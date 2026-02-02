@@ -14,7 +14,7 @@ const ClassicTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-white p-8 shadow-lg text-gray-800"
-      style={{ minHeight: "297mm" }}
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Header */}
       <div className="border-b-2 border-gray-800 pb-4 mb-6">
@@ -25,19 +25,19 @@ const ClassicTemplate = ({ data }) => {
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-2 mt-3 text-sm text-gray-600">
+        <div className="flex flex-wrap mt-3 text-sm text-gray-600">
           {personalInfo?.email && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaEnvelope /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaPhoneAlt /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaMapMarkerAlt /> {personalInfo.location}
             </span>
           )}
@@ -46,7 +46,7 @@ const ClassicTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-800 hover:underline"
+              className="flex items-center gap-2 text-blue-800 hover:underline mr-6 mb-2"
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -56,7 +56,7 @@ const ClassicTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-900 hover:underline"
+              className="flex items-center gap-2 text-gray-900 hover:underline mr-6 mb-2"
             >
               <FaGithub /> GitHub
             </a>
@@ -66,7 +66,7 @@ const ClassicTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-800 hover:underline"
+              className="flex items-center gap-2 text-blue-800 hover:underline mr-6 mb-2"
             >
               <FaGlobe /> Portfolio
             </a>
@@ -88,7 +88,11 @@ const ClassicTemplate = ({ data }) => {
           </h2>
           <div className="space-y-4">
             {experience.map((exp, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-4"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="flex justify-between items-baseline">
                   <h3 className="font-bold text-gray-800">{exp.position}</h3>
                   <span className="text-sm text-gray-500">
@@ -117,7 +121,11 @@ const ClassicTemplate = ({ data }) => {
           </h2>
           <div className="space-y-4">
             {projects.map((proj, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-4"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="flex justify-between items-baseline">
                   <h3 className="font-bold text-gray-800">{proj.name}</h3>
                   {proj.link && (
@@ -146,9 +154,13 @@ const ClassicTemplate = ({ data }) => {
           <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
             Education
           </h2>
-          <div className="space-y-2">
+          <div className="">
             {education.map((edu, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-2"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="flex justify-between">
                   <h3 className="font-bold text-gray-800">{edu.institution}</h3>
                   <span className="text-sm text-gray-500">
@@ -169,33 +181,33 @@ const ClassicTemplate = ({ data }) => {
             <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
               Technical Skills
             </h2>
-            <div className="grid grid-cols-2 gap-y-2 gap-x-8 text-sm text-gray-700">
+            <div className="grid grid-cols-2 text-sm text-gray-700">
               {data.technicalSkills.frontend?.length > 0 && (
-                <div>
+                <div className="mb-2 mr-8">
                   <span className="font-bold">Frontend:</span>{" "}
                   {data.technicalSkills.frontend.join(", ")}
                 </div>
               )}
               {data.technicalSkills.backend?.length > 0 && (
-                <div>
+                <div className="mb-2 mr-8">
                   <span className="font-bold">Backend:</span>{" "}
                   {data.technicalSkills.backend.join(", ")}
                 </div>
               )}
               {data.technicalSkills.database?.length > 0 && (
-                <div>
+                <div className="mb-2 mr-8">
                   <span className="font-bold">Database:</span>{" "}
                   {data.technicalSkills.database.join(", ")}
                 </div>
               )}
               {data.technicalSkills.aiDevOps?.length > 0 && (
-                <div>
+                <div className="mb-2 mr-8">
                   <span className="font-bold">AI / DevOps:</span>{" "}
                   {data.technicalSkills.aiDevOps.join(", ")}
                 </div>
               )}
               {data.technicalSkills.tools?.length > 0 && (
-                <div>
+                <div className="mb-2 mr-8">
                   <span className="font-bold">Tools:</span>{" "}
                   {data.technicalSkills.tools.join(", ")}
                 </div>
@@ -211,15 +223,18 @@ const ClassicTemplate = ({ data }) => {
           <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
             Proficiency & Competencies
           </h2>
-          <div className="text-sm text-gray-700 space-y-2">
+          <div
+            className="text-sm text-gray-700"
+            style={{ pageBreakInside: "avoid" }}
+          >
             {data.softwareProficiency?.length > 0 && (
-              <div>
+              <div className="mb-2">
                 <span className="font-bold">Software:</span>{" "}
                 {data.softwareProficiency.join(", ")}
               </div>
             )}
             {data.competencies?.length > 0 && (
-              <div>
+              <div className="mb-2">
                 <span className="font-bold">Competencies:</span>{" "}
                 {data.competencies.join(" • ")}
               </div>

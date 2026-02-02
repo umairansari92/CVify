@@ -13,8 +13,8 @@ const ClearTemplate = ({ data }) => {
 
   return (
     <div
-      className="w-full bg-slate-50 p-10 font-sans text-slate-800"
-      style={{ minHeight: "297mm" }}
+      className="w-full bg-slate-50 p-10 font-sans text-slate-800 flex"
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Left Sidebar */}
       <div className="w-1/3 bg-slate-800 text-white p-6">
@@ -28,19 +28,19 @@ const ClearTemplate = ({ data }) => {
         </div>
 
         {/* Contact Info */}
-        <div className="mb-8 text-sm space-y-3">
+        <div className="mb-8 text-sm">
           {personalInfo?.email && (
             <div className="flex items-center gap-2 break-all">
               <FaEnvelope className="text-slate-400" /> {personalInfo.email}
             </div>
           )}
           {personalInfo?.phone && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-3">
               <FaPhoneAlt className="text-slate-400" /> {personalInfo.phone}
             </div>
           )}
           {personalInfo?.location && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-3">
               <FaMapMarkerAlt className="text-slate-400" />{" "}
               {personalInfo.location}
             </div>
@@ -50,7 +50,7 @@ const ClearTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all"
+              className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all mb-3"
             >
               <FaLinkedin className="text-slate-400" /> LinkedIn
             </a>
@@ -60,7 +60,7 @@ const ClearTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-slate-300 transition-colors break-all"
+              className="flex items-center gap-2 hover:text-slate-300 transition-colors break-all mb-3"
             >
               <FaGithub className="text-slate-400" /> GitHub
             </a>
@@ -70,7 +70,7 @@ const ClearTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all"
+              className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all mb-3"
             >
               <FaGlobe className="text-slate-400" /> Portfolio
             </a>
@@ -83,13 +83,13 @@ const ClearTemplate = ({ data }) => {
           Object.values(data.technicalSkills).some(
             (arr) => arr?.length > 0,
           ) && (
-            <div className="mb-8">
+            <div className="mb-8" style={{ pageBreakInside: "avoid" }}>
               <h3 className="text-lg font-bold border-b border-slate-600 pb-1 mb-3">
                 Technical Skills
               </h3>
-              <div className="space-y-3">
+              <div className="">
                 {data.technicalSkills.frontend?.length > 0 && (
-                  <div>
+                  <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       Frontend
                     </div>
@@ -97,7 +97,7 @@ const ClearTemplate = ({ data }) => {
                       {data.technicalSkills.frontend.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs"
+                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                         >
                           {s}
                         </span>
@@ -106,7 +106,7 @@ const ClearTemplate = ({ data }) => {
                   </div>
                 )}
                 {data.technicalSkills.backend?.length > 0 && (
-                  <div>
+                  <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       Backend
                     </div>
@@ -114,7 +114,7 @@ const ClearTemplate = ({ data }) => {
                       {data.technicalSkills.backend.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs"
+                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                         >
                           {s}
                         </span>
@@ -123,7 +123,7 @@ const ClearTemplate = ({ data }) => {
                   </div>
                 )}
                 {data.technicalSkills.aiDevOps?.length > 0 && (
-                  <div>
+                  <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       AI & DevOps
                     </div>
@@ -131,7 +131,7 @@ const ClearTemplate = ({ data }) => {
                       {data.technicalSkills.aiDevOps.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs"
+                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                         >
                           {s}
                         </span>
@@ -153,7 +153,7 @@ const ClearTemplate = ({ data }) => {
                       ].map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs"
+                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                         >
                           {s}
                         </span>
@@ -175,7 +175,7 @@ const ClearTemplate = ({ data }) => {
               {data.competencies.map((skill, index) => (
                 <span
                   key={index}
-                  className="bg-slate-700 px-2 py-1 text-xs rounded"
+                  className="bg-slate-700 px-2 py-1 text-xs rounded mr-2 mb-2"
                 >
                   {skill}
                 </span>
@@ -194,7 +194,7 @@ const ClearTemplate = ({ data }) => {
               {data.softwareProficiency.map((skill, index) => (
                 <span
                   key={index}
-                  className="bg-slate-700 px-2 py-1 text-xs rounded"
+                  className="bg-slate-700 px-2 py-1 text-xs rounded mr-2 mb-2"
                 >
                   {skill}
                 </span>
@@ -211,7 +211,7 @@ const ClearTemplate = ({ data }) => {
             </h3>
             <div className="space-y-4">
               {education.map((edu, index) => (
-                <div key={index}>
+                <div key={index} className="mb-4">
                   <p className="font-bold text-sm">{edu.institution}</p>
                   <p className="text-xs text-slate-400">
                     {edu.startDate} - {edu.endDate}
@@ -244,9 +244,13 @@ const ClearTemplate = ({ data }) => {
             <h2 className="text-xl font-bold uppercase text-slate-800 border-b-2 border-slate-200 pb-2 mb-4">
               Experience
             </h2>
-            <div className="space-y-6">
+            <div className="">
               {experience.map((exp, index) => (
-                <div key={index}>
+                <div
+                  key={index}
+                  className="mb-6"
+                  style={{ pageBreakInside: "avoid" }}
+                >
                   <div className="flex justify-between items-baseline mb-1">
                     <h3 className="font-bold text-lg text-slate-700">
                       {exp.position}
@@ -259,9 +263,11 @@ const ClearTemplate = ({ data }) => {
                     {exp.company}
                   </p>
                   {exp.responsibilities && (
-                    <ul className="list-disc list-outside ml-4 text-sm text-gray-600 space-y-1">
+                    <ul className="list-disc list-outside ml-4 text-sm text-gray-600">
                       {exp.responsibilities.map((res, i) => (
-                        <li key={i}>{res}</li>
+                        <li key={i} className="mb-1">
+                          {res}
+                        </li>
                       ))}
                     </ul>
                   )}
@@ -279,7 +285,11 @@ const ClearTemplate = ({ data }) => {
             </h2>
             <div className="space-y-4">
               {projects.map((proj, index) => (
-                <div key={index}>
+                <div
+                  key={index}
+                  className="mb-4"
+                  style={{ pageBreakInside: "avoid" }}
+                >
                   <div className="flex justify-between items-baseline mb-1">
                     <h3 className="font-bold text-md text-slate-700">
                       {proj.name}

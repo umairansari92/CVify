@@ -24,7 +24,7 @@ const ModernTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-white p-10 text-gray-800 font-sans"
-      style={{ minHeight: "297mm" }}
+      style={{ padding: "15mm" }}
     >
       {/* Header */}
       <div className="border-l-4 border-blue-600 pl-6 mb-10">
@@ -35,19 +35,19 @@ const ModernTemplate = ({ data }) => {
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600 mt-4">
+        <div className="flex flex-wrap text-sm text-gray-600 mt-4">
           {personalInfo?.email && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-3">
               <FaEnvelope className="text-blue-500" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-3">
               <FaPhoneAlt className="text-blue-500" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-3">
               <FaMapMarkerAlt className="text-blue-500" />{" "}
               {personalInfo.location}
             </span>
@@ -57,7 +57,7 @@ const ModernTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-600 hover:underline"
+              className="flex items-center gap-2 mr-6 mb-3 hover:underline"
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -67,7 +67,7 @@ const ModernTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-800 hover:underline"
+              className="flex items-center gap-2 text-gray-800 hover:underline mr-6 mb-3"
             >
               <FaGithub /> GitHub
             </a>
@@ -77,7 +77,7 @@ const ModernTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-600 hover:underline"
+              className="flex items-center gap-2 mr-6 mb-3 hover:underline"
             >
               <FaGlobe /> Portfolio
             </a>
@@ -94,17 +94,24 @@ const ModernTemplate = ({ data }) => {
       )}
 
       {/* Skills & Competencies Grid */}
-      <div className="grid grid-cols-2 gap-8 mb-8">
+      <div className="mb-8" style={{ pageBreakInside: "avoid", clear: "both" }}>
         {((data.technicalSkills &&
           Object.values(data.technicalSkills).some((arr) => arr?.length > 0)) ||
           data.competencies?.length > 0) && (
-          <div>
+          <div
+            style={{
+              display: "inline-block",
+              width: "48%",
+              verticalAlign: "top",
+              marginRight: "4%",
+            }}
+          >
             <h3 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-3">
               Technical Expertise
             </h3>
-            <div className="space-y-2">
+            <div className="">
               {data.technicalSkills?.frontend?.length > 0 && (
-                <div className="text-sm">
+                <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">Frontend:</span>{" "}
                   <span className="text-gray-600">
                     {data.technicalSkills.frontend.join(", ")}
@@ -112,7 +119,7 @@ const ModernTemplate = ({ data }) => {
                 </div>
               )}
               {data.technicalSkills?.backend?.length > 0 && (
-                <div className="text-sm">
+                <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">Backend:</span>{" "}
                   <span className="text-gray-600">
                     {data.technicalSkills.backend.join(", ")}
@@ -120,7 +127,7 @@ const ModernTemplate = ({ data }) => {
                 </div>
               )}
               {data.technicalSkills?.aiDevOps?.length > 0 && (
-                <div className="text-sm">
+                <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">AI/DevOps:</span>{" "}
                   <span className="text-gray-600">
                     {data.technicalSkills.aiDevOps.join(", ")}
@@ -132,11 +139,11 @@ const ModernTemplate = ({ data }) => {
                   <h4 className="text-xs font-bold uppercase text-gray-500 mb-1">
                     Competencies
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap">
                     {data.competencies.map((c, i) => (
                       <span
                         key={i}
-                        className="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs"
+                        className="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs mr-2 mb-2"
                       >
                         {c}
                       </span>
@@ -149,7 +156,13 @@ const ModernTemplate = ({ data }) => {
         )}
 
         {data.softwareProficiency?.length > 0 && (
-          <div>
+          <div
+            style={{
+              display: "inline-block",
+              width: "48%",
+              verticalAlign: "top",
+            }}
+          >
             <h3 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-3">
               Software Proficiency
             </h3>
@@ -157,7 +170,7 @@ const ModernTemplate = ({ data }) => {
               {data.softwareProficiency.map((skill, index) => (
                 <span
                   key={index}
-                  className="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm"
+                  className="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm mr-2 mb-2"
                 >
                   {skill}
                 </span>
@@ -165,6 +178,7 @@ const ModernTemplate = ({ data }) => {
             </div>
           </div>
         )}
+        <div style={{ clear: "both" }}></div>
       </div>
 
       {/* Experience */}
@@ -174,7 +188,11 @@ const ModernTemplate = ({ data }) => {
           titleClassName="text-blue-600 border-blue-200"
         >
           {experience.map((exp, index) => (
-            <div key={index} className="mb-4">
+            <div
+              key={index}
+              className="mb-4"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <div className="flex justify-between items-baseline mb-1">
                 <h3 className="font-bold text-lg text-gray-900">
                   {exp.position}
@@ -210,7 +228,11 @@ const ModernTemplate = ({ data }) => {
           titleClassName="text-blue-600 border-blue-200"
         >
           {projects.map((proj, index) => (
-            <div key={index} className="mb-4">
+            <div
+              key={index}
+              className="mb-4"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <div className="flex justify-between items-baseline">
                 <h3 className="font-bold text-gray-900">{proj.name}</h3>
                 {proj.link && (
@@ -242,7 +264,11 @@ const ModernTemplate = ({ data }) => {
           titleClassName="text-blue-600 border-blue-200"
         >
           {education.map((edu, index) => (
-            <div key={index} className="flex justify-between items-center py-1">
+            <div
+              key={index}
+              className="flex justify-between items-center py-1 mb-2"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <div>
                 <h3 className="font-bold text-gray-800">{edu.institution}</h3>
                 <p className="text-sm text-gray-600">{edu.degree}</p>

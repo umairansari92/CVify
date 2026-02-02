@@ -21,15 +21,15 @@ const TechnicalTemplate = ({ data }) => {
 
   return (
     <div
-      className="w-full bg-[#1a1c24] text-gray-300 font-mono p-8 relative overflow-hidden"
-      style={{ minHeight: "297mm" }}
+      className="w-full bg-[#1a1c24] text-gray-300 font-mono p-8 relative"
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Code Header */}
       <div className="bg-slate-900 text-green-400 p-6 rounded-md mb-6 font-mono shadow-lg">
-        <div className="flex gap-2 mb-4">
-          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+        <div className="flex mb-4">
+          <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+          <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
         </div>
         <h1 className="text-3xl font-bold mb-2">
           <span className="text-blue-400">const</span>{" "}
@@ -48,20 +48,22 @@ const TechnicalTemplate = ({ data }) => {
           );
         </p>
 
-        <div className="text-[10px] text-slate-500 font-bold flex flex-wrap gap-x-6 gap-y-2 mt-2">
+        <div className="text-[10px] text-slate-500 font-bold flex flex-wrap mt-2">
           {personalInfo?.email && (
-            <span className="flex items-center gap-1.5">
-              <FaEnvelope className="text-slate-600" /> {personalInfo.email}
+            <span className="flex items-center mr-6 mb-2">
+              <FaEnvelope className="text-slate-600 mr-1.5" />{" "}
+              {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-1.5">
-              <FaPhoneAlt className="text-slate-600" /> {personalInfo.phone}
+            <span className="flex items-center mr-6 mb-2">
+              <FaPhoneAlt className="text-slate-600 mr-1.5" />{" "}
+              {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-1.5">
-              <FaMapMarkerAlt className="text-slate-600" />{" "}
+            <span className="flex items-center mr-6 mb-2">
+              <FaMapMarkerAlt className="text-slate-600 mr-1.5" />{" "}
               {personalInfo.location}
             </span>
           )}
@@ -70,9 +72,9 @@ const TechnicalTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-green-500 hover:text-green-400 transition-colors"
+              className="flex items-center mr-6 mb-2 text-green-500 hover:text-green-400 transition-colors"
             >
-              <FaGithub /> GitHub
+              <FaGithub className="mr-1.5" /> GitHub
             </a>
           )}
           {personalInfo?.linkedin && (
@@ -100,12 +102,15 @@ const TechnicalTemplate = ({ data }) => {
 
       <div className="grid grid-cols-3 gap-6">
         {/* Left Col: Skills & Stack */}
-        <div className="col-span-1 space-y-6">
+        <div className="col-span-1">
           {data.technicalSkills &&
             Object.values(data.technicalSkills).some(
               (arr) => arr?.length > 0,
             ) && (
-              <div className="bg-white p-4 rounded shadow-sm border border-slate-200">
+              <div
+                className="bg-white p-4 rounded shadow-sm border border-slate-200 mb-6"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1">
                   Tech Stack
                 </h3>
@@ -246,16 +251,20 @@ const TechnicalTemplate = ({ data }) => {
         </div>
 
         {/* Right Col: Experience & Projects */}
-        <div className="col-span-2 space-y-6">
+        <div className="col-span-2">
           {experience?.length > 0 && (
             <section>
               <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <span className="text-blue-500">function</span> getExperience(){" "}
                 {"{"}
               </h2>
-              <div className="space-y-6 border-l-2 border-slate-200 pl-6 ml-2">
+              <div className="border-l-2 border-slate-200 pl-6 ml-2">
                 {experience.map((exp, index) => (
-                  <div key={index} className="relative">
+                  <div
+                    key={index}
+                    className="relative mb-6"
+                    style={{ pageBreakInside: "avoid" }}
+                  >
                     <div className="absolute -left-[31px] top-0 w-4 h-4 bg-white border-2 border-blue-500 rounded-full"></div>
                     <div className="flex justify-between items-baseline mb-1">
                       <h3 className="font-bold text-base text-slate-800">
@@ -294,7 +303,8 @@ const TechnicalTemplate = ({ data }) => {
                 {projects.map((proj, index) => (
                   <div
                     key={index}
-                    className="bg-white p-4 border border-slate-200 rounded hover:border-blue-400 transition-colors"
+                    className="bg-white p-4 border border-slate-200 rounded hover:border-blue-400 transition-colors mb-4"
+                    style={{ pageBreakInside: "avoid" }}
                   >
                     <div className="flex justify-between mb-2">
                       <h3 className="font-bold text-slate-800">{proj.name}</h3>

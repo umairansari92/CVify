@@ -14,7 +14,11 @@ const MinimalTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-white p-12 text-gray-900"
-      style={{ minHeight: "297mm", fontFamily: '"Open Sans", sans-serif' }}
+      style={{
+        minHeight: "297mm",
+        fontFamily: '"Open Sans", sans-serif',
+        padding: "15mm",
+      }}
     >
       {/* Centered Header */}
       <div className="text-center mb-12">
@@ -25,19 +29,19 @@ const MinimalTemplate = ({ data }) => {
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
-        <div className="flex justify-center flex-wrap gap-x-8 gap-y-3 text-[10px] tracking-widest text-gray-500 uppercase mt-4">
+        <div className="flex justify-center flex-wrap text-[10px] tracking-widest text-gray-500 uppercase mt-4">
           {personalInfo?.email && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 mr-8 mb-3">
               <FaEnvelope className="text-gray-300" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 mr-8 mb-3">
               <FaPhoneAlt className="text-gray-300" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 mr-8 mb-3">
               <FaMapMarkerAlt className="text-gray-300" />{" "}
               {personalInfo.location}
             </span>
@@ -47,7 +51,7 @@ const MinimalTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors"
+              className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -57,7 +61,7 @@ const MinimalTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors"
+              className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
             >
               <FaGithub /> GitHub
             </a>
@@ -67,7 +71,7 @@ const MinimalTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-black transition-colors"
+              className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
             >
               <FaGlobe /> Portfolio
             </a>
@@ -92,9 +96,13 @@ const MinimalTemplate = ({ data }) => {
           <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-8 text-black">
             Professional Experience
           </h2>
-          <div className="space-y-8 max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             {experience.map((exp, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="flex justify-between items-baseline mb-2">
                   <h3 className="font-semibold text-base">{exp.position}</h3>
                   <span className="text-xs text-gray-500 font-mono">
@@ -127,7 +135,11 @@ const MinimalTemplate = ({ data }) => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {projects.map((proj, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="font-semibold text-sm mb-1">{proj.name}</h3>
                 {proj.description?.map((desc, i) => (
                   <p key={i} className="text-xs text-gray-600 leading-5">
@@ -148,7 +160,11 @@ const MinimalTemplate = ({ data }) => {
               Education
             </h2>
             {education.map((edu, index) => (
-              <div key={index} className="text-center mb-4">
+              <div
+                key={index}
+                className="text-center mb-4"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="font-semibold text-sm">{edu.institution}</div>
                 <div className="text-xs text-gray-600">{edu.degree}</div>
                 <div className="text-xs text-gray-400 mt-1">
@@ -172,33 +188,33 @@ const MinimalTemplate = ({ data }) => {
               Object.values(data.technicalSkills).some(
                 (arr) => arr?.length > 0,
               ) && (
-                <div className="text-center text-sm text-gray-700 leading-7 mb-4 space-y-1">
+                <div className="text-center text-sm text-gray-700 leading-7 mb-4">
                   {data.technicalSkills.frontend?.length > 0 && (
-                    <div>
+                    <div className="mb-1">
                       <span className="font-semibold">Frontend:</span>{" "}
                       {data.technicalSkills.frontend.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.backend?.length > 0 && (
-                    <div>
+                    <div className="mb-1">
                       <span className="font-semibold">Backend:</span>{" "}
                       {data.technicalSkills.backend.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.database?.length > 0 && (
-                    <div>
+                    <div className="mb-1">
                       <span className="font-semibold">Database:</span>{" "}
                       {data.technicalSkills.database.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.aiDevOps?.length > 0 && (
-                    <div>
+                    <div className="mb-1">
                       <span className="font-semibold">AI/DevOps:</span>{" "}
                       {data.technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.tools?.length > 0 && (
-                    <div>
+                    <div className="mb-1">
                       <span className="font-semibold">Tools:</span>{" "}
                       {data.technicalSkills.tools.join(", ")}
                     </div>

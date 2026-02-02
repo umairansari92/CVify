@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 import DateRangePicker from "../common/DateRangePicker";
+import { FiTrash2 } from "react-icons/fi";
 
 const ExperienceForm = () => {
   const dispatch = useDispatch();

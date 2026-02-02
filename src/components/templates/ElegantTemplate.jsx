@@ -15,43 +15,43 @@ const ElegantTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-[#f9f7f2] p-10 font-serif text-[#2c3e50]"
-      style={{ minHeight: "297mm" }}
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Header - Serif Font */}
       <div className="text-center border-b-2 border-double border-gray-300 pb-8 mb-8">
         <h1 className="text-5xl mb-3" style={{ fontFamily: "Georgia, serif" }}>
           {personalInfo?.fullName || "Your Name"}
         </h1>
-        <div className="flex justify-center items-center gap-4 text-sm uppercase tracking-widest text-gray-500 font-medium mb-4">
+        <div className="flex justify-center items-center text-sm uppercase tracking-widest text-gray-500 font-medium mb-4">
           {personalInfo?.jobTitle && <span>{personalInfo.jobTitle}</span>}
         </div>
 
-        <div className="flex justify-center gap-8 text-sm text-gray-600 font-normal italic">
+        <div className="flex justify-center text-sm text-gray-600 font-normal italic">
           {personalInfo?.email && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mx-4">
               <FaEnvelope className="text-gray-400" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mx-4">
               <FaPhoneAlt className="text-gray-400" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mx-4">
               <FaMapMarkerAlt className="text-gray-400" />{" "}
               {personalInfo.location}
             </span>
           )}
         </div>
         {/* Links Row */}
-        <div className="flex justify-center gap-8 text-sm text-gray-600 font-normal italic mt-2">
+        <div className="flex justify-center text-sm text-gray-600 font-normal italic mt-2">
           {personalInfo?.linkedin && (
             <a
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors"
+              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors mx-4"
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -61,7 +61,7 @@ const ElegantTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors"
+              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors mx-4"
             >
               <FaGithub /> GitHub
             </a>
@@ -71,7 +71,7 @@ const ElegantTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors"
+              className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors mx-4"
             >
               <FaGlobe /> Portfolio
             </a>
@@ -98,9 +98,13 @@ const ElegantTemplate = ({ data }) => {
             >
               Professional Experience
             </h2>
-            <div className="space-y-8">
+            <div className="">
               {experience.map((exp, index) => (
-                <div key={index} className="grid grid-cols-12 gap-4">
+                <div
+                  key={index}
+                  className="grid grid-cols-12 gap-4 mb-8"
+                  style={{ pageBreakInside: "avoid" }}
+                >
                   <div className="col-span-3 text-right">
                     <span className="block font-bold text-gray-800">
                       {exp.startDate}
@@ -217,11 +221,11 @@ const ElegantTemplate = ({ data }) => {
               >
                 Core Competencies
               </h2>
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center">
                 {data.competencies.map((skill, index) => (
                   <span
                     key={index}
-                    className="border border-gray-300 px-3 py-1 rounded-full text-sm text-gray-600 italic"
+                    className="border border-gray-300 px-3 py-1 rounded-full text-sm text-gray-600 italic mr-3 mb-3"
                   >
                     {skill}
                   </span>

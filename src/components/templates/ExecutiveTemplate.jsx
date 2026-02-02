@@ -14,7 +14,7 @@ const ExecutiveTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-[#fdfdfd] text-slate-800 p-12 leading-snug shadow-inner border-x-4 border-slate-200"
-      style={{ minHeight: "297mm" }}
+      style={{ padding: "15mm" }}
     >
       {/* Header - Formal & Center */}
       <div className="text-center border-b-4 border-gray-900 pb-8 mb-10">
@@ -25,19 +25,19 @@ const ExecutiveTemplate = ({ data }) => {
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
-        <div className="flex justify-center flex-wrap gap-x-10 gap-y-4 text-sm font-bold text-gray-800 border-t border-gray-300 pt-6 mt-4 w-full">
+        <div className="flex justify-center flex-wrap text-sm font-bold text-gray-800 border-t border-gray-300 pt-6 mt-4 w-full">
           {personalInfo?.email && (
-            <span className="flex items-center gap-2 uppercase tracking-tighter">
+            <span className="flex items-center gap-2 uppercase tracking-tighter mx-5 mb-4">
               <FaEnvelope className="text-gray-400" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2 uppercase tracking-tighter">
+            <span className="flex items-center gap-2 uppercase tracking-tighter mx-5 mb-4">
               <FaPhoneAlt className="text-gray-400" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-2 uppercase tracking-tighter">
+            <span className="flex items-center gap-2 uppercase tracking-tighter mx-5 mb-4">
               <FaMapMarkerAlt className="text-gray-400" />{" "}
               {personalInfo.location}
             </span>
@@ -45,9 +45,16 @@ const ExecutiveTemplate = ({ data }) => {
         </div>
       </div>
 
-      <div className="flex gap-12">
+      <div className="w-full">
         {/* Main Column */}
-        <div className="w-2/3">
+        <div
+          style={{
+            display: "inline-block",
+            width: "65%",
+            verticalAlign: "top",
+            paddingRight: "1.5rem",
+          }}
+        >
           {/* Summary */}
           {personalInfo?.profileSummary && (
             <div className="mb-10">
@@ -66,9 +73,13 @@ const ExecutiveTemplate = ({ data }) => {
               <h3 className="text-lg font-bold uppercase border-b-2 border-gray-900 mb-6 pb-1">
                 Professional Experience
               </h3>
-              <div className="space-y-8">
+              <div className="">
                 {experience.map((exp, index) => (
-                  <div key={index}>
+                  <div
+                    key={index}
+                    className="mb-8"
+                    style={{ pageBreakInside: "avoid" }}
+                  >
                     <div className="flex justify-between items-baseline mb-1">
                       <h4 className="text-xl font-bold text-gray-900">
                         {exp.position}
@@ -100,7 +111,11 @@ const ExecutiveTemplate = ({ data }) => {
               </h3>
               <div className="space-y-4">
                 {projects.map((proj, index) => (
-                  <div key={index}>
+                  <div
+                    key={index}
+                    className="mb-4"
+                    style={{ pageBreakInside: "avoid" }}
+                  >
                     <h4 className="font-bold text-gray-900">{proj.name}</h4>
                     <p className="text-sm text-gray-700">
                       {proj.description?.join(". ")}
@@ -113,16 +128,26 @@ const ExecutiveTemplate = ({ data }) => {
         </div>
 
         {/* Right Sidebar - Boxed */}
-        <div className="w-1/3 space-y-10">
+        <div
+          style={{
+            display: "inline-block",
+            width: "35%",
+            verticalAlign: "top",
+            paddingLeft: "1.5rem",
+          }}
+        >
           {/* Education Box */}
           {education?.length > 0 && (
-            <div className="bg-gray-100 p-6 border-l-4 border-gray-900">
+            <div
+              className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <h3 className="text-base font-bold uppercase mb-4 text-gray-900">
                 Education
               </h3>
               <div className="space-y-4">
                 {education.map((edu, index) => (
-                  <div key={index}>
+                  <div key={index} className="mb-4">
                     <div className="font-bold text-gray-900">
                       {edu.institution}
                     </div>
@@ -142,31 +167,34 @@ const ExecutiveTemplate = ({ data }) => {
             Object.values(data.technicalSkills).some(
               (arr) => arr?.length > 0,
             ) && (
-              <div className="bg-gray-100 p-6 border-l-4 border-gray-900">
+              <div
+                className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="text-base font-bold uppercase mb-4 text-gray-900">
                   Technical Expertise
                 </h3>
-                <div className="space-y-3 text-sm text-gray-800">
+                <div className="text-sm text-gray-800">
                   {data.technicalSkills.frontend?.length > 0 && (
-                    <div>
+                    <div className="mb-3">
                       <span className="font-bold underline">Frontend:</span>{" "}
                       {data.technicalSkills.frontend.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.backend?.length > 0 && (
-                    <div>
+                    <div className="mb-3">
                       <span className="font-bold underline">Backend:</span>{" "}
                       {data.technicalSkills.backend.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.database?.length > 0 && (
-                    <div>
+                    <div className="mb-3">
                       <span className="font-bold underline">Database:</span>{" "}
                       {data.technicalSkills.database.join(", ")}
                     </div>
                   )}
                   {data.technicalSkills.aiDevOps?.length > 0 && (
-                    <div>
+                    <div className="mb-3">
                       <span className="font-bold underline">AI/DevOps:</span>{" "}
                       {data.technicalSkills.aiDevOps.join(", ")}
                     </div>
@@ -177,15 +205,18 @@ const ExecutiveTemplate = ({ data }) => {
 
           {/* Competencies Box */}
           {data.competencies?.length > 0 && (
-            <div className="bg-gray-100 p-6 border-l-4 border-gray-900">
+            <div
+              className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <h3 className="text-base font-bold uppercase mb-4 text-gray-900">
                 Core Competencies
               </h3>
-              <ul className="space-y-2">
+              <ul className="">
                 {data.competencies.map((skill, index) => (
                   <li
                     key={index}
-                    className="text-sm text-gray-800 font-semibold border-b border-gray-300 pb-1 last:border-0"
+                    className="text-sm text-gray-800 font-semibold border-b border-gray-300 pb-2 mb-2 last:border-0"
                   >
                     {skill}
                   </li>
@@ -217,7 +248,7 @@ const ExecutiveTemplate = ({ data }) => {
                   href={personalInfo.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm hover:text-blue-300 transition-colors"
+                  className="flex items-center gap-3 text-sm hover:text-blue-300 transition-colors mb-4"
                 >
                   <FaLinkedin className="text-gray-400" /> LinkedIn Profile
                 </a>

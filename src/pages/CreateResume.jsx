@@ -72,7 +72,9 @@ const CreateResume = () => {
               {loading ? "Syncing..." : "Save & Finish"}
             </button>
             <button
-              onClick={handleDownloadPDF}
+              onClick={() =>
+                handleDownloadPDF(currentResume, currentResume?.templateId)
+              }
               className="flex-1 xl:flex-none bg-success hover:bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-premium hover:shadow-success/30 transition-all font-bold"
             >
               Get PDF

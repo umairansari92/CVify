@@ -15,7 +15,7 @@ const BoldTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-white p-0 text-gray-900 font-sans leading-tight shadow-2xl relative"
-      style={{ minHeight: "297mm" }}
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Dark Header */}
       <div className="bg-gray-900 text-white p-10 pb-12">
@@ -26,19 +26,19 @@ const BoldTemplate = ({ data }) => {
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
-        <div className="flex flex-wrap gap-6 text-sm text-gray-400 mt-4">
+        <div className="flex flex-wrap text-sm text-gray-400 mt-4">
           {personalInfo?.email && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaEnvelope className="text-gray-400" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaPhoneAlt className="text-gray-400" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 mr-6 mb-2">
               <FaMapMarkerAlt className="text-gray-400" />{" "}
               {personalInfo.location}
             </span>
@@ -48,7 +48,7 @@ const BoldTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mr-6 mb-2"
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -58,7 +58,7 @@ const BoldTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mr-6 mb-2"
             >
               <FaGithub /> GitHub
             </a>
@@ -68,7 +68,7 @@ const BoldTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mr-6 mb-2"
             >
               <FaGlobe /> Portfolio
             </a>
@@ -76,7 +76,7 @@ const BoldTemplate = ({ data }) => {
         </div>
       </div>
 
-      <div className="p-10 -mt-6">
+      <div className="p-10 pt-4">
         {/* Summary Card */}
         {personalInfo?.profileSummary && (
           <div className="bg-white p-6 shadow-md border-l-4 border-gray-900 mb-8 rounded-r">
@@ -106,9 +106,11 @@ const BoldTemplate = ({ data }) => {
                     </div>
 
                     {exp.responsibilities && (
-                      <ul className="list-disc list-outside ml-4 mt-2 text-sm text-gray-700 space-y-1">
+                      <ul className="list-disc list-outside ml-4 mt-2 text-sm text-gray-700">
                         {exp.responsibilities.map((res, i) => (
-                          <li key={i}>{res}</li>
+                          <li key={i} className="mb-1">
+                            {res}
+                          </li>
                         ))}
                       </ul>
                     )}
@@ -137,7 +139,11 @@ const BoldTemplate = ({ data }) => {
                     )}
                     <ul className="list-none mt-1 text-sm text-gray-700">
                       {proj.description?.map((desc, i) => (
-                        <li key={i} className="mb-1">
+                        <li
+                          key={i}
+                          className="mb-1"
+                          style={{ pageBreakInside: "avoid" }}
+                        >
                           » {desc}
                         </li>
                       ))}
@@ -149,9 +155,12 @@ const BoldTemplate = ({ data }) => {
           </div>
 
           {/* Side Column */}
-          <div className="col-span-4 space-y-8">
+          <div className="col-span-4 pl-6">
             {education?.length > 0 && (
-              <div className="bg-gray-50 p-5 rounded">
+              <div
+                className="bg-gray-50 p-5 rounded mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
                   Education
                 </h3>
@@ -174,13 +183,16 @@ const BoldTemplate = ({ data }) => {
               Object.values(data.technicalSkills).some(
                 (arr) => arr?.length > 0,
               ) && (
-                <div className="bg-gray-50 p-5 rounded">
+                <div
+                  className="bg-gray-50 p-5 rounded mb-8"
+                  style={{ pageBreakInside: "avoid" }}
+                >
                   <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
                     Expertise
                   </h3>
-                  <div className="space-y-3">
+                  <div className="">
                     {data.technicalSkills.frontend?.length > 0 && (
-                      <div>
+                      <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Frontend
                         </div>
@@ -188,7 +200,7 @@ const BoldTemplate = ({ data }) => {
                           {data.technicalSkills.frontend.map((s, i) => (
                             <span
                               key={i}
-                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs"
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                             >
                               {s}
                             </span>
@@ -197,7 +209,7 @@ const BoldTemplate = ({ data }) => {
                       </div>
                     )}
                     {data.technicalSkills.backend?.length > 0 && (
-                      <div>
+                      <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Backend
                         </div>
@@ -205,7 +217,7 @@ const BoldTemplate = ({ data }) => {
                           {data.technicalSkills.backend.map((s, i) => (
                             <span
                               key={i}
-                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs"
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                             >
                               {s}
                             </span>
@@ -214,7 +226,7 @@ const BoldTemplate = ({ data }) => {
                       </div>
                     )}
                     {data.technicalSkills.database?.length > 0 && (
-                      <div>
+                      <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Database
                         </div>
@@ -222,7 +234,7 @@ const BoldTemplate = ({ data }) => {
                           {data.technicalSkills.database.map((s, i) => (
                             <span
                               key={i}
-                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs"
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                             >
                               {s}
                             </span>
@@ -231,7 +243,7 @@ const BoldTemplate = ({ data }) => {
                       </div>
                     )}
                     {data.technicalSkills.aiDevOps?.length > 0 && (
-                      <div>
+                      <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           AI & DevOps
                         </div>
@@ -239,7 +251,7 @@ const BoldTemplate = ({ data }) => {
                           {data.technicalSkills.aiDevOps.map((s, i) => (
                             <span
                               key={i}
-                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs"
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                             >
                               {s}
                             </span>
@@ -248,7 +260,7 @@ const BoldTemplate = ({ data }) => {
                       </div>
                     )}
                     {data.technicalSkills.tools?.length > 0 && (
-                      <div>
+                      <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Tools/Others
                         </div>
@@ -256,7 +268,7 @@ const BoldTemplate = ({ data }) => {
                           {data.technicalSkills.tools.map((s, i) => (
                             <span
                               key={i}
-                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs"
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
                             >
                               {s}
                             </span>
@@ -270,13 +282,18 @@ const BoldTemplate = ({ data }) => {
 
             {/* Competencies */}
             {data.competencies?.length > 0 && (
-              <div className="bg-gray-50 p-5 rounded">
+              <div
+                className="bg-gray-50 p-5 rounded mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
                   Core Competencies
                 </h3>
-                <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                <ul className="list-disc list-inside text-sm text-gray-700">
                   {data.competencies.map((c, i) => (
-                    <li key={i}>{c}</li>
+                    <li key={i} className="mb-1">
+                      {c}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -284,15 +301,18 @@ const BoldTemplate = ({ data }) => {
 
             {/* Software Proficiency */}
             {data.softwareProficiency?.length > 0 && (
-              <div className="bg-gray-50 p-5 rounded">
+              <div
+                className="bg-gray-50 p-5 rounded mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
                   Software
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap">
                   {data.softwareProficiency.map((s, i) => (
                     <span
                       key={i}
-                      className="bg-gray-200 px-2 py-1 text-xs rounded text-gray-800"
+                      className="bg-gray-200 px-2 py-1 text-xs rounded text-gray-800 mr-2 mb-2"
                     >
                       {s}
                     </span>

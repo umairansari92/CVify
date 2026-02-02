@@ -14,26 +14,27 @@ const TraditionalTemplate = ({ data }) => {
   return (
     <div
       className="w-full bg-white p-10 text-gray-900 font-serif"
-      style={{ minHeight: "297mm" }}
+      style={{ minHeight: "297mm", padding: "15mm" }}
     >
       {/* Header - Centered */}
       <div className="text-center border-b-2 border-black pb-6 mb-8">
         <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">
           {personalInfo?.fullName || "Your Name"}
         </h1>
-        <div className="flex justify-center flex-wrap gap-x-4 gap-y-2 mt-4 text-xs font-bold text-gray-700">
+        <div className="flex justify-center flex-wrap mt-4 text-xs font-bold text-gray-700">
           {personalInfo?.email && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 mx-2 mb-2">
               <FaEnvelope className="text-gray-400" /> {personalInfo.email}
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-1.5">
-              • <FaPhoneAlt className="text-gray-400" /> {personalInfo.phone}
+            <span className="flex items-center ml-4">
+              • <FaPhoneAlt className="text-gray-400 mr-1.5" />{" "}
+              {personalInfo.phone}
             </span>
           )}
           {personalInfo?.location && (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 mx-2 mb-2">
               • <FaMapMarkerAlt className="text-gray-400" />{" "}
               {personalInfo.location}
             </span>
@@ -43,7 +44,7 @@ const TraditionalTemplate = ({ data }) => {
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:underline"
+              className="flex items-center gap-1.5 hover:underline mx-2 mb-2"
             >
               • <FaLinkedin className="text-gray-400" /> LinkedIn
             </a>
@@ -53,9 +54,9 @@ const TraditionalTemplate = ({ data }) => {
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:underline"
+              className="flex items-center gap-1.5 hover:underline mx-2 mb-2"
             >
-              • <FaGithub className="text-gray-400" /> GitHub
+              • <FaGithub className="text-gray-400 mr-1.5" /> GitHub
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -63,7 +64,7 @@ const TraditionalTemplate = ({ data }) => {
               href={personalInfo.portfolio}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:underline"
+              className="flex items-center gap-1.5 hover:underline mx-2 mb-2"
             >
               • <FaGlobe className="text-gray-400" /> Portfolio
             </a>
@@ -89,9 +90,13 @@ const TraditionalTemplate = ({ data }) => {
           <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-4">
             Professional Experience
           </h2>
-          <div className="space-y-5">
+          <div className="">
             {experience.map((exp, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className="mb-5"
+                style={{ pageBreakInside: "avoid" }}
+              >
                 <div className="flex justify-between font-bold">
                   <h3>{exp.company}</h3>
                   <span>
@@ -119,7 +124,11 @@ const TraditionalTemplate = ({ data }) => {
             Education
           </h2>
           {education.map((edu, index) => (
-            <div key={index} className="mb-2">
+            <div
+              key={index}
+              className="mb-4"
+              style={{ pageBreakInside: "avoid" }}
+            >
               <div className="flex justify-between font-bold">
                 <h3>{edu.institution}</h3>
                 <span>
@@ -140,7 +149,7 @@ const TraditionalTemplate = ({ data }) => {
             <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-2">
               Technical Skills
             </h2>
-            <div className="space-y-2 text-sm">
+            <div className="text-sm">
               {data.technicalSkills.frontend?.length > 0 && (
                 <div>
                   <span className="font-bold">Frontend:</span>{" "}
@@ -166,7 +175,7 @@ const TraditionalTemplate = ({ data }) => {
                 </div>
               )}
               {data.technicalSkills.tools?.length > 0 && (
-                <div>
+                <div className="mb-2">
                   <span className="font-bold">Tools:</span>{" "}
                   {data.technicalSkills.tools.join(", ")}
                 </div>
@@ -182,7 +191,7 @@ const TraditionalTemplate = ({ data }) => {
           <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-2">
             Additional Skills
           </h2>
-          <div className="text-sm space-y-2">
+          <div className="text-sm">
             {data.competencies?.length > 0 && (
               <div>
                 <span className="font-bold">Competencies:</span>{" "}

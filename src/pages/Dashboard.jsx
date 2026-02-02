@@ -176,7 +176,9 @@ const Dashboard = () => {
                       <FiCopy size={16} />
                     </button>
                     <button
-                      onClick={() => handleEdit(resume._id)}
+                      onClick={() =>
+                        handleDownloadPDF(resume, resume.templateId)
+                      }
                       title="Download PDF"
                       className="p-3 text-success hover:bg-success hover:text-white rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
                     >
