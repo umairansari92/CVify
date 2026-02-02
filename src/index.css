@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Blue Horizon Theme Colors */
+  --color-primary: #0f172a;
+  --color-action: #3b82f6;
+  --color-success: #10b981;
+  --color-accent: #60a5fa;
+
+  /* Backgrounds */
+  --color-slate-soft: #f1f5f9;
+  --color-midnight: #0f172a;
+  --color-slate-blue: #1e293b;
+
+  /* Typography */
+  --font-heading: "Inter", sans-serif;
+  --font-body: "Public Sans", sans-serif;
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-manrope: "Manrope", sans-serif;
+
+  /* Shadows */
+  --shadow-premium:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-soft dark:bg-midnight text-slate-600 dark:text-slate-300 font-body transition-all duration-300;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-primary dark:text-slate-50 dark:font-jakarta tracking-tight;
+  }
+}
+
+/* Glassmorphism Classes */
+.glass {
+  @apply bg-white/70 dark:bg-slate-blue/60 backdrop-blur-md border border-white/20 dark:border-white/5;
+}
+
+.glow-btn {
+  @apply shadow-action/30 hover:shadow-action/50 dark:shadow-accent/20 dark:hover:shadow-accent/40 transition-all;
+}
