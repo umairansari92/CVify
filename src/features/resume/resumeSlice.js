@@ -48,6 +48,12 @@ const resumeSlice = createSlice({
         templateId: "classic",
       };
     },
+    initResumeWithData(state, action) {
+      state.currentResume = {
+        ...action.payload.data,
+        templateId: action.payload.templateId,
+      };
+    },
     setResumeField(state, action) {
       if (state.currentResume) {
         state.currentResume[action.payload.field] = action.payload.value;
@@ -124,6 +130,10 @@ const resumeSlice = createSlice({
   },
 });
 
-export const { clearCurrentResume, initNewResume, setResumeField } =
-  resumeSlice.actions;
+export const {
+  clearCurrentResume,
+  initNewResume,
+  initResumeWithData,
+  setResumeField,
+} = resumeSlice.actions;
 export default resumeSlice.reducer;

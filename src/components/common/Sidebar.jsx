@@ -1,6 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaFileAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import {
+  FaHome,
+  FaFileAlt,
+  FaSignOutAlt,
+  FaUser,
+  FaThLarge,
+} from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +25,7 @@ const Sidebar = () => {
   const navItems = [
     { path: "/", label: "Dashboard", icon: <FaHome /> },
     { path: "/create", label: "Create Resume", icon: <FaFileAlt /> },
+    { path: "/templates", label: "Templates", icon: <FaThLarge /> },
   ];
 
   return (

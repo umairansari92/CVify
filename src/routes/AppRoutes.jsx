@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
+import Templates from "../pages/Templates";
 import Layout from "../components/common/Layout";
 
 const AppRoutes = () => {
@@ -20,6 +21,7 @@ const AppRoutes = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/create" element={<CreateResume />} />
           <Route path="/edit/:id" element={<CreateResume />} />
+          <Route path="/templates" element={<Templates />} />
         </Route>
       ) : (
         <Route path="*" element={<Navigate to="/login" />} />
