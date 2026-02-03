@@ -38,58 +38,52 @@ const ExperienceForm = () => {
   }, [watch, dispatch]);
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-10 animate-fadeIn">
       {fields.map((item, index) => (
         <div
           key={item.id}
-          className="relative group p-8 rounded-[2rem] bg-slate-50/50 dark:bg-midnight/30 border-2 border-slate-100 dark:border-slate-800/50 space-y-8 transition-all duration-300 hover:border-action/20 dark:hover:border-accent/20"
+          className="relative group p-10 rounded-[2.5rem] bg-foreground/10 border-2 border-border-subtle space-y-10 transition-all duration-500 hover:border-primary/20"
         >
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="text-[10px] font-black text-action dark:text-accent uppercase tracking-[0.2em] flex items-center gap-2">
-              <span className="w-6 h-px bg-action/20 dark:bg-accent/20"></span>
+          <div className="flex justify-between items-center">
+            <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
+              <span className="w-8 h-px bg-primary/20"></span>
               Experience Entry #{index + 1}
             </h4>
             <button
               type="button"
               onClick={() => remove(index)}
-              className="p-2 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20"
+              className="p-3 text-text-muted hover:text-red-500 transition-all rounded-xl hover:bg-red-500/10"
               title="Remove Experience"
             >
-              <FiTrash2 size={16} />
+              <FiTrash2 size={18} />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="flex flex-col gap-3">
+              <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
                 Position <span className="text-red-500">*</span>
               </label>
               <input
                 {...register(`experience.${index}.position`)}
                 placeholder="e.g. Software Engineer"
-                className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                className="input-premium"
               />
-              <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-                Your official job title.
-              </p>
             </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+            <div className="flex flex-col gap-3">
+              <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
                 Company <span className="text-red-500">*</span>
               </label>
               <input
                 {...register(`experience.${index}.company`)}
                 placeholder="e.g. Google"
-                className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                className="input-premium"
               />
-              <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-                Company where you worked.
-              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="flex flex-col gap-3">
               <Controller
                 control={control}
                 name={`experience.${index}.startDate`}
@@ -101,11 +95,8 @@ const ExperienceForm = () => {
                   />
                 )}
               />
-              <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-                When you embarked on this role.
-              </p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <Controller
                 control={control}
                 name={`experience.${index}.endDate`}
@@ -118,14 +109,11 @@ const ExperienceForm = () => {
                   />
                 )}
               />
-              <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-                When you concluded or select "Present".
-              </p>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+          <div className="space-y-4">
+            <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
               Impact & Responsibilities
             </label>
             <div className="relative">
@@ -142,14 +130,14 @@ const ExperienceForm = () => {
                 }
                 maxLength={500}
                 placeholder="Describe your wins (one per line)..."
-                className="w-full px-5 py-4 border-2 border-slate-100 dark:border-slate-800 rounded-[1.5rem] bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 h-40 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all resize-none font-semibold leading-relaxed shadow-sm"
+                className="input-premium h-44 resize-none leading-relaxed"
               />
-              <div className="flex justify-between items-center mt-2 px-1">
-                <p className="text-[10px] text-slate-400 font-medium italic">
+              <div className="flex justify-between items-center mt-3 px-2">
+                <p className="text-[10px] text-text-muted/60 font-bold italic">
                   Use line breaks for bullet points in the preview.
                 </p>
                 <span
-                  className={`text-[10px] font-black tracking-widest ${(watch(`experience.${index}.responsibilities`)?.length || 0) >= 450 ? "text-orange-500" : "text-slate-400"}`}
+                  className={`text-[10px] font-black tracking-widest ${(watch(`experience.${index}.responsibilities`)?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}
                 >
                   {watch(`experience.${index}.responsibilities`)?.length || 0} /
                   500
@@ -172,7 +160,7 @@ const ExperienceForm = () => {
             responsibilities: "",
           });
         }}
-        className="group w-full px-8 py-5 bg-white dark:bg-slate-blue/30 text-action dark:text-accent rounded-[2rem] hover:bg-slate-50 dark:hover:bg-midnight/50 transition-all font-black uppercase tracking-widest border-2 border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center gap-3 shadow-sm hover:shadow-md hover:-translate-y-1"
+        className="group w-full px-8 py-6 bg-foreground/10 text-primary rounded-[2rem] hover:bg-primary/10 transition-all font-black uppercase tracking-[0.25em] border-2 border-dashed border-primary/20 flex items-center justify-center gap-4 shadow-sm hover:shadow-lg hover:-translate-y-1"
       >
         <span className="text-2xl group-hover:rotate-90 transition-transform">
           +

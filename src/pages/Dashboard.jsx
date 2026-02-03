@@ -17,6 +17,9 @@ import {
   FiPlus,
   FiCopy,
 } from "react-icons/fi";
+import ThreeBackground from "../components/three/ThreeBackground";
+import Swal from "react-sweetalert2";
+import { TypeAnimation } from "react-type-animation";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -34,12 +37,38 @@ const Dashboard = () => {
 
   const handleDelete = async (id, e) => {
     e.stopPropagation();
-    if (
-      window.confirm(
-        "Are you sure you want to delete this resume? This action cannot be undone.",
-      )
-    ) {
+    const result = await Swal.fire({
+      title: "Delete Resume?",
+      text: "This action cannot be undone. Your resume will be permanently deleted.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#64748b",
+      confirmButtonText: "Yes, Delete It",
+      cancelButtonText: "Cancel",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: {
+        popup: "glass",
+        confirmButton: "btn-primary",
+        cancelButton: "btn-secondary",
+      },
+    });
+
+    if (result.isConfirmed) {
       await dispatch(deleteResume(id));
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your resume has been deleted successfully.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "var(--midground)",
+        color: "var(--text-main)",
+        customClass: {
+          popup: "glass",
+        },
+      });
     }
   };
 
@@ -49,7 +78,21 @@ const Dashboard = () => {
 
   const handleClone = async (id, e) => {
     e.stopPropagation();
-    await dispatch(cloneResume(id));
+    const result = await dispatch(cloneResume(id));
+    if (result.type.includes("fulfilled")) {
+      Swal.fire({
+        title: "Cloned!",
+        text: "Resume has been duplicated successfully.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "var(--midground)",
+        color: "var(--text-main)",
+        customClass: {
+          popup: "glass",
+        },
+      });
+    }
   };
 
   const handleCreateNew = () => {
@@ -58,47 +101,60 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-soft dark:bg-midnight p-6 md:p-10 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen relative bg-mesh p-6 md:p-12 transition-colors duration-300">
+      <ThreeBackground />
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-16 gap-8 animate-fadeIn">
           <div className="w-full md:w-auto">
-            <h1 className="text-4xl font-bold text-primary dark:text-slate-50 dark:font-jakarta tracking-tight flex items-baseline gap-3">
-              My Workspace
-              <span className="text-base font-medium text-slate-400 bg-white dark:bg-slate-blue/50 px-4 py-1.5 rounded-full border border-slate-200/50 dark:border-white/5 shadow-sm">
+            <h1 className="text-5xl text-gradient font-extrabold tracking-tight flex items-center gap-4">
+              Welcome to Your Dashboard
+              <span className="text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20 shadow-sm animate-float">
                 {resumes.length} {resumes.length === 1 ? "Resume" : "Resumes"}
               </span>
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium max-w-md">
-              Your professional journey, managed with precision and style.
+
+            <p className="text-text-muted mt-4 font-bold text-lg max-w-lg leading-relaxed">
+              <TypeAnimation
+                sequence={[
+                  "Elevate your career with precision-crafted, high-impact resumes.",
+                  3000,
+                  "Build professional resumes that get you noticed.",
+                  3000,
+                  "Transform your career story into compelling narratives.",
+                  3000,
+                ]}
+                wrapper="span"
+                speed={60}
+                repeat={Infinity}
+              />
             </p>
           </div>
           <div className="flex gap-4 w-full md:w-auto">
             <button
               onClick={handleCreateNew}
-              className="group flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-3.5 bg-action hover:bg-blue-600 text-white rounded-2xl shadow-premium hover:shadow-action/40 transition-all font-bold active:scale-95 glow-btn"
+              className="btn-primary flex items-center gap-3 px-10 py-4 text-lg"
             >
-              <FiPlus className="text-xl group-hover:rotate-90 transition-transform duration-300" />
+              <FiPlus className="text-2xl" />
               <span>Create New CV</span>
-            </button>
-            <button
-              onClick={handleLogout}
-              className="px-6 py-3.5 bg-white dark:bg-slate-blue text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-2xl hover:bg-slate-50 dark:hover:bg-midnight transition-all font-semibold shadow-sm"
-            >
-              Logout
             </button>
           </div>
         </div>
 
         {error && (
-          <div className="mb-8 p-5 bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 text-red-700 dark:text-red-400 rounded-2xl flex justify-between items-center shadow-lg animate-fadeIn">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">⚠️</span>
-              <span className="font-semibold">Error: {error}</span>
+          <div className="mb-12 p-6 glass border-l-8 border-red-500 rounded-3xl flex justify-between items-center shadow-xl animate-shake">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl">🚀</span>
+              <div>
+                <p className="font-black text-primary uppercase text-xs tracking-[0.2em] mb-1">
+                  System Notice
+                </p>
+                <p className="font-bold text-text-primary text-lg">{error}</p>
+              </div>
             </div>
             <button
               onClick={() => dispatch(getMyResumes())}
-              className="text-sm bg-white dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 px-5 py-2 rounded-xl transition-all font-bold border border-red-200 dark:border-red-900/50"
+              className="btn-glass text-primary hover:scale-105"
             >
               Retry Connection
             </button>
@@ -107,110 +163,113 @@ const Dashboard = () => {
 
         {/* Resumes Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-64 bg-white/50 dark:bg-slate-blue/30 rounded-3xl animate-pulse"
+                className="h-95 glass rounded-[3rem] animate-pulse"
               ></div>
             ))}
           </div>
         ) : resumes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fadeIn">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {resumes.map((resume) => (
               <div
                 key={resume._id}
-                className="group relative bg-white dark:bg-slate-blue rounded-[2rem] shadow-premium hover:shadow-2xl hover:-translate-y-2 border border-slate-100 dark:border-white/5 overflow-hidden transition-all duration-500"
+                className="premium-card group h-full flex flex-col p-8 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5"
               >
-                {/* Status Bar */}
-                <div className="h-3 bg-gradient-to-r from-action to-accent opacity-80 group-hover:opacity-100 transition-opacity"></div>
+                {/* Visual Header */}
+                  <div className="relative mb-8 aspect-16/6 bg-linear-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+                  <div className="absolute inset-0 bg-mesh opacity-30"></div>
+                  <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-xl border border-white/20 shadow-sm">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+                      {resume.templateId || "Modern"}
+                    </p>
+                  </div>
+                </div>
 
-                <div className="p-8">
+                <div className="flex-1">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <h3 className="text-xl font-bold text-primary dark:text-slate-50 dark:font-jakarta mb-1 truncate max-w-[200px]">
-                        {resume.personalInfo?.fullName || "Legacy CV"}
+                      <h3 className="text-2xl font-black text-text-primary leading-tight mb-2 truncate max-w-55">
+                        {resume.personalInfo?.fullName || "Untitled Resume"}
                       </h3>
-                      <p className="text-sm text-action dark:text-accent font-bold uppercase tracking-wider">
-                        {resume.personalInfo?.jobTitle || "Growth Specialist"}
+                      <p className="text-xs font-black text-primary uppercase tracking-[0.15em] opacity-80 mb-4">
+                        {resume.personalInfo?.jobTitle || "Resume Builder"}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 bg-slate-50 dark:bg-midnight/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-white/5 shadow-inner mb-2">
-                        {resume.templateId || "Modern"}
+                  </div>
+
+                  <div className="flex items-center gap-3 text-sm text-text-secondary font-bold mb-8">
+                    <div className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-primary shadow-sm">
+                      <FiEdit2 size={16} />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase tracking-widest opacity-50">
+                        Last Modified
+                      </span>
+                      <span>
+                        {new Date(resume.updatedAt).toLocaleDateString(
+                          undefined,
+                          { month: "short", day: "numeric" },
+                        )}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-slate-400 mb-8 font-medium italic">
-                    <span className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                    Ready for export •{" "}
-                    {new Date(resume.updatedAt).toLocaleDateString(undefined, {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </div>
-
                   {/* Actions Grid */}
-                  <div className="grid grid-cols-5 gap-2 pt-6 border-t border-slate-100 dark:border-white/5">
+                  <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => handleEdit(resume._id)}
-                      title="Edit Resume"
-                      className="p-3 text-action hover:bg-action hover:text-white dark:hover:bg-accent dark:hover:text-primary rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
+                      className="btn-primary px-0! bg-primary/10 text-black! border border-primary/20 hover:bg-primary hover:text-white! flex items-center justify-center group/btn"
                     >
-                      <FiEdit2 size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleEdit(resume._id)}
-                      title="Quick Preview"
-                      className="p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-midnight rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
-                    >
-                      <FiEye size={16} />
-                    </button>
-                    <button
-                      onClick={(e) => handleClone(resume._id, e)}
-                      title="Duplicate Resume"
-                      className="p-3 text-indigo-500 hover:bg-indigo-500 hover:text-white rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
-                    >
-                      <FiCopy size={16} />
+                      <FiEdit2 className="group-hover/btn:rotate-12 transition-transform" />
+                      <span className="ml-2 hidden lg:block">Edit</span>
                     </button>
                     <button
                       onClick={() =>
                         handleDownloadPDF(resume, resume.templateId)
                       }
-                      title="Download PDF"
-                      className="p-3 text-success hover:bg-success hover:text-white rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
+                      className="btn-primary px-0! bg-success/10 text-success! border border-success/20 hover:bg-success hover:text-white! flex items-center justify-center group/btn"
                     >
-                      <FiDownload size={16} />
+                      <FiDownload className="group-hover/btn:translate-y-1 transition-transform" />
                     </button>
-                    <button
-                      onClick={(e) => handleDelete(resume._id, e)}
-                      title="Delete Forever"
-                      className="p-3 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-300 border border-slate-50 dark:border-white/5 flex items-center justify-center active:scale-90"
-                    >
-                      <FiTrash2 size={16} />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={(e) => handleClone(resume._id, e)}
+                        className="flex-1 btn-glass px-0! flex items-center justify-center hover:scale-110 active:scale-95"
+                        title="Duplicate"
+                      >
+                        <FiCopy />
+                      </button>
+                      <button
+                        onClick={(e) => handleDelete(resume._id, e)}
+                        className="flex-1 btn-glass px-0! bg-red-500/10! text-red-500! border border-red-500/20! hover:bg-red-500! hover:text-white! flex items-center justify-center hover:scale-110 active:scale-95"
+                        title="Delete"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="bg-white/70 dark:bg-slate-blue/30 backdrop-blur-sm rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-white/10 p-20 text-center animate-fadeIn shadow-inner">
-            <div className="w-24 h-24 bg-action/10 text-action dark:text-accent rounded-full flex items-center justify-center mx-auto mb-8 shadow-glow ring-8 ring-action/5">
-              <FiPlus className="text-5xl" />
+          <div className="premium-card p-24 text-center max-w-4xl mx-auto border-2 border-dashed border-primary/20 bg-primary/5">
+            <div className="w-32 h-32 bg-primary/10 text-primary rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 shadow-glow ring-4 ring-primary/5 group transition-all duration-500 hover:scale-110 hover:rotate-12">
+              <FiPlus className="text-6xl" />
             </div>
-            <h2 className="text-3xl font-bold text-primary dark:text-slate-50 dark:font-jakarta mb-4">
-              You’re just one click away.
+            <h2 className="text-4xl font-black text-text-primary mb-6 tracking-tight">
+              Create Your Career Masterpiece
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 mb-10 max-w-md mx-auto font-medium text-lg leading-relaxed font-manrope">
-              Our professional templates are waiting to showcase your expertise.
-              Create your first CV in minutes.
+            <p className="text-text-secondary mb-12 max-w-md mx-auto font-bold text-xl leading-relaxed opacity-70">
+              Your dream job is waiting. Unleash your potential with CVify’s
+              premium templates.
             </p>
             <button
               onClick={handleCreateNew}
-              className="px-12 py-4 bg-action hover:bg-blue-600 text-white rounded-2xl font-black text-lg shadow-premium shadow-action/40 hover:-translate-y-1 transition-all active:scale-95 glow-btn"
+              className="btn-primary px-16 py-5 text-xl font-black rounded-3xl"
             >
               Start Building Now
             </button>

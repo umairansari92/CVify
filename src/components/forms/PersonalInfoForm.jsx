@@ -44,153 +44,144 @@ const PersonalInfoForm = () => {
   }, [watch, dispatch]);
 
   return (
-    <form className="space-y-8 animate-fadeIn">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+    <form className="space-y-10 animate-fadeIn">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="flex flex-col gap-3">
+          <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
             Full Name <span className="text-red-500">*</span>
           </label>
           <input
             {...register("fullName")}
             placeholder="e.g. John Doe"
-            className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+            className="input-premium"
           />
-          <p className="text-[10px] text-slate-400 font-medium italic ml-1">
+          <p className="text-[10px] text-text-muted/60 font-bold italic ml-2">
             Your legal name as it should appear on the CV.
           </p>
           {errors.fullName && (
-            <p className="text-red-500 text-[10px] font-bold ml-1 animate-fadeIn">
+            <p className="text-red-500 text-[10px] font-black ml-2 animate-fadeIn">
               {errors.fullName.message}
             </p>
           )}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+        <div className="flex flex-col gap-3">
+          <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
             Job Title <span className="text-red-500">*</span>
           </label>
           <input
             {...register("jobTitle")}
             placeholder="e.g. Senior Frontend Developer"
-            className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+            className="input-premium"
           />
-          <p className="text-[10px] text-slate-400 font-medium italic ml-1">
+          <p className="text-[10px] text-text-muted/60 font-bold italic ml-2">
             The role you are currently in or applying for.
           </p>
           {errors.jobTitle && (
-            <p className="text-red-500 text-[10px] font-bold ml-1 animate-fadeIn">
+            <p className="text-red-500 text-[10px] font-black ml-2 animate-fadeIn">
               {errors.jobTitle.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="flex flex-col gap-3">
+          <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
             Location
           </label>
           <input
             {...register("location")}
             placeholder="e.g. New York, USA"
-            className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+            className="input-premium"
           />
-          <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-            City and Country is usually enough.
-          </p>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+        <div className="flex flex-col gap-3">
+          <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
             Phone <span className="text-red-500">*</span>
           </label>
           <input
             {...register("phone")}
             placeholder="+1 234 567 890"
-            className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+            className="input-premium"
           />
-          <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-            Include country code for international reach.
-          </p>
           {errors.phone && (
-            <p className="text-red-500 text-[10px] font-bold ml-1 animate-fadeIn">
+            <p className="text-red-500 text-[10px] font-black ml-2 animate-fadeIn">
               {errors.phone.message}
             </p>
           )}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+        <div className="flex flex-col gap-3">
+          <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
             Email <span className="text-red-500">*</span>
           </label>
           <input
             {...register("email")}
             placeholder="john@example.com"
-            className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+            className="input-premium"
           />
-          <p className="text-[10px] text-slate-400 font-medium italic ml-1">
-            Use a professional email address.
-          </p>
           {errors.email && (
-            <p className="text-red-500 text-[10px] font-bold ml-1 animate-fadeIn">
+            <p className="text-red-500 text-[10px] font-black ml-2 animate-fadeIn">
               {errors.email.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className="space-y-6 pt-4">
-        <h3 className="text-xs font-black text-action dark:text-accent uppercase tracking-[0.2em] flex items-center gap-3">
+      <div className="space-y-8 pt-6">
+        <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] flex items-center gap-4">
           Social Presence
-          <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></span>
+          <span className="flex-1 h-px bg-border-subtle"></span>
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="flex flex-col gap-3">
             <input
               {...register("linkedin")}
-              placeholder="LinkedIn Profile URL"
-              className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+              placeholder="LinkedIn URL"
+              className="input-premium"
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <input
               {...register("github")}
-              placeholder="GitHub Profile URL"
-              className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+              placeholder="GitHub URL"
+              className="input-premium"
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <input
               {...register("portfolio")}
               placeholder="Portfolio URL"
-              className="w-full px-5 py-3.5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+              className="input-premium"
             />
           </div>
         </div>
       </div>
 
-      <div className="space-y-4 pt-4">
-        <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+      <div className="space-y-6 pt-6">
+        <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
           Professional Summary <span className="text-red-500">*</span>
         </label>
         <textarea
           {...register("profileSummary")}
           placeholder="e.g. Passionate developer with 5+ years of experience..."
           maxLength={500}
-          className="w-full px-5 py-4 border-2 border-slate-100 dark:border-slate-800 rounded-[1.5rem] bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 h-40 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all resize-none font-semibold leading-relaxed"
+          className="input-premium h-44 resize-none leading-relaxed"
         />
-        <div className="flex justify-between items-center px-1">
-          <p className="text-[10px] text-slate-400 font-medium italic">
+        <div className="flex justify-between items-center px-2">
+          <p className="text-[10px] text-text-muted/60 font-bold italic">
             Focus on your top achievements and unique value proposition.
           </p>
           <span
-            className={`text-[10px] font-black tracking-widest ${(watch("profileSummary")?.length || 0) >= 450 ? "text-orange-500" : "text-slate-400"}`}
+            className={`text-[10px] font-black tracking-widest ${(watch("profileSummary")?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}
           >
             {watch("profileSummary")?.length || 0} / 500
           </span>
         </div>
         {errors.profileSummary && (
-          <p className="text-red-500 text-[10px] font-bold ml-1 animate-fadeIn">
+          <p className="text-red-500 text-[10px] font-black ml-2 animate-fadeIn">
             {errors.profileSummary.message}
           </p>
         )}

@@ -4,17 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 
 const InputGroup = ({ label, name, register, height = "h-24", hint }) => (
-  <div className="flex flex-col gap-2">
-    <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1">
+  <div className="flex flex-col gap-3">
+    <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
       {label}
     </label>
     <textarea
       {...register(name)}
       placeholder="e.g. Skill 1, Skill 2, Skill 3..."
-      className={`w-full px-5 py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold resize-none leading-relaxed ${height}`}
+      className={`input-premium resize-none leading-relaxed ${height}`}
     />
     {hint && (
-      <p className="text-[10px] text-slate-400 font-medium italic ml-1">
+      <p className="text-[10px] text-text-muted/60 font-bold italic ml-2">
         {hint}
       </p>
     )}
@@ -127,12 +127,12 @@ const SkillsForm = () => {
         />
       </section>
 
-      <section className="space-y-6">
-        <h3 className="text-xs font-black text-success dark:text-emerald-400 uppercase tracking-[0.2em] flex items-center gap-3">
+      <section className="space-y-8">
+        <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] flex items-center gap-4">
           Core Competencies
-          <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></span>
+          <span className="flex-1 h-px bg-border-subtle"></span>
         </h3>
-        <div className="space-y-8">
+        <div className="space-y-10">
           <InputGroup
             label="Expertise & Soft Skills"
             name="competencies"

@@ -51,23 +51,24 @@ const CreateResume = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-slate-soft dark:bg-midnight overflow-hidden transition-colors duration-300">
+    <div className="flex flex-col lg:flex-row h-screen bg-background overflow-hidden transition-colors duration-300 relative">
       {/* Left Panel - Forms */}
-      <div className="w-1/2 p-6 md:p-10 overflow-y-auto border-r border-slate-200 dark:border-slate-800/50">
-        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-10 gap-6">
+      <div className="w-full lg:w-1/2 p-4 lg:p-10 overflow-y-auto border-r border-border-subtle relative z-20 glass no-scrollbar">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 lg:mb-10 gap-4 lg:gap-6">
           <div>
-            <h1 className="text-3xl font-black text-primary dark:text-slate-50 dark:font-jakarta tracking-tight">
-              CV Builder
+            <h1 className="text-2xl lg:text-4xl font-black tracking-tight">
+              <span className="text-gradient">CV Builder</span>
             </h1>
-            <p className="text-sm text-slate-500 font-medium mt-1">
+            <p className="text-text-muted font-bold mt-1 lg:mt-2 text-sm lg:text-lg">
               Design your professional identity.
             </p>
           </div>
-          <div className="flex gap-3 w-full xl:w-auto">
+          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full xl:w-auto">
             <button
               onClick={handleSave}
               disabled={loading}
-              className="flex-1 xl:flex-none bg-action hover:bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-premium hover:shadow-action/30 transition-all font-bold disabled:opacity-50 glow-btn"
+              className="btn-primary flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base"
+              style={{ color: 'white' }}
             >
               {loading ? "Syncing..." : "Save & Finish"}
             </button>
@@ -75,7 +76,7 @@ const CreateResume = () => {
               onClick={() =>
                 handleDownloadPDF(currentResume, currentResume?.templateId)
               }
-              className="flex-1 xl:flex-none bg-success hover:bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-premium hover:shadow-success/30 transition-all font-bold"
+              className="btn-secondary flex-1 xl:flex-none !bg-success/10! !text-success! border-success/20 hover:!bg-success! hover:!text-white! shadow-lg shadow-success/10 text-sm lg:text-base"
             >
               Get PDF
             </button>
@@ -83,19 +84,19 @@ const CreateResume = () => {
         </div>
 
         {/* Tabs & Template Select */}
-        <div className="flex flex-col gap-6 mb-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex gap-1.5 p-1 bg-white dark:bg-slate-blue rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-x-auto">
+        <div className="flex flex-col gap-8 mb-12">
+          <div className="flex items-center justify-between gap-4 lg:gap-6">
+            <div className="flex gap-1 lg:gap-2 p-1 lg:p-2 bg-foreground/10 rounded-2xl lg:rounded-3xl border border-border-subtle overflow-x-auto no-scrollbar w-full lg:w-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap
-                              ${
-                                activeTab === tab.id
-                                  ? "bg-action text-white shadow-md shadow-action/20"
-                                  : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-midnight/50"
-                              }`}
+                  className={`px-3 lg:px-6 py-2 lg:py-3 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black transition-all duration-300 whitespace-nowrap flex-shrink-0
+                               ${
+                                 activeTab === tab.id
+                                   ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]"
+                                   : "text-text-muted hover:bg-white/10 hover:text-primary"
+                               }`}
                 >
                   {tab.label}
                 </button>
@@ -104,7 +105,7 @@ const CreateResume = () => {
 
             <div className="relative group">
               <select
-                className="appearance-none pl-5 pr-10 py-3 bg-white dark:bg-slate-blue text-primary dark:text-slate-50 font-bold text-sm border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm focus:ring-2 focus:ring-action transition-all cursor-pointer"
+                className="appearance-none pl-6 pr-12 py-3.5 bg-midground text-text-primary font-black text-sm border-2 border-border-subtle rounded-2xl shadow-sm focus:border-primary transition-all cursor-pointer outline-none"
                 value={currentResume?.templateId || "classic"}
                 onChange={(e) =>
                   dispatch(
@@ -146,8 +147,8 @@ const CreateResume = () => {
         </div>
 
         {/* Form Content - Card Style */}
-        <div className="bg-white dark:bg-slate-blue p-8 rounded-[2rem] shadow-premium border border-slate-100 dark:border-white/5 animate-fadeIn transition-all duration-500 overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-2 h-full bg-action/10"></div>
+        <div className="bg-midground p-4 lg:p-10 rounded-3xl lg:rounded-3xl shadow-premium border border-border-subtle animate-fadeIn transition-all duration-500 overflow-hidden relative">
+          <div className="absolute top-0 left-0 w-2 h-full bg-primary/10"></div>
           <div className="relative z-10">
             {activeTab === "personal" && <PersonalInfoForm />}
             {activeTab === "education" && <EducationForm />}
@@ -159,15 +160,15 @@ const CreateResume = () => {
       </div>
 
       {/* Right Panel - Live Preview */}
-      <div className="w-1/2 bg-slate-200 dark:bg-midnight p-10 overflow-y-auto flex justify-center items-start border-l border-slate-300 dark:border-slate-800/50 shadow-inner">
+      <div className="w-full lg:w-1/2 bg-slate-200 dark:bg-midnight p-4 lg:p-10 overflow-y-auto flex justify-center items-start border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10 order-first lg:order-last">
         <div className="sticky top-0 w-full flex flex-col items-center">
-          <div className="mb-6 flex items-center gap-3">
+          <div className="mb-4 lg:mb-6 flex items-center gap-2 lg:gap-3">
             <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-            <h2 className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
+            <h2 className="text-[9px] lg:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
               Real-Time Canvas Preview
             </h2>
           </div>
-          <div className="scale-[0.85] xl:scale-95 origin-top transition-transform duration-500 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]">
+          <div className="scale-[0.7] sm:scale-[0.8] lg:scale-[0.85] xl:scale-95 origin-top transition-transform duration-500 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]">
             <ResumePreview
               resume={currentResume}
               templateId={currentResume?.templateId || "classic"}

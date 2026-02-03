@@ -6,6 +6,7 @@ import App from "./App";
 import { store } from "./app/store";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
