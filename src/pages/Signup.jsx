@@ -14,7 +14,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      navigate("/login");
     }
   }, [token, navigate]);
 
