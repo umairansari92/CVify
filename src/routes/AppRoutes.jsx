@@ -1,5 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
@@ -9,7 +11,28 @@ import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useSelector((state) => state.auth);
-  return token ? children : <Navigate to="/login" replace />;
+  if (token) return children;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "You must be logged in to access this page.",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/login", { replace: true });
+      });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [navigate]);
+
+  return null;
 };
 
 const AppRoutes = () => {
