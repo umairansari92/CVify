@@ -7,6 +7,7 @@ import { store } from "./app/store";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { registerSW } from 'virtual:pwa-register';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -19,3 +20,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </Provider>
   </React.StrictMode>,
 );
+
+if ('serviceWorker' in navigator) {
+  try {
+    registerSW({ immediate: true });
+  } catch (e) {
+    // registration failed or virtual module not available in dev
+  }
+}
