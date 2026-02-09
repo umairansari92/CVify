@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: "33%",
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#1e293b",
   },
   sidebar: {
     width: "33%",
-    color: "#be9e9eff",
+    color: "#fff",
     padding: 30,
     paddingTop: 40,
     zIndex: 1,
