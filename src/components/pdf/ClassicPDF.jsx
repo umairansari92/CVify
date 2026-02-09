@@ -94,6 +94,11 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     lineHeight: 1.5,
   },
+  skillText: {
+    fontSize: 9.5,
+    marginBottom: 5,
+    lineHeight: 1.5,
+  },
   grid: {
     flexDirection: "row",
     gap: 20,
@@ -228,13 +233,13 @@ const ClassicPDF = ({ data }) => {
           <View style={{ marginTop: 10 }}>
             <Text style={styles.sectionTitle}>Proficiency & Competencies</Text>
             {softwareProficiency?.length > 0 && (
-              <Text style={[styles.bulletText, { marginBottom: 5 }]}>
+              <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Software: </Text>
                 {softwareProficiency.join(", ")}
               </Text>
             )}
             {competencies?.length > 0 && (
-              <Text style={styles.bulletText}>
+              <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Competencies: </Text>
                 {competencies.join(" • ")}
               </Text>
