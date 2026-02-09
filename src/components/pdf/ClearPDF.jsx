@@ -47,10 +47,11 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 5,
+    color: "#FFFFFF",
   },
   jobTitle: {
     fontSize: 10,
-    color: "#94a3b8",
+    color: "#e2e8f0",
     textTransform: "uppercase",
     letterSpacing: 2,
   },
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     marginBottom: 12,
     marginTop: 15,
+    color: "#FFFFFF",
   },
   sidebarEducation: {
     marginBottom: 20,
