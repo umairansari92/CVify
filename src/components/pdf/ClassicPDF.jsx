@@ -29,11 +29,13 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#000",
     letterSpacing: 1,
+    marginBottom: 8,
+    lineHeight: 1,
   },
   jobTitle: {
     fontSize: 14,
     color: "#4b5563",
-    marginTop: 4,
+    marginTop: 0,
   },
   contact: {
     flexDirection: "row",
@@ -216,7 +218,7 @@ const ClassicPDF = ({ data }) => {
                   ([cat, list], i) =>
                     list?.length > 0 && (
                       <View key={i} style={styles.gridItem}>
-                        <Text style={[styles.bulletText, { fontSize: 9 }]}>
+                        <Text style={[styles.skillText, { fontSize: 9 }]}>
                           <Text style={styles.skillLabel}>
                             {cat.toUpperCase()}:{" "}
                           </Text>
@@ -258,7 +260,7 @@ const ClassicPDF = ({ data }) => {
                     {edu.startDate} - {edu.endDate}
                   </Text>
                 </View>
-                <Text style={styles.bulletText}>{edu.degree}</Text>
+                <Text style={styles.skillText}>{edu.degree}</Text>
               </View>
             ))}
           </View>
