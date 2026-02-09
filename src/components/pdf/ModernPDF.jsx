@@ -140,7 +140,7 @@ const ModernPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.headerContainer} fixed>
+        <View style={styles.headerContainer}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
