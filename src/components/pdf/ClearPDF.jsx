@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   bulletText: {
-    flex: 1,
     fontSize: 9,
     color: "#475569",
     lineHeight: 1.4,
@@ -145,15 +144,15 @@ const styles = StyleSheet.create({
   skillLabel: {
     fontSize: 7,
     textTransform: "uppercase",
-    color: "#94a3b8",
+    color: "#e2e8f0",
     marginBottom: 3,
   },
   skillBadge: {
-    backgroundColor: "#43556bff",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     padding: "2 6",
     borderRadius: 3,
     fontSize: 7.5,
-    color: "#E2E8F0",
+    color: "#f1f5f9",
     marginRight: 4,
     marginBottom: 4,
   },
