@@ -27,13 +27,15 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: "#0f172a",
-    marginBottom: 4,
+    marginBottom: 8,
+    lineHeight: 1.2,
   },
   jobTitle: {
     fontSize: 14,
     color: "#2563eb",
     fontWeight: "bold",
     marginBottom: 10,
+    lineHeight: 1.2,
   },
   contactRow: {
     flexDirection: "row",
@@ -115,6 +117,13 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     lineHeight: 1.4,
   },
+  skillText: {
+    fontSize: 9,
+    color: "#334155",
+    textAlign: "justify",
+    lineHeight: 1.4,
+    marginBottom: 4,
+  },
 });
 
 const ModernPDF = ({ data }) => {
@@ -189,7 +198,7 @@ const ModernPDF = ({ data }) => {
                   i < 3 && ( // Only first 3 categories in left col
                     <View key={i} style={styles.skillGroup} wrap={false}>
                       <Text style={styles.skillLabel}>{key.toUpperCase()}</Text>
-                      <Text style={styles.bulletText}>{val.join(", ")}</Text>
+                      <Text style={styles.skillText}>{val.join(", ")}</Text>
                     </View>
                   ),
               )}
@@ -200,13 +209,13 @@ const ModernPDF = ({ data }) => {
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
                 <Text style={styles.skillLabel}>CORE COMPETENCIES</Text>
-                <Text style={styles.bulletText}>{competencies.join(", ")}</Text>
+                <Text style={styles.skillText}>{competencies.join(", ")}</Text>
               </View>
             )}
             {softwareProficiency?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
                 <Text style={styles.skillLabel}>SOFTWARE & SYSTEMS</Text>
-                <Text style={styles.bulletText}>
+                <Text style={styles.skillText}>
                   {softwareProficiency.join(", ")}
                 </Text>
               </View>
@@ -275,7 +284,7 @@ const ModernPDF = ({ data }) => {
                     {edu.startDate} - {edu.endDate}
                   </Text>
                 </View>
-                <Text style={styles.bulletText}>{edu.degree}</Text>
+                <Text style={styles.skillText}>{edu.degree}</Text>
               </View>
             ))}
           </View>
