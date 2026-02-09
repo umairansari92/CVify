@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   sidebar: {
     width: "33%",
-    color: "#fff",
+    color: "#be9e9eff",
     padding: 30,
     paddingTop: 40,
     zIndex: 1,
