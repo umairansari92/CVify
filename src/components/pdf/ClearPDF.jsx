@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: "33%",
-    backgroundColor: "#1e293b",
+    backgroundColor: "#ffffffff",
   },
   sidebar: {
     width: "33%",
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   eduDeg: {
     fontSize: 8,
     fontStyle: "italic",
-    color: "#cbd5e1",
+    color: "#ffffffff",
   },
   sectionTitle: {
     fontSize: 14,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   skillBadge: {
-    backgroundColor: "#334155",
+    backgroundColor: "#43556bff",
     padding: "2 6",
     borderRadius: 3,
     fontSize: 7.5,
