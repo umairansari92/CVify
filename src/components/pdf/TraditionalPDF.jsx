@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 2,
-    marginBottom: 5,
+    marginBottom: 10,
+    lineHeight: 1.2,
   },
   contact: {
     flexDirection: "row",
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     gap: 12,
     fontSize: 9,
     fontWeight: "bold",
+    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 12,
