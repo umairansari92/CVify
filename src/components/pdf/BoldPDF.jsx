@@ -103,16 +103,20 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   bulletText: {
-    flex: 1,
+    fontSize: 9.5,
+    lineHeight: 1.4,
+    color: "#374151",
+  },
+  skillText: {
     fontSize: 9.5,
     lineHeight: 1.4,
     color: "#374151",
   },
   sidebarBox: {
     backgroundColor: "#f9fafb",
-    padding: 15,
+    padding: 10,
     borderRadius: 4,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   sidebarTitle: {
     fontSize: 9,
@@ -309,7 +313,7 @@ const BoldPDF = ({ data }) => {
                   {competencies.map((c, i) => (
                     <View key={i} style={styles.bullet}>
                       <Text>•</Text>
-                      <Text style={{ fontSize: 9 }}>{c}</Text>
+                      <Text style={styles.skillText}>{c}</Text>
                     </View>
                   ))}
                 </View>
