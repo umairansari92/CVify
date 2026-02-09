@@ -11,31 +11,22 @@ import {
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#1e293b", // Sidebar color
     fontFamily: "Helvetica",
     fontSize: 9,
     color: "#1e293b",
-  },
-  sidebarBackground: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: "33%",
-    backgroundColor: "#1e293b",
   },
   sidebar: {
     width: "33%",
     color: "#fff",
     padding: 30,
     paddingTop: 40,
-    zIndex: 1,
   },
   main: {
     width: "67%",
     padding: 35,
     paddingTop: 40,
-    zIndex: 1,
+    backgroundColor: "#f8fafc", // Main content color
   },
   sidebarHeader: {
     marginBottom: 30,
@@ -172,9 +163,6 @@ const ClearPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Fixed Sidebar Background */}
-        <View style={styles.sidebarBackground} fixed />
-
         <View style={styles.sidebar}>
           <View style={styles.sidebarHeader} wrap={false}>
             <Text style={styles.name}>
