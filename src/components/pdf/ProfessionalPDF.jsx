@@ -1,5 +1,12 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Link,
+} from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: {
@@ -14,14 +21,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     top: 0,
-    bottom: 0,
-    width: "32%",
+    height: "100%",
     backgroundColor: "#111827",
   },
   sidebar: {
     width: "32%",
     padding: 25,
     color: "white",
+    backgroundColor: "#111827", // Fallback background
     zIndex: 1,
   },
   main: {
@@ -146,13 +153,42 @@ const ProfessionalPDF = ({ data }) => {
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarTitle}>Contact</Text>
             {personalInfo?.email && (
-              <Text style={styles.sidebarText}>{personalInfo.email}</Text>
+              <Link
+                src={`mailto:${personalInfo.email}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Text style={styles.sidebarText}>{personalInfo.email}</Text>
+              </Link>
             )}
             {personalInfo?.phone && (
               <Text style={styles.sidebarText}>{personalInfo.phone}</Text>
             )}
             {personalInfo?.location && (
               <Text style={styles.sidebarText}>{personalInfo.location}</Text>
+            )}
+            {personalInfo?.linkedin && (
+              <Link
+                src={personalInfo.linkedin}
+                style={{ textDecoration: "none" }}
+              >
+                <Text style={styles.sidebarText}>LinkedIn</Text>
+              </Link>
+            )}
+            {personalInfo?.github && (
+              <Link
+                src={personalInfo.github}
+                style={{ textDecoration: "none" }}
+              >
+                <Text style={styles.sidebarText}>GitHub</Text>
+              </Link>
+            )}
+            {personalInfo?.portfolio && (
+              <Link
+                src={personalInfo.portfolio}
+                style={{ textDecoration: "none" }}
+              >
+                <Text style={styles.sidebarText}>Portfolio</Text>
+              </Link>
             )}
           </View>
 
@@ -254,9 +290,11 @@ const ProfessionalPDF = ({ data }) => {
                   <View style={styles.entryHeader} wrap={false}>
                     <Text style={styles.title}>{proj.name}</Text>
                     {proj.link && (
-                      <Text style={[styles.date, { color: "#2563eb" }]}>
-                        View Project
-                      </Text>
+                      <Link src={proj.link} style={{ textDecoration: "none" }}>
+                        <Text style={[styles.date, { color: "#2563eb" }]}>
+                          View Project
+                        </Text>
+                      </Link>
                     )}
                   </View>
                   {proj.description?.map((desc, j) => (
