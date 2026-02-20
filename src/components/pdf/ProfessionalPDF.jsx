@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   sidebarText: {
     fontSize: 9,
     marginBottom: 4,
-    color: "#d1d5db",
+    color: "#0a65eeff",
   },
   skillCategory: {
     fontSize: 8,
@@ -144,6 +144,8 @@ const ProfessionalPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <View style={styles.sidebarBackground} fixed />
+
         {/* Sidebar Content */}
         <View style={styles.sidebar}>
           <View style={styles.sidebarSection}>
