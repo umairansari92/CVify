@@ -152,6 +152,16 @@ const ElegantPDF = ({ data }) => {
                 LinkedIn
               </Link>
             )}
+            {personalInfo?.github && (
+              <Link src={personalInfo.github} style={{ color: "#4b5563" }}>
+                GitHub
+              </Link>
+            )}
+            {personalInfo?.portfolio && (
+              <Link src={personalInfo.portfolio} style={{ color: "#4b5563" }}>
+                Portfolio
+              </Link>
+            )}
           </View>
         </View>
 
@@ -186,6 +196,45 @@ const ElegantPDF = ({ data }) => {
                     </View>
                   ))}
                 </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {projects?.length > 0 && (
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.sectionTitle}>Key Projects</Text>
+            {projects.map((proj, i) => (
+              <View key={i} style={{ marginBottom: 15 }} wrap={false}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 4,
+                  }}
+                >
+                  <Text style={styles.title}>{proj.name}</Text>
+                  {proj.link && (
+                    <Link
+                      src={proj.link}
+                      style={{
+                        fontSize: 9,
+                        color: "#4b5563",
+                        textDecoration: "none",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      View Project
+                    </Link>
+                  )}
+                </View>
+                {proj.description?.map((desc, j) => (
+                  <View key={j} style={styles.bullet}>
+                    <Text style={{ color: "#d1d5db" }}>-</Text>
+                    <Text style={styles.bulletText}>{desc}</Text>
+                  </View>
+                ))}
               </View>
             ))}
           </View>
