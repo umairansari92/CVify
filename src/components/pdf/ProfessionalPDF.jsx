@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#374151",
     paddingBottom: 5,
     marginBottom: 10,
-    color: "#2563eb",
+    color: "#c8cedbff",
   },
   sidebarText: {
     fontSize: 9,
