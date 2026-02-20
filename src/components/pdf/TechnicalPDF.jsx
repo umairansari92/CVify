@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 4,
+    marginBottom: 8,
+    lineHeight: 1.2,
   },
   keyword: {
     color: "#60a5fa",
@@ -179,7 +180,7 @@ const TechnicalPDF = ({ data }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Terminal Header */}
-        <View style={styles.terminalHeader} fixed>
+        <View style={styles.terminalHeader}>
           <View style={styles.windowButtons}>
             <View style={[styles.dot, { backgroundColor: "#ef4444" }]} />
             <View style={[styles.dot, { backgroundColor: "#eab308" }]} />
