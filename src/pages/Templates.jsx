@@ -126,6 +126,8 @@ const templates = [
   { id: "bold", name: "Bold Impact" },
   { id: "elegant", name: "Elegant Style" },
   { id: "clear", name: "Clear Layout" },
+  { id: "global", name: "Global Minimalist" },
+  { id: "elite", name: "Corporate Elite" },
 ];
 
 const Templates = () => {
