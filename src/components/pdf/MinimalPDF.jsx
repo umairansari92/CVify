@@ -10,121 +10,133 @@ import {
 
 const styles = StyleSheet.create({
   page: {
-    padding: 60,
+    padding: 40,
     fontFamily: "Helvetica",
     fontSize: 9,
     color: "#333",
     backgroundColor: "#fff",
-    lineHeight: 1.6,
+    lineHeight: 1.5,
   },
   header: {
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+    paddingBottom: 20,
   },
   name: {
-    fontSize: 24,
-    fontWeight: "light",
+    fontSize: 22,
+    fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 4,
-    color: "#000",
-    marginBottom: 8,
+    letterSpacing: 2,
+    color: "#1e293b",
+    marginBottom: 6,
   },
   jobTitle: {
     fontSize: 10,
     textTransform: "uppercase",
-    color: "#94a3b8",
-    letterSpacing: 2,
-    marginBottom: 15,
+    color: "#64748b",
+    letterSpacing: 1.5,
+    marginBottom: 12,
   },
   contact: {
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
-    gap: 15,
+    gap: 12,
     fontSize: 8,
     color: "#64748b",
-    textTransform: "uppercase",
-    letterSpacing: 1,
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  summarySection: {
+    marginBottom: 25,
+    paddingHorizontal: 20,
   },
   summary: {
-    maxWidth: 400,
-    marginLeft: "auto",
-    marginRight: "auto",
     textAlign: "center",
-    marginBottom: 40,
-    fontSize: 10,
+    fontSize: 9.5,
     color: "#475569",
+    lineHeight: 1.6,
+  },
+  section: {
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 2,
-    textAlign: "center",
-    marginBottom: 20,
-    marginTop: 10,
-    color: "#000",
-  },
-  experienceContainer: {
-    maxWidth: 450,
-    marginLeft: "auto",
-    marginRight: "auto",
+    letterSpacing: 1.5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+    paddingBottom: 4,
+    marginBottom: 12,
+    color: "#334155",
   },
   entry: {
-    marginBottom: 25,
+    marginBottom: 15,
   },
   entryHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "baseline",
+    alignItems: "flex-start",
     marginBottom: 4,
   },
   title: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 10,
-    fontStyle: "italic",
-    color: "#64748b",
-    marginBottom: 8,
+    color: "#1e293b",
+    maxWidth: "70%",
   },
   date: {
-    fontSize: 8,
+    fontSize: 8.5,
     color: "#94a3b8",
-    fontFamily: "Courier",
+    textAlign: "right",
+  },
+  subtitle: {
+    fontSize: 9.5,
+    fontStyle: "italic",
+    color: "#64748b",
+    marginBottom: 6,
+  },
+  bulletList: {
+    paddingLeft: 10,
   },
   bullet: {
     flexDirection: "row",
-    gap: 8,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   bulletDot: {
-    width: 6,
-    color: "#cbd5e1",
+    width: 10,
+    fontSize: 10,
+    color: "#94a3b8",
   },
   bulletText: {
     flex: 1,
-    fontSize: 9.5,
+    fontSize: 9,
     color: "#475569",
     lineHeight: 1.5,
   },
-  skillsGrid: {
+  gridContainer: {
     flexDirection: "row",
-    gap: 40,
-    maxWidth: 450,
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginBottom: 30,
+    justifyContent: "space-between",
   },
-  skillCol: {
-    flex: 1,
-    textAlign: "center",
+  skillCategory: {
+    marginBottom: 8,
+  },
+  skillCategoryTitle: {
+    fontSize: 8.5,
+    fontWeight: "bold",
+    color: "#64748b",
+    textTransform: "uppercase",
+    marginBottom: 3,
   },
   skillText: {
     fontSize: 9,
-    color: "#475569",
-    lineHeight: 1.8,
+    color: "#334155",
+    lineHeight: 1.4,
   },
 });
 
@@ -137,11 +149,12 @@ const MinimalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+  } = data || {};
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
@@ -150,19 +163,32 @@ const MinimalPDF = ({ data }) => {
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
           <View style={styles.contact}>
-            {personalInfo?.email && <Text>{personalInfo.email}</Text>}
-            {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
-            {personalInfo?.location && <Text>{personalInfo.location}</Text>}
-            {personalInfo?.linkedin && <Text>LinkedIn</Text>}
+            {[
+              personalInfo?.email,
+              personalInfo?.phone,
+              personalInfo?.location,
+              personalInfo?.linkedin && "LinkedIn",
+              personalInfo?.github && "GitHub",
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <Text key={i} style={styles.contactItem}>
+                  {item}
+                </Text>
+              ))}
           </View>
         </View>
 
+        {/* Summary */}
         {personalInfo?.profileSummary && (
-          <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
+          <View style={styles.summarySection} wrap={false}>
+            <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
+          </View>
         )}
 
+        {/* Experience */}
         {experience?.length > 0 && (
-          <View style={styles.experienceContainer}>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Professional Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
@@ -173,78 +199,114 @@ const MinimalPDF = ({ data }) => {
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
-                {exp.responsibilities?.map((res, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={styles.bulletDot}>•</Text>
-                    <Text style={styles.bulletText}>{res}</Text>
-                  </View>
-                ))}
+                <View style={styles.bulletList}>
+                  {exp.responsibilities?.map((res, j) => (
+                    <View key={j} style={styles.bullet}>
+                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletText}>{res}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
             ))}
           </View>
         )}
 
+        {/* Projects */}
         {projects?.length > 0 && (
-          <View style={styles.experienceContainer}>
-            <Text style={styles.sectionTitle}>Projects</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-              }}
-            >
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
-                <View
-                  key={i}
-                  style={{ width: "48%", marginBottom: 15 }}
-                  wrap={false}
-                >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 10,
-                      marginBottom: 4,
-                    }}
-                  >
-                    {proj.name}
-                  </Text>
-                  <Text style={{ fontSize: 8.5, color: "#64748b" }}>
-                    {proj.description?.join(" ")}
-                  </Text>
+                <View key={i} style={styles.entry} wrap={false}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.title}>{proj.name}</Text>
+                  </View>
+                  <View style={styles.bulletList}>
+                    {proj.description?.map((desc, j) => (
+                      <View key={j} style={styles.bullet}>
+                        <Text style={styles.bulletDot}>-</Text>
+                        <Text style={styles.bulletText}>{desc}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
               ))}
             </View>
           </View>
         )}
 
-        <View style={styles.skillsGrid}>
-          {education?.length > 0 && (
-            <View style={styles.skillCol}>
-              <Text style={styles.sectionTitle}>Education</Text>
-              {education.map((edu, i) => (
-                <View key={i} style={{ marginBottom: 10 }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 10 }}>
-                    {edu.degree}
-                  </Text>
-                  <Text style={{ fontSize: 9 }}>{edu.institution}</Text>
-                  <Text style={{ fontSize: 8, color: "#94a3b8" }}>
-                    {edu.startDate} - {edu.endDate}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          <View style={styles.skillCol}>
-            <Text style={styles.sectionTitle}>Skills</Text>
-            {competencies?.length > 0 && (
-              <Text style={styles.skillText}>{competencies.join(" • ")}</Text>
+        {/* Two Column Layout: Education & Skills */}
+        {/* Two Column Layout: Education & Skills */}
+        <View style={styles.gridContainer}>
+          {/* Left Column: Education */}
+          <View style={{ flex: 1, paddingRight: 10 }}>
+            {education?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Education</Text>
+                {education.map((edu, i) => (
+                  <View key={i} style={{ marginBottom: 12 }} wrap={false}>
+                    <Text style={{ fontWeight: "bold", fontSize: 9.5 }}>
+                      {edu.degree}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        color: "#475569",
+                        marginVertical: 2,
+                      }}
+                    >
+                      {edu.institution}
+                    </Text>
+                    <Text style={{ fontSize: 8.5, color: "#94a3b8" }}>
+                      {edu.startDate} - {edu.endDate}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             )}
-            {softwareProficiency?.length > 0 && (
-              <Text style={styles.skillText}>
-                {softwareProficiency.join(", ")}
-              </Text>
+          </View>
+
+          {/* Right Column: Skills */}
+          <View style={{ flex: 1, paddingLeft: 10 }}>
+            {(technicalSkills ||
+              competencies?.length > 0 ||
+              softwareProficiency?.length > 0) && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+
+                {technicalSkills &&
+                  Object.entries(technicalSkills).map(
+                    ([cat, list], i) =>
+                      Array.isArray(list) &&
+                      list.length > 0 && (
+                        <View key={i} style={styles.skillCategory} wrap={false}>
+                          <Text style={styles.skillCategoryTitle}>{cat}</Text>
+                          <Text style={styles.skillText}>
+                            {list.join(", ")}
+                          </Text>
+                        </View>
+                      ),
+                  )}
+
+                {competencies?.length > 0 && (
+                  <View style={styles.skillCategory} wrap={false}>
+                    <Text style={styles.skillCategoryTitle}>Core Skills</Text>
+                    <Text style={styles.skillText}>
+                      {competencies.join(" • ")}
+                    </Text>
+                  </View>
+                )}
+
+                {softwareProficiency?.length > 0 && (
+                  <View style={styles.skillCategory} wrap={false}>
+                    <Text style={styles.skillCategoryTitle}>Software</Text>
+                    <Text style={styles.skillText}>
+                      {softwareProficiency.join(", ")}
+                    </Text>
+                  </View>
+                )}
+              </View>
             )}
           </View>
         </View>

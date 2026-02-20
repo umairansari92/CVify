@@ -82,6 +82,8 @@ export const handleDownloadPDF = async (data, templateId) => {
     setTimeout(() => URL.revokeObjectURL(url), 100);
   } catch (error) {
     console.error("PDF Export Error:", error);
-    alert("Native PDF generation failed. Check console for details.");
+    alert(
+      `PDF generation failed: ${error.message}. Please check the console for more details.`,
+    );
   }
 };
