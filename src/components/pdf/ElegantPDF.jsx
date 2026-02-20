@@ -22,13 +22,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderBottomStyle: "double", // Note: double actually isn't supported, it will be solid.
     borderBottomColor: "#d1d5db",
-    paddingBottom: 25,
+    paddingBottom: 35,
     marginBottom: 25,
   },
   name: {
     fontSize: 36,
     color: "#2c3e50",
-    marginBottom: 8,
+    marginBottom: 12,
+    lineHeight: 1.1,
   },
   jobTitle: {
     fontSize: 12,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     color: "#9ca3af",
     marginBottom: 15,
+    lineHeight: 1.3,
   },
   contact: {
     flexDirection: "row",
