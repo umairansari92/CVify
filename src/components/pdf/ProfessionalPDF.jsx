@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   sidebarText: {
     fontSize: 9,
     marginBottom: 4,
-    color: "#0a65eeff",
+    color: "#9ca8b9ff",
   },
   skillCategory: {
     fontSize: 8,
