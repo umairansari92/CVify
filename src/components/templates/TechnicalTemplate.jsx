@@ -10,22 +10,36 @@ import {
 } from "react-icons/fa";
 
 const TechnicalTemplate = ({ data }) => {
-  const {
-    personalInfo,
-    education,
-    experience,
-    skills,
-    projects,
     softwareProficiency,
+    customSections,
+    themeColor,
+    fontFamily,
   } = data;
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter": return "'Inter', sans-serif";
+      case "Manrope": return "'Manrope', sans-serif";
+      case "Playfair Display": return "'Playfair Display', serif";
+      case "Public Sans": return "'Public Sans', sans-serif";
+      default: return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-[#1a1c24] text-gray-300 font-mono p-8 relative"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-[#1a1c24] text-gray-300 p-8 relative transition-all duration-500"
+      style={{ 
+        minHeight: "297mm", 
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily) 
+      }}
     >
       {/* Code Header */}
-      <div className="bg-slate-900 text-green-400 p-6 rounded-md mb-6 font-mono shadow-lg">
+      <div 
+        className="text-green-400 p-6 rounded-md mb-6 font-mono shadow-lg border-t-4"
+        style={{ backgroundColor: "#0f172a", borderTopColor: themeColor }}
+      >
         <div className="flex mb-4">
           <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
@@ -33,7 +47,7 @@ const TechnicalTemplate = ({ data }) => {
         </div>
         <h1 className="text-3xl font-bold mb-2">
           <span className="text-blue-400">const</span>{" "}
-          <span className="text-yellow-300">Name</span> ={" "}
+          <span style={{ color: themeColor }}>Name</span> ={" "}
           <span className="text-white">
             "{personalInfo?.fullName || "User"}"
           </span>
@@ -329,6 +343,28 @@ const TechnicalTemplate = ({ data }) => {
               </span>
             </section>
           )}
+          {/* Custom Sections */}
+          {customSections?.map((section, i) => (
+            <section key={i} className="mt-8 animate-fadeIn">
+              <h2 
+                className="text-xl font-bold mb-4 flex items-center gap-2"
+                style={{ color: themeColor }}
+              >
+                [{section.title.toUpperCase()}]
+              </h2>
+              <div className="space-y-3 pl-6 border-l-2 border-slate-800 ml-2">
+                {section.items?.map((item, j) => (
+                  <div key={j} className="flex gap-4 text-xs text-slate-400 italic">
+                    <span style={{ color: themeColor }}>{`>>`}</span>
+                    <span className="flex-1">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <span className="text-slate-900 ml-2 mt-4 block">
+                [/{section.title.toUpperCase()}]
+              </span>
+            </section>
+          ))}
         </div>
       </div>
     </div>

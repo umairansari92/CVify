@@ -15,16 +15,43 @@ const EliteTemplate = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
-    softwareProficiency,
+    customSections,
+    themeColor,
+    fontFamily,
   } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Plus Jakarta Sans":
+        return "'Plus Jakarta Sans', sans-serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Playfair Display', serif"; // Elite defaults to Serif
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white text-slate-900 p-[15mm] font-serif shadow-xl mx-auto border-[12px] border-slate-50"
-      style={{ minHeight: "297mm", maxWidth: "210mm" }}
+      className="w-full bg-white text-slate-900 p-[15mm] shadow-xl mx-auto border-[12px] transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        maxWidth: "210mm",
+        fontFamily: getFontFamily(fontFamily),
+        borderColor: `${themeColor}10`, // 10% opacity for the border
+      }}
     >
       {/* Heavy Corporate Header */}
-      <header className="border-b-[3px] border-slate-900 pb-6 mb-8">
+      <header
+        className="border-b-[3px] pb-6 mb-8"
+        style={{ borderColor: themeColor }}
+      >
         <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tight">
           {personalInfo?.fullName || "Your Name"}
         </h1>
@@ -76,7 +103,10 @@ const EliteTemplate = ({ data }) => {
         {/* Executive Summary */}
         {personalInfo?.profileSummary && (
           <section>
-            <h3 className="bg-slate-900 text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4">
+            <h3
+              className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4"
+              style={{ backgroundColor: themeColor }}
+            >
               Executive Summary
             </h3>
             <p className="text-sm leading-relaxed text-justify px-2 italic text-slate-700 border-l-4 border-slate-200 ml-2">
@@ -88,7 +118,10 @@ const EliteTemplate = ({ data }) => {
         {/* Professional Experience */}
         {experience?.length > 0 && (
           <section>
-            <h3 className="bg-slate-900 text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-6">
+            <h3
+              className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-6"
+              style={{ backgroundColor: themeColor }}
+            >
               Professional Experience
             </h3>
             <div className="space-y-8">
@@ -97,7 +130,10 @@ const EliteTemplate = ({ data }) => {
                   key={i}
                   className="relative pl-6 border-l-2 border-slate-100 hover:border-slate-900 transition-colors"
                 >
-                  <div className="absolute -left-[9px] top-0 w-4 h-4 bg-white border-2 border-slate-900 rounded-full"></div>
+                  <div
+                    className="absolute -left-[9px] top-0 w-4 h-4 bg-white border-2 rounded-full"
+                    style={{ borderColor: themeColor }}
+                  ></div>
                   <div className="flex justify-between items-baseline mb-2">
                     <h4 className="text-base font-black text-slate-900 uppercase italic">
                       {exp.position}
@@ -132,7 +168,10 @@ const EliteTemplate = ({ data }) => {
           <div className="md:col-span-3 space-y-8">
             {education?.length > 0 && (
               <section>
-                <h3 className="bg-slate-900 text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4">
+                <h3
+                  className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4"
+                  style={{ backgroundColor: themeColor }}
+                >
                   Education
                 </h3>
                 <div className="space-y-4 px-2">
@@ -160,7 +199,10 @@ const EliteTemplate = ({ data }) => {
 
             {projects?.length > 0 && (
               <section>
-                <h3 className="bg-slate-900 text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4">
+                <h3
+                  className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4"
+                  style={{ backgroundColor: themeColor }}
+                >
                   Key Projects
                 </h3>
                 <div className="space-y-4 px-2">
@@ -223,6 +265,34 @@ const EliteTemplate = ({ data }) => {
             </section>
           </div>
         </div>
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <section key={i} className="animate-fadeIn">
+            <h3
+              className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4"
+              style={{ backgroundColor: themeColor }}
+            >
+              {section.title}
+            </h3>
+            <ul className="space-y-2 px-2">
+              {section.items?.map((item, j) => (
+                <li
+                  key={j}
+                  className="text-[13px] text-slate-700 leading-relaxed flex gap-3"
+                >
+                  <span
+                    className="font-bold shrink-0"
+                    style={{ color: themeColor }}
+                  >
+                    •
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
     </div>
   );

@@ -45,11 +45,17 @@ const resumeSlice = createSlice({
         projects: [],
         competencies: [],
         softwareProficiency: [],
+        customSections: [], // Array of { id, title, content: [] }
+        themeColor: "#0f172a", // Default slate-900
+        fontFamily: "Inter", // Default sans-serif
         templateId: "classic",
       };
     },
     initResumeWithData(state, action) {
       state.currentResume = {
+        themeColor: "#0f172a",
+        fontFamily: "Inter",
+        customSections: [],
         ...action.payload.data,
         templateId: action.payload.templateId,
       };

@@ -137,12 +137,40 @@ const GlobalPDF = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
-    softwareProficiency,
+    customSections,
+    themeColor,
+    fontFamily,
   } = data || {};
+
+  // Map user font selection to PDF standard fonts
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: themeColor,
+    },
+    accentText: { color: themeColor },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>
@@ -178,7 +206,7 @@ const GlobalPDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Professional Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>Professional Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -186,11 +214,13 @@ const GlobalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
-                  <Text style={styles.title}>{exp.position}</Text>
+                  <Text style={[styles.title, dynamicStyles.accentText]}>
+                    {exp.position}
+                  </Text>
                   <Text style={styles.date}>
                     {exp.startDate} — {exp.endDate}
                   </Text>
@@ -299,6 +329,23 @@ const GlobalPDF = ({ data }) => {
             </View>
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <View key={i} style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            <View style={styles.bulletList}>
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bullet}>
+                  <Text style={[styles.bulletDot, dynamicStyles.accentText]}>
+                    •
+                  </Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
       </Page>
     </Document>
   );

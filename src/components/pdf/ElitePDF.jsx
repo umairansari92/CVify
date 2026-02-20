@@ -145,14 +145,41 @@ const ElitePDF = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
-    softwareProficiency,
+    customSections,
+    themeColor,
+    fontFamily,
   } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Times-Roman";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    sectionTitle: { ...styles.sectionTitle, backgroundColor: themeColor },
+    accentText: { color: themeColor },
+    borderAccent: {
+      borderBottomColor: themeColor,
+      borderLeftColor: themeColor,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { borderBottomColor: themeColor }]}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
@@ -179,7 +206,7 @@ const ElitePDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Executive Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>Executive Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -187,7 +214,9 @@ const ElitePDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>
+              Professional Experience
+            </Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -213,7 +242,7 @@ const ElitePDF = ({ data }) => {
         {/* Education */}
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Academic Background</Text>
+            <Text style={dynamicStyles.sectionTitle}>Academic Background</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -233,7 +262,9 @@ const ElitePDF = ({ data }) => {
           competencies?.length > 0 ||
           softwareProficiency?.length > 0) && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+            <Text style={dynamicStyles.sectionTitle}>
+              Skills & Competencies
+            </Text>
             <View style={styles.skillsTable}>
               {technicalSkills &&
                 Object.entries(technicalSkills).map(
@@ -268,7 +299,7 @@ const ElitePDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -291,6 +322,23 @@ const ElitePDF = ({ data }) => {
             ))}
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <View key={i} style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            <View style={styles.bulletList}>
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bullet}>
+                  <Text style={[styles.bulletDot, dynamicStyles.accentText]}>
+                    •
+                  </Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
       </Page>
     </Document>
   );

@@ -6,6 +6,8 @@ import EducationForm from "../components/forms/EducationForm";
 import ExperienceForm from "../components/forms/ExperienceForm";
 import SkillsForm from "../components/forms/SkillsForm";
 import ProjectsForm from "../components/forms/ProjectsForm";
+import StyleSettings from "../components/forms/StyleSettings";
+import CustomSectionsForm from "../components/forms/CustomSectionsForm";
 import ResumePreview from "../components/ResumePreview";
 import { handleDownloadPDF } from "../utils/pdfExport";
 
@@ -48,6 +50,8 @@ const CreateResume = () => {
     { id: "education", label: "Education" },
     { id: "projects", label: "Projects" },
     { id: "skills", label: "Skills" },
+    { id: "custom", label: "Custom" },
+    { id: "style", label: "Style" },
   ];
 
   return (
@@ -157,6 +161,8 @@ const CreateResume = () => {
             {activeTab === "experience" && <ExperienceForm />}
             {activeTab === "skills" && <SkillsForm />}
             {activeTab === "projects" && <ProjectsForm />}
+            {activeTab === "custom" && <CustomSectionsForm />}
+            {activeTab === "style" && <StyleSettings />}
           </div>
         </div>
       </div>

@@ -16,13 +16,34 @@ const GlobalTemplate = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
-    softwareProficiency,
+    customSections,
+    themeColor,
+    fontFamily,
   } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white text-slate-800 p-12 font-sans shadow-lg mx-auto"
-      style={{ minHeight: "297mm", maxWidth: "210mm" }}
+      className="w-full bg-white text-slate-800 p-12 shadow-lg mx-auto transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        maxWidth: "210mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header */}
       <header className="flex flex-col items-center text-center space-y-4 mb-10 pb-8 border-b border-slate-100">
@@ -56,9 +77,10 @@ const GlobalTemplate = ({ data }) => {
           {personalInfo?.linkedin && (
             <a
               href={personalInfo.linkedin}
-              className="text-slate-500 hover:text-primary flex items-center gap-2 transition-colors"
+              className="hover:opacity-75 flex items-center gap-2 transition-all"
+              style={{ color: themeColor }}
             >
-              <FaLinkedin className="text-blue-500" /> LINKEDIN
+              <FaLinkedin /> LINKEDIN
             </a>
           )}
           {personalInfo?.github && (
@@ -85,7 +107,10 @@ const GlobalTemplate = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <section className="animate-fadeIn">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-4 border-b border-slate-900 pb-1 w-full">
+            <h2
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-4 border-b pb-1 w-full"
+              style={{ color: themeColor, borderColor: themeColor }}
+            >
               Professional Summary
             </h2>
             <p className="text-[13px] leading-relaxed text-slate-700 text-justify">
@@ -97,14 +122,20 @@ const GlobalTemplate = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <section className="animate-fadeIn">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-6 border-b border-slate-900 pb-1 w-full">
+            <h2
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-6 border-b pb-1 w-full"
+              style={{ color: themeColor, borderColor: themeColor }}
+            >
               Work Experience
             </h2>
             <div className="space-y-8">
               {experience.map((exp, i) => (
                 <div key={i} className="group">
                   <div className="flex justify-between items-baseline mb-2">
-                    <h3 className="text-base font-bold text-slate-900 group-hover:text-primary transition-colors">
+                    <h3
+                      className="text-base font-bold transition-colors"
+                      style={{ color: themeColor }}
+                    >
                       {exp.position}
                     </h3>
                     <span className="text-[11px] font-medium text-slate-400">
@@ -226,6 +257,34 @@ const GlobalTemplate = ({ data }) => {
             </div>
           </section>
         </div>
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <section key={i} className="animate-fadeIn">
+            <h2
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-4 border-b pb-1 w-full"
+              style={{ color: themeColor, borderColor: themeColor }}
+            >
+              {section.title}
+            </h2>
+            <ul className="space-y-2">
+              {section.items?.map((item, j) => (
+                <li
+                  key={j}
+                  className="flex gap-3 text-[12.5px] text-slate-700 leading-relaxed italic"
+                >
+                  <span
+                    className="mt-1.5 opacity-30"
+                    style={{ color: themeColor }}
+                  >
+                    •
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
     </div>
   );
