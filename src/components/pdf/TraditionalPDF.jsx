@@ -194,9 +194,13 @@ const TraditionalPDF = ({ data }) => {
           <View>
             <Text style={styles.sectionTitle}>Additional Skills</Text>
             {competencies?.length > 0 && (
-              <View style={styles.skillRow}>
-                <Text style={styles.skillLabel}>Core:</Text>
-                <Text style={styles.skillList}>{competencies.join(" • ")}</Text>
+              <View style={{ marginTop: 5 }}>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bullet}>
+                    <Text>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
               </View>
             )}
             {softwareProficiency?.length > 0 && (

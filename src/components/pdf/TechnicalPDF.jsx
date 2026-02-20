@@ -259,9 +259,16 @@ const TechnicalPDF = ({ data }) => {
             {competencies?.length > 0 && (
               <View style={styles.sidebarBox} wrap={false}>
                 <Text style={styles.sidebarTitle}>Core Skills</Text>
-                <Text style={{ fontSize: 8, color: "#475569" }}>
-                  {competencies.join(" • ")}
-                </Text>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bullet}>
+                    <Text style={[styles.bulletSign, { color: "#60a5fa" }]}>
+                      {">"}
+                    </Text>
+                    <Text style={[styles.bulletText, { fontSize: 8 }]}>
+                      {c}
+                    </Text>
+                  </View>
+                ))}
               </View>
             )}
 

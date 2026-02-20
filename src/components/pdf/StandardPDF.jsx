@@ -235,6 +235,18 @@ const StandardPDF = ({ data }) => {
           </View>
         )}
 
+        {competencies?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Core Skills</Text>
+            {competencies.map((c, i) => (
+              <View key={i} style={styles.bullet}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{c}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
         {education?.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>

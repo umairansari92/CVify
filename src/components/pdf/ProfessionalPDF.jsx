@@ -318,14 +318,17 @@ const ProfessionalPDF = ({ data }) => {
                       fontSize: 9,
                       fontWeight: "bold",
                       color: "#4b5563",
-                      marginBottom: 4,
+                      marginBottom: 8,
                     }}
                   >
-                    EXPERTISE & SOFT SKILLS
+                    CORE SKILLS
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#4b5563" }}>
-                    {competencies.join(" • ")}
-                  </Text>
+                  {competencies.map((c, i) => (
+                    <View key={i} style={styles.bulletPoint}>
+                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletText}>{c}</Text>
+                    </View>
+                  ))}
                 </View>
               )}
               {softwareProficiency?.length > 0 && (

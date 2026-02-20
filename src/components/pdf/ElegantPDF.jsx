@@ -317,22 +317,20 @@ const ElegantPDF = ({ data }) => {
                 gap: 8,
               }}
             >
-              {competencies?.map((c, i) => (
-                <Text
-                  key={i}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#d1d5db",
-                    padding: "3 8",
-                    borderRadius: 15,
-                    fontSize: 8.5,
-                    fontStyle: "italic",
-                    marginBottom: 5,
-                  }}
-                >
-                  {c}
-                </Text>
-              ))}
+              {competencies?.length > 0 && (
+                <View style={{ width: "100%", marginTop: 10 }}>
+                  {competencies.map((c, i) => (
+                    <View key={i} style={styles.bullet}>
+                      <Text style={{ color: "#d1d5db" }}>•</Text>
+                      <Text
+                        style={[styles.bulletText, { textAlign: "justify" }]}
+                      >
+                        {c}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
               {softwareProficiency?.length > 0 && (
                 <Text
                   style={{

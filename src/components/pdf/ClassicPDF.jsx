@@ -241,10 +241,14 @@ const ClassicPDF = ({ data }) => {
               </Text>
             )}
             {competencies?.length > 0 && (
-              <Text style={styles.skillText}>
-                <Text style={styles.skillLabel}>Competencies: </Text>
-                {competencies.join(" • ")}
-              </Text>
+              <View style={{ marginTop: 5 }}>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bullet}>
+                    <Text>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
+              </View>
             )}
           </View>
         )}

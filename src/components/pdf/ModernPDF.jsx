@@ -208,8 +208,13 @@ const ModernPDF = ({ data }) => {
             <Text style={styles.sectionTitle}>Additional Skills</Text>
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>CORE COMPETENCIES</Text>
-                <Text style={styles.skillText}>{competencies.join(", ")}</Text>
+                <Text style={styles.skillLabel}>CORE SKILLS</Text>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bulletPoint}>
+                    <Text style={{ width: 6, color: "#2563eb" }}>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
               </View>
             )}
             {softwareProficiency?.length > 0 && (

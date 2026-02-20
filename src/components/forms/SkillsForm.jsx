@@ -10,7 +10,7 @@ const InputGroup = ({ label, name, register, height = "h-24", hint }) => (
     </label>
     <textarea
       {...register(name)}
-      placeholder="e.g. Skill 1, Skill 2, Skill 3..."
+      placeholder="e.g. Skill 1&#10;Skill 2&#10;Skill 3..."
       className={`input-premium resize-none leading-relaxed ${height}`}
     />
     {hint && (
@@ -26,7 +26,8 @@ const SkillsForm = () => {
   const { currentResume } = useSelector((state) => state.resume);
 
   // Helper to safely join arrays
-  const join = (arr) => (Array.isArray(arr) ? arr.join(", ") : "");
+  // Helper to safely join arrays with newlines for the textarea
+  const join = (arr) => (Array.isArray(arr) ? arr.join("\n") : "");
 
   const { register, watch } = useForm({
     defaultValues: {
@@ -46,7 +47,7 @@ const SkillsForm = () => {
       const split = (str) =>
         str
           ? str
-              .split(",")
+              .split(/[\n,;]/)
               .map((s) => s.trim())
               .filter(Boolean)
           : [];
@@ -137,7 +138,8 @@ const SkillsForm = () => {
             label="Professional Strengths"
             name="competencies"
             register={register}
-            hint="e.g. Team Leadership, Problem Solving, Communication, Time Management"
+            hint="Enter each strength on a new line for better organization (e.g. Team Leadership, Problem Solving)"
+            height="h-40"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <InputGroup
