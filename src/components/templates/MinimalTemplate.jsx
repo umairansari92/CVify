@@ -9,14 +9,38 @@ import {
 } from "react-icons/fa";
 
 const MinimalTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
+  } = data;
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white p-12 text-gray-900"
+      className="w-full bg-white p-12 text-gray-900 transition-all duration-500"
       style={{
         minHeight: "297mm",
-        fontFamily: '"Open Sans", sans-serif',
+        fontFamily: getFontFamily(fontFamily),
         padding: "15mm",
       }}
     >
@@ -52,6 +76,7 @@ const MinimalTemplate = ({ data }) => {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
+              style={{ color: themeColor }}
             >
               <FaLinkedin /> LinkedIn
             </a>
@@ -96,6 +121,10 @@ const MinimalTemplate = ({ data }) => {
           <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-8 text-black">
             Professional Experience
           </h2>
+          <div
+            className="w-20 h-px bg-gray-200 mx-auto mb-8"
+            style={{ backgroundColor: `${themeColor}40` }}
+          ></div>
           <div className="max-w-3xl mx-auto">
             {experience.map((exp, index) => (
               <div

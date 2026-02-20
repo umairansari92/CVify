@@ -10,16 +10,44 @@ import {
 } from "react-icons/fa";
 
 const ElegantTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#2c3e50",
+    fontFamily = "Playfair Display",
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Playfair Display', serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-[#f9f7f2] p-10 font-serif text-[#2c3e50]"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-[#f9f7f2] p-10 text-[#2c3e50] transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header - Serif Font */}
       <div className="text-center border-b-2 border-double border-gray-300 pb-8 mb-8">
-        <h1 className="text-5xl mb-3" style={{ fontFamily: "Georgia, serif" }}>
+        <h1 className="text-5xl mb-3" style={{ color: themeColor }}>
           {personalInfo?.fullName || "Your Name"}
         </h1>
         <div className="flex justify-center items-center text-sm uppercase tracking-widest text-gray-500 font-medium mb-4">
@@ -93,8 +121,8 @@ const ElegantTemplate = ({ data }) => {
         {experience?.length > 0 && (
           <section>
             <h2
-              className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
-              style={{ fontFamily: "Georgia, serif" }}
+              className="text-center text-xl uppercase tracking-widest border-t border-b py-2 mb-6"
+              style={{ color: themeColor, borderColor: `${themeColor}20` }}
             >
               Professional Experience
             </h2>
@@ -138,13 +166,32 @@ const ElegantTemplate = ({ data }) => {
           </section>
         )}
 
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <section key={i}>
+            <h2
+              className="text-center text-xl uppercase tracking-widest border-t border-b py-2 mb-6"
+              style={{ color: themeColor, borderColor: `${themeColor}20` }}
+            >
+              {section.title}
+            </h2>
+            <div className="max-w-2xl mx-auto mb-8">
+              <ul className="list-disc list-outside ml-4 text-sm text-gray-700 leading-6">
+                {section.items?.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ))}
+
         {/* Education & Projects Grid */}
         <div className="grid grid-cols-2 gap-10">
           {education?.length > 0 && (
             <section>
               <h2
-                className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
-                style={{ fontFamily: "Georgia, serif" }}
+                className="text-center text-xl uppercase tracking-widest border-t border-b py-2 mb-6"
+                style={{ color: themeColor, borderColor: `${themeColor}20` }}
               >
                 Education
               </h2>

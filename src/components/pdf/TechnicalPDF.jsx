@@ -167,18 +167,39 @@ const styles = StyleSheet.create({
 
 const TechnicalPDF = ({ data }) => {
   const {
-    personalInfo,
-    education,
-    experience,
     technicalSkills,
     projects,
     competencies,
     softwareProficiency,
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
   } = data;
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Courier"; // Technical remains Courier-like by default
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    borderAccent: { borderLeftColor: themeColor },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         {/* Terminal Header */}
         <View style={styles.terminalHeader}>
           <View style={styles.windowButtons}>
@@ -189,7 +210,7 @@ const TechnicalPDF = ({ data }) => {
 
           <Text style={styles.name}>
             <Text style={styles.keyword}>const </Text>
-            <Text style={styles.variable}>developer </Text>
+            <Text style={dynamicStyles.accentText}>developer </Text>
             <Text>= </Text>
             <Text style={styles.string}>
               "{personalInfo?.fullName || "User"}"
@@ -261,7 +282,7 @@ const TechnicalPDF = ({ data }) => {
                 <Text style={styles.sidebarTitle}>Core Skills</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>
-                    <Text style={[styles.bulletSign, { color: "#60a5fa" }]}>
+                    <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
                       {">"}
                     </Text>
                     <Text style={[styles.bulletText, { fontSize: 8 }]}>
@@ -350,6 +371,34 @@ const TechnicalPDF = ({ data }) => {
             )}
           </View>
         </View>
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <View key={i} style={{ marginTop: 15 }}>
+            <Text style={[styles.sectionTitle, dynamicStyles.accentText]}>
+              [{section.title.toUpperCase()}]
+            </Text>
+            <View
+              style={{
+                paddingLeft: 15,
+                borderLeftWidth: 1,
+                borderLeftColor: "#334155",
+              }}
+            >
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bullet}>
+                  <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
+                    {">> "}
+                  </Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={{ fontSize: 8, color: "#475569", marginTop: 4 }}>
+              [/{section.title.toUpperCase()}]
+            </Text>
+          </View>
+        ))}
       </Page>
     </Document>
   );

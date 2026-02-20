@@ -142,13 +142,47 @@ const ExecutivePDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Playfair Display",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    header: { ...styles.header, borderBottomColor: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: themeColor,
+    },
+    sidebarBox: {
+      ...styles.sidebarBox,
+      borderLeftColor: themeColor,
+      backgroundColor: `${themeColor}05`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.name}>
+      <Page size="A4" style={dynamicStyles.page}>
+        <View style={dynamicStyles.header}>
+          <Text style={[styles.name, dynamicStyles.accentText]}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
           <Text style={styles.jobTitle}>
@@ -166,7 +200,7 @@ const ExecutivePDF = ({ data }) => {
               <View style={styles.contactRow}>
                 {personalInfo?.linkedin && (
                   <Link
-                    style={{ color: "#2563eb", textDecoration: "none" }}
+                    style={{ color: themeColor, textDecoration: "none" }}
                     src={personalInfo.linkedin}
                   >
                     LinkedIn
@@ -197,7 +231,9 @@ const ExecutivePDF = ({ data }) => {
           <View style={styles.content}>
             {personalInfo?.profileSummary && (
               <View style={styles.section} wrap={false}>
-                <Text style={styles.sectionTitle}>Professional Summary</Text>
+                <Text style={dynamicStyles.sectionTitle}>
+                  Professional Summary
+                </Text>
                 <Text
                   style={{
                     fontSize: 10,
@@ -213,7 +249,7 @@ const ExecutivePDF = ({ data }) => {
 
             {experience?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Work Experience</Text>
+                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
                 {experience.map((exp, i) => (
                   <View key={i} style={styles.entry} wrap={false}>
                     <View style={styles.entryHeader}>
@@ -263,10 +299,10 @@ const ExecutivePDF = ({ data }) => {
 
           <View style={styles.sidebar}>
             {education?.length > 0 && (
-              <View style={styles.sidebarBox} wrap={false}>
+              <View style={dynamicStyles.sidebarBox} wrap={false}>
                 <Text
                   style={[
-                    styles.sectionTitle,
+                    dynamicStyles.sectionTitle,
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >

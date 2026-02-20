@@ -9,11 +9,35 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 
-const ProfessionalTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const { 
+    personalInfo, 
+    education, 
+    experience, 
+    skills, 
+    projects,
+    customSections,
+    themeColor = "#2563eb",
+    fontFamily = "Inter"
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter": return "'Inter', sans-serif";
+      case "Manrope": return "'Manrope', sans-serif";
+      case "Playfair Display": return "'Playfair Display', serif";
+      case "Public Sans": return "'Public Sans', sans-serif";
+      default: return "'Inter', sans-serif";
+    }
+  };
 
   return (
-    <div className="w-full bg-white text-gray-800" style={{ padding: "15mm" }}>
+    <div 
+      className="w-full bg-white text-gray-800 transition-all duration-500" 
+      style={{ 
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily)
+      }}
+    >
       {/* Sidebar (Left, Dark) */}
       <div
         style={{
@@ -207,7 +231,7 @@ const ProfessionalTemplate = ({ data }) => {
           <h1 className="text-4xl font-bold text-slate-900 uppercase tracking-tight mb-2">
             {personalInfo?.fullName || "Your Name"}
           </h1>
-          <p className="text-xl text-blue-700 font-medium">
+          <p className="text-xl font-medium" style={{ color: themeColor }}>
             {personalInfo?.jobTitle || "Job Title"}
           </p>
         </div>
@@ -227,7 +251,7 @@ const ProfessionalTemplate = ({ data }) => {
         {experience?.length > 0 && (
           <ResumeSection
             title="Work History"
-            titleClassName="text-slate-800 border-slate-300"
+            titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
           >
             {experience.map((exp, index) => (
               <div
@@ -257,6 +281,21 @@ const ProfessionalTemplate = ({ data }) => {
             ))}
           </ResumeSection>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, i) => (
+          <ResumeSection
+            key={i}
+            title={section.title}
+            titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
+          >
+            <ul className="list-disc list-outside ml-4 space-y-1 text-sm text-gray-700">
+              {section.items?.map((item, j) => (
+                <li key={j}>{item}</li>
+              ))}
+            </ul>
+          </ResumeSection>
+        ))}
       </div>
     </div>
   );

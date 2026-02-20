@@ -143,12 +143,43 @@ const BoldPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#111827",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      case "Public Sans":
+        return "Helvetica";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    header: { ...styles.header, backgroundColor: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: themeColor,
+    },
+    sidebarTitle: { ...styles.sidebarTitle, color: themeColor },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
+      <Page size="A4" style={dynamicStyles.page}>
+        <View style={dynamicStyles.header}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
@@ -174,7 +205,7 @@ const BoldPDF = ({ data }) => {
 
         <View style={styles.mainContent}>
           {personalInfo?.profileSummary && (
-            <View style={styles.summaryCard}>
+            <View style={[styles.summaryCard, { borderLeftColor: themeColor }]}>
               <Text
                 style={{
                   fontStyle: "italic",
@@ -192,7 +223,9 @@ const BoldPDF = ({ data }) => {
             <View style={styles.leftCol}>
               {experience?.length > 0 && (
                 <View>
-                  <Text style={styles.sectionTitle}>Work Experience</Text>
+                  <Text style={dynamicStyles.sectionTitle}>
+                    Work Experience
+                  </Text>
                   {experience.map((exp, i) => (
                     <View key={i} style={styles.entry} wrap={false}>
                       <View style={styles.entryHeader}>
@@ -214,7 +247,7 @@ const BoldPDF = ({ data }) => {
 
               {projects?.length > 0 && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={styles.sectionTitle}>Additional Skills</Text>
+                  <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
                   {projects.map((proj, i) => (
                     <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                       <View
@@ -252,7 +285,7 @@ const BoldPDF = ({ data }) => {
             <View style={styles.rightCol}>
               {education?.length > 0 && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sidebarTitle}>Education</Text>
+                  <Text style={dynamicStyles.sidebarTitle}>Education</Text>
                   {education.map((edu, i) => (
                     <View key={i} style={{ marginBottom: 10 }}>
                       <Text style={{ fontWeight: "bold", fontSize: 10 }}>
@@ -272,7 +305,7 @@ const BoldPDF = ({ data }) => {
               {technicalSkills &&
                 Object.values(technicalSkills).some((a) => a?.length > 0) && (
                   <View style={styles.sidebarBox}>
-                    <Text style={styles.sidebarTitle}>Skills</Text>
+                    <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
                     {Object.entries(technicalSkills).map(
                       ([cat, list], i) =>
                         list?.length > 0 && (

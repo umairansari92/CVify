@@ -19,8 +19,8 @@ const TechnicalTemplate = ({ data }) => {
     competencies,
     softwareProficiency,
     customSections,
-    themeColor,
-    fontFamily,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
   } = data;
 
   const getFontFamily = (font) => {

@@ -135,16 +135,48 @@ const ModernPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#2563eb",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    borderAccent: {
+      borderLeftColor: themeColor,
+      borderBottomColor: themeColor,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}33`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.headerContainer}>
+      <Page size="A4" style={dynamicStyles.page}>
+        <View style={[styles.headerContainer, { borderLeftColor: themeColor }]}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
-          <Text style={styles.jobTitle}>
+          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
           <View style={styles.contactRow}>
@@ -160,7 +192,7 @@ const ModernPDF = ({ data }) => {
             {personalInfo?.linkedin && (
               <Link
                 src={personalInfo.linkedin}
-                style={[styles.contactItem, { color: "#2563eb" }]}
+                style={[styles.contactItem, dynamicStyles.accentText]}
               >
                 LinkedIn
               </Link>
@@ -168,7 +200,7 @@ const ModernPDF = ({ data }) => {
             {personalInfo?.github && (
               <Link
                 src={personalInfo.github}
-                style={[styles.contactItem, { color: "#2563eb" }]}
+                style={[styles.contactItem, dynamicStyles.accentText]}
               >
                 GitHub
               </Link>
@@ -176,7 +208,7 @@ const ModernPDF = ({ data }) => {
             {personalInfo?.portfolio && (
               <Link
                 src={personalInfo.portfolio}
-                style={[styles.contactItem, { color: "#2563eb" }]}
+                style={[styles.contactItem, dynamicStyles.accentText]}
               >
                 Portfolio
               </Link>
@@ -211,7 +243,7 @@ const ModernPDF = ({ data }) => {
                 <Text style={styles.skillLabel}>CORE SKILLS</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 6, color: "#2563eb" }}>•</Text>
+                    <Text style={{ width: 6, color: themeColor }}>•</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -242,7 +274,7 @@ const ModernPDF = ({ data }) => {
                 <Text style={styles.entrySubtitle}>{exp.company}</Text>
                 {exp.responsibilities?.map((res, i) => (
                   <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 8, color: "#2563eb" }}>•</Text>
+                    <Text style={{ width: 8, color: themeColor }}>•</Text>
                     <Text style={styles.bulletText}>{res}</Text>
                   </View>
                 ))}
@@ -269,7 +301,7 @@ const ModernPDF = ({ data }) => {
                 </View>
                 {proj.description?.map((desc, i) => (
                   <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 8, color: "#64748b" }}>-</Text>
+                    <Text style={{ width: 8, color: themeColor }}>-</Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
                 ))}
@@ -294,6 +326,19 @@ const ModernPDF = ({ data }) => {
             ))}
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, j) => (
+          <View key={j} style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            {section.items?.map((item, k) => (
+              <View key={k} style={styles.bulletPoint}>
+                <Text style={{ width: 8, color: themeColor }}>•</Text>
+                <Text style={styles.bulletText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
       </Page>
     </Document>
   );

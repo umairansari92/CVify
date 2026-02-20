@@ -9,15 +9,46 @@ import {
 } from "react-icons/fa";
 
 const ClearTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#1e293b",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-slate-50 p-10 font-sans text-slate-800 flex"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-slate-50 font-sans text-slate-800 flex transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Left Sidebar */}
-      <div className="w-1/3 bg-slate-800 text-white p-6">
+      <div
+        className="w-1/3 text-white p-6"
+        style={{ backgroundColor: themeColor }}
+      >
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold uppercase tracking-wider mb-2">
             {personalInfo?.fullName || "Your Name"}
@@ -97,7 +128,11 @@ const ClearTemplate = ({ data }) => {
                       {data.technicalSkills.frontend.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                          className="px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                          style={{
+                            backgroundColor: `${themeColor}20`,
+                            border: `1px solid ${themeColor}40`,
+                          }}
                         >
                           {s}
                         </span>
@@ -229,7 +264,10 @@ const ClearTemplate = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <div className="mb-8">
-            <h2 className="text-xl font-bold uppercase text-slate-800 border-b-2 border-slate-200 pb-2 mb-3">
+            <h2
+              className="text-xl font-bold uppercase border-b-2 pb-2 mb-3"
+              style={{ color: themeColor, borderColor: `${themeColor}20` }}
+            >
               Profile
             </h2>
             <p className="text-gray-700 leading-relaxed text-sm">
@@ -241,7 +279,10 @@ const ClearTemplate = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-xl font-bold uppercase text-slate-800 border-b-2 border-slate-200 pb-2 mb-4">
+            <h2
+              className="text-xl font-bold uppercase border-b-2 pb-2 mb-4"
+              style={{ color: themeColor, borderColor: `${themeColor}20` }}
+            >
               Experience
             </h2>
             <div className="">

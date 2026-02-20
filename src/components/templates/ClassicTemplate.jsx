@@ -9,15 +9,43 @@ import {
 } from "react-icons/fa";
 
 const ClassicTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
+  } = data;
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white p-8 shadow-lg text-gray-800"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-white p-8 shadow-lg text-gray-800 transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header */}
-      <div className="border-b-2 border-gray-800 pb-4 mb-6">
+      <div className="border-b-2 pb-4 mb-6" style={{ borderColor: themeColor }}>
         <h1 className="text-4xl font-bold uppercase text-gray-900 tracking-wider">
           {personalInfo?.fullName || "Your Name"}
         </h1>
@@ -41,16 +69,15 @@ const ClassicTemplate = ({ data }) => {
               <FaMapMarkerAlt /> {personalInfo.location}
             </span>
           )}
-          {personalInfo?.linkedin && (
-            <a
-              href={personalInfo.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-blue-800 hover:underline mr-6 mb-2"
-            >
-              <FaLinkedin /> LinkedIn
-            </a>
-          )}
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:underline mr-6 mb-2"
+            style={{ color: themeColor }}
+          >
+            <FaLinkedin /> LinkedIn
+          </a>
           {personalInfo?.github && (
             <a
               href={personalInfo.github}
@@ -83,7 +110,10 @@ const ClassicTemplate = ({ data }) => {
       {/* Experience */}
       {experience?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Experience
           </h2>
           <div className="space-y-4">
@@ -116,7 +146,10 @@ const ClassicTemplate = ({ data }) => {
       {/* Projects */}
       {projects?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Projects
           </h2>
           <div className="space-y-4">
@@ -151,7 +184,10 @@ const ClassicTemplate = ({ data }) => {
       {/* Education */}
       {education?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Education
           </h2>
           <div className="">
@@ -178,7 +214,10 @@ const ClassicTemplate = ({ data }) => {
       {data.technicalSkills &&
         Object.values(data.technicalSkills).some((arr) => arr?.length > 0) && (
           <div className="mb-6">
-            <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+            <h2
+              className="text-xl font-bold uppercase border-b mb-4 pb-1"
+              style={{ color: themeColor, borderColor: `${themeColor}40` }}
+            >
               Technical Skills
             </h2>
             <div className="grid grid-cols-2 text-sm text-gray-700">
@@ -220,7 +259,10 @@ const ClassicTemplate = ({ data }) => {
       {(data.competencies?.length > 0 ||
         data.softwareProficiency?.length > 0) && (
         <div className="mb-6">
-          <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Proficiency & Competencies
           </h2>
           <div
@@ -246,7 +288,10 @@ const ClassicTemplate = ({ data }) => {
       {/* Interests */}
       {data.interests?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Interests
           </h2>
           <p className="text-sm text-gray-700">{data.interests.join(", ")}</p>

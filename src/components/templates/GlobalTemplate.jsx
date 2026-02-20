@@ -17,8 +17,8 @@ const GlobalTemplate = ({ data }) => {
     projects,
     competencies,
     customSections,
-    themeColor,
-    fontFamily,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
   } = data || {};
 
   const getFontFamily = (font) => {

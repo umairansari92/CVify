@@ -131,13 +131,42 @@ const ElegantPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#2c3e50",
+    fontFamily = "Playfair Display",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      case "Public Sans":
+        return "Helvetica";
+      default:
+        return "Times-Roman";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderColor: `${themeColor}20`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         <View style={styles.header}>
-          <Text style={styles.name}>
+          <Text style={[styles.name, dynamicStyles.accentText]}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
           <Text style={styles.jobTitle}>
@@ -171,7 +200,7 @@ const ElegantPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.expRow} wrap={false}>
                 <View style={styles.expDateSide}>
@@ -203,7 +232,7 @@ const ElegantPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                 <View
@@ -243,7 +272,7 @@ const ElegantPDF = ({ data }) => {
         <View style={styles.columnGrid}>
           {education?.length > 0 && (
             <View style={styles.col}>
-              <Text style={styles.sectionTitle}>Education</Text>
+              <Text style={dynamicStyles.sectionTitle}>Education</Text>
               {education.map((edu, i) => (
                 <View
                   key={i}
@@ -347,6 +376,21 @@ const ElegantPDF = ({ data }) => {
             </View>
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, idx) => (
+          <View key={idx} style={{ marginTop: 10 }}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            <View style={{ paddingHorizontal: 40 }}>
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bullet}>
+                  <Text style={{ color: "#d1d5db" }}>•</Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
       </Page>
     </Document>
   );

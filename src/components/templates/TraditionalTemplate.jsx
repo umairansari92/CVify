@@ -9,16 +9,50 @@ import {
 } from "react-icons/fa";
 
 const TraditionalTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#000000",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white p-10 text-gray-900 font-serif"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-white p-10 text-gray-900 transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header - Centered */}
-      <div className="text-center border-b-2 border-black pb-6 mb-8">
-        <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">
+      <div
+        className="text-center border-b-2 pb-6 mb-8"
+        style={{ borderColor: themeColor }}
+      >
+        <h1
+          className="text-3xl font-bold uppercase tracking-widest mb-2"
+          style={{ color: themeColor }}
+        >
           {personalInfo?.fullName || "Your Name"}
         </h1>
         <div className="flex justify-center flex-wrap mt-4 text-xs font-bold text-gray-700">
@@ -75,7 +109,10 @@ const TraditionalTemplate = ({ data }) => {
       {/* Summary */}
       {personalInfo?.profileSummary && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-2">
+          <h2
+            className="text-lg font-bold uppercase border-b mb-2"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Professional Summary
           </h2>
           <p className="text-md leading-relaxed text-justify">
@@ -87,7 +124,10 @@ const TraditionalTemplate = ({ data }) => {
       {/* Experience */}
       {experience?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-4">
+          <h2
+            className="text-lg font-bold uppercase border-b mb-4"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
             Professional Experience
           </h2>
           <div className="">

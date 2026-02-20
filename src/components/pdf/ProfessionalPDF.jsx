@@ -139,17 +139,50 @@ const ProfessionalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#2563eb",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    sidebarTitle: {
+      ...styles.sidebarTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}40`,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}20`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         <View style={styles.sidebarBackground} fixed />
 
         {/* Sidebar Content */}
         <View style={styles.sidebar}>
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarTitle}>Contact</Text>
+            <Text style={dynamicStyles.sidebarTitle}>Contact</Text>
             {personalInfo?.email && (
               <Link
                 src={`mailto:${personalInfo.email}`}
@@ -191,7 +224,7 @@ const ProfessionalPDF = ({ data }) => {
           </View>
 
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarTitle}>Technical Skills</Text>
+            <Text style={dynamicStyles.sidebarTitle}>Technical Skills</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
@@ -206,7 +239,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {education?.length > 0 && (
             <View style={styles.sidebarSection}>
-              <Text style={styles.sidebarTitle}>Education</Text>
+              <Text style={dynamicStyles.sidebarTitle}>Education</Text>
               {education.map((edu, i) => (
                 <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                   <Text
@@ -240,7 +273,7 @@ const ProfessionalPDF = ({ data }) => {
             <Text style={styles.name}>
               {personalInfo?.fullName || "Your Name"}
             </Text>
-            <Text style={styles.jobTitle}>
+            <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
               {personalInfo?.jobTitle || "Job Title"}
             </Text>
             {personalInfo?.profileSummary && (
@@ -259,7 +292,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Work Experience</Text>
+              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
@@ -282,7 +315,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {projects?.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Projects</Text>
+              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader} wrap={false}>
@@ -310,7 +343,9 @@ const ProfessionalPDF = ({ data }) => {
 
           {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Core Skills & Tools</Text>
+              <Text style={dynamicStyles.sectionTitle}>
+                Core Skills & Tools
+              </Text>
               {competencies?.length > 0 && (
                 <View style={{ marginBottom: 10 }}>
                   <Text

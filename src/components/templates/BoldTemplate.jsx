@@ -10,15 +10,46 @@ import {
 } from "react-icons/fa";
 
 const BoldTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#111827",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white p-0 text-gray-900 font-sans leading-tight shadow-2xl relative"
-      style={{ minHeight: "297mm", padding: "15mm" }}
+      className="w-full bg-white p-0 text-gray-900 leading-tight shadow-2xl relative transition-all duration-500"
+      style={{
+        minHeight: "297mm",
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Dark Header */}
-      <div className="bg-gray-900 text-white p-10 pb-12">
+      <div
+        className="text-white p-10 pb-12"
+        style={{ backgroundColor: themeColor }}
+      >
         <h1 className="text-4xl font-extrabold uppercase tracking-wider mb-2">
           {personalInfo?.fullName || "Your Name"}
         </h1>
@@ -99,7 +130,10 @@ const BoldTemplate = ({ data }) => {
                     key={index}
                     className="mb-6 relative pl-4 border-l-2 border-gray-200"
                   >
-                    <div className="absolute w-3 h-3 bg-gray-900 rounded-full -left-[7px] top-1.5"></div>
+                    <div
+                      className="absolute w-3 h-3 rounded-full -left-[7px] top-1.5"
+                      style={{ backgroundColor: themeColor }}
+                    ></div>
                     <h3 className="font-bold text-gray-900">{exp.position}</h3>
                     <div className="text-sm font-semibold text-gray-600 mb-1">
                       {exp.company} | {exp.startDate} - {exp.endDate}
@@ -118,6 +152,23 @@ const BoldTemplate = ({ data }) => {
                 ))}
               </ResumeSection>
             )}
+
+            {/* Custom Sections */}
+            {customSections?.map((section, i) => (
+              <ResumeSection
+                key={i}
+                title={section.title}
+                titleStyle={{ color: themeColor, borderColor: themeColor }}
+              >
+                <ul className="list-disc list-outside ml-4 mt-2 text-sm text-gray-700">
+                  {section.items?.map((item, j) => (
+                    <li key={j} className="mb-1">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </ResumeSection>
+            ))}
 
             {projects?.length > 0 && (
               <ResumeSection
@@ -161,7 +212,10 @@ const BoldTemplate = ({ data }) => {
                 className="bg-gray-50 p-5 rounded mb-8"
                 style={{ pageBreakInside: "avoid" }}
               >
-                <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
+                <h3
+                  className="font-bold uppercase border-b pb-2 mb-4"
+                  style={{ color: themeColor, borderColor: `${themeColor}20` }}
+                >
                   Education
                 </h3>
                 {education.map((edu, index) => (
@@ -187,7 +241,13 @@ const BoldTemplate = ({ data }) => {
                   className="bg-gray-50 p-5 rounded mb-8"
                   style={{ pageBreakInside: "avoid" }}
                 >
-                  <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4">
+                  <h3
+                    className="font-bold uppercase border-b pb-2 mb-4"
+                    style={{
+                      color: themeColor,
+                      borderColor: `${themeColor}20`,
+                    }}
+                  >
                     Expertise
                   </h3>
                   <div className="">

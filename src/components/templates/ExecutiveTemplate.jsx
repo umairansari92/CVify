@@ -9,16 +9,50 @@ import {
 } from "react-icons/fa";
 
 const ExecutiveTemplate = ({ data }) => {
-  const { personalInfo, education, experience, skills, projects } = data;
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
+    projects,
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
+    technicalSkills,
+  } = data || {};
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-[#fdfdfd] text-slate-800 p-12 leading-snug shadow-inner border-x-4 border-slate-200"
-      style={{ padding: "15mm" }}
+      className="w-full bg-[#fdfdfd] text-slate-800 p-12 leading-snug shadow-inner transition-all duration-500"
+      style={{
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header - Formal & Center */}
-      <div className="text-center border-b-4 border-gray-900 pb-8 mb-10">
-        <h1 className="text-4xl font-extrabold uppercase tracking-widest text-gray-900 mb-2">
+      <div
+        className="text-center pb-8 mb-10 border-b-4"
+        style={{ borderColor: themeColor }}
+      >
+        <h1
+          className="text-4xl font-extrabold uppercase tracking-widest mb-2"
+          style={{ color: themeColor }}
+        >
           {personalInfo?.fullName || "Your Name"}
         </h1>
         <p className="text-lg uppercase tracking-wide font-semibold text-gray-600 mb-6">
@@ -58,7 +92,10 @@ const ExecutiveTemplate = ({ data }) => {
           {/* Summary */}
           {personalInfo?.profileSummary && (
             <div className="mb-10">
-              <h3 className="text-lg font-bold uppercase border-b-2 border-gray-900 mb-4 pb-1">
+              <h3
+                className="text-lg font-bold uppercase border-b-2 mb-4 pb-1"
+                style={{ color: themeColor, borderColor: themeColor }}
+              >
                 Professional Profile
               </h3>
               <p className="text-justify text-gray-800 leading-relaxed font-medium">
@@ -70,7 +107,10 @@ const ExecutiveTemplate = ({ data }) => {
           {/* Experience */}
           {experience?.length > 0 && (
             <div className="mb-10">
-              <h3 className="text-lg font-bold uppercase border-b-2 border-gray-900 mb-6 pb-1">
+              <h3
+                className="text-lg font-bold uppercase border-b-2 mb-6 pb-1"
+                style={{ color: themeColor, borderColor: themeColor }}
+              >
                 Professional Experience
               </h3>
               <div className="">
@@ -139,10 +179,17 @@ const ExecutiveTemplate = ({ data }) => {
           {/* Education Box */}
           {education?.length > 0 && (
             <div
-              className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
-              style={{ pageBreakInside: "avoid" }}
+              className="p-6 border-l-4 mb-10"
+              style={{
+                pageBreakInside: "avoid",
+                backgroundColor: `${themeColor}05`,
+                borderLeftColor: themeColor,
+              }}
             >
-              <h3 className="text-base font-bold uppercase mb-4 text-gray-900">
+              <h3
+                className="text-base font-bold uppercase mb-4"
+                style={{ color: themeColor }}
+              >
                 Education
               </h3>
               <div className="space-y-4">

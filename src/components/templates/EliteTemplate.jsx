@@ -16,8 +16,8 @@ const EliteTemplate = ({ data }) => {
     projects,
     competencies,
     customSections,
-    themeColor,
-    fontFamily,
+    themeColor = "#0f172a",
+    fontFamily = "Playfair Display",
   } = data || {};
 
   const getFontFamily = (font) => {

@@ -110,13 +110,42 @@ const TraditionalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#000000",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    header: { ...styles.header, borderBottomColor: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}40`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.name}>
+      <Page size="A4" style={dynamicStyles.page}>
+        <View style={dynamicStyles.header}>
+          <Text style={[styles.name, dynamicStyles.accentText]}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
           <View style={styles.contact}>
@@ -129,14 +158,14 @@ const TraditionalPDF = ({ data }) => {
 
         {personalInfo?.profileSummary && (
           <View>
-            <Text style={styles.sectionTitle}>Professional Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>Professional Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -213,6 +242,19 @@ const TraditionalPDF = ({ data }) => {
             )}
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, idx) => (
+          <View key={idx}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            {section.items?.map((item, j) => (
+              <View key={j} style={styles.bullet}>
+                <Text style={dynamicStyles.accentText}>•</Text>
+                <Text style={styles.bulletText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
       </Page>
     </Document>
   );

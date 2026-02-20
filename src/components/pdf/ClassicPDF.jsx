@@ -126,12 +126,41 @@ const ClassicPDF = ({ data }) => {
     competencies,
     softwareProficiency,
     interests,
-  } = data;
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    borderAccent: { borderBottomColor: themeColor, borderTopColor: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}33`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
+      <Page size="A4" style={dynamicStyles.page}>
+        <View style={[styles.header, { borderBottomColor: themeColor }]}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
@@ -143,7 +172,10 @@ const ClassicPDF = ({ data }) => {
             {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
             {personalInfo?.location && <Text>{personalInfo.location}</Text>}
             {personalInfo?.linkedin && (
-              <Link src={personalInfo.linkedin} style={{ color: "#1e3a8a" }}>
+              <Link
+                src={personalInfo.linkedin}
+                style={dynamicStyles.accentText}
+              >
                 LinkedIn
               </Link>
             )}
@@ -161,7 +193,7 @@ const ClassicPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -184,14 +216,14 @@ const ClassicPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (
                     <Link
-                      style={{ fontSize: 8, color: "#2563eb" }}
+                      style={{ fontSize: 8, color: themeColor }}
                       src={proj.link}
                     >
                       View Link
@@ -212,7 +244,7 @@ const ClassicPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View>
-              <Text style={styles.sectionTitle}>Technical Skills</Text>
+              <Text style={dynamicStyles.sectionTitle}>Technical Skills</Text>
               <View style={styles.grid}>
                 {Object.entries(technicalSkills).map(
                   ([cat, list], i) =>
@@ -233,7 +265,7 @@ const ClassicPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={styles.sectionTitle}>Core Skills</Text>
+            <Text style={dynamicStyles.sectionTitle}>Core Skills</Text>
             {softwareProficiency?.length > 0 && (
               <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Software: </Text>
@@ -255,7 +287,7 @@ const ClassicPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View style={{ marginTop: 15 }}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -269,6 +301,19 @@ const ClassicPDF = ({ data }) => {
             ))}
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, l) => (
+          <View key={l} style={{ marginTop: 15 }}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            {section.items?.map((item, m) => (
+              <View key={m} style={styles.bullet}>
+                <Text style={dynamicStyles.accentText}>•</Text>
+                <Text style={styles.bulletText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
       </Page>
     </Document>
   );

@@ -158,11 +158,41 @@ const ClearPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    customSections,
+    themeColor = "#1e293b",
+    fontFamily = "Inter",
+  } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      case "Public Sans":
+        return "Helvetica";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont, backgroundColor: themeColor },
+    sidebarHeader: { ...styles.sidebarHeader },
+    sideSectionTitle: { ...styles.sideSectionTitle },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}20`,
+    },
+  };
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         <View style={styles.sidebar}>
           <View style={styles.sidebarHeader} wrap={false}>
             <Text style={styles.name}>
@@ -246,7 +276,9 @@ const ClearPDF = ({ data }) => {
         <View style={styles.main}>
           {personalInfo?.profileSummary && (
             <View style={{ marginBottom: 25 }}>
-              <Text style={styles.sectionTitle}>Professional Summary</Text>
+              <Text style={dynamicStyles.sectionTitle}>
+                Professional Summary
+              </Text>
               <Text
                 style={{ fontSize: 9.5, lineHeight: 1.5, color: "#334155" }}
               >
@@ -257,7 +289,7 @@ const ClearPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View>
-              <Text style={styles.sectionTitle}>Work Experience</Text>
+              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
@@ -306,6 +338,19 @@ const ClearPDF = ({ data }) => {
               ))}
             </View>
           )}
+
+          {/* Custom Sections */}
+          {customSections?.map((section, idx) => (
+            <View key={idx} style={{ marginBottom: 20 }}>
+              <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bullet}>
+                  <Text style={{ color: `${themeColor}40` }}>•</Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          ))}
         </View>
       </Page>
     </Document>

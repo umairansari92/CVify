@@ -153,7 +153,35 @@ const MinimalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    customSections,
+    themeColor = "#0f172a",
+    fontFamily = "Inter",
   } = data || {};
+
+  const getPDFFont = (font) => {
+    switch (font) {
+      case "Inter":
+      case "Manrope":
+      case "Public Sans":
+        return "Helvetica";
+      case "Playfair Display":
+        return "Times-Roman";
+      default:
+        return "Helvetica";
+    }
+  };
+
+  const pdfFont = getPDFFont(fontFamily);
+
+  const dynamicStyles = {
+    page: { ...styles.page, fontFamily: pdfFont },
+    accentText: { color: themeColor },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: themeColor,
+      borderBottomColor: `${themeColor}20`,
+    },
+  };
 
   const renderContactItem = (label, value, link) => {
     if (!value) return null;
@@ -172,13 +200,13 @@ const MinimalPDF = ({ data }) => {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { borderBottomColor: `${themeColor}10` }]}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
-          <Text style={styles.jobTitle}>
+          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
           <View style={styles.contact}>
@@ -233,7 +261,7 @@ const MinimalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -259,7 +287,7 @@ const MinimalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
@@ -300,7 +328,7 @@ const MinimalPDF = ({ data }) => {
           <View style={{ flex: 1, paddingRight: 10 }}>
             {education?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Education</Text>
+                <Text style={dynamicStyles.sectionTitle}>Education</Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 12 }} wrap={false}>
                     <Text style={{ fontWeight: "bold", fontSize: 9.5 }}>
@@ -330,7 +358,7 @@ const MinimalPDF = ({ data }) => {
               competencies?.length > 0 ||
               softwareProficiency?.length > 0) && (
               <View style={styles.section}>
-                <Text style={styles.sidebarTitle}>Technical Skills</Text>
+                <Text style={dynamicStyles.sectionTitle}>Technical Skills</Text>
 
                 {technicalSkills &&
                   Object.entries(technicalSkills).map(
@@ -367,6 +395,21 @@ const MinimalPDF = ({ data }) => {
             )}
           </View>
         </View>
+
+        {/* Custom Sections */}
+        {customSections?.map((section, p) => (
+          <View key={p} style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+            <View style={styles.bulletList}>
+              {section.items?.map((item, q) => (
+                <View key={q} style={styles.bullet}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ))}
       </Page>
     </Document>
   );

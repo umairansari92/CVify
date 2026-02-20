@@ -19,19 +19,43 @@ const ModernTemplate = ({ data }) => {
     interests,
     competencies,
     softwareProficiency,
+    customSections,
+    themeColor = "#2563eb", // Modern defaults to Blue
+    fontFamily = "Inter",
   } = data;
+
+  const getFontFamily = (font) => {
+    switch (font) {
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
 
   return (
     <div
-      className="w-full bg-white p-10 text-gray-800 font-sans"
-      style={{ padding: "15mm" }}
+      className="w-full bg-white p-10 text-gray-800 transition-all duration-500"
+      style={{
+        padding: "15mm",
+        fontFamily: getFontFamily(fontFamily),
+      }}
     >
       {/* Header */}
-      <div className="border-l-4 border-blue-600 pl-6 mb-10">
+      <div
+        className="border-l-4 pl-6 mb-10"
+        style={{ borderColor: themeColor }}
+      >
         <h1 className="text-5xl font-bold text-gray-900 tracking-tight leading-none mb-2">
           {personalInfo?.fullName || "Your Name"}
         </h1>
-        <p className="text-2xl text-blue-600 font-medium mb-4">
+        <p className="text-2xl font-medium mb-4" style={{ color: themeColor }}>
           {personalInfo?.jobTitle || "Job Title"}
         </p>
 
@@ -185,7 +209,7 @@ const ModernTemplate = ({ data }) => {
       {experience?.length > 0 && (
         <ResumeSection
           title="Experience"
-          titleClassName="text-blue-600 border-blue-200"
+          titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
         >
           {experience.map((exp, index) => (
             <div
@@ -225,7 +249,7 @@ const ModernTemplate = ({ data }) => {
       {projects?.length > 0 && (
         <ResumeSection
           title="Projects"
-          titleClassName="text-blue-600 border-blue-200"
+          titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
         >
           {projects.map((proj, index) => (
             <div
@@ -261,7 +285,7 @@ const ModernTemplate = ({ data }) => {
       {education?.length > 0 && (
         <ResumeSection
           title="Education"
-          titleClassName="text-blue-600 border-blue-200"
+          titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
         >
           {education.map((edu, index) => (
             <div
@@ -280,6 +304,29 @@ const ModernTemplate = ({ data }) => {
           ))}
         </ResumeSection>
       )}
+
+      {/* Custom Sections */}
+      {customSections?.map((section, i) => (
+        <ResumeSection
+          key={i}
+          title={section.title}
+          titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
+        >
+          <ul className="list-none space-y-1.5 text-gray-700 text-sm pl-0">
+            {section.items?.map((item, j) => (
+              <li key={j} className="flex items-start">
+                <span
+                  className="mr-3 mt-1.5 text-[0.6rem]"
+                  style={{ color: themeColor }}
+                >
+                  ●
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </ResumeSection>
+      ))}
     </div>
   );
 };
