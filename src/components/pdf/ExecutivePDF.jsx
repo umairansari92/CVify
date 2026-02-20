@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 2,
     color: "#0f172a",
-    marginBottom: 6,
+    marginBottom: 8,
+    lineHeight: 1.2,
   },
   jobTitle: {
     fontSize: 12,
@@ -44,13 +45,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
-    gap: 20,
+    gap: 15,
     fontSize: 9,
     fontWeight: "bold",
     color: "#334155",
     borderTopWidth: 1,
     borderTopColor: "#e2e8f0",
     paddingTop: 10,
+    lineHeight: 1.4,
   },
   main: {
     flexDirection: "row",
@@ -142,7 +144,7 @@ const ExecutivePDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header} fixed>
+        <View style={styles.header}>
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
@@ -153,6 +155,22 @@ const ExecutivePDF = ({ data }) => {
             {personalInfo?.email && <Text>{personalInfo.email}</Text>}
             {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
             {personalInfo?.location && <Text>{personalInfo.location}</Text>}
+            {personalInfo?.linkedin && (
+              <Link
+                style={{ color: "#2563eb", textDecoration: "none" }}
+                src={personalInfo.linkedin}
+              >
+                LinkedIn
+              </Link>
+            )}
+            {personalInfo?.github && (
+              <Link
+                style={{ color: "#2563eb", textDecoration: "none" }}
+                src={personalInfo.github}
+              >
+                GitHub
+              </Link>
+            )}
           </View>
         </View>
 
@@ -289,56 +307,6 @@ const ExecutivePDF = ({ data }) => {
                 ))}
               </View>
             )}
-
-            <View
-              style={[
-                styles.sidebarBox,
-                {
-                  backgroundColor: "#0f172a",
-                  color: "#fff",
-                  borderLeftWidth: 0,
-                },
-              ]}
-              wrap={false}
-            >
-              <Text
-                style={{
-                  fontSize: 9,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#334155",
-                  paddingBottom: 5,
-                  marginBottom: 8,
-                }}
-              >
-                LINKS
-              </Text>
-              {personalInfo?.linkedin && (
-                <Link
-                  style={{ color: "#fff", fontSize: 8, marginBottom: 4 }}
-                  src={personalInfo.linkedin}
-                >
-                  LinkedIn Profile
-                </Link>
-              )}
-              {personalInfo?.github && (
-                <Link
-                  style={{ color: "#fff", fontSize: 8, marginBottom: 4 }}
-                  src={personalInfo.github}
-                >
-                  GitHub Repository
-                </Link>
-              )}
-              {personalInfo?.portfolio && (
-                <Link
-                  style={{ color: "#fff", fontSize: 8 }}
-                  src={personalInfo.portfolio}
-                >
-                  Digital Portfolio
-                </Link>
-              )}
-            </View>
           </View>
         </View>
       </Page>
