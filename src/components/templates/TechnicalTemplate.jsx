@@ -33,14 +33,14 @@ const TechnicalTemplate = ({ data }) => {
         </div>
         <h1 className="text-3xl font-bold mb-2">
           <span className="text-blue-400">const</span>{" "}
-          <span className="text-yellow-300">developer</span> ={" "}
+          <span className="text-yellow-300">Name</span> ={" "}
           <span className="text-white">
             "{personalInfo?.fullName || "User"}"
           </span>
           ;
         </h1>
         <p className="text-slate-400 mb-4">
-          <span className="text-purple-400">developer</span>.
+          <span className="text-purple-400">Title</span>.
           <span className="text-blue-300">setTitle</span>(
           <span className="text-orange-300">
             "{personalInfo?.jobTitle || "Developer"}"
@@ -112,7 +112,7 @@ const TechnicalTemplate = ({ data }) => {
                 style={{ pageBreakInside: "avoid" }}
               >
                 <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1">
-                  Tech Stack
+                  Technical Skills
                 </h3>
                 <div className="space-y-3">
                   {data.technicalSkills.frontend?.length > 0 && (
@@ -207,7 +207,7 @@ const TechnicalTemplate = ({ data }) => {
           {data.competencies?.length > 0 && (
             <div className="bg-white p-4 rounded shadow-sm border border-slate-200">
               <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1">
-                Competencies
+                Core Skills
               </h3>
               <ul className="list-disc list-inside text-xs text-slate-600 leading-5">
                 {data.competencies.map((c, index) => (
@@ -255,8 +255,7 @@ const TechnicalTemplate = ({ data }) => {
           {experience?.length > 0 && (
             <section>
               <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <span className="text-blue-500">function</span> getExperience(){" "}
-                {"{"}
+                [WORK_EXPERIENCE]
               </h2>
               <div className="border-l-2 border-slate-200 pl-6 ml-2">
                 {experience.map((exp, index) => (
@@ -290,14 +289,16 @@ const TechnicalTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-              <span className="text-slate-400 ml-2 mt-4 block">{"}"}</span>
+              <span className="text-slate-400 ml-2 mt-4 block">
+                [/EXPERIENCE]
+              </span>
             </section>
           )}
 
           {projects?.length > 0 && (
             <section className="mt-8">
               <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <span className="text-blue-500">const</span> projects = [
+                [PROJECTS]
               </h2>
               <div className="space-y-4 pl-4">
                 {projects.map((proj, index) => (
@@ -323,7 +324,9 @@ const TechnicalTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-              <span className="text-slate-900 ml-0 mt-4 block">];</span>
+              <span className="text-slate-900 ml-0 mt-4 block">
+                [/PROJECTS]
+              </span>
             </section>
           )}
         </div>

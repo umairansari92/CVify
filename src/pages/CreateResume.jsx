@@ -68,7 +68,7 @@ const CreateResume = () => {
               onClick={handleSave}
               disabled={loading}
               className="btn-primary flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base"
-              style={{ color: 'white' }}
+              style={{ color: "white" }}
             >
               {loading ? "Syncing..." : "Save & Finish"}
             </button>
@@ -126,6 +126,8 @@ const CreateResume = () => {
                 <option value="elegant">Elegant Style</option>
                 <option value="technical">Technical Focus</option>
                 <option value="executive">Executive Tier</option>
+                <option value="global">Global Minimalist</option>
+                <option value="elite">Corporate Elite</option>
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                 <svg

@@ -36,7 +36,7 @@ const Header = () => {
               style={{ animationDuration: "3s" }}
             />
             <h2 className="text-lg lg:text-xl font-black text-text-primary tracking-tight group-hover:text-primary transition-colors">
-              Overview
+              Home
             </h2>
           </div>
           <p className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-70 group-hover:opacity-100 transition-opacity">

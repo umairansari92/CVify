@@ -11,6 +11,8 @@ import ClassicPDF from "../components/pdf/ClassicPDF";
 import BoldPDF from "../components/pdf/BoldPDF";
 import ElegantPDF from "../components/pdf/ElegantPDF";
 import ClearPDF from "../components/pdf/ClearPDF";
+import GlobalPDF from "../components/pdf/GlobalPDF";
+import ElitePDF from "../components/pdf/ElitePDF";
 
 /**
  * Handles the PDF export using native @react-pdf/renderer.
@@ -58,6 +60,12 @@ export const handleDownloadPDF = async (data, templateId) => {
         break;
       case "clear":
         MyDocument = <ClearPDF data={data} />;
+        break;
+      case "global":
+        MyDocument = <GlobalPDF data={data} />;
+        break;
+      case "elite":
+        MyDocument = <ElitePDF data={data} />;
         break;
       // All others fallback to a clean StandardPDF
       default:

@@ -8,6 +8,8 @@ import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import ElegantTemplate from "./templates/ElegantTemplate";
 import TechnicalTemplate from "./templates/TechnicalTemplate";
 import ExecutiveTemplate from "./templates/ExecutiveTemplate";
+import GlobalTemplate from "./templates/GlobalTemplate";
+import EliteTemplate from "./templates/EliteTemplate";
 
 const ResumePreview = ({ resume, templateId }) => {
   if (!resume) return <div className="text-gray-500">No resume data</div>;
@@ -35,6 +37,10 @@ const ResumePreview = ({ resume, templateId }) => {
         return <TechnicalTemplate data={resume} />;
       case "executive":
         return <ExecutiveTemplate data={resume} />;
+      case "global":
+        return <GlobalTemplate data={resume} />;
+      case "elite":
+        return <EliteTemplate data={resume} />;
       default:
         return <ClassicTemplate data={resume} />;
     }
