@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     marginBottom: 12,
     marginTop: 10,
-    color: "#111827",
+    color: "#1c5eecff",
     textTransform: "uppercase",
   },
   entry: {
