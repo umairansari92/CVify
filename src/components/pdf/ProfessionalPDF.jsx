@@ -15,25 +15,28 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#333",
     backgroundColor: "#fff",
+    paddingTop: 30,
+    paddingBottom: 30,
   },
   // Fixed Sidebar Background
   sidebarBackground: {
     position: "absolute",
     left: 0,
-    top: 0,
-    height: "100%",
+    top: -30, // Offset for page padding
+    height: "120%", // Fail-safe height
+    width: "32%",
     backgroundColor: "#111827",
   },
   sidebar: {
     width: "32%",
-    padding: 25,
+    paddingHorizontal: 25,
     color: "white",
     backgroundColor: "#111827", // Fallback background
     zIndex: 1,
   },
   main: {
     width: "68%",
-    padding: 35,
+    paddingHorizontal: 35,
     zIndex: 1,
   },
   sidebarSection: {
