@@ -89,68 +89,68 @@ const SkillsForm = () => {
     <div className="space-y-12 animate-fadeIn">
       <section className="space-y-6">
         <h3 className="text-xs font-black text-action dark:text-accent uppercase tracking-[0.2em] flex items-center gap-3">
-          Technical Inventory
+          Skills & Abilities
           <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></span>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <InputGroup
-            label="Frontend Tech"
+            label="Primary Skills"
             name="frontend"
             register={register}
-            hint="React, Next.js, Vue, Tailwind"
+            hint="e.g. Project Management, Microsoft Office, Customer Service"
           />
           <InputGroup
-            label="Backend Tech"
+            label="Secondary Skills"
             name="backend"
             register={register}
-            hint="Node.js, Go, Python, Java"
+            hint="e.g. Accounting, Data Entry, Inventory Management"
           />
           <InputGroup
-            label="Cloud / DevOps"
+            label="Systems & Software"
             name="aiDevOps"
             register={register}
-            hint="AWS, Docker, Kubernetes, CI/CD"
+            hint="e.g. SAP, CRM, Adobe Photoshop, AutoCAD"
           />
           <InputGroup
-            label="Data Systems"
+            label="Specialized Tools"
             name="database"
             register={register}
-            hint="PostgreSQL, MongoDB, GraphQL"
+            hint="e.g. Public Speaking, Multi-language Support, Budgeting"
           />
         </div>
         <InputGroup
-          label="Professional Utilities"
+          label="Workplace Tools"
           name="tools"
           register={register}
-          hint="Git, Figma, Jira, Postman, Linux"
+          hint="e.g. Microsoft Teams, Zoom, Slack, Trello"
           height="h-32"
         />
       </section>
 
       <section className="space-y-8">
         <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] flex items-center gap-4">
-          Core Competencies
+          Key Strengths
           <span className="flex-1 h-px bg-border-subtle"></span>
         </h3>
         <div className="space-y-10">
           <InputGroup
-            label="Expertise & Soft Skills"
+            label="Professional Strengths"
             name="competencies"
             register={register}
-            hint="Agile, System Design, Mentorship, Public Speaking"
+            hint="e.g. Team Leadership, Problem Solving, Communication, Time Management"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <InputGroup
-              label="Tools & Software"
+              label="Digital Literacy"
               name="softwareProficiency"
               register={register}
-              hint="Office 365, Adobe CC, SAP, CRM"
+              hint="Office 365, Adobe CC, CRM Software"
             />
             <InputGroup
-              label="Human Interests"
+              label="Personal Interests"
               name="interests"
               register={register}
-              hint="Open Source, Chess, Traveling, Robotics"
+              hint="e.g. Reading, Sports, Traveling, Volunteering"
             />
           </div>
         </div>

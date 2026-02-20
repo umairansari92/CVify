@@ -27,9 +27,24 @@ const Sidebar = ({ onClose }) => {
   };
 
   const navItems = [
-    { path: "/", label: "Dashboard", icon: <FaHome />, color: "from-blue-500 to-cyan-500" },
-    { path: "/create", label: "Create Resume", icon: <FaFileAlt />, color: "from-green-500 to-emerald-500" },
-    { path: "/templates", label: "Templates", icon: <FaThLarge />, color: "from-purple-500 to-pink-500" },
+    {
+      path: "/",
+      label: "Home",
+      icon: <FaHome />,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      path: "/create",
+      label: "Create Resume",
+      icon: <FaFileAlt />,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      path: "/templates",
+      label: "Templates",
+      icon: <FaThLarge />,
+      color: "from-purple-500 to-pink-500",
+    },
   ];
 
   return (
@@ -46,15 +61,27 @@ const Sidebar = ({ onClose }) => {
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-10 left-10 w-20 h-20 bg-primary rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-16 h-16 bg-secondary rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-accent rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute bottom-20 right-10 w-16 h-16 bg-secondary rounded-full blur-xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/4 w-12 h-12 bg-accent rounded-full blur-xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
       {/* Floating geometric shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-8 w-3 h-3 bg-primary/20 rotate-45 animate-float"></div>
-        <div className="absolute top-40 left-6 w-2 h-2 bg-secondary/30 rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-40 right-12 w-4 h-4 bg-accent/20 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute top-40 left-6 w-2 h-2 bg-secondary/30 rounded-full animate-float"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-40 right-12 w-4 h-4 bg-accent/20 rounded-full animate-float"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
       <div className="p-10 flex flex-col items-center justify-center relative overflow-hidden">
@@ -100,13 +127,17 @@ const Sidebar = ({ onClose }) => {
                 )}
                 <span
                   className={`text-xl transition-all duration-300 group-hover:scale-110 relative z-10 ${
-                    isActive ? "text-white animate-bounce" : "group-hover:text-primary"
+                    isActive
+                      ? "text-white animate-bounce"
+                      : "group-hover:text-primary"
                   }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {item.icon}
                 </span>
-                <span className="font-bold tracking-tight relative z-10">{item.label}</span>
+                <span className="font-bold tracking-tight relative z-10">
+                  {item.label}
+                </span>
                 {!isActive && (
                   <div className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>
@@ -122,7 +153,10 @@ const Sidebar = ({ onClose }) => {
         <div className="premium-card p-6 bg-linear-to-br from-primary/5 to-secondary/5 border border-primary/10 mb-6 group cursor-pointer relative overflow-hidden rounded-2xl">
           <div className="absolute inset-0 bg-linear-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="absolute top-2 right-2">
-            <FaCrown className="text-primary animate-spin" style={{ animationDuration: '4s' }} />
+            <FaCrown
+              className="text-primary animate-spin"
+              style={{ animationDuration: "4s" }}
+            />
           </div>
           <p className="text-xs font-black text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
             <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
@@ -139,8 +173,14 @@ const Sidebar = ({ onClose }) => {
             <span className="text-xs text-text-secondary">Expires: Never</span>
             <div className="flex gap-1">
               <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
-              <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping" style={{ animationDelay: '0.4s' }}></div>
+              <div
+                className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+              <div
+                className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"
+                style={{ animationDelay: "0.4s" }}
+              ></div>
             </div>
           </div>
         </div>

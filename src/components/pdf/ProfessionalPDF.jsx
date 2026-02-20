@@ -191,7 +191,7 @@ const ProfessionalPDF = ({ data }) => {
           </View>
 
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarTitle}>Technical Inventory</Text>
+            <Text style={styles.sidebarTitle}>Technical Skills</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
@@ -259,7 +259,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Professional Experience</Text>
+              <Text style={styles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
@@ -282,7 +282,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {projects?.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Key Projects</Text>
+              <Text style={styles.sectionTitle}>Projects</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader} wrap={false}>
@@ -310,7 +310,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Core Competencies & Tools</Text>
+              <Text style={styles.sectionTitle}>Core Skills & Tools</Text>
               {competencies?.length > 0 && (
                 <View style={{ marginBottom: 10 }}>
                   <Text

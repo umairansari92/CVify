@@ -136,7 +136,7 @@ const TraditionalPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>

@@ -64,7 +64,7 @@ const ProjectsForm = () => {
               </label>
               <input
                 {...register(`projects.${index}.name`)}
-                placeholder="e.g. CVify Explorer"
+                placeholder="e.g. Community Service or Office Renovation"
                 className="input-premium"
               />
             </div>
@@ -74,7 +74,7 @@ const ProjectsForm = () => {
               </label>
               <input
                 {...register(`projects.${index}.link`)}
-                placeholder="e.g. github.com/user/cvify"
+                placeholder="e.g. Link to your work or website"
                 className="input-premium"
               />
             </div>
@@ -87,7 +87,7 @@ const ProjectsForm = () => {
                 name={`projects.${index}.startDate`}
                 render={({ field }) => (
                   <DateRangePicker
-                    label="Project Inception *"
+                    label="Start Date *"
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -100,7 +100,7 @@ const ProjectsForm = () => {
                 name={`projects.${index}.endDate`}
                 render={({ field }) => (
                   <DateRangePicker
-                    label="Project Conclusion *"
+                    label="End Date *"
                     value={field.value}
                     onChange={field.onChange}
                     isPresentAllowed={true}
@@ -112,13 +112,13 @@ const ProjectsForm = () => {
 
           <div className="space-y-4">
             <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
-              Project Brief
+              Project Description
             </label>
             <div className="relative">
               <textarea
                 {...register(`projects.${index}.description.0`)}
                 maxLength={500}
-                placeholder="Detail the tech stack and your primary contributions..."
+                placeholder="Describe the project objectives and your role..."
                 className="input-premium h-44 resize-none leading-relaxed"
               />
               <div className="flex justify-between items-center mt-3 px-2">
@@ -153,7 +153,7 @@ const ProjectsForm = () => {
         <span className="text-2xl group-hover:rotate-90 transition-transform">
           +
         </span>
-        <span>Register New Project</span>
+        <span>Add Project</span>
       </button>
     </div>
   );

@@ -71,7 +71,7 @@ const PersonalInfoForm = () => {
           </label>
           <input
             {...register("jobTitle")}
-            placeholder="e.g. Senior Frontend Developer"
+            placeholder="e.g. Sales Manager, Office Administrator"
             className="input-premium"
           />
           <p className="text-[10px] text-text-muted/60 font-bold italic ml-2">
@@ -132,7 +132,7 @@ const PersonalInfoForm = () => {
 
       <div className="space-y-8 pt-6">
         <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] flex items-center gap-4">
-          Social Presence
+          Professional Links
           <span className="flex-1 h-px bg-border-subtle"></span>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -146,7 +146,7 @@ const PersonalInfoForm = () => {
           <div className="flex flex-col gap-3">
             <input
               {...register("github")}
-              placeholder="GitHub URL"
+              placeholder="e.g. Work Portfolio or Digital Profile"
               className="input-premium"
             />
           </div>
@@ -166,13 +166,13 @@ const PersonalInfoForm = () => {
         </label>
         <textarea
           {...register("profileSummary")}
-          placeholder="e.g. Passionate developer with 5+ years of experience..."
+          placeholder="e.g. Dedicated professional with over 5 years of experience in office management, known for efficiency and strong organization skills..."
           maxLength={500}
           className="input-premium h-44 resize-none leading-relaxed"
         />
         <div className="flex justify-between items-center px-2">
           <p className="text-[10px] text-text-muted/60 font-bold italic">
-            Focus on your top achievements and unique value proposition.
+            Focus on your top achievements and unique skills and experience.
           </p>
           <span
             className={`text-[10px] font-black tracking-widest ${(watch("profileSummary")?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}

@@ -40,7 +40,7 @@ const EducationForm = () => {
           <div className="flex justify-between items-center">
             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
               <span className="w-8 h-px bg-primary/20"></span>
-              Academic Registry #{index + 1}
+              Education Details #{index + 1}
             </h4>
             <button
               type="button"
@@ -59,7 +59,7 @@ const EducationForm = () => {
               </label>
               <input
                 {...register(`education.${index}.degree`)}
-                placeholder="e.g. BS in Computer Science"
+                placeholder="e.g. High School Diploma or Bachelor of Commerce"
                 className="input-premium"
               />
             </div>
@@ -69,7 +69,7 @@ const EducationForm = () => {
               </label>
               <input
                 {...register(`education.${index}.institution`)}
-                placeholder="e.g. Stanford University"
+                placeholder="e.g. City High School or National University"
                 className="input-premium"
               />
             </div>
@@ -82,7 +82,7 @@ const EducationForm = () => {
                 name={`education.${index}.startDate`}
                 render={({ field }) => (
                   <DateRangePicker
-                    label="Commencement Date *"
+                    label="Start Date *"
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -95,7 +95,7 @@ const EducationForm = () => {
                 name={`education.${index}.endDate`}
                 render={({ field }) => (
                   <DateRangePicker
-                    label="Completion Date *"
+                    label="End Date *"
                     value={field.value}
                     onChange={field.onChange}
                     isPresentAllowed={true}
@@ -123,7 +123,7 @@ const EducationForm = () => {
         <span className="text-2xl group-hover:rotate-90 transition-transform">
           +
         </span>
-        <span>Add Educational Asset</span>
+        <span>Add Education</span>
       </button>
     </div>
   );

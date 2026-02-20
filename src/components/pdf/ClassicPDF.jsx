@@ -161,7 +161,7 @@ const ClassicPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Experience</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -233,7 +233,7 @@ const ClassicPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={styles.sectionTitle}>Proficiency & Competencies</Text>
+            <Text style={styles.sectionTitle}>Core Skills</Text>
             {softwareProficiency?.length > 0 && (
               <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Software: </Text>

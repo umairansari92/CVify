@@ -171,7 +171,7 @@ const ElegantPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.expRow} wrap={false}>
                 <View style={styles.expDateSide}>
@@ -265,7 +265,7 @@ const ElegantPDF = ({ data }) => {
           {technicalSkills &&
             Object.values(technicalSkills).some((a) => a?.length > 0) && (
               <View style={styles.col}>
-                <Text style={styles.sectionTitle}>Expertise</Text>
+                <Text style={styles.sectionTitle}>Technical Skills</Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -308,7 +308,7 @@ const ElegantPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={styles.sectionTitle}>Additional Detail</Text>
+            <Text style={styles.sectionTitle}>Core Skills</Text>
             <View
               style={{
                 flexDirection: "row",

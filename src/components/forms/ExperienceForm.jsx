@@ -47,7 +47,7 @@ const ExperienceForm = () => {
           <div className="flex justify-between items-center">
             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
               <span className="w-8 h-px bg-primary/20"></span>
-              Experience Entry #{index + 1}
+              Work Experience #{index + 1}
             </h4>
             <button
               type="button"
@@ -66,7 +66,7 @@ const ExperienceForm = () => {
               </label>
               <input
                 {...register(`experience.${index}.position`)}
-                placeholder="e.g. Software Engineer"
+                placeholder="e.g. Manager, Accountant, or Sales Assistant"
                 className="input-premium"
               />
             </div>
@@ -76,7 +76,7 @@ const ExperienceForm = () => {
               </label>
               <input
                 {...register(`experience.${index}.company`)}
-                placeholder="e.g. Google"
+                placeholder="e.g. ABC Corporation or Standard Bank"
                 className="input-premium"
               />
             </div>
@@ -114,7 +114,7 @@ const ExperienceForm = () => {
 
           <div className="space-y-4">
             <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
-              Impact & Responsibilities
+              Job Duties & Achievements
             </label>
             <div className="relative">
               <textarea
@@ -129,7 +129,7 @@ const ExperienceForm = () => {
                     : ""
                 }
                 maxLength={500}
-                placeholder="Describe your wins (one per line)..."
+                placeholder="Describe your duties and achievements (one per line)..."
                 className="input-premium h-44 resize-none leading-relaxed"
               />
               <div className="flex justify-between items-center mt-3 px-2">
@@ -165,7 +165,7 @@ const ExperienceForm = () => {
         <span className="text-2xl group-hover:rotate-90 transition-transform">
           +
         </span>
-        <span>Add Professional Experience</span>
+        <span>Add Work Experience</span>
       </button>
     </div>
   );

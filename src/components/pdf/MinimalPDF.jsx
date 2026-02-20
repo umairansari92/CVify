@@ -233,7 +233,7 @@ const MinimalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -259,7 +259,7 @@ const MinimalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <Text style={styles.sectionTitle}>Projects</Text>
             <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
@@ -330,7 +330,7 @@ const MinimalPDF = ({ data }) => {
               competencies?.length > 0 ||
               softwareProficiency?.length > 0) && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Skills & Competencies</Text>
+                <Text style={styles.sidebarTitle}>Technical Skills</Text>
 
                 {technicalSkills &&
                   Object.entries(technicalSkills).map(

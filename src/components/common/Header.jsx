@@ -14,21 +14,33 @@ const Header = () => {
 
       {/* Floating particles effect */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-2 left-1/4 w-2 h-2 bg-primary/30 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute top-4 right-1/3 w-1 h-1 bg-secondary/40 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-2 left-1/2 w-1.5 h-1.5 bg-accent/30 rounded-full animate-bounce" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute top-2 left-1/4 w-2 h-2 bg-primary/30 rounded-full animate-bounce"
+          style={{ animationDelay: "0s" }}
+        ></div>
+        <div
+          className="absolute top-4 right-1/3 w-1 h-1 bg-secondary/40 rounded-full animate-bounce"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-2 left-1/2 w-1.5 h-1.5 bg-accent/30 rounded-full animate-bounce"
+          style={{ animationDelay: "2s" }}
+        ></div>
       </div>
 
       <div className="flex items-center gap-2 lg:gap-4 relative z-10">
         <div className="flex flex-col group cursor-pointer">
           <div className="flex items-center gap-1 lg:gap-2">
-            <FaStar className="text-primary animate-spin text-sm lg:text-base" style={{ animationDuration: '3s' }} />
+            <FaStar
+              className="text-primary animate-spin text-sm lg:text-base"
+              style={{ animationDuration: "3s" }}
+            />
             <h2 className="text-lg lg:text-xl font-black text-text-primary tracking-tight group-hover:text-primary transition-colors">
-              Dashboard
+              Overview
             </h2>
           </div>
           <p className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-70 group-hover:opacity-100 transition-opacity">
-            Workspace
+            My Account
           </p>
         </div>
       </div>
@@ -57,7 +69,10 @@ const Header = () => {
           {user?.profileImage ? (
             <div className="relative group cursor-pointer">
               <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full group-hover:bg-primary/40 transition-all scale-110 group-hover:scale-125"></div>
-              <div className="absolute inset-0 bg-linear-to-r from-primary/20 to-secondary/20 rounded-full animate-spin" style={{ animationDuration: '10s' }}></div>
+              <div
+                className="absolute inset-0 bg-linear-to-r from-primary/20 to-secondary/20 rounded-full animate-spin"
+                style={{ animationDuration: "10s" }}
+              ></div>
               <img
                 src={user.profileImage}
                 alt="Profile"

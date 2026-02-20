@@ -246,7 +246,7 @@ const ClearPDF = ({ data }) => {
         <View style={styles.main}>
           {personalInfo?.profileSummary && (
             <View style={{ marginBottom: 25 }}>
-              <Text style={styles.sectionTitle}>Profile</Text>
+              <Text style={styles.sectionTitle}>Professional Summary</Text>
               <Text
                 style={{ fontSize: 9.5, lineHeight: 1.5, color: "#334155" }}
               >
@@ -257,7 +257,7 @@ const ClearPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View>
-              <Text style={styles.sectionTitle}>Experience</Text>
+              <Text style={styles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>

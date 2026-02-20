@@ -190,7 +190,7 @@ const ModernPDF = ({ data }) => {
 
         <View style={styles.columns} wrap={false}>
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Technical Expertise</Text>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([key, val], i) =>
@@ -205,7 +205,7 @@ const ModernPDF = ({ data }) => {
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Soft Skills & Tools</Text>
+            <Text style={styles.sectionTitle}>Additional Skills</Text>
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
                 <Text style={styles.skillLabel}>CORE COMPETENCIES</Text>
@@ -248,7 +248,7 @@ const ModernPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Projects</Text>
+            <Text style={styles.sectionTitle}>Work Projects</Text>
             {projects.map((proj, index) => (
               <View key={index} style={styles.entry}>
                 <View style={styles.entryHeader} wrap={false}>

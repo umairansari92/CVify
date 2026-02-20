@@ -241,7 +241,7 @@ const TechnicalPDF = ({ data }) => {
             {technicalSkills &&
               Object.values(technicalSkills).some((a) => a?.length > 0) && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sidebarTitle}>Tech Stack</Text>
+                  <Text style={styles.sidebarTitle}>Technical Skills</Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
                       list?.length > 0 && (
@@ -258,7 +258,7 @@ const TechnicalPDF = ({ data }) => {
 
             {competencies?.length > 0 && (
               <View style={styles.sidebarBox} wrap={false}>
-                <Text style={styles.sidebarTitle}>Competencies</Text>
+                <Text style={styles.sidebarTitle}>Core Skills</Text>
                 <Text style={{ fontSize: 8, color: "#475569" }}>
                   {competencies.join(" • ")}
                 </Text>
@@ -290,11 +290,7 @@ const TechnicalPDF = ({ data }) => {
             {experience?.length > 0 && (
               <View>
                 <View wrap={false}>
-                  <Text style={styles.sectionTitle}>
-                    <Text style={styles.keyword}>function </Text>
-                    <Text style={styles.function}>getExperience</Text>
-                    <Text>() {"{"}</Text>
-                  </Text>
+                  <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
                 </View>
                 {experience.map((exp, i) => (
                   <View key={i} style={styles.entry} wrap={false}>
@@ -313,18 +309,13 @@ const TechnicalPDF = ({ data }) => {
                     ))}
                   </View>
                 ))}
-                <Text style={{ color: "#64748b", marginTop: 5 }}>{"}"}</Text>
               </View>
             )}
 
             {projects?.length > 0 && (
               <View style={{ marginTop: 15 }}>
                 <View wrap={false}>
-                  <Text style={styles.sectionTitle}>
-                    <Text style={styles.keyword}>const </Text>
-                    <Text style={styles.variable}>projects </Text>
-                    <Text>= [</Text>
-                  </Text>
+                  <Text style={styles.sectionTitle}>KEY PROJECTS</Text>
                 </View>
                 {projects.map((proj, i) => (
                   <View key={i} style={styles.projectBox} wrap={false}>
@@ -348,7 +339,6 @@ const TechnicalPDF = ({ data }) => {
                     </Text>
                   </View>
                 ))}
-                <Text style={{ color: "#64748b", marginTop: 5 }}>{"];"}</Text>
               </View>
             )}
           </View>

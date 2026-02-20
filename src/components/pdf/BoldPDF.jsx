@@ -192,7 +192,7 @@ const BoldPDF = ({ data }) => {
             <View style={styles.leftCol}>
               {experience?.length > 0 && (
                 <View>
-                  <Text style={styles.sectionTitle}>Experience</Text>
+                  <Text style={styles.sectionTitle}>Work Experience</Text>
                   {experience.map((exp, i) => (
                     <View key={i} style={styles.entry} wrap={false}>
                       <View style={styles.entryHeader}>
@@ -214,7 +214,7 @@ const BoldPDF = ({ data }) => {
 
               {projects?.length > 0 && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={styles.sectionTitle}>Projects</Text>
+                  <Text style={styles.sectionTitle}>Additional Skills</Text>
                   {projects.map((proj, i) => (
                     <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                       <View
@@ -272,7 +272,7 @@ const BoldPDF = ({ data }) => {
               {technicalSkills &&
                 Object.values(technicalSkills).some((a) => a?.length > 0) && (
                   <View style={styles.sidebarBox}>
-                    <Text style={styles.sidebarTitle}>Expertise</Text>
+                    <Text style={styles.sidebarTitle}>Skills</Text>
                     {Object.entries(technicalSkills).map(
                       ([cat, list], i) =>
                         list?.length > 0 && (
@@ -305,7 +305,7 @@ const BoldPDF = ({ data }) => {
 
               {competencies?.length > 0 && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sidebarTitle}>Competencies</Text>
+                  <Text style={styles.sectionTitle}>Additional Skills</Text>
                   {competencies.map((c, i) => (
                     <View key={i} style={styles.bullet}>
                       <Text>•</Text>
