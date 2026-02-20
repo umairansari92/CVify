@@ -26,13 +26,14 @@ const styles = StyleSheet.create({
     height: "120%", // Fail-safe height
     width: "32%",
     backgroundColor: "#111827",
+    zIndex: -1,
   },
   sidebar: {
     width: "32%",
     paddingHorizontal: 25,
     color: "white",
     backgroundColor: "#111827", // Fallback background
-    zIndex: 1,
+    zIndex: 10,
   },
   main: {
     width: "68%",

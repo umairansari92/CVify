@@ -18,7 +18,7 @@ import {
   FiCopy,
 } from "react-icons/fi";
 import ThreeBackground from "../components/three/ThreeBackground";
-import Swal from "react-sweetalert2";
+import Swal from "sweetalert2";
 import { TypeAnimation } from "react-type-animation";
 
 const Dashboard = () => {
@@ -179,7 +179,7 @@ const Dashboard = () => {
                 className="premium-card group h-full flex flex-col p-8 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5"
               >
                 {/* Visual Header */}
-                  <div className="relative mb-8 aspect-16/6 bg-linear-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+                <div className="relative mb-8 aspect-16/6 bg-linear-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
                   <div className="absolute inset-0 bg-mesh opacity-30"></div>
                   <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-xl border border-white/20 shadow-sm">
                     <p className="text-[10px] font-black uppercase tracking-widest text-primary">
