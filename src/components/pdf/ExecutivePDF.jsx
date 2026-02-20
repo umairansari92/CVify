@@ -42,6 +42,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   contact: {
+    borderTopWidth: 1,
+    borderTopColor: "#e2e8f0",
+    paddingTop: 10,
+    gap: 8,
+  },
+  contactRow: {
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
@@ -49,10 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: "bold",
     color: "#334155",
-    borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
-    paddingTop: 10,
-    lineHeight: 1.4,
+    lineHeight: 1.2,
   },
   main: {
     flexDirection: "row",
@@ -152,24 +155,40 @@ const ExecutivePDF = ({ data }) => {
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
           <View style={styles.contact}>
-            {personalInfo?.email && <Text>{personalInfo.email}</Text>}
-            {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
-            {personalInfo?.location && <Text>{personalInfo.location}</Text>}
-            {personalInfo?.linkedin && (
-              <Link
-                style={{ color: "#2563eb", textDecoration: "none" }}
-                src={personalInfo.linkedin}
-              >
-                LinkedIn
-              </Link>
-            )}
-            {personalInfo?.github && (
-              <Link
-                style={{ color: "#2563eb", textDecoration: "none" }}
-                src={personalInfo.github}
-              >
-                GitHub
-              </Link>
+            <View style={styles.contactRow}>
+              {personalInfo?.email && <Text>{personalInfo.email}</Text>}
+              {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
+              {personalInfo?.location && <Text>{personalInfo.location}</Text>}
+            </View>
+            {(personalInfo?.linkedin ||
+              personalInfo?.github ||
+              personalInfo?.portfolio) && (
+              <View style={styles.contactRow}>
+                {personalInfo?.linkedin && (
+                  <Link
+                    style={{ color: "#2563eb", textDecoration: "none" }}
+                    src={personalInfo.linkedin}
+                  >
+                    LinkedIn
+                  </Link>
+                )}
+                {personalInfo?.github && (
+                  <Link
+                    style={{ color: "#2563eb", textDecoration: "none" }}
+                    src={personalInfo.github}
+                  >
+                    GitHub
+                  </Link>
+                )}
+                {personalInfo?.portfolio && (
+                  <Link
+                    style={{ color: "#2563eb", textDecoration: "none" }}
+                    src={personalInfo.portfolio}
+                  >
+                    Portfolio
+                  </Link>
+                )}
+              </View>
             )}
           </View>
         </View>
