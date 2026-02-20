@@ -138,6 +138,10 @@ const styles = StyleSheet.create({
     color: "#334155",
     lineHeight: 1.4,
   },
+  link: {
+    color: "#2563eb",
+    textDecoration: "none",
+  },
 });
 
 const MinimalPDF = ({ data }) => {
@@ -151,6 +155,21 @@ const MinimalPDF = ({ data }) => {
     softwareProficiency,
   } = data || {};
 
+  const renderContactItem = (label, value, link) => {
+    if (!value) return null;
+    return (
+      <View style={styles.contactItem}>
+        {link ? (
+          <Link src={link} style={styles.link}>
+            <Text style={{ color: "#64748b" }}>{label}</Text>
+          </Link>
+        ) : (
+          <Text>{value}</Text>
+        )}
+      </View>
+    );
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -163,19 +182,44 @@ const MinimalPDF = ({ data }) => {
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
           <View style={styles.contact}>
-            {[
-              personalInfo?.email,
-              personalInfo?.phone,
-              personalInfo?.location,
-              personalInfo?.linkedin && "LinkedIn",
-              personalInfo?.github && "GitHub",
-            ]
-              .filter(Boolean)
-              .map((item, i) => (
-                <Text key={i} style={styles.contactItem}>
-                  {item}
-                </Text>
-              ))}
+            {personalInfo?.email && (
+              <View style={styles.contactItem}>
+                <Link src={`mailto:${personalInfo.email}`} style={styles.link}>
+                  <Text style={{ color: "#64748b" }}>{personalInfo.email}</Text>
+                </Link>
+              </View>
+            )}
+            {personalInfo?.phone && (
+              <View style={styles.contactItem}>
+                <Text>{personalInfo.phone}</Text>
+              </View>
+            )}
+            {personalInfo?.location && (
+              <View style={styles.contactItem}>
+                <Text>{personalInfo.location}</Text>
+              </View>
+            )}
+            {personalInfo?.linkedin && (
+              <View style={styles.contactItem}>
+                <Link src={personalInfo.linkedin} style={styles.link}>
+                  <Text style={{ color: "#64748b" }}>LinkedIn</Text>
+                </Link>
+              </View>
+            )}
+            {personalInfo?.github && (
+              <View style={styles.contactItem}>
+                <Link src={personalInfo.github} style={styles.link}>
+                  <Text style={{ color: "#64748b" }}>GitHub</Text>
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.contactItem}>
+                <Link src={personalInfo.portfolio} style={styles.link}>
+                  <Text style={{ color: "#64748b" }}>Portfolio</Text>
+                </Link>
+              </View>
+            )}
           </View>
         </View>
 
@@ -220,7 +264,20 @@ const MinimalPDF = ({ data }) => {
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
-                    <Text style={styles.title}>{proj.name}</Text>
+                    {proj.link ? (
+                      <Link
+                        src={proj.link}
+                        style={[
+                          styles.title,
+                          styles.link,
+                          { color: "#1e293b", textDecoration: "none" },
+                        ]}
+                      >
+                        <Text>{proj.name}</Text>
+                      </Link>
+                    ) : (
+                      <Text style={styles.title}>{proj.name}</Text>
+                    )}
                   </View>
                   <View style={styles.bulletList}>
                     {proj.description?.map((desc, j) => (
