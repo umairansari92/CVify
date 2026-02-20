@@ -10,6 +10,13 @@ import {
 } from "react-icons/fa";
 
 const TechnicalTemplate = ({ data }) => {
+  const {
+    personalInfo,
+    education,
+    experience,
+    projects,
+    technicalSkills,
+    competencies,
     softwareProficiency,
     customSections,
     themeColor,
@@ -18,25 +25,30 @@ const TechnicalTemplate = ({ data }) => {
 
   const getFontFamily = (font) => {
     switch (font) {
-      case "Inter": return "'Inter', sans-serif";
-      case "Manrope": return "'Manrope', sans-serif";
-      case "Playfair Display": return "'Playfair Display', serif";
-      case "Public Sans": return "'Public Sans', sans-serif";
-      default: return "'Inter', sans-serif";
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
     }
   };
 
   return (
     <div
       className="w-full bg-[#1a1c24] text-gray-300 p-8 relative transition-all duration-500"
-      style={{ 
-        minHeight: "297mm", 
+      style={{
+        minHeight: "297mm",
         padding: "15mm",
-        fontFamily: getFontFamily(fontFamily) 
+        fontFamily: getFontFamily(fontFamily),
       }}
     >
       {/* Code Header */}
-      <div 
+      <div
         className="text-green-400 p-6 rounded-md mb-6 font-mono shadow-lg border-t-4"
         style={{ backgroundColor: "#0f172a", borderTopColor: themeColor }}
       >
@@ -346,7 +358,7 @@ const TechnicalTemplate = ({ data }) => {
           {/* Custom Sections */}
           {customSections?.map((section, i) => (
             <section key={i} className="mt-8 animate-fadeIn">
-              <h2 
+              <h2
                 className="text-xl font-bold mb-4 flex items-center gap-2"
                 style={{ color: themeColor }}
               >
@@ -354,7 +366,10 @@ const TechnicalTemplate = ({ data }) => {
               </h2>
               <div className="space-y-3 pl-6 border-l-2 border-slate-800 ml-2">
                 {section.items?.map((item, j) => (
-                  <div key={j} className="flex gap-4 text-xs text-slate-400 italic">
+                  <div
+                    key={j}
+                    className="flex gap-4 text-xs text-slate-400 italic"
+                  >
                     <span style={{ color: themeColor }}>{`>>`}</span>
                     <span className="flex-1">{item}</span>
                   </div>
