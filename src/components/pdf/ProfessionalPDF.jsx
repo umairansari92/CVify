@@ -15,30 +15,19 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#333",
     backgroundColor: "#fff",
-    paddingTop: 30,
-    paddingBottom: 30,
-  },
-  // Fixed Sidebar Background
-  sidebarBackground: {
-    position: "absolute",
-    left: 0,
-    top: -30, // Offset for page padding
-    height: "120%", // Fail-safe height
-    width: "32%",
-    backgroundColor: "#111827",
-    zIndex: -1,
   },
   sidebar: {
     width: "32%",
     paddingHorizontal: 25,
+    paddingVertical: 35,
     color: "white",
-    backgroundColor: "#111827", // Fallback background
-    zIndex: 10,
+    backgroundColor: "#111827",
+    minHeight: "100%",
   },
   main: {
     width: "68%",
     paddingHorizontal: 35,
-    zIndex: 1,
+    paddingVertical: 35,
   },
   sidebarSection: {
     marginBottom: 20,
@@ -149,9 +138,6 @@ const ProfessionalPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Fixed Background Layer for Sidebar */}
-        <View style={styles.sidebarBackground} fixed />
-
         {/* Sidebar Content */}
         <View style={styles.sidebar}>
           <View style={styles.sidebarSection}>
