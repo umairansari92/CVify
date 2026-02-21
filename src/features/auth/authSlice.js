@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, signupUser } from "./authThunk";
+import { loginUser, signupUser, verifyOtp } from "./authThunk";
 
 const getSafeToken = () => {
   const token = localStorage.getItem("token");
@@ -59,6 +59,23 @@ const authSlice = createSlice({
         }
       })
       .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(verifyOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        const { user, token } = action.payload;
+        if (token) {
+          state.user = user;
+          state.token = token;
+          localStorage.setItem("token", token);
+        }
+      })
+      .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
+import VerifyOtp from "../pages/VerifyOtp";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";

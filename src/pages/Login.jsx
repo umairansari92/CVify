@@ -51,7 +51,16 @@ const Login = () => {
 
           {error && (
             <div className="bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 p-4 rounded-2xl text-xs font-bold mb-6 border border-red-100 dark:border-red-900/50 animate-shake">
-              {error}
+              <p className="mb-2">{typeof error === "object" ? error?.message : error}</p>
+              {typeof error === "object" && error?.email && (
+                <Link
+                  to="/verify-otp"
+                  state={{ email: error.email }}
+                  className="text-action dark:text-accent font-bold hover:underline"
+                >
+                  Verify email now →
+                </Link>
+              )}
             </div>
           )}
 

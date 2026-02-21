@@ -16,11 +16,11 @@ const Signup = () => {
 
   useEffect(() => {
     if (token) {
-      navigate("/login");
+      navigate("/", { replace: true });
     }
   }, [token, navigate]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Create FormData for file upload
     const formData = new FormData();
     formData.append("firstName", data.firstName);
@@ -36,7 +36,14 @@ const Signup = () => {
       formData.append("profileImage", data.profileImage[0]);
     }
 
-    dispatch(signupUser(formData));
+    try {
+      const result = await dispatch(signupUser(formData));
+      if (signupUser.fulfilled.match(result) && result.payload?.email) {
+        navigate("/verify-otp", { state: { email: result.payload.email }, replace: true });
+      }
+    } catch (_) {
+      // Error shown via auth slice
+    }
   };
 
   return (
