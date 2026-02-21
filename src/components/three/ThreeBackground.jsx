@@ -6,19 +6,29 @@ export default function ThreeBackground() {
     <div className="three-canvas-container">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 60 }}
-        style={{ 
+        style={{
           background: "transparent",
           width: "100%",
-          height: "100%"
+          height: "100%",
         }}
-        gl={{ 
-          alpha: true, 
+        gl={{
+          alpha: true,
           antialias: true,
           powerPreference: "high-performance",
           stencil: false,
-          depth: false
+          depth: false,
+          preserveDrawingBuffer: false, // Optimization
         }}
         dpr={[1, 2]}
+        onCreated={({ gl }) => {
+          gl.domElement.addEventListener("webglcontextlost", (event) => {
+            event.preventDefault();
+            console.warn("CVify: WebGL Context Lost. Attempting recovery...");
+          });
+          gl.domElement.addEventListener("webglcontextrestored", () => {
+            console.info("CVify: WebGL Context Restored.");
+          });
+        }}
       >
         <ambientLight intensity={2} />
         <pointLight position={[10, 10, 10]} intensity={0.5} />
