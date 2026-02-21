@@ -22,7 +22,7 @@ const ModernTemplate = ({ data }) => {
     customSections,
     themeColor = "#2563eb", // Modern defaults to Blue
     fontFamily = "Inter",
-  } = data;
+  } = data || {};
 
   const getFontFamily = (font) => {
     switch (font) {

@@ -65,5 +65,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, updateDiamonds } = authSlice.actions;
 export default authSlice.reducer;

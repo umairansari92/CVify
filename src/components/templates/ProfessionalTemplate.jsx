@@ -9,33 +9,39 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 
-  const { 
-    personalInfo, 
-    education, 
-    experience, 
-    skills, 
+const ProfessionalTemplate = ({ data }) => {
+  const {
+    personalInfo,
+    education,
+    experience,
+    skills,
     projects,
     customSections,
     themeColor = "#2563eb",
-    fontFamily = "Inter"
+    fontFamily = "Inter",
   } = data || {};
 
   const getFontFamily = (font) => {
     switch (font) {
-      case "Inter": return "'Inter', sans-serif";
-      case "Manrope": return "'Manrope', sans-serif";
-      case "Playfair Display": return "'Playfair Display', serif";
-      case "Public Sans": return "'Public Sans', sans-serif";
-      default: return "'Inter', sans-serif";
+      case "Inter":
+        return "'Inter', sans-serif";
+      case "Manrope":
+        return "'Manrope', sans-serif";
+      case "Playfair Display":
+        return "'Playfair Display', serif";
+      case "Public Sans":
+        return "'Public Sans', sans-serif";
+      default:
+        return "'Inter', sans-serif";
     }
   };
 
   return (
-    <div 
-      className="w-full bg-white text-gray-800 transition-all duration-500" 
-      style={{ 
+    <div
+      className="w-full bg-white text-gray-800 transition-all duration-500"
+      style={{
         padding: "15mm",
-        fontFamily: getFontFamily(fontFamily)
+        fontFamily: getFontFamily(fontFamily),
       }}
     >
       {/* Sidebar (Left, Dark) */}

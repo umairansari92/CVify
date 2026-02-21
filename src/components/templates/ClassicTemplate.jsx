@@ -18,7 +18,7 @@ const ClassicTemplate = ({ data }) => {
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Inter",
-  } = data;
+  } = data || {};
 
   const getFontFamily = (font) => {
     switch (font) {

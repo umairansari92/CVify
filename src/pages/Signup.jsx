@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../features/auth/authThunk";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import ThemeToggle from "../components/common/ThemeToggle";
 
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const referralCode = new URLSearchParams(search).get("ref");
   const { loading, error, token } = useSelector((state) => state.auth);
   const { register, handleSubmit } = useForm();
 
@@ -26,6 +28,9 @@ const Signup = () => {
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("gender", data.gender);
+    if (referralCode) {
+      formData.append("referredBy", referralCode);
+    }
 
     if (data.profileImage && data.profileImage[0]) {
       formData.append("profileImage", data.profileImage[0]);

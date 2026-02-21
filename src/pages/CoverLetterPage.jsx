@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+import api from "../api/axios";
 import {
   FaGem,
   FaMagic,
@@ -36,9 +36,7 @@ const CoverLetterPage = () => {
 
   const fetchResumes = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/resumes", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/resumes");
       setResumes(res.data);
       if (res.data.length > 0)
         setFormData((prev) => ({ ...prev, resumeId: res.data[0]._id }));
@@ -49,9 +47,7 @@ const CoverLetterPage = () => {
 
   const fetchLetters = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/cover-letters", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/cover-letters");
       setLetters(res.data);
     } catch (err) {
       console.error(err);
@@ -65,11 +61,10 @@ const CoverLetterPage = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/cover-letters/generate",
-        { ...formData, type: genType },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const res = await api.post("/cover-letters/generate", {
+        ...formData,
+        type: genType,
+      });
 
       toast.success(
         `${genType === "ai" ? "AI" : "Template"} Letter Generated!`,
@@ -239,10 +234,7 @@ const CoverLetterPage = () => {
                   <button
                     onClick={async () => {
                       if (window.confirm("Delete this letter?")) {
-                        await axios.delete(
-                          `http://localhost:5000/api/cover-letters/${letter._id}`,
-                          { headers: { Authorization: `Bearer ${token}` } },
-                        );
+                        await api.delete(`/cover-letters/${letter._id}`);
                         fetchLetters();
                       }
                     }}
