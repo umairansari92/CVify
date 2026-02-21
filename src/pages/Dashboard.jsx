@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
@@ -20,15 +20,62 @@ import {
 import ThreeBackground from "../components/three/ThreeBackground";
 import Swal from "sweetalert2";
 import { TypeAnimation } from "react-type-animation";
+import api from "../api/axios";
+import { handleDownloadLetter } from "../utils/pdfExport";
+import { toast } from "react-hot-toast";
+import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes } from "react-icons/fa";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { resumes, loading, error } = useSelector((state) => state.resume);
+  const { user } = useSelector((state) => state.auth);
+  const [coverLetters, setCoverLetters] = useState([]);
+  const [loadingLetters, setLoadingLetters] = useState(false);
+  const [selectedLetter, setSelectedLetter] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getMyResumes());
+    fetchCoverLetters();
   }, [dispatch]);
+
+  const fetchCoverLetters = async () => {
+    setLoadingLetters(true);
+    try {
+      const res = await api.get("/cover-letters");
+      setCoverLetters(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingLetters(false);
+    }
+  };
+
+  const handleDeleteLetter = async (id, e) => {
+    e.stopPropagation();
+    const result = await Swal.fire({
+      title: "Delete Cover Letter?",
+      text: "Permanent action. You can't recover this letter.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      confirmButtonText: "Delete",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" }
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/cover-letters/${id}`);
+        fetchCoverLetters();
+        toast.success("Deleted");
+      } catch (err) {
+        toast.error("Failed to delete");
+      }
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -275,7 +322,108 @@ const Dashboard = () => {
             </button>
           </div>
         )}
+            </div>
+          </div>
+        )}
+
+        {/* Cover Letters Section */}
+        <div className="mt-24 mb-12">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-4xl font-black text-text-primary tracking-tight flex items-center gap-4">
+              My Cover Letters
+              <span className="text-xs font-black text-secondary bg-secondary/10 px-4 py-2 rounded-2xl border border-secondary/20 shadow-sm">
+                {coverLetters.length} Letters
+              </span>
+            </h2>
+          </div>
+
+          {loadingLetters ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-50">
+              {[1, 2].map((i) => (
+                <div key={i} className="h-48 glass rounded-[2.5rem] animate-pulse"></div>
+              ))}
+            </div>
+          ) : coverLetters.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {coverLetters.map((letter) => (
+                <div key={letter._id} className="premium-card group p-6 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5 space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-secondary shadow-sm">
+                      <FaFileAlt size={20} />
+                    </div>
+                    <div className="px-3 py-1 bg-secondary/10 border border-secondary/20 rounded-lg">
+                      <span className="text-[9px] font-black uppercase text-secondary tracking-widest">
+                        {letter.type === 'ai' ? 'AI Optimized' : 'Standard'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-black text-text-primary truncate">{letter.jobTitle}</h3>
+                    <p className="text-sm text-text-muted font-bold opacity-60 italic">{letter.companyName || "No Company"}</p>
+                  </div>
+
+                  <div className="pt-4 flex gap-2">
+                    <button 
+                      onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }}
+                      className="flex-1 btn-glass text-[10px] font-black uppercase py-2 hover:bg-white/10"
+                    >
+                      View
+                    </button>
+                    <button 
+                      onClick={() => handleDownloadLetter(letter, user)}
+                      className="flex-1 btn-glass bg-primary/10! text-primary! border-primary/20! text-[10px] font-black uppercase py-2 hover:bg-primary! hover:text-white!"
+                    >
+                      PDF
+                    </button>
+                    <button 
+                      onClick={(e) => handleDeleteLetter(letter._id, e)}
+                      className="w-10 btn-glass bg-red-500/10! text-red-500! border-red-500/20! flex items-center justify-center hover:bg-red-500! hover:text-white!"
+                    >
+                      <FaTrash size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="glass p-12 text-center rounded-[2.5rem] border-2 border-dashed border-white/5 opacity-50">
+               <p className="font-bold text-text-muted text-lg italic">You haven't generated any cover letters yet.</p>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Preview Modal */}
+      {isPreviewOpen && selectedLetter && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-midground w-full max-w-2xl max-h-[85vh] rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col scale-in">
+            <div className="p-8 border-b border-white/5 flex justify-between items-center">
+              <div>
+                <h3 className="font-black text-2xl text-text-primary uppercase tracking-tight">{selectedLetter.jobTitle}</h3>
+                <p className="text-sm text-secondary font-black">{selectedLetter.companyName || "Professional Application"}</p>
+              </div>
+              <button 
+                onClick={() => setIsPreviewOpen(false)}
+                className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 transition-all text-text-muted"
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="p-10 overflow-y-auto font-medium text-base text-text-muted leading-relaxed whitespace-pre-wrap select-text scrollbar-thin">
+              {selectedLetter.content}
+            </div>
+            <div className="p-8 border-t border-white/5 bg-white/5 flex gap-4">
+               <button 
+                  onClick={() => handleDownloadLetter(selectedLetter, user)}
+                  className="flex-1 py-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                >
+                  <FaDownload /> Save PDF
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

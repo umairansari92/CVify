@@ -103,23 +103,38 @@ import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
 
 export const handleDownloadLetter = async (letter, user) => {
   if (!letter || !user) {
-    console.error("Missing data for Cover Letter export");
+    console.error("Missing data for Cover Letter export:", { letter, user });
+    toast.error("Required data missing for PDF");
     return;
   }
 
+  console.log("Exporting Cover Letter PDF for:", letter.jobTitle);
+
   try {
     const MyDocument = <CoverLetterPDF letter={letter} user={user} />;
+
+    // Using the same flow as handleDownloadPDF for consistency
     const blob = await pdf(MyDocument).toBlob();
+
+    if (!blob) throw new Error("Generated PDF blob is empty");
+
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = `Cover-Letter-${letter.jobTitle.replace(/\s+/g, "-")}.pdf`;
+
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(url), 100);
+
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 200);
+
+    console.info("Cover Letter PDF downloaded successfully");
   } catch (error) {
     console.error("Cover Letter Export Error:", error);
-    alert("Failed to download PDF");
+    toast.error(`Failed to download PDF: ${error.message}`);
   }
 };

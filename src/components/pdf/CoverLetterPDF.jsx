@@ -70,7 +70,7 @@ const CoverLetterPDF = ({ letter, user }) => (
       </View>
 
       <View style={styles.footer}>
-        <Text>Generated via CVify - Your Professional Identity Partner</Text>
+        <a href="https://app-cvifypro.vercel.app/"><Text>Generated via CVify - Your Professional Identity Partner</Text></a>
       </View>
     </Page>
   </Document>
