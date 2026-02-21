@@ -54,10 +54,13 @@ const CoverLetterPDF = ({ letter, user }) => (
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
         <Text style={styles.name}>
-          {user?.firstName} {user?.lastName}
+          {user?.firstName && user?.lastName
+            ? `${user.firstName} ${user.lastName}`
+            : user?.firstName || "Applicant"}
         </Text>
         <Text style={styles.contact}>
-          {user?.email} | {letter.jobTitle} Application
+          {user?.email ? `${user.email} | ` : ""}
+          {letter.jobTitle || "Cover Letter"} Application
         </Text>
       </View>
 

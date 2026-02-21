@@ -103,8 +103,8 @@ export const handleDownloadPDF = async (data, templateId) => {
 import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
 
 export const handleDownloadLetter = async (letter, user) => {
-  if (!letter || !user) {
-    console.error("Missing data for Cover Letter export:", { letter, user });
+  if (!letter) {
+    console.error("Missing letter data for Cover Letter export");
     toast.error("Required data missing for PDF");
     return;
   }
