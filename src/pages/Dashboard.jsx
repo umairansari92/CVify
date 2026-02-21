@@ -214,7 +214,7 @@ const Dashboard = () => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-95 glass rounded-[3rem] animate-pulse"
+                className="h-[380px] glass rounded-[3rem] animate-pulse"
               ></div>
             ))}
           </div>
@@ -226,7 +226,7 @@ const Dashboard = () => {
                 className="premium-card group h-full flex flex-col p-8 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5"
               >
                 {/* Visual Header */}
-                <div className="relative mb-8 aspect-16/6 bg-linear-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+                <div className="relative mb-8 aspect-[16/6] bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
                   <div className="absolute inset-0 bg-mesh opacity-30"></div>
                   <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-xl border border-white/20 shadow-sm">
                     <p className="text-[10px] font-black uppercase tracking-widest text-primary">
@@ -238,7 +238,7 @@ const Dashboard = () => {
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <h3 className="text-2xl font-black text-text-primary leading-tight mb-2 truncate max-w-55">
+                      <h3 className="text-2xl font-black text-text-primary leading-tight mb-2 truncate max-w-[220px]">
                         {resume.personalInfo?.fullName || "Untitled Resume"}
                       </h3>
                       <p className="text-xs font-black text-primary uppercase tracking-[0.15em] opacity-80 mb-4">
@@ -320,9 +320,6 @@ const Dashboard = () => {
             >
               Start Building Now
             </button>
-          </div>
-        )}
-            </div>
           </div>
         )}
 
