@@ -12,6 +12,8 @@ import {
 } from "react-icons/fa";
 import { updateDiamonds } from "../features/auth/authSlice";
 import { toast } from "react-hot-toast";
+import { handleDownloadLetter } from "../utils/pdfExport";
+import { FaEye, FaTimes } from "react-icons/fa";
 
 const CoverLetterPage = () => {
   const { user, token } = useSelector((state) => state.auth);
@@ -19,6 +21,8 @@ const CoverLetterPage = () => {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [letters, setLetters] = useState([]);
+  const [selectedLetter, setSelectedLetter] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     resumeId: "",
@@ -254,6 +258,15 @@ const CoverLetterPage = () => {
                 <div className="flex gap-2 mt-auto">
                   <button
                     onClick={() => {
+                      setSelectedLetter(letter);
+                      setIsPreviewOpen(true);
+                    }}
+                    className="flex-1 py-2 glass rounded-xl text-[10px] font-black uppercase text-text-secondary hover:bg-white/10 hover:text-primary transition-all flex items-center justify-center gap-2"
+                  >
+                    <FaEye /> View
+                  </button>
+                  <button
+                    onClick={() => {
                       navigator.clipboard.writeText(letter.content);
                       toast.success("Copied to clipboard!");
                     }}
@@ -261,7 +274,10 @@ const CoverLetterPage = () => {
                   >
                     <FaCopy /> Copy
                   </button>
-                  <button className="flex-1 py-2 glass rounded-xl text-[10px] font-black uppercase text-secondary hover:bg-secondary hover:text-white transition-all flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => handleDownloadLetter(letter, user)}
+                    className="flex-1 py-2 glass rounded-xl text-[10px] font-black uppercase text-secondary hover:bg-secondary hover:text-white transition-all flex items-center justify-center gap-2"
+                  >
                     <FaDownload /> PDF
                   </button>
                 </div>
@@ -282,6 +298,50 @@ const CoverLetterPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      {isPreviewOpen && selectedLetter && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-midground w-full max-w-2xl max-h-[80vh] rounded-3xl border border-white/10 shadow-2xl flex flex-col animate-in zoom-in-95 duration-300">
+            <div className="p-6 border-b border-white/5 flex justify-between items-center">
+              <div>
+                <h3 className="font-black text-xl text-text-primary uppercase tracking-tight">
+                  {selectedLetter.jobTitle}
+                </h3>
+                <p className="text-sm text-primary font-bold">
+                  {selectedLetter.companyName || "Professional Application"}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsPreviewOpen(false)}
+                className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/10 hover:text-red-500 transition-all text-text-secondary"
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="p-8 overflow-y-auto font-medium text-sm text-text-secondary leading-relaxed whitespace-pre-wrap select-text">
+              {selectedLetter.content}
+            </div>
+            <div className="p-6 border-t border-white/5 bg-white/5 flex gap-4">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(selectedLetter.content);
+                  toast.success("Copied to clipboard!");
+                }}
+                className="flex-1 py-3 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <FaCopy /> Copy Content
+              </button>
+              <button
+                onClick={() => handleDownloadLetter(selectedLetter, user)}
+                className="flex-1 py-3 bg-secondary text-white rounded-2xl font-black shadow-lg shadow-secondary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <FaDownload /> Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

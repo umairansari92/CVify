@@ -95,3 +95,31 @@ export const handleDownloadPDF = async (data, templateId) => {
     );
   }
 };
+
+/**
+ * Handles Cover Letter PDF generation
+ */
+import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
+
+export const handleDownloadLetter = async (letter, user) => {
+  if (!letter || !user) {
+    console.error("Missing data for Cover Letter export");
+    return;
+  }
+
+  try {
+    const MyDocument = <CoverLetterPDF letter={letter} user={user} />;
+    const blob = await pdf(MyDocument).toBlob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Cover-Letter-${letter.jobTitle.replace(/\s+/g, "-")}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+  } catch (error) {
+    console.error("Cover Letter Export Error:", error);
+    alert("Failed to download PDF");
+  }
+};
