@@ -10,6 +10,7 @@ import {
   FaStar,
   FaCrown,
   FaTimes,
+  FaEnvelopeOpenText,
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -44,6 +45,18 @@ const Sidebar = ({ onClose }) => {
       label: "Templates",
       icon: <FaThLarge />,
       color: "from-purple-500 to-pink-500",
+    },
+    {
+      path: "/cover-letter",
+      label: "Cover Letter",
+      icon: <FaEnvelopeOpenText />,
+      color: "from-orange-500 to-amber-500",
+    },
+    {
+      path: "/referral",
+      label: "Earn Diamonds",
+      icon: <FaRocket />,
+      color: "from-red-500 to-pink-500",
     },
   ];
 

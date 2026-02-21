@@ -7,6 +7,8 @@ import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";
+import CoverLetterPage from "../pages/CoverLetterPage";
+import ReferralPage from "../pages/ReferralPage";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -53,6 +55,8 @@ const AppRoutes = () => {
         <Route path="/create" element={<CreateResume />} />
         <Route path="/edit/:id" element={<CreateResume />} />
         <Route path="/templates" element={<Templates />} />
+        <Route path="/cover-letter" element={<CoverLetterPage />} />
+        <Route path="/referral" element={<ReferralPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />

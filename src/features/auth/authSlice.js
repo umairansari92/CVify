@@ -21,6 +21,11 @@ const authSlice = createSlice({
       state.token = null;
       localStorage.removeItem("token");
     },
+    updateDiamonds(state, action) {
+      if (state.user) {
+        state.user.diamonds = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder

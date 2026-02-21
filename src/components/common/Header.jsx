@@ -1,7 +1,7 @@
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
-import { FaUserCircle, FaCrown, FaStar } from "react-icons/fa";
+import { FaUserCircle, FaCrown, FaStar, FaGem } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 
 const Header = () => {
@@ -46,6 +46,26 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-4 lg:gap-8 relative z-10">
+        {/* Diamond Balance Indicator */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-linear-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 shadow-lg shadow-blue-500/5 group hover:scale-105 transition-all duration-300">
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue-400 blur-sm rounded-full animate-pulse opacity-50"></div>
+            <FaGem
+              className="text-blue-400 relative z-10 animate-bounce text-sm lg:text-base"
+              style={{ animationDuration: "3s" }}
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[10px] lg:text-[11px] font-black text-blue-400 uppercase leading-none tracking-tighter">
+              Diamonds
+            </span>
+            <span className="text-xs lg:text-sm font-black text-text-primary leading-none mt-0.5">
+              {user?.diamonds || 0}
+            </span>
+          </div>
+          <div className="ml-1 w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
+        </div>
+
         <ThemeToggle />
 
         <div className="flex items-center gap-2 lg:gap-4 pl-4 lg:pl-8 border-l border-white/10">
