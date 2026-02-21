@@ -1,5 +1,6 @@
 import React from "react";
 import { pdf } from "@react-pdf/renderer";
+import { toast } from "react-hot-toast";
 import ModernPDF from "../components/pdf/ModernPDF";
 import StandardPDF from "../components/pdf/StandardPDF";
 import ProfessionalPDF from "../components/pdf/ProfessionalPDF";
@@ -121,7 +122,7 @@ export const handleDownloadLetter = async (letter, user) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `Cover-Letter-${letter.jobTitle.replace(/\s+/g, "-")}.pdf`;
+    link.download = `Cover-Letter-${(letter.jobTitle || "cover-letter").replace(/\s+/g, "-")}.pdf`;
 
     document.body.appendChild(link);
     link.click();
