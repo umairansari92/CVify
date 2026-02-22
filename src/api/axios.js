@@ -14,12 +14,13 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Global response interceptor: show toasts/alerts for errors and handle 401
+// Global response interceptor: show toasts/alerts for errors and handle 401/403
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    const message = error.response?.data?.message || error.message || "An error occurred";
+    const data = error.response?.data;
+    const message = data?.message || error.message || "An error occurred";
 
     if (status === 401) {
       // Clear token and force login with a modal confirmation
@@ -32,6 +33,9 @@ api.interceptors.response.use(
       }).then(() => {
         window.location.href = "/login";
       });
+    } else if (status === 403 && data?.code === "EMAIL_NOT_VERIFIED" && data?.email) {
+      // Don't show generic toast - Login page will show verify prompt and redirect
+      // Just reject so auth thunk can handle it
     } else {
       // Non-blocking toast for other errors
       Swal.fire({

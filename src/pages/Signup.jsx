@@ -172,7 +172,7 @@ const Signup = () => {
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-100 dark:border-white/5 text-center">
+          <div className="mt-10 pt-8 border-t border-slate-100 dark:border-white/5 text-center space-y-3">
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               Existing member?{" "}
               <Link
@@ -180,6 +180,14 @@ const Signup = () => {
                 className="text-action dark:text-accent font-bold hover:underline transition-all"
               >
                 Access Account
+              </Link>
+            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <Link
+                to="/verify-otp"
+                className="text-action dark:text-accent font-bold hover:underline transition-all"
+              >
+                Verify your email →
               </Link>
             </p>
           </div>

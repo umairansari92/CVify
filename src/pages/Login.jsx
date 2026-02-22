@@ -18,8 +18,12 @@ const Login = () => {
     }
   }, [token, navigate]);
 
-  const onSubmit = (data) => {
-    dispatch(loginUser(data));
+  const onSubmit = async (data) => {
+    const result = await dispatch(loginUser(data));
+    // If 403 (email not verified), redirect to verify-otp with email
+    if (loginUser.rejected.match(result) && result.payload?.email) {
+      navigate("/verify-otp", { state: { email: result.payload.email }, replace: true });
+    }
   };
 
   return (
@@ -96,7 +100,7 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-100 dark:border-white/5 text-center">
+          <div className="mt-10 pt-8 border-t border-slate-100 dark:border-white/5 text-center space-y-3">
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               New to the platform?{" "}
               <Link
@@ -104,6 +108,14 @@ const Login = () => {
                 className="text-action dark:text-accent font-bold hover:underline transition-all"
               >
                 Create Account
+              </Link>
+            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <Link
+                to="/verify-otp"
+                className="text-action dark:text-accent font-bold hover:underline transition-all"
+              >
+                Verify your email →
               </Link>
             </p>
           </div>
