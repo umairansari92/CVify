@@ -22,6 +22,7 @@ import ElitePDF from "../components/pdf/ElitePDF";
 export const handleDownloadPDF = async (data, templateId) => {
   if (!data) {
     console.error("No data provided for PDF export");
+    toast.error("No data available for PDF export");
     return;
   }
 
@@ -77,6 +78,10 @@ export const handleDownloadPDF = async (data, templateId) => {
     // 2. Generate the PDF blob using the native renderer
     const blob = await pdf(MyDocument).toBlob();
 
+    if (!blob) {
+      throw new Error("PDF generation produced an empty result");
+    }
+
     // 3. Trigger browser download
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -89,11 +94,12 @@ export const handleDownloadPDF = async (data, templateId) => {
 
     // Clean up
     setTimeout(() => URL.revokeObjectURL(url), 100);
+
+    toast.success("Resume PDF downloaded successfully");
+    console.info("Resume PDF downloaded:", link.download);
   } catch (error) {
     console.error("PDF Export Error:", error);
-    alert(
-      `PDF generation failed: ${error.message}. Please check the console for more details.`,
-    );
+    toast.error(`PDF generation failed: ${error.message || "Unknown error"}`);
   }
 };
 
