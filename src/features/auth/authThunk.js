@@ -22,10 +22,10 @@ export const loginUser = createAsyncThunk(
       const res = await api.post("/auth/login", data);
       return res.data;
     } catch (err) {
-      const data = err.response?.data;
-      const message = data?.message || "Login failed. Please check your credentials.";
-      if (data?.code === "EMAIL_NOT_VERIFIED" && data?.email) {
-        return rejectWithValue({ message, email: data.email });
+      const errorData = err.response?.data;
+      const message = errorData?.message || "Login failed. Please check your credentials.";
+      if (errorData?.code === "EMAIL_NOT_VERIFIED" && errorData?.email) {
+        return rejectWithValue({ message, email: errorData.email, code: "EMAIL_NOT_VERIFIED" });
       }
       return rejectWithValue(message);
     }

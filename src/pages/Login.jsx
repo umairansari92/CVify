@@ -21,8 +21,11 @@ const Login = () => {
   const onSubmit = async (data) => {
     const result = await dispatch(loginUser(data));
     // If 403 (email not verified), redirect to verify-otp with email
-    if (loginUser.rejected.match(result) && result.payload?.email) {
-      navigate("/verify-otp", { state: { email: result.payload.email }, replace: true });
+    if (loginUser.rejected.match(result)) {
+      const payload = result.payload;
+      if (typeof payload === "object" && payload?.email) {
+        navigate("/verify-otp", { state: { email: payload.email }, replace: true });
+      }
     }
   };
 
@@ -55,7 +58,7 @@ const Login = () => {
 
           {error && (
             <div className="bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 p-4 rounded-2xl text-xs font-bold mb-6 border border-red-100 dark:border-red-900/50 animate-shake">
-              <p className="mb-2">{typeof error === "object" ? error?.message : error}</p>
+              <p className="mb-2">{typeof error === "object" && error?.message ? error.message : String(error)}</p>
               {typeof error === "object" && error?.email && (
                 <Link
                   to="/verify-otp"
