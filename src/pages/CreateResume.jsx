@@ -41,7 +41,7 @@ const CreateResume = () => {
     } else {
       await dispatch(createResume(currentResume));
     }
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const tabs = [

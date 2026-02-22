@@ -39,8 +39,16 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const AppRoutes = () => {
+  const { token } = useSelector((state) => state.auth);
+
   return (
     <Routes>
+      {/* Root: redirect based on auth state */}
+      <Route
+        path="/"
+        element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
+      />
+
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
@@ -53,7 +61,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create" element={<CreateResume />} />
         <Route path="/edit/:id" element={<CreateResume />} />
         <Route path="/templates" element={<Templates />} />
