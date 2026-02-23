@@ -94,7 +94,7 @@ const CreateResume = () => {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full xl:w-auto">
             <button
-              onClick={handleSave}
+              onClick={() => handleSave()}
               disabled={loading}
               className="btn-primary flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base"
               style={{ color: "white" }}
