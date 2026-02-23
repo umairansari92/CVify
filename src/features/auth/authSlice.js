@@ -1,3 +1,4 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, signupUser, verifyOtp, getMe } from "./authThunk";
 
 const getSafeToken = () => {
