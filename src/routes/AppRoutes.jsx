@@ -8,7 +8,7 @@ import VerifyOtp from "../pages/VerifyOtp";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";
-import LandingPage from "../pages/LandingPage";
+
 import CoverLetterPage from "../pages/CoverLetterPage";
 import ReferralPage from "../pages/ReferralPage";
 import Layout from "../components/common/Layout";
@@ -47,7 +47,7 @@ const AppRoutes = () => {
       {/* Root: Landing Page for guests, Dashboard for users */}
       <Route
         path="/"
-        element={token ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+        element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
       />
 
       <Route path="/login" element={<Login />} />
