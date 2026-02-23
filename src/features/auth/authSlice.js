@@ -1,5 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, signupUser, verifyOtp } from "./authThunk";
+import { loginUser, signupUser, verifyOtp, getMe } from "./authThunk";
 
 const getSafeToken = () => {
   const token = localStorage.getItem("token");
@@ -78,6 +77,19 @@ const authSlice = createSlice({
       .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(getMe.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getMe.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(getMe.rejected, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.token = null;
+        localStorage.removeItem("token");
       });
   },
 });

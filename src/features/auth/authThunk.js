@@ -23,9 +23,14 @@ export const loginUser = createAsyncThunk(
       return res.data;
     } catch (err) {
       const errorData = err.response?.data;
-      const message = errorData?.message || "Login failed. Please check your credentials.";
+      const message =
+        errorData?.message || "Login failed. Please check your credentials.";
       if (errorData?.code === "EMAIL_NOT_VERIFIED" && errorData?.email) {
-        return rejectWithValue({ message, email: errorData.email, code: "EMAIL_NOT_VERIFIED" });
+        return rejectWithValue({
+          message,
+          email: errorData.email,
+          code: "EMAIL_NOT_VERIFIED",
+        });
       }
       return rejectWithValue(message);
     }
@@ -54,6 +59,20 @@ export const resendOtp = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to resend OTP.",
+      );
+    }
+  },
+);
+
+export const getMe = createAsyncThunk(
+  "auth/getMe",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/auth/me");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user data.",
       );
     }
   },
