@@ -8,6 +8,7 @@ import VerifyOtp from "../pages/VerifyOtp";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";
+import LandingPage from "../pages/LandingPage";
 import CoverLetterPage from "../pages/CoverLetterPage";
 import ReferralPage from "../pages/ReferralPage";
 import Layout from "../components/common/Layout";
@@ -43,10 +44,10 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Root: redirect based on auth state */}
+      {/* Root: Landing Page for guests, Dashboard for users */}
       <Route
         path="/"
-        element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
+        element={token ? <Navigate to="/dashboard" replace /> : <LandingPage />}
       />
 
       <Route path="/login" element={<Login />} />
@@ -69,7 +70,7 @@ const AppRoutes = () => {
         <Route path="/referral" element={<ReferralPage />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
