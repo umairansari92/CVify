@@ -15,6 +15,7 @@ import {
 import { updateDiamonds } from "../features/auth/authSlice";
 import { toast } from "react-hot-toast";
 import { handleDownloadLetter } from "../utils/pdfExport";
+import Swal from "sweetalert2";
 
 const CoverLetterPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -50,7 +51,7 @@ const CoverLetterPage = () => {
     }
   };
 
-  const handleGenerate = async (genType) => {
+  const handleGenerate = async (genType, useDiamonds = false) => {
     if (!formData.resumeId || !formData.jobTitle) {
       return toast.error("Please select a resume and enter a job title");
     }
@@ -60,6 +61,7 @@ const CoverLetterPage = () => {
       const res = await api.post("/cover-letters/generate", {
         ...formData,
         type: genType,
+        useDiamonds,
       });
       const letter = res.data.letter;
       setGeneratedLetter(letter);
@@ -67,9 +69,33 @@ const CoverLetterPage = () => {
       toast.success(
         `${genType === "ai" ? "AI" : "Template"} Letter Generated!`,
       );
-      if (genType === "ai") dispatch(updateDiamonds(res.data.diamonds));
+      if (res.data.diamonds !== undefined)
+        dispatch(updateDiamonds(res.data.diamonds));
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to generate");
+      if (err.response?.status === 403) {
+        setLoading(false);
+        const confirm = await Swal.fire({
+          title: "Cover Letter Limit Reached",
+          text: `You already have 3 cover letters. To generate a new one, you can either delete an old one or use 30 diamonds.`,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Use 30 Diamonds",
+          cancelButtonText: "Maybe Later",
+          background: "var(--midground)",
+          color: "var(--text-main)",
+          customClass: {
+            popup: "glass",
+            confirmButton: "btn-primary",
+            cancelButton: "btn-secondary",
+          },
+        });
+
+        if (confirm.isConfirmed) {
+          handleGenerate(genType, true);
+        }
+      } else {
+        toast.error(err.response?.data?.message || "Failed to generate");
+      }
     } finally {
       setLoading(false);
     }

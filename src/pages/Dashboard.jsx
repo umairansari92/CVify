@@ -63,7 +63,7 @@ const Dashboard = () => {
       confirmButtonText: "Delete",
       background: "var(--midground)",
       color: "var(--text-main)",
-      customClass: { popup: "glass" }
+      customClass: { popup: "glass" },
     });
 
     if (result.isConfirmed) {
@@ -123,9 +123,9 @@ const Dashboard = () => {
     navigate(`/edit/${id}`);
   };
 
-  const handleClone = async (id, e) => {
-    e.stopPropagation();
-    const result = await dispatch(cloneResume(id));
+  const handleClone = async (id, e, useDiamonds = false) => {
+    if (e) e.stopPropagation();
+    const result = await dispatch(cloneResume({ id, useDiamonds }));
     if (result.type.includes("fulfilled")) {
       Swal.fire({
         title: "Cloned!",
@@ -139,6 +139,26 @@ const Dashboard = () => {
           popup: "glass",
         },
       });
+    } else if (result.payload?.limitReached) {
+      const confirm = await Swal.fire({
+        title: "Resume Limit Reached",
+        text: `You already have 2 resumes. To clone this one, you can either delete an old one or use 30 diamonds.`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Use 30 Diamonds",
+        cancelButtonText: "Maybe Later",
+        background: "var(--midground)",
+        color: "var(--text-main)",
+        customClass: {
+          popup: "glass",
+          confirmButton: "btn-primary",
+          cancelButton: "btn-secondary",
+        },
+      });
+
+      if (confirm.isConfirmed) {
+        handleClone(id, null, true);
+      }
     }
   };
 
@@ -337,43 +357,56 @@ const Dashboard = () => {
           {loadingLetters ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-50">
               {[1, 2].map((i) => (
-                <div key={i} className="h-48 glass rounded-[2.5rem] animate-pulse"></div>
+                <div
+                  key={i}
+                  className="h-48 glass rounded-[2.5rem] animate-pulse"
+                ></div>
               ))}
             </div>
           ) : coverLetters.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {coverLetters.map((letter) => (
-                <div key={letter._id} className="premium-card group p-6 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5 space-y-4">
+                <div
+                  key={letter._id}
+                  className="premium-card group p-6 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5 space-y-4"
+                >
                   <div className="flex justify-between items-start">
                     <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-secondary shadow-sm">
                       <FaFileAlt size={20} />
                     </div>
                     <div className="px-3 py-1 bg-secondary/10 border border-secondary/20 rounded-lg">
                       <span className="text-[9px] font-black uppercase text-secondary tracking-widest">
-                        {letter.type === 'ai' ? 'AI Optimized' : 'Standard'}
+                        {letter.type === "ai" ? "AI Optimized" : "Standard"}
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-black text-text-primary truncate">{letter.jobTitle}</h3>
-                    <p className="text-sm text-text-muted font-bold opacity-60 italic">{letter.companyName || "No Company"}</p>
+                    <h3 className="text-xl font-black text-text-primary truncate">
+                      {letter.jobTitle}
+                    </h3>
+                    <p className="text-sm text-text-muted font-bold opacity-60 italic">
+                      {letter.companyName || "No Company"}
+                    </p>
                   </div>
 
                   <div className="pt-4 flex gap-2">
-                    <button 
-                      onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }}
+                    <button
+                      onClick={() => {
+                        setSelectedLetter(letter);
+                        setIsPreviewOpen(true);
+                      }}
                       className="flex-1 btn-glass text-[10px] font-black uppercase py-2 hover:bg-white/10"
                     >
                       View
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDownloadLetter(letter, user)}
                       className="flex-1 btn-glass bg-primary/10! text-primary! border-primary/20! text-[10px] font-black uppercase py-2 hover:bg-primary! hover:text-white!"
                     >
                       PDF
                     </button>
-                    <button 
+                    <button
                       onClick={(e) => handleDeleteLetter(letter._id, e)}
                       className="w-10 btn-glass bg-red-500/10! text-red-500! border-red-500/20! flex items-center justify-center hover:bg-red-500! hover:text-white!"
                     >
@@ -385,7 +418,9 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="glass p-12 text-center rounded-[2.5rem] border-2 border-dashed border-white/5 opacity-50">
-               <p className="font-bold text-text-muted text-lg italic">You haven't generated any cover letters yet.</p>
+              <p className="font-bold text-text-muted text-lg italic">
+                You haven't generated any cover letters yet.
+              </p>
             </div>
           )}
         </div>
@@ -397,10 +432,14 @@ const Dashboard = () => {
           <div className="bg-midground w-full max-w-2xl max-h-[85vh] rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col scale-in">
             <div className="p-8 border-b border-white/5 flex justify-between items-center">
               <div>
-                <h3 className="font-black text-2xl text-text-primary uppercase tracking-tight">{selectedLetter.jobTitle}</h3>
-                <p className="text-sm text-secondary font-black">{selectedLetter.companyName || "Professional Application"}</p>
+                <h3 className="font-black text-2xl text-text-primary uppercase tracking-tight">
+                  {selectedLetter.jobTitle}
+                </h3>
+                <p className="text-sm text-secondary font-black">
+                  {selectedLetter.companyName || "Professional Application"}
+                </p>
               </div>
-              <button 
+              <button
                 onClick={() => setIsPreviewOpen(false)}
                 className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 transition-all text-text-muted"
               >
@@ -411,12 +450,12 @@ const Dashboard = () => {
               {selectedLetter.content}
             </div>
             <div className="p-8 border-t border-white/5 bg-white/5 flex gap-4">
-               <button 
-                  onClick={() => handleDownloadLetter(selectedLetter, user)}
-                  className="flex-1 py-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
-                >
-                  <FaDownload /> Save PDF
-               </button>
+              <button
+                onClick={() => handleDownloadLetter(selectedLetter, user)}
+                className="flex-1 py-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+              >
+                <FaDownload /> Save PDF
+              </button>
             </div>
           </div>
         </div>

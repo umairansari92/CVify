@@ -4,14 +4,19 @@ import api from "../../api/axios";
 // CREATE RESUME
 export const createResume = createAsyncThunk(
   "resume/create",
-  async (data, { rejectWithValue }) => {
+  async (data, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.post("/resumes", data);
-      return res.data;
+      if (res.data.diamonds !== undefined) {
+        dispatch({ type: "auth/updateDiamonds", payload: res.data.diamonds });
+      }
+      return res.data.resume || res.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to create resume",
-      );
+      return rejectWithValue({
+        message: err.response?.data?.message || "Failed to create resume",
+        limitReached: err.response?.status === 403,
+        details: err.response?.data,
+      });
     }
   },
 );
@@ -78,14 +83,19 @@ export const deleteResume = createAsyncThunk(
 // CLONE RESUME
 export const cloneResume = createAsyncThunk(
   "resume/clone",
-  async (id, { rejectWithValue }) => {
+  async ({ id, useDiamonds }, { rejectWithValue, dispatch }) => {
     try {
-      const res = await api.post(`/resumes/${id}/clone`);
-      return res.data;
+      const res = await api.post(`/resumes/${id}/clone`, { useDiamonds });
+      if (res.data.diamonds !== undefined) {
+        dispatch({ type: "auth/updateDiamonds", payload: res.data.diamonds });
+      }
+      return res.data.resume || res.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to clone resume",
-      );
+      return rejectWithValue({
+        message: err.response?.data?.message || "Failed to clone resume",
+        limitReached: err.response?.status === 403,
+        details: err.response?.data,
+      });
     }
   },
 );

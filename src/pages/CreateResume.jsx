@@ -12,6 +12,7 @@ import ResumePreview from "../components/ResumePreview";
 import { handleDownloadPDF } from "../utils/pdfExport";
 
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
   createResume,
   updateResume,
@@ -33,15 +34,39 @@ const CreateResume = () => {
     }
   }, [dispatch, id]);
 
-  const handleSave = async () => {
+  const handleSave = async (useDiamonds = false) => {
+    let result;
     if (currentResume?._id) {
-      await dispatch(
+      result = await dispatch(
         updateResume({ id: currentResume._id, data: currentResume }),
       );
     } else {
-      await dispatch(createResume(currentResume));
+      result = await dispatch(createResume({ ...currentResume, useDiamonds }));
     }
-    navigate("/dashboard");
+
+    if (result.type.includes("fulfilled")) {
+      navigate("/dashboard");
+    } else if (result.payload?.limitReached) {
+      const confirm = await Swal.fire({
+        title: "Resume Limit Reached",
+        text: `You already have 2 resumes. To create a new one, you can either delete an old one or use 30 diamonds.`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Use 30 Diamonds",
+        cancelButtonText: "Maybe Later",
+        background: "var(--midground)",
+        color: "var(--text-main)",
+        customClass: {
+          popup: "glass",
+          confirmButton: "btn-primary",
+          cancelButton: "btn-secondary",
+        },
+      });
+
+      if (confirm.isConfirmed) {
+        handleSave(true);
+      }
+    }
   };
 
   const tabs = [
