@@ -5,6 +5,8 @@ import { signupUser } from "../features/auth/authThunk";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import ThemeToggle from "../components/common/ThemeToggle";
+import { isDisposableEmail } from "../utils/blockedDomains";
+import { toast } from "react-hot-toast";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -21,7 +23,20 @@ const Signup = () => {
   }, [token, navigate]);
 
   const onSubmit = async (data) => {
+    // Frontend check for disposable emails
+    if (isDisposableEmail(data.email)) {
+      toast.error(
+        "Temporary or disposable email addresses are not allowed. Please use a real email address.",
+        {
+          duration: 5000,
+          icon: "🚫",
+        },
+      );
+      return;
+    }
+
     // Create FormData for file upload
+
     const formData = new FormData();
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
@@ -39,7 +54,10 @@ const Signup = () => {
     try {
       const result = await dispatch(signupUser(formData));
       if (signupUser.fulfilled.match(result) && result.payload?.email) {
-        navigate("/verify-otp", { state: { email: result.payload.email }, replace: true });
+        navigate("/verify-otp", {
+          state: { email: result.payload.email },
+          replace: true,
+        });
       }
     } catch (_) {
       // Error shown via auth slice
