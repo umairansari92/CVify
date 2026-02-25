@@ -83,7 +83,7 @@ const ClearTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all mb-3"
             >
-              <FaLinkedin className="text-slate-400" /> LinkedIn
+              <FaLinkedin className="text-slate-400" /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -93,7 +93,7 @@ const ClearTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-slate-300 transition-colors break-all mb-3"
             >
-              <FaGithub className="text-slate-400" /> GitHub
+              <FaGithub className="text-slate-400" /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (

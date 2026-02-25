@@ -50,7 +50,7 @@ const TraditionalTemplate = ({ data }) => {
         style={{ borderColor: themeColor }}
       >
         <h1
-          className="text-3xl font-bold uppercase tracking-widest mb-2"
+          className="text-3xl font-bold tracking-widest mb-2"
           style={{ color: themeColor }}
         >
           {personalInfo?.fullName || "Your Name"}
@@ -80,7 +80,8 @@ const TraditionalTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:underline mx-2 mb-2"
             >
-              • <FaLinkedin className="text-gray-400" /> LinkedIn
+              • <FaLinkedin className="text-gray-400" />
+              {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -90,7 +91,8 @@ const TraditionalTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:underline mx-2 mb-2"
             >
-              • <FaGithub className="text-gray-400 mr-1.5" /> GitHub
+              • <FaGithub className="text-gray-400 mr-1.5" />
+              {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -110,7 +112,7 @@ const TraditionalTemplate = ({ data }) => {
       {personalInfo?.profileSummary && (
         <div className="mb-6">
           <h2
-            className="text-lg font-bold uppercase border-b mb-2"
+            className="text-lg font-bold border-b mb-2"
             style={{ color: themeColor, borderColor: `${themeColor}40` }}
           >
             Professional Summary
@@ -125,7 +127,7 @@ const TraditionalTemplate = ({ data }) => {
       {experience?.length > 0 && (
         <div className="mb-6">
           <h2
-            className="text-lg font-bold uppercase border-b mb-4"
+            className="text-lg font-bold border-b mb-4"
             style={{ color: themeColor, borderColor: `${themeColor}40` }}
           >
             Professional Experience
@@ -160,7 +162,7 @@ const TraditionalTemplate = ({ data }) => {
       {/* Education */}
       {education?.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-4">
+          <h2 className="text-lg font-bold border-b border-gray-400 mb-4">
             Education
           </h2>
           {education.map((edu, index) => (
@@ -186,7 +188,7 @@ const TraditionalTemplate = ({ data }) => {
       {data.technicalSkills &&
         Object.values(data.technicalSkills).some((arr) => arr?.length > 0) && (
           <div className="mb-6">
-            <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-2">
+            <h2 className="text-lg font-bold border-b border-gray-400 mb-2">
               Technical Skills
             </h2>
             <div className="text-sm">
@@ -228,7 +230,7 @@ const TraditionalTemplate = ({ data }) => {
       {(data.competencies?.length > 0 ||
         data.softwareProficiency?.length > 0) && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-gray-400 mb-2">
+          <h2 className="text-lg font-bold border-b border-gray-400 mb-2">
             Additional Skills
           </h2>
           <div className="text-sm">

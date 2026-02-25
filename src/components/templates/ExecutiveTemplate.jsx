@@ -286,7 +286,7 @@ const ExecutiveTemplate = ({ data }) => {
 
           {/* Links Box */}
           <div className="bg-gray-800 text-white p-6">
-            <h3 className="text-base font-bold uppercase mb-6 text-white text-center border-b border-gray-700 pb-3">
+              <h3 className="text-base font-bold mb-6 text-white text-center border-b border-gray-700 pb-3">
               Professional Links
             </h3>
             <div className="space-y-4">
@@ -297,7 +297,7 @@ const ExecutiveTemplate = ({ data }) => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm hover:text-blue-300 transition-colors mb-4"
                 >
-                  <FaLinkedin className="text-gray-400" /> LinkedIn Profile
+                  <FaLinkedin className="text-gray-400" /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
                 </a>
               )}
               {personalInfo?.github && (
@@ -307,7 +307,7 @@ const ExecutiveTemplate = ({ data }) => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm hover:text-slate-300 transition-colors"
                 >
-                  <FaGithub className="text-gray-400" /> GitHub Profile
+                  <FaGithub className="text-gray-400" /> {personalInfo.github.replace(/^https?:\/\//, "")}
                 </a>
               )}
               {personalInfo?.portfolio && (

@@ -78,7 +78,7 @@ const MinimalTemplate = ({ data }) => {
               className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
               style={{ color: themeColor }}
             >
-              <FaLinkedin /> LinkedIn
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -88,7 +88,7 @@ const MinimalTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 mr-8 mb-3 hover:text-black transition-colors"
             >
-              <FaGithub /> GitHub
+              <FaGithub /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -118,7 +118,7 @@ const MinimalTemplate = ({ data }) => {
       {/* Experience */}
       {experience?.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-8 text-black">
+          <h2 className="text-xs font-bold tracking-widest text-center mb-8 text-black">
             Professional Experience
           </h2>
           <div
@@ -159,7 +159,7 @@ const MinimalTemplate = ({ data }) => {
       {/* Projects */}
       {projects?.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-8 text-black">
+          <h2 className="text-xs font-bold tracking-widest text-center mb-8 text-black">
             Projects
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -185,7 +185,7 @@ const MinimalTemplate = ({ data }) => {
       <div className="grid grid-cols-2 gap-12 max-w-3xl mx-auto">
         {education?.length > 0 && (
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-6 text-black">
+            <h2 className="text-xs font-bold tracking-widest text-center mb-6 text-black">
               Education
             </h2>
             {education.map((edu, index) => (
@@ -208,7 +208,7 @@ const MinimalTemplate = ({ data }) => {
           Object.values(data.technicalSkills).some((arr) => arr?.length > 0)) ||
           data.competencies?.length > 0) && (
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-center mb-6 text-black">
+            <h2 className="text-xs font-bold tracking-widest text-center mb-6 text-black">
               Skills & Competencies
             </h2>
 

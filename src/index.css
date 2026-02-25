@@ -188,6 +188,12 @@ select.input-premium:focus {
   animation: float 8s ease-in-out infinite;
 }
 
+/* prevent automatic hyphenation/word splitting across the entire app, fixes ATS parsers misreading keywords */
+* {
+  hyphens: none;
+  word-break: keep-all;
+}
+
 /* SweetAlert2 Custom Styling */
 .swal2-popup {
   background: var(--midground) !important;

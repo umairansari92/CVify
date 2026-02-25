@@ -76,7 +76,7 @@ const ClassicTemplate = ({ data }) => {
             className="flex items-center gap-2 hover:underline mr-6 mb-2"
             style={{ color: themeColor }}
           >
-            <FaLinkedin /> LinkedIn
+            <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
           </a>
           {personalInfo?.github && (
             <a
@@ -85,7 +85,7 @@ const ClassicTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-900 hover:underline mr-6 mb-2"
             >
-              <FaGithub /> GitHub
+              <FaGithub /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -111,7 +111,7 @@ const ClassicTemplate = ({ data }) => {
       {experience?.length > 0 && (
         <div className="mb-6">
           <h2
-            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            className="text-xl font-bold border-b mb-4 pb-1"
             style={{ color: themeColor, borderColor: `${themeColor}40` }}
           >
             Experience

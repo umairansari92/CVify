@@ -81,7 +81,7 @@ const GlobalTemplate = ({ data }) => {
               className="hover:opacity-75 flex items-center gap-2 transition-all"
               style={{ color: themeColor }}
             >
-              <FaLinkedin /> LINKEDIN
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -89,7 +89,7 @@ const GlobalTemplate = ({ data }) => {
               href={personalInfo.github}
               className="text-slate-500 hover:text-primary flex items-center gap-2 transition-colors"
             >
-              <FaGithub className="text-slate-900" /> GITHUB
+              <FaGithub className="text-slate-900" /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -109,7 +109,7 @@ const GlobalTemplate = ({ data }) => {
         {personalInfo?.profileSummary && (
           <section className="animate-fadeIn">
             <h2
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-4 border-b pb-1 w-full"
+              className="text-xs font-bold tracking-[0.2em] mb-4 border-b pb-1 w-full"
               style={{ color: themeColor, borderColor: themeColor }}
             >
               Professional Summary

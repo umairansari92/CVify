@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 10,
     fontWeight: "bold",
-    textTransform: "uppercase",
+    // textTransform: "uppercase",
     letterSpacing: 1.5,
     color: "#000",
     marginBottom: 10,

@@ -83,17 +83,23 @@ const EliteTemplate = ({ data }) => {
             {personalInfo?.linkedin && (
               <a
                 href={personalInfo.linkedin}
-                className="p-2 bg-slate-100 rounded hover:bg-slate-900 hover:text-white transition-all"
+                className="p-2 bg-slate-100 rounded hover:bg-slate-900 hover:text-white transition-all flex items-center gap-1"
               >
                 <FaLinkedin size={14} />
+                <span className="text-xs">
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </span>
               </a>
             )}
             {personalInfo?.github && (
               <a
                 href={personalInfo.github}
-                className="p-2 bg-slate-100 rounded hover:bg-slate-900 hover:text-white transition-all"
+                className="p-2 bg-slate-100 rounded hover:bg-slate-900 hover:text-white transition-all flex items-center gap-1"
               >
                 <FaGithub size={14} />
+                <span className="text-xs">
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </span>
               </a>
             )}
           </div>
@@ -105,7 +111,7 @@ const EliteTemplate = ({ data }) => {
         {personalInfo?.profileSummary && (
           <section>
             <h3
-              className="text-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] mb-4"
+              className="text-white px-4 py-2 text-xs font-black tracking-[0.2em] mb-4"
               style={{ backgroundColor: themeColor }}
             >
               Executive Summary

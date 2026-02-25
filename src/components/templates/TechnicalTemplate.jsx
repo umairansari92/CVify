@@ -100,7 +100,8 @@ const TechnicalTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center mr-6 mb-2 text-green-500 hover:text-green-400 transition-colors"
             >
-              <FaGithub className="mr-1.5" /> GitHub
+              <FaGithub className="mr-1.5" />
+              {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.linkedin && (
@@ -110,7 +111,8 @@ const TechnicalTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-blue-500 hover:text-blue-400 transition-colors"
             >
-              <FaLinkedin /> LinkedIn
+              <FaLinkedin />
+              {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (

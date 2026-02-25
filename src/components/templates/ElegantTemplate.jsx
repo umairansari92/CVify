@@ -81,7 +81,7 @@ const ElegantTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors mx-4"
             >
-              <FaLinkedin /> LinkedIn
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -91,7 +91,7 @@ const ElegantTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-[#2c3e50] transition-colors mx-4"
             >
-              <FaGithub /> GitHub
+              <FaGithub /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (

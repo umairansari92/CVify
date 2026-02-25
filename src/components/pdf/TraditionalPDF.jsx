@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 12,
     fontWeight: "bold",
-    textTransform: "uppercase",
+    // avoid forcing ALL CAPS so sections render in natural case
+    // textTransform: "uppercase",
     borderBottomWidth: 1,
     borderBottomColor: "#666",
     paddingBottom: 2,

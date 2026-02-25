@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 10,
     fontWeight: "bold",
-    textTransform: "uppercase",
+    // textTransform: "uppercase",
     letterSpacing: 1.5,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",

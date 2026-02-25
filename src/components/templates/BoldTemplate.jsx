@@ -81,7 +81,7 @@ const BoldTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mr-6 mb-2"
             >
-              <FaLinkedin /> LinkedIn
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (

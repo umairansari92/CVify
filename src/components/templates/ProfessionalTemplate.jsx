@@ -58,7 +58,7 @@ const ProfessionalTemplate = ({ data }) => {
       >
         {/* Contact */}
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 border-b border-slate-600 pb-2 mb-4">
+          <h3 className="text-sm font-bold tracking-widest text-slate-400 border-b border-slate-600 pb-2 mb-4">
             Contact
           </h3>
           {/* ... contact details ... (no changes needed to internal flex) */}
@@ -105,10 +105,12 @@ const ProfessionalTemplate = ({ data }) => {
               >
                 <FaLinkedin className="mt-1 text-blue-400 shrink-0 group-hover:text-blue-300" />
                 <div>
-                  <span className="block text-[10px] text-slate-500 uppercase tracking-tighter mb-0.5">
+                  <span className="block text-[10px] text-slate-500 tracking-tighter mb-0.5">
                     LinkedIn
                   </span>
-                  <span className="group-hover:underline">View Profile</span>
+                  <span className="group-hover:underline">
+                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  </span>
                 </div>
               </a>
             )}
@@ -121,10 +123,12 @@ const ProfessionalTemplate = ({ data }) => {
               >
                 <FaGithub className="mt-1 text-slate-400 shrink-0 group-hover:text-white" />
                 <div>
-                  <span className="block text-[10px] text-slate-500 uppercase tracking-tighter mb-0.5">
+                  <span className="block text-[10px] text-slate-500 tracking-tighter mb-0.5">
                     GitHub
                   </span>
-                  <span className="group-hover:underline">Source Code</span>
+                  <span className="group-hover:underline">
+                    {personalInfo.github.replace(/^https?:\/\//, "")}
+                  </span>
                 </div>
               </a>
             )}

@@ -83,7 +83,7 @@ const ModernTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 mr-6 mb-3 hover:underline"
             >
-              <FaLinkedin /> LinkedIn
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -93,7 +93,7 @@ const ModernTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-800 hover:underline mr-6 mb-3"
             >
-              <FaGithub /> GitHub
+              • <FaGithub /> {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
