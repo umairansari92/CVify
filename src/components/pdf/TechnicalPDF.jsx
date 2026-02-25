@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -242,7 +245,7 @@ const TechnicalPDF = ({ data }) => {
                 style={{ color: "#4ade80", textDecoration: "none" }}
                 src={personalInfo.github}
               >
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.linkedin && (
@@ -250,7 +253,7 @@ const TechnicalPDF = ({ data }) => {
                 style={{ color: "#60a5fa", textDecoration: "none" }}
                 src={personalInfo.linkedin}
               >
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -262,7 +265,7 @@ const TechnicalPDF = ({ data }) => {
             {technicalSkills &&
               Object.values(technicalSkills).some((a) => a?.length > 0) && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sidebarTitle}>Technical Skills</Text>
+                  <Text style={styles.sidebarTitle}>SKILLS</Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
                       list?.length > 0 && (
@@ -279,7 +282,7 @@ const TechnicalPDF = ({ data }) => {
 
             {competencies?.length > 0 && (
               <View style={styles.sidebarBox} wrap={false}>
-                <Text style={styles.sidebarTitle}>Core Skills</Text>
+                <Text style={styles.sidebarTitle}>CORE SKILLS</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>
                     <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
@@ -295,7 +298,7 @@ const TechnicalPDF = ({ data }) => {
 
             {education?.length > 0 && (
               <View style={styles.sidebarBox}>
-                <Text style={styles.sidebarTitle}>Education</Text>
+                <Text style={styles.sidebarTitle}>EDUCATION</Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 8 }} wrap={false}>
                     <Text style={{ fontSize: 9, fontWeight: "bold" }}>
@@ -356,7 +359,7 @@ const TechnicalPDF = ({ data }) => {
                           style={{ color: "#2563eb", fontSize: 8 }}
                           src={proj.link}
                         >
-                          git push
+                          {proj.link.replace(/^https?:\/\//, "")}
                         </Link>
                       )}
                     </View>

@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -178,17 +181,17 @@ const ElegantPDF = ({ data }) => {
             {personalInfo?.location && <Text>{personalInfo.location}</Text>}
             {personalInfo?.linkedin && (
               <Link src={personalInfo.linkedin} style={{ color: "#4b5563" }}>
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link src={personalInfo.github} style={{ color: "#4b5563" }}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.portfolio && (
               <Link src={personalInfo.portfolio} style={{ color: "#4b5563" }}>
-                Portfolio
+                {personalInfo.portfolio.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -200,7 +203,7 @@ const ElegantPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.expRow} wrap={false}>
                 <View style={styles.expDateSide}>
@@ -232,7 +235,7 @@ const ElegantPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={{ marginBottom: 20 }}>
-            <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                 <View
@@ -254,7 +257,7 @@ const ElegantPDF = ({ data }) => {
                         fontStyle: "italic",
                       }}
                     >
-                      View Project
+                      {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
                 </View>
@@ -272,7 +275,7 @@ const ElegantPDF = ({ data }) => {
         <View style={styles.columnGrid}>
           {education?.length > 0 && (
             <View style={styles.col}>
-              <Text style={dynamicStyles.sectionTitle}>Education</Text>
+              <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
               {education.map((edu, i) => (
                 <View
                   key={i}
@@ -294,7 +297,7 @@ const ElegantPDF = ({ data }) => {
           {technicalSkills &&
             Object.values(technicalSkills).some((a) => a?.length > 0) && (
               <View style={styles.col}>
-                <Text style={styles.sectionTitle}>Technical Skills</Text>
+                <Text style={styles.sectionTitle}>SKILLS</Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -337,7 +340,7 @@ const ElegantPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={styles.sectionTitle}>Core Skills</Text>
+            <Text style={styles.sectionTitle}>ADDITIONAL SKILLS</Text>
             <View
               style={{
                 flexDirection: "row",

@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -193,12 +196,12 @@ const ElitePDF = ({ data }) => {
             <Text style={styles.contactItem}>{personalInfo?.location}</Text>
             {personalInfo?.linkedin && (
               <Link src={personalInfo.linkedin} style={styles.link}>
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link src={personalInfo.github} style={styles.link}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -207,7 +210,7 @@ const ElitePDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Executive Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -215,9 +218,7 @@ const ElitePDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>
-              Professional Experience
-            </Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -243,7 +244,7 @@ const ElitePDF = ({ data }) => {
         {/* Education */}
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Academic Background</Text>
+            <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -263,9 +264,7 @@ const ElitePDF = ({ data }) => {
           competencies?.length > 0 ||
           softwareProficiency?.length > 0) && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>
-              Skills & Competencies
-            </Text>
+            <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
             <View style={styles.skillsTable}>
               {technicalSkills &&
                 Object.entries(technicalSkills).map(
@@ -300,14 +299,14 @@ const ElitePDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (
                     <Link src={proj.link} style={[styles.date, styles.link]}>
-                      VIEW PROJECT
+                      {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
                 </View>

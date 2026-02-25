@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -192,12 +195,12 @@ const BoldPDF = ({ data }) => {
             {personalInfo?.location && <Text>{personalInfo.location}</Text>}
             {personalInfo?.linkedin && (
               <Link style={{ color: "#fff" }} src={personalInfo.linkedin}>
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link style={{ color: "#fff" }} src={personalInfo.github}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -224,7 +227,7 @@ const BoldPDF = ({ data }) => {
               {experience?.length > 0 && (
                 <View>
                   <Text style={dynamicStyles.sectionTitle}>
-                    Work Experience
+                    WORK EXPERIENCE
                   </Text>
                   {experience.map((exp, i) => (
                     <View key={i} style={styles.entry} wrap={false}>
@@ -247,7 +250,7 @@ const BoldPDF = ({ data }) => {
 
               {projects?.length > 0 && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
+                  <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
                   {projects.map((proj, i) => (
                     <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                       <View
@@ -266,7 +269,7 @@ const BoldPDF = ({ data }) => {
                             style={{ fontSize: 7, color: "#2563eb" }}
                             src={proj.link}
                           >
-                            View Link
+                            {proj.link.replace(/^https?:\/\//, "")}
                           </Link>
                         )}
                       </View>
@@ -285,7 +288,7 @@ const BoldPDF = ({ data }) => {
             <View style={styles.rightCol}>
               {education?.length > 0 && (
                 <View style={styles.sidebarBox}>
-                  <Text style={dynamicStyles.sidebarTitle}>Education</Text>
+                  <Text style={dynamicStyles.sidebarTitle}>EDUCATION</Text>
                   {education.map((edu, i) => (
                     <View key={i} style={{ marginBottom: 10 }}>
                       <Text style={{ fontWeight: "bold", fontSize: 10 }}>
@@ -305,7 +308,7 @@ const BoldPDF = ({ data }) => {
               {technicalSkills &&
                 Object.values(technicalSkills).some((a) => a?.length > 0) && (
                   <View style={styles.sidebarBox}>
-                    <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
+                    <Text style={dynamicStyles.sidebarTitle}>SKILLS</Text>
                     {Object.entries(technicalSkills).map(
                       ([cat, list], i) =>
                         list?.length > 0 && (
@@ -338,7 +341,7 @@ const BoldPDF = ({ data }) => {
 
               {competencies?.length > 0 && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sectionTitle}>Additional Skills</Text>
+                  <Text style={styles.sectionTitle}>CORE SKILLS</Text>
                   {competencies.map((c, i) => (
                     <View key={i} style={styles.bullet}>
                       <Text>•</Text>

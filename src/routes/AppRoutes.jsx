@@ -10,6 +10,7 @@ import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";
 
 import CoverLetterPage from "../pages/CoverLetterPage";
+import ATSPage from "../pages/ATSPage";
 import ReferralPage from "../pages/ReferralPage";
 import Layout from "../components/common/Layout";
 
@@ -67,6 +68,7 @@ const AppRoutes = () => {
         <Route path="/edit/:id" element={<CreateResume />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/cover-letter" element={<CoverLetterPage />} />
+        <Route path="/ats" element={<ATSPage />} />
         <Route path="/referral" element={<ReferralPage />} />
       </Route>
 

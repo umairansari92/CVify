@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -220,7 +223,7 @@ const ClearPDF = ({ data }) => {
                 src={personalInfo.linkedin}
                 style={[styles.sideContactItem, { color: "#93c5fd" }]}
               >
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
@@ -228,7 +231,7 @@ const ClearPDF = ({ data }) => {
                 src={personalInfo.github}
                 style={[styles.sideContactItem, { color: "#cbd5e1" }]}
               >
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -236,7 +239,7 @@ const ClearPDF = ({ data }) => {
           {technicalSkills &&
             Object.values(technicalSkills).some((a) => a?.length > 0) && (
               <View>
-                <Text style={styles.sideSectionTitle}>Technical Skills</Text>
+                <Text style={styles.sideSectionTitle}>SKILLS</Text>
                 {Object.entries(technicalSkills).map(
                   ([cat, list], i) =>
                     list?.length > 0 && (
@@ -259,7 +262,7 @@ const ClearPDF = ({ data }) => {
 
           {education?.length > 0 && (
             <View style={{ marginTop: 15 }}>
-              <Text style={styles.sideSectionTitle}>Education</Text>
+              <Text style={styles.sideSectionTitle}>EDUCATION</Text>
               {education.map((edu, i) => (
                 <View key={i} style={styles.eduItem} wrap={false}>
                   <Text style={styles.eduInst}>{edu.institution}</Text>
@@ -276,9 +279,7 @@ const ClearPDF = ({ data }) => {
         <View style={styles.main}>
           {personalInfo?.profileSummary && (
             <View style={{ marginBottom: 25 }}>
-              <Text style={dynamicStyles.sectionTitle}>
-                Professional Summary
-              </Text>
+              <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
               <Text
                 style={{ fontSize: 9.5, lineHeight: 1.5, color: "#334155" }}
               >
@@ -289,7 +290,7 @@ const ClearPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View>
-              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+              <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
@@ -312,7 +313,7 @@ const ClearPDF = ({ data }) => {
 
           {projects?.length > 0 && (
             <View style={{ marginTop: 10 }}>
-              <Text style={styles.sectionTitle}>Projects</Text>
+              <Text style={styles.sectionTitle}>PROJECTS</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={{ marginBottom: 15 }}>
                   <View style={styles.entryHeader} wrap={false}>
@@ -324,7 +325,7 @@ const ClearPDF = ({ data }) => {
                         style={{ fontSize: 7.5, color: "#2563eb" }}
                         src={proj.link}
                       >
-                        View Link
+                        {proj.link.replace(/^https?:\/\//, "")}
                       </Link>
                     )}
                   </View>

@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -230,21 +233,27 @@ const MinimalPDF = ({ data }) => {
             {personalInfo?.linkedin && (
               <View style={styles.contactItem}>
                 <Link src={personalInfo.linkedin} style={styles.link}>
-                  <Text style={{ color: "#64748b" }}>LinkedIn</Text>
+                  <Text style={{ color: "#64748b" }}>
+                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  </Text>
                 </Link>
               </View>
             )}
             {personalInfo?.github && (
               <View style={styles.contactItem}>
                 <Link src={personalInfo.github} style={styles.link}>
-                  <Text style={{ color: "#64748b" }}>GitHub</Text>
+                  <Text style={{ color: "#64748b" }}>
+                    {personalInfo.github.replace(/^https?:\/\//, "")}
+                  </Text>
                 </Link>
               </View>
             )}
             {personalInfo?.portfolio && (
               <View style={styles.contactItem}>
                 <Link src={personalInfo.portfolio} style={styles.link}>
-                  <Text style={{ color: "#64748b" }}>Portfolio</Text>
+                  <Text style={{ color: "#64748b" }}>
+                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                  </Text>
                 </Link>
               </View>
             )}
@@ -261,7 +270,7 @@ const MinimalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -287,7 +296,7 @@ const MinimalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
             <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
@@ -301,7 +310,7 @@ const MinimalPDF = ({ data }) => {
                           { color: "#1e293b", textDecoration: "none" },
                         ]}
                       >
-                        <Text>{proj.name}</Text>
+                        <Text>{proj.link.replace(/^https?:\/\//, "")}</Text>
                       </Link>
                     ) : (
                       <Text style={styles.title}>{proj.name}</Text>
@@ -328,7 +337,7 @@ const MinimalPDF = ({ data }) => {
           <View style={{ flex: 1, paddingRight: 10 }}>
             {education?.length > 0 && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Education</Text>
+                <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 12 }} wrap={false}>
                     <Text style={{ fontWeight: "bold", fontSize: 9.5 }}>
@@ -358,7 +367,7 @@ const MinimalPDF = ({ data }) => {
               competencies?.length > 0 ||
               softwareProficiency?.length > 0) && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Technical Skills</Text>
+                <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
 
                 {technicalSkills &&
                   Object.entries(technicalSkills).map(
@@ -376,7 +385,7 @@ const MinimalPDF = ({ data }) => {
 
                 {competencies?.length > 0 && (
                   <View style={styles.skillCategory} wrap={false}>
-                    <Text style={styles.skillCategoryTitle}>Core Skills</Text>
+                    <Text style={styles.skillCategoryTitle}>CORE SKILLS</Text>
                     <Text style={styles.skillText}>
                       {competencies.join(" • ")}
                     </Text>
@@ -385,7 +394,7 @@ const MinimalPDF = ({ data }) => {
 
                 {softwareProficiency?.length > 0 && (
                   <View style={styles.skillCategory} wrap={false}>
-                    <Text style={styles.skillCategoryTitle}>Software</Text>
+                    <Text style={styles.skillCategoryTitle}>SOFTWARE</Text>
                     <Text style={styles.skillText}>
                       {softwareProficiency.join(", ")}
                     </Text>

@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -176,12 +179,12 @@ const ClassicPDF = ({ data }) => {
                 src={personalInfo.linkedin}
                 style={dynamicStyles.accentText}
               >
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link src={personalInfo.github} style={{ color: "#111" }}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -193,7 +196,7 @@ const ClassicPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -216,7 +219,7 @@ const ClassicPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -226,7 +229,7 @@ const ClassicPDF = ({ data }) => {
                       style={{ fontSize: 8, color: themeColor }}
                       src={proj.link}
                     >
-                      View Link
+                      {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
                 </View>
@@ -244,7 +247,7 @@ const ClassicPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View>
-              <Text style={dynamicStyles.sectionTitle}>Technical Skills</Text>
+              <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
               <View style={styles.grid}>
                 {Object.entries(technicalSkills).map(
                   ([cat, list], i) =>
@@ -265,7 +268,7 @@ const ClassicPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={dynamicStyles.sectionTitle}>Core Skills</Text>
+            <Text style={dynamicStyles.sectionTitle}>CORE SKILLS</Text>
             {softwareProficiency?.length > 0 && (
               <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Software: </Text>
@@ -287,7 +290,7 @@ const ClassicPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View style={{ marginTop: 15 }}>
-            <Text style={dynamicStyles.sectionTitle}>Education</Text>
+            <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, i) => (
               <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                 <View style={styles.entryHeader}>

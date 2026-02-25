@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -138,17 +141,17 @@ const StandardPDF = ({ data }) => {
 
             {personalInfo?.linkedin && (
               <Link style={styles.link} src={personalInfo.linkedin}>
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link style={styles.link} src={personalInfo.github}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.portfolio && (
               <Link style={styles.link} src={personalInfo.portfolio}>
-                Portfolio
+                {personalInfo.portfolio.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -156,7 +159,7 @@ const StandardPDF = ({ data }) => {
 
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Summary</Text>
+            <Text style={styles.sectionTitle}>SUMMARY</Text>
             <Text
               style={{ fontSize: 9.5, textAlign: "justify", lineHeight: 1.6 }}
             >
@@ -167,7 +170,7 @@ const StandardPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experience</Text>
+            <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -191,7 +194,7 @@ const StandardPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Skills</Text>
+              <Text style={styles.sectionTitle}>SKILLS</Text>
               {Object.entries(technicalSkills).map(
                 ([key, val], i) =>
                   val?.length > 0 && (
@@ -208,7 +211,7 @@ const StandardPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
+            <Text style={styles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -218,7 +221,7 @@ const StandardPDF = ({ data }) => {
                       style={[styles.date, { color: "#2563eb" }]}
                       src={proj.link}
                     >
-                      View Source
+                      {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
                 </View>
@@ -237,7 +240,7 @@ const StandardPDF = ({ data }) => {
 
         {competencies?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Core Skills</Text>
+            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
             {competencies.map((c, i) => (
               <View key={i} style={styles.bullet}>
                 <Text style={styles.bulletDot}>•</Text>
@@ -249,7 +252,7 @@ const StandardPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>

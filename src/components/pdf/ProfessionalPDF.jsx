@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -202,7 +205,9 @@ const ProfessionalPDF = ({ data }) => {
                 src={personalInfo.linkedin}
                 style={{ textDecoration: "none" }}
               >
-                <Text style={styles.sidebarText}>LinkedIn</Text>
+                <Text style={styles.sidebarText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Text>
               </Link>
             )}
             {personalInfo?.github && (
@@ -210,7 +215,9 @@ const ProfessionalPDF = ({ data }) => {
                 src={personalInfo.github}
                 style={{ textDecoration: "none" }}
               >
-                <Text style={styles.sidebarText}>GitHub</Text>
+                <Text style={styles.sidebarText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Text>
               </Link>
             )}
             {personalInfo?.portfolio && (
@@ -218,13 +225,15 @@ const ProfessionalPDF = ({ data }) => {
                 src={personalInfo.portfolio}
                 style={{ textDecoration: "none" }}
               >
-                <Text style={styles.sidebarText}>Portfolio</Text>
+                <Text style={styles.sidebarText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Text>
               </Link>
             )}
           </View>
 
           <View style={styles.sidebarSection}>
-            <Text style={dynamicStyles.sidebarTitle}>Technical Skills</Text>
+            <Text style={dynamicStyles.sidebarTitle}>SKILLS</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
@@ -239,7 +248,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {education?.length > 0 && (
             <View style={styles.sidebarSection}>
-              <Text style={dynamicStyles.sidebarTitle}>Education</Text>
+              <Text style={dynamicStyles.sidebarTitle}>EDUCATION</Text>
               {education.map((edu, i) => (
                 <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                   <Text
@@ -292,7 +301,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+              <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
@@ -315,7 +324,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {projects?.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+              <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader} wrap={false}>
@@ -323,7 +332,7 @@ const ProfessionalPDF = ({ data }) => {
                     {proj.link && (
                       <Link src={proj.link} style={{ textDecoration: "none" }}>
                         <Text style={[styles.date, { color: "#2563eb" }]}>
-                          View Project
+                          {proj.link.replace(/^https?:\/\//, "")}
                         </Text>
                       </Link>
                     )}

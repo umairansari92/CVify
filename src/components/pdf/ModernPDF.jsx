@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -194,7 +197,7 @@ const ModernPDF = ({ data }) => {
                 src={personalInfo.linkedin}
                 style={[styles.contactItem, dynamicStyles.accentText]}
               >
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
@@ -202,7 +205,7 @@ const ModernPDF = ({ data }) => {
                 src={personalInfo.github}
                 style={[styles.contactItem, dynamicStyles.accentText]}
               >
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.portfolio && (
@@ -210,7 +213,7 @@ const ModernPDF = ({ data }) => {
                 src={personalInfo.portfolio}
                 style={[styles.contactItem, dynamicStyles.accentText]}
               >
-                Portfolio
+                {personalInfo.portfolio.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -222,7 +225,7 @@ const ModernPDF = ({ data }) => {
 
         <View style={styles.columns} wrap={false}>
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Technical Skills</Text>
+            <Text style={styles.sectionTitle}>SKILLS</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([key, val], i) =>
@@ -237,7 +240,7 @@ const ModernPDF = ({ data }) => {
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Additional Skills</Text>
+            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
                 <Text style={styles.skillLabel}>CORE SKILLS</Text>
@@ -262,7 +265,7 @@ const ModernPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Professional Experience</Text>
+            <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, index) => (
               <View key={index} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -285,7 +288,7 @@ const ModernPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Projects</Text>
+            <Text style={styles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, index) => (
               <View key={index} style={styles.entry}>
                 <View style={styles.entryHeader} wrap={false}>
@@ -295,7 +298,7 @@ const ModernPDF = ({ data }) => {
                       style={[styles.date, { color: "#2563eb" }]}
                       src={proj.link}
                     >
-                      View Project
+                      {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
                 </View>
@@ -312,7 +315,7 @@ const ModernPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, index) => (
               <View key={index} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>

@@ -9,6 +9,8 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
+Font.registerHyphenationCallback((word) => [word]);
+
 const styles = StyleSheet.create({
   page: {
     padding: "15mm",
@@ -188,17 +190,17 @@ const GlobalPDF = ({ data }) => {
           <View style={[styles.contactRow, { marginTop: 4 }]}>
             {personalInfo?.linkedin && (
               <Link src={personalInfo.linkedin} style={styles.link}>
-                LinkedIn
+                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
               <Link src={personalInfo.github} style={styles.link}>
-                GitHub
+                {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.portfolio && (
               <Link src={personalInfo.portfolio} style={styles.link}>
-                Portfolio
+                {personalInfo.portfolio.replace(/^https?:\/\//, "")}
               </Link>
             )}
           </View>
@@ -207,7 +209,7 @@ const GlobalPDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Professional Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -215,7 +217,7 @@ const GlobalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -243,7 +245,7 @@ const GlobalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
+            <Text style={styles.sectionTitle}>PROJECTS</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -268,7 +270,7 @@ const GlobalPDF = ({ data }) => {
         {/* Education */}
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -285,7 +287,7 @@ const GlobalPDF = ({ data }) => {
 
         {/* Skills */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Technical Skills</Text>
+          <Text style={styles.sectionTitle}>SKILLS</Text>
           <View style={styles.skillsGrid}>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
@@ -311,7 +313,7 @@ const GlobalPDF = ({ data }) => {
         {/* Core Skills */}
         {competencies?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Core Skills</Text>
+            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
             <View style={styles.skillsGrid}>
               {competencies.map((c, i) => (
                 <View

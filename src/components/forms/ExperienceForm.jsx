@@ -3,13 +3,19 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 import DateRangePicker from "../common/DateRangePicker";
-import { FiTrash2 } from "react-icons/fi";
+import { FiTrash2, FiAlertCircle } from "react-icons/fi";
+import { isValidDateRange } from "../../utils/dateUtils";
 
 const ExperienceForm = () => {
   const dispatch = useDispatch();
   const { currentResume } = useSelector((state) => state.resume);
 
-  const { register, control, watch } = useForm({
+  const {
+    register,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       experience: currentResume?.experience || [],
     },
@@ -100,13 +106,30 @@ const ExperienceForm = () => {
               <Controller
                 control={control}
                 name={`experience.${index}.endDate`}
-                render={({ field }) => (
-                  <DateRangePicker
-                    label="End Period *"
-                    value={field.value}
-                    onChange={field.onChange}
-                    isPresentAllowed={true}
-                  />
+                rules={{
+                  validate: (value) => {
+                    const startDate = watch(`experience.${index}.startDate`);
+                    return (
+                      isValidDateRange(startDate, value) ||
+                      "End date cannot be before start date"
+                    );
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <div className="space-y-2">
+                    <DateRangePicker
+                      label="End Period *"
+                      value={field.value}
+                      onChange={field.onChange}
+                      isPresentAllowed={true}
+                    />
+                    {fieldState.error && (
+                      <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 ml-1 animate-fadeIn">
+                        <FiAlertCircle size={12} />
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
                 )}
               />
             </div>

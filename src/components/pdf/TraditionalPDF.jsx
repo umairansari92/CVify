@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -152,20 +155,22 @@ const TraditionalPDF = ({ data }) => {
             {personalInfo?.email && <Text>{personalInfo.email}</Text>}
             {personalInfo?.phone && <Text>• {personalInfo.phone}</Text>}
             {personalInfo?.location && <Text>• {personalInfo.location}</Text>}
-            {personalInfo?.linkedin && <Text>• LinkedIn</Text>}
+            {personalInfo?.linkedin && (
+              <Text>• {personalInfo.linkedin.replace(/^https?:\/\//, "")}</Text>
+            )}
           </View>
         </View>
 
         {personalInfo?.profileSummary && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>Professional Summary</Text>
+            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -188,7 +193,7 @@ const TraditionalPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>EDUCATION</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -206,7 +211,7 @@ const TraditionalPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View>
-              <Text style={styles.sectionTitle}>Technical Skills</Text>
+              <Text style={styles.sectionTitle}>SKILLS</Text>
               {Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
                   list?.length > 0 && (
@@ -221,7 +226,7 @@ const TraditionalPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View>
-            <Text style={styles.sectionTitle}>Additional Skills</Text>
+            <Text style={styles.sectionTitle}>ADDITIONAL SKILLS</Text>
             {competencies?.length > 0 && (
               <View style={{ marginTop: 5 }}>
                 {competencies.map((c, i) => (

@@ -11,6 +11,7 @@ import {
   FaCrown,
   FaTimes,
   FaEnvelopeOpenText,
+  FaChartLine,
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -51,6 +52,12 @@ const Sidebar = ({ onClose }) => {
       label: "Cover Letter",
       icon: <FaEnvelopeOpenText />,
       color: "from-orange-500 to-amber-500",
+    },
+    {
+      path: "/ats",
+      label: "ATS System",
+      icon: <FaChartLine />,
+      color: "from-indigo-500 to-blue-500",
     },
     {
       path: "/referral",

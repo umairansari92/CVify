@@ -6,7 +6,10 @@ import {
   View,
   StyleSheet,
   Link,
+  Font,
 } from "@react-pdf/renderer";
+
+Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
@@ -203,7 +206,7 @@ const ExecutivePDF = ({ data }) => {
                     style={{ color: themeColor, textDecoration: "none" }}
                     src={personalInfo.linkedin}
                   >
-                    LinkedIn
+                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
                   </Link>
                 )}
                 {personalInfo?.github && (
@@ -211,7 +214,7 @@ const ExecutivePDF = ({ data }) => {
                     style={{ color: "#2563eb", textDecoration: "none" }}
                     src={personalInfo.github}
                   >
-                    GitHub
+                    {personalInfo.github.replace(/^https?:\/\//, "")}
                   </Link>
                 )}
                 {personalInfo?.portfolio && (
@@ -219,7 +222,7 @@ const ExecutivePDF = ({ data }) => {
                     style={{ color: "#2563eb", textDecoration: "none" }}
                     src={personalInfo.portfolio}
                   >
-                    Portfolio
+                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
                   </Link>
                 )}
               </View>
@@ -231,9 +234,7 @@ const ExecutivePDF = ({ data }) => {
           <View style={styles.content}>
             {personalInfo?.profileSummary && (
               <View style={styles.section} wrap={false}>
-                <Text style={dynamicStyles.sectionTitle}>
-                  Professional Summary
-                </Text>
+                <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
                 <Text
                   style={{
                     fontSize: 10,
@@ -249,7 +250,7 @@ const ExecutivePDF = ({ data }) => {
 
             {experience?.length > 0 && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+                <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
                 {experience.map((exp, i) => (
                   <View key={i} style={styles.entry} wrap={false}>
                     <View style={styles.entryHeader}>
@@ -272,7 +273,7 @@ const ExecutivePDF = ({ data }) => {
 
             {projects?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Key Projects</Text>
+                <Text style={styles.sectionTitle}>PROJECTS</Text>
                 {projects.map((proj, i) => (
                   <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader} wrap={false}>
@@ -281,7 +282,7 @@ const ExecutivePDF = ({ data }) => {
                       </Text>
                       {proj.link && (
                         <Text style={[styles.date, { color: "#2563eb" }]}>
-                          View Project
+                          {proj.link.replace(/^https?:\/\//, "")}
                         </Text>
                       )}
                     </View>
@@ -306,7 +307,7 @@ const ExecutivePDF = ({ data }) => {
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  Education
+                  EDUCATION
                 </Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 8 }}>
@@ -331,7 +332,7 @@ const ExecutivePDF = ({ data }) => {
                       { borderBottomWidth: 0, paddingBottom: 0 },
                     ]}
                   >
-                    Additional Skills
+                    SKILLS
                   </Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
@@ -353,7 +354,7 @@ const ExecutivePDF = ({ data }) => {
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  Core Skills
+                  CORE SKILLS
                 </Text>
                 {competencies.map((c, i) => (
                   <Text key={i} style={styles.sidebarItem}>
