@@ -15,6 +15,7 @@ const EliteTemplate = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
+    softwareProficiency,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Playfair Display",
@@ -257,6 +258,18 @@ const EliteTemplate = ({ data }) => {
                     <ul className="text-[10px] text-slate-700 font-bold space-y-1">
                       {competencies.map((c, idx) => (
                         <li key={idx}>- {c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {softwareProficiency?.length > 0 && (
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Software
+                    </p>
+                    <ul className="text-[10px] text-slate-700 font-bold space-y-1">
+                      {softwareProficiency.map((s, idx) => (
+                        <li key={idx}>- {s}</li>
                       ))}
                     </ul>
                   </div>

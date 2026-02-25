@@ -137,6 +137,7 @@ const GlobalPDF = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
+    softwareProficiency,
     customSections,
     themeColor,
     fontFamily,

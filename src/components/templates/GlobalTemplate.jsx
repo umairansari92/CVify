@@ -16,6 +16,7 @@ const GlobalTemplate = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
+    softwareProficiency,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Inter",
@@ -251,6 +252,16 @@ const GlobalTemplate = ({ data }) => {
                   </p>
                   <p className="text-xs text-slate-700 leading-relaxed italic">
                     {competencies.join(", ")}
+                  </p>
+                </div>
+              )}
+              {softwareProficiency?.length > 0 && (
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                    Software
+                  </p>
+                  <p className="text-xs text-slate-700 leading-relaxed italic">
+                    {softwareProficiency.join(", ")}
                   </p>
                 </div>
               )}

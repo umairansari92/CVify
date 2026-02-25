@@ -145,6 +145,7 @@ const ElitePDF = ({ data }) => {
     technicalSkills,
     projects,
     competencies,
+    softwareProficiency,
     customSections,
     themeColor,
     fontFamily,
