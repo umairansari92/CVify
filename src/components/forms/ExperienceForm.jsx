@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 import DateRangePicker from "../common/DateRangePicker";
@@ -61,9 +61,7 @@ const ExperienceForm = () => {
         company: "Multiple Employers",
         startDate: oldEntries[0]?.startDate,
         endDate: oldEntries[oldEntries.length - 1]?.endDate,
-        responsibilities: [
-          "Summary of earlier experience (collapsed)",
-        ],
+        responsibilities: ["Summary of earlier experience (collapsed)"],
       });
     }
 
@@ -75,7 +73,10 @@ const ExperienceForm = () => {
         control.setValue(fieldName, exp[key]);
       });
       if (exp.responsibilities) {
-        control.setValue(`experience.${idx}.responsibilities`, exp.responsibilities.join("\n"));
+        control.setValue(
+          `experience.${idx}.responsibilities`,
+          exp.responsibilities.join("\n"),
+        );
       }
     });
     // if there are more fields than remaining, remove extras
@@ -127,7 +128,7 @@ const ExperienceForm = () => {
     <div className="space-y-10 animate-fadeIn">
       {oldExists && (
         <div className="bg-yellow-100 border-l-4 border-yellow-400 p-4 text-yellow-800">
-          You have experience entries older than 10 years. 
+          You have experience entries older than 10 years.
           <button
             type="button"
             className="underline ml-2"
@@ -169,7 +170,7 @@ const ExperienceForm = () => {
               />
               {suggestions[index] && (
                 <div className="text-xs text-yellow-600 mt-1">
-                  Suggestion: use{' '}
+                  Suggestion: use{" "}
                   <button
                     type="button"
                     className="underline"
