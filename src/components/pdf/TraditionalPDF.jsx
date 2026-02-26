@@ -114,6 +114,7 @@ const TraditionalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#000000",
     fontFamily = "Inter",

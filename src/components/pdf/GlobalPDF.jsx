@@ -140,6 +140,7 @@ const GlobalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor,
     fontFamily,

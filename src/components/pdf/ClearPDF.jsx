@@ -161,6 +161,7 @@ const ClearPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#1e293b",
     fontFamily = "Inter",

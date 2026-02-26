@@ -146,6 +146,7 @@ const BoldPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#111827",
     fontFamily = "Inter",

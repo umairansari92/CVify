@@ -138,6 +138,7 @@ const ModernPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#2563eb",
     fontFamily = "Inter",

@@ -134,6 +134,7 @@ const ElegantPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#2c3e50",
     fontFamily = "Playfair Display",

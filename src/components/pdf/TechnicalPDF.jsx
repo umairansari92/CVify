@@ -170,14 +170,18 @@ const styles = StyleSheet.create({
 
 const TechnicalPDF = ({ data }) => {
   const {
+    personalInfo,
+    education,
+    experience,
     technicalSkills,
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Inter",
-  } = data;
+  } = data || {};
 
   const getPDFFont = (font) => {
     switch (font) {

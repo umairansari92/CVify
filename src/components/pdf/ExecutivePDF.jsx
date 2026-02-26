@@ -145,6 +145,7 @@ const ExecutivePDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Playfair Display",

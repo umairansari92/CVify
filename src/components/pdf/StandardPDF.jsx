@@ -116,7 +116,8 @@ const StandardPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
-  } = data;
+    interests,
+  } = data || {};
 
   return (
     <Document>
