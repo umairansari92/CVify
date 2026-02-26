@@ -270,13 +270,13 @@ const MinimalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} - {exp.endDate}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
@@ -296,7 +296,7 @@ const MinimalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
@@ -337,7 +337,7 @@ const MinimalPDF = ({ data }) => {
           <View style={{ flex: 1, paddingRight: 10 }}>
             {education?.length > 0 && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
+                <Text style={dynamicStyles.sectionTitle}>Education</Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 12 }} wrap={false}>
                     <Text style={{ fontWeight: "bold", fontSize: 9.5 }}>
@@ -353,7 +353,7 @@ const MinimalPDF = ({ data }) => {
                       {edu.institution}
                     </Text>
                     <Text style={{ fontSize: 8.5, color: "#94a3b8" }}>
-                      {edu.startDate} - {edu.endDate}
+                      {edu.startDate} — {edu.endDate}
                     </Text>
                   </View>
                 ))}
@@ -367,7 +367,7 @@ const MinimalPDF = ({ data }) => {
               competencies?.length > 0 ||
               softwareProficiency?.length > 0) && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
+                <Text style={dynamicStyles.sectionTitle}>Expertise</Text>
 
                 {technicalSkills &&
                   Object.entries(technicalSkills).map(
@@ -375,7 +375,12 @@ const MinimalPDF = ({ data }) => {
                       Array.isArray(list) &&
                       list.length > 0 && (
                         <View key={i} style={styles.skillCategory} wrap={false}>
-                          <Text style={styles.skillCategoryTitle}>{cat}</Text>
+                          <Text style={styles.skillCategoryTitle}>
+                            {cat
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()
+                              .replace(/^\w/, (c) => c.toUpperCase())}
+                          </Text>
                           <Text style={styles.skillText}>
                             {list.join(", ")}
                           </Text>
@@ -385,7 +390,7 @@ const MinimalPDF = ({ data }) => {
 
                 {competencies?.length > 0 && (
                   <View style={styles.skillCategory} wrap={false}>
-                    <Text style={styles.skillCategoryTitle}>CORE SKILLS</Text>
+                    <Text style={styles.skillCategoryTitle}>Core Skills</Text>
                     <Text style={styles.skillText}>
                       {competencies.join(" • ")}
                     </Text>
@@ -394,10 +399,18 @@ const MinimalPDF = ({ data }) => {
 
                 {softwareProficiency?.length > 0 && (
                   <View style={styles.skillCategory} wrap={false}>
-                    <Text style={styles.skillCategoryTitle}>SOFTWARE</Text>
+                    <Text style={styles.skillCategoryTitle}>
+                      Software & Systems
+                    </Text>
                     <Text style={styles.skillText}>
                       {softwareProficiency.join(", ")}
                     </Text>
+                  </View>
+                )}
+                {interests?.length > 0 && (
+                  <View style={styles.skillCategory} wrap={false}>
+                    <Text style={styles.skillCategoryTitle}>Interests</Text>
+                    <Text style={styles.skillText}>{interests.join(", ")}</Text>
                   </View>
                 )}
               </View>

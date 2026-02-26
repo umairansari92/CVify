@@ -159,7 +159,7 @@ const StandardPDF = ({ data }) => {
 
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>SUMMARY</Text>
+            <Text style={styles.sectionTitle}>Summary</Text>
             <Text
               style={{ fontSize: 9.5, textAlign: "justify", lineHeight: 1.6 }}
             >
@@ -170,13 +170,13 @@ const StandardPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} - {exp.endDate}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
@@ -194,7 +194,7 @@ const StandardPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>SKILLS</Text>
+              <Text style={styles.sectionTitle}>Expertise</Text>
               {Object.entries(technicalSkills).map(
                 ([key, val], i) =>
                   val?.length > 0 && (
@@ -211,7 +211,7 @@ const StandardPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>PROJECTS</Text>
+            <Text style={styles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -228,7 +228,7 @@ const StandardPDF = ({ data }) => {
                 {proj.description?.map((desc, j) => (
                   <View key={j} style={styles.bullet}>
                     <Text style={[styles.bulletDot, { color: "#6b7280" }]}>
-                      -
+                      •
                     </Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
@@ -238,27 +238,51 @@ const StandardPDF = ({ data }) => {
           </View>
         )}
 
-        {competencies?.length > 0 && (
+        {softwareProficiency?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
-            {competencies.map((c, i) => (
+            <Text style={styles.sectionTitle}>Software & Systems</Text>
+            <Text style={{ fontSize: 9.5 }}>
+              {softwareProficiency.join(", ")}
+            </Text>
+          </View>
+        )}
+
+        {(competencies?.length > 0 || interests?.length > 0) && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Core Competencies</Text>
+            {competencies?.map((c, i) => (
               <View key={i} style={styles.bullet}>
                 <Text style={styles.bulletDot}>•</Text>
                 <Text style={styles.bulletText}>{c}</Text>
               </View>
             ))}
+            {interests?.length > 0 && (
+              <View style={{ marginTop: 8 }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 10,
+                    color: "#444",
+                    marginBottom: 4,
+                  }}
+                >
+                  Interests:
+                </Text>
+                <Text style={{ fontSize: 9.5 }}>{interests.join(", ")}</Text>
+              </View>
+            )}
           </View>
         )}
 
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>EDUCATION</Text>
+            <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{edu.degree}</Text>

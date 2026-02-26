@@ -20,11 +20,16 @@ export const months = [
  */
 export const dateToValue = (dateString) => {
   if (!dateString || dateString === "Present") {
-    // Return a value in the far future for comparison
     return 999999;
   }
 
-  const [month, year] = dateString.split(" ");
+  const parts = dateString.split(" ");
+  if (parts.length === 1) {
+    const yearNum = parseInt(parts[0]);
+    return isNaN(yearNum) ? 0 : yearNum * 12 + 11;
+  }
+
+  const [month, year] = parts;
   const monthIndex = months.indexOf(month);
   const yearNum = parseInt(year);
 
@@ -32,7 +37,6 @@ export const dateToValue = (dateString) => {
     return 0;
   }
 
-  // Value = Year * 12 + MonthIndex
   return yearNum * 12 + monthIndex;
 };
 

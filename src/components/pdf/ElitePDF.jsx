@@ -210,7 +210,7 @@ const ElitePDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
+            <Text style={dynamicStyles.sectionTitle}>Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -218,7 +218,7 @@ const ElitePDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -244,7 +244,7 @@ const ElitePDF = ({ data }) => {
         {/* Education */}
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
+            <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -262,9 +262,12 @@ const ElitePDF = ({ data }) => {
         {/* Skills */}
         {(technicalSkills ||
           competencies?.length > 0 ||
-          softwareProficiency?.length > 0) && (
+          softwareProficiency?.length > 0 ||
+          interests?.length > 0) && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
+            <Text style={dynamicStyles.sectionTitle}>
+              Skills & Competencies
+            </Text>
             <View style={styles.skillsTable}>
               {technicalSkills &&
                 Object.entries(technicalSkills).map(
@@ -292,6 +295,12 @@ const ElitePDF = ({ data }) => {
                   </Text>
                 </View>
               )}
+              {interests?.length > 0 && (
+                <View style={styles.skillRow}>
+                  <Text style={styles.skillLabel}>Interests</Text>
+                  <Text style={styles.skillValue}>{interests.join(", ")}</Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -299,7 +308,7 @@ const ElitePDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>

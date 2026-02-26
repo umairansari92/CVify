@@ -156,28 +156,27 @@ const TraditionalPDF = ({ data }) => {
             {personalInfo?.email && <Text>{personalInfo.email}</Text>}
             {personalInfo?.phone && <Text>• {personalInfo.phone}</Text>}
             {personalInfo?.location && <Text>• {personalInfo.location}</Text>}
-            {personalInfo?.linkedin && (
-              <Text>• {personalInfo.linkedin.replace(/^https?:\/\//, "")}</Text>
-            )}
+            {personalInfo?.linkedin && <Text>• {personalInfo.linkedin}</Text>}
+            {personalInfo?.github && <Text>• {personalInfo.github}</Text>}
           </View>
         </View>
 
         {personalInfo?.profileSummary && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
+            <Text style={dynamicStyles.sectionTitle}>Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.company}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} - {exp.endDate}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.position}</Text>
@@ -194,13 +193,14 @@ const TraditionalPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>EDUCATION</Text>
+            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{edu.degree}</Text>
@@ -212,12 +212,18 @@ const TraditionalPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View>
-              <Text style={styles.sectionTitle}>SKILLS</Text>
+              <Text style={styles.sectionTitle}>Expertise</Text>
               {Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
                   list?.length > 0 && (
                     <View key={i} style={styles.skillRow}>
-                      <Text style={styles.skillLabel}>{cat}:</Text>
+                      <Text style={styles.skillLabel}>
+                        {cat
+                          .replace(/([A-Z])/g, " $1")
+                          .trim()
+                          .replace(/^\w/, (c) => c.toUpperCase())}
+                        :
+                      </Text>
                       <Text style={styles.skillList}>{list.join(", ")}</Text>
                     </View>
                   ),
@@ -227,9 +233,14 @@ const TraditionalPDF = ({ data }) => {
 
         {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
           <View>
-            <Text style={styles.sectionTitle}>ADDITIONAL SKILLS</Text>
+            <Text style={styles.sectionTitle}>Additional Information</Text>
             {competencies?.length > 0 && (
               <View style={{ marginTop: 5 }}>
+                <Text
+                  style={{ fontSize: 10, fontWeight: "bold", marginBottom: 3 }}
+                >
+                  Core Skills
+                </Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>
                     <Text>•</Text>
@@ -244,6 +255,12 @@ const TraditionalPDF = ({ data }) => {
                 <Text style={styles.skillList}>
                   {softwareProficiency.join(", ")}
                 </Text>
+              </View>
+            )}
+            {interests?.length > 0 && (
+              <View style={styles.skillRow}>
+                <Text style={styles.skillLabel}>Interests:</Text>
+                <Text style={styles.skillList}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>

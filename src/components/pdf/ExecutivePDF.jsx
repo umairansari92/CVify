@@ -234,7 +234,7 @@ const ExecutivePDF = ({ data }) => {
           <View style={styles.content}>
             {personalInfo?.profileSummary && (
               <View style={styles.section} wrap={false}>
-                <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
+                <Text style={dynamicStyles.sectionTitle}>Summary</Text>
                 <Text
                   style={{
                     fontSize: 10,
@@ -250,13 +250,13 @@ const ExecutivePDF = ({ data }) => {
 
             {experience?.length > 0 && (
               <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
                 {experience.map((exp, i) => (
                   <View key={i} style={styles.entry} wrap={false}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>
-                        {exp.startDate} - {exp.endDate}
+                        {exp.startDate} — {exp.endDate}
                       </Text>
                     </View>
                     <Text style={styles.subtitle}>{exp.company}</Text>
@@ -273,7 +273,7 @@ const ExecutivePDF = ({ data }) => {
 
             {projects?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>PROJECTS</Text>
+                <Text style={styles.sectionTitle}>Projects</Text>
                 {projects.map((proj, i) => (
                   <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader} wrap={false}>
@@ -307,7 +307,7 @@ const ExecutivePDF = ({ data }) => {
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  EDUCATION
+                  Education
                 </Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 8 }}>
@@ -316,7 +316,7 @@ const ExecutivePDF = ({ data }) => {
                     </Text>
                     <Text style={{ fontSize: 9 }}>{edu.degree}</Text>
                     <Text style={{ fontSize: 8, color: "#64748b" }}>
-                      {edu.startDate} - {edu.endDate}
+                      {edu.startDate} — {edu.endDate}
                     </Text>
                   </View>
                 ))}
@@ -332,13 +332,19 @@ const ExecutivePDF = ({ data }) => {
                       { borderBottomWidth: 0, paddingBottom: 0 },
                     ]}
                   >
-                    SKILLS
+                    Skills
                   </Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
                       list?.length > 0 && (
                         <View key={i} style={{ marginBottom: 5 }} wrap={false}>
-                          <Text style={styles.skillLabel}>{cat}:</Text>
+                          <Text style={styles.skillLabel}>
+                            {cat
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()
+                              .replace(/^\w/, (c) => c.toUpperCase())}
+                            :
+                          </Text>
                           <Text style={{ fontSize: 9 }}>{list.join(", ")}</Text>
                         </View>
                       ),
@@ -354,13 +360,21 @@ const ExecutivePDF = ({ data }) => {
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  CORE SKILLS
+                  Core Skills
                 </Text>
                 {competencies.map((c, i) => (
                   <Text key={i} style={styles.sidebarItem}>
                     • {c}
                   </Text>
                 ))}
+                {interests?.length > 0 && (
+                  <View style={{ marginTop: 10 }}>
+                    <Text style={[styles.skillLabel, { fontSize: 10 }]}>
+                      Interests:
+                    </Text>
+                    <Text style={{ fontSize: 9 }}>{interests.join(", ")}</Text>
+                  </View>
+                )}
               </View>
             )}
           </View>

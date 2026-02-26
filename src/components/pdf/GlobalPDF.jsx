@@ -189,17 +189,26 @@ const GlobalPDF = ({ data }) => {
           </View>
           <View style={[styles.contactRow, { marginTop: 4 }]}>
             {personalInfo?.linkedin && (
-              <Link src={personalInfo.linkedin} style={styles.link}>
+              <Link
+                src={personalInfo.linkedin}
+                style={[styles.link, dynamicStyles.accentText]}
+              >
                 {personalInfo.linkedin.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.github && (
-              <Link src={personalInfo.github} style={styles.link}>
+              <Link
+                src={personalInfo.github}
+                style={[styles.link, dynamicStyles.accentText]}
+              >
                 {personalInfo.github.replace(/^https?:\/\//, "")}
               </Link>
             )}
             {personalInfo?.portfolio && (
-              <Link src={personalInfo.portfolio} style={styles.link}>
+              <Link
+                src={personalInfo.portfolio}
+                style={[styles.link, dynamicStyles.accentText]}
+              >
                 {personalInfo.portfolio.replace(/^https?:\/\//, "")}
               </Link>
             )}
@@ -209,7 +218,7 @@ const GlobalPDF = ({ data }) => {
         {/* Summary */}
         {personalInfo?.profileSummary && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
+            <Text style={dynamicStyles.sectionTitle}>Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -217,7 +226,7 @@ const GlobalPDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -245,7 +254,7 @@ const GlobalPDF = ({ data }) => {
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>PROJECTS</Text>
+            <Text style={styles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -270,7 +279,7 @@ const GlobalPDF = ({ data }) => {
         {/* Education */}
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>EDUCATION</Text>
+            <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -287,7 +296,7 @@ const GlobalPDF = ({ data }) => {
 
         {/* Skills */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>SKILLS</Text>
+          <Text style={styles.sectionTitle}>Skills</Text>
           <View style={styles.skillsGrid}>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
@@ -299,12 +308,10 @@ const GlobalPDF = ({ data }) => {
                     </View>
                   ),
               )}
-            {softwareProficiency?.length > 0 && (
+            {interests?.length > 0 && (
               <View style={styles.skillCategory}>
-                <Text style={styles.skillLabel}>Software</Text>
-                <Text style={styles.skillValue}>
-                  {softwareProficiency.join(", ")}
-                </Text>
+                <Text style={styles.skillLabel}>Interests</Text>
+                <Text style={styles.skillValue}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>
@@ -313,7 +320,7 @@ const GlobalPDF = ({ data }) => {
         {/* Core Skills */}
         {competencies?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
+            <Text style={styles.sectionTitle}>Key Skills</Text>
             <View style={styles.skillsGrid}>
               {competencies.map((c, i) => (
                 <View

@@ -203,19 +203,11 @@ const ElegantPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.expRow} wrap={false}>
                 <View style={styles.expDateSide}>
                   <Text style={styles.dateText}>{exp.startDate}</Text>
-                  <Text
-                    style={[
-                      styles.dateText,
-                      { color: "#9ca3af", marginVertical: 2 },
-                    ]}
-                  >
-                    to
-                  </Text>
                   <Text style={styles.dateText}>{exp.endDate}</Text>
                 </View>
                 <View style={styles.expContentSide}>
@@ -235,7 +227,7 @@ const ElegantPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={{ marginBottom: 20 }}>
-            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                 <View
@@ -263,7 +255,7 @@ const ElegantPDF = ({ data }) => {
                 </View>
                 {proj.description?.map((desc, j) => (
                   <View key={j} style={styles.bullet}>
-                    <Text style={{ color: "#d1d5db" }}>-</Text>
+                    <Text style={{ color: "#d1d5db" }}>•</Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
                 ))}
@@ -275,7 +267,7 @@ const ElegantPDF = ({ data }) => {
         <View style={styles.columnGrid}>
           {education?.length > 0 && (
             <View style={styles.col}>
-              <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
+              <Text style={dynamicStyles.sectionTitle}>Education</Text>
               {education.map((edu, i) => (
                 <View
                   key={i}
@@ -287,7 +279,7 @@ const ElegantPDF = ({ data }) => {
                   </Text>
                   <Text style={styles.subtitle}>{edu.degree}</Text>
                   <Text style={{ fontSize: 8.5, color: "#9ca3af" }}>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
               ))}
@@ -297,7 +289,7 @@ const ElegantPDF = ({ data }) => {
           {technicalSkills &&
             Object.values(technicalSkills).some((a) => a?.length > 0) && (
               <View style={styles.col}>
-                <Text style={styles.sectionTitle}>SKILLS</Text>
+                <Text style={styles.sectionTitle}>Expertise</Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -321,7 +313,7 @@ const ElegantPDF = ({ data }) => {
                             style={{
                               fontSize: 8.5,
                               fontWeight: "bold",
-                              textTransform: "uppercase",
+                              // textTransform: "uppercase",
                               marginBottom: 3,
                             }}
                           >
@@ -338,9 +330,11 @@ const ElegantPDF = ({ data }) => {
             )}
         </View>
 
-        {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
+        {(competencies?.length > 0 ||
+          softwareProficiency?.length > 0 ||
+          interests?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={styles.sectionTitle}>ADDITIONAL SKILLS</Text>
+            <Text style={styles.sectionTitle}>Additional Skills</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -373,7 +367,20 @@ const ElegantPDF = ({ data }) => {
                     marginTop: 10,
                   }}
                 >
-                  Software: {softwareProficiency.join(" • ")}
+                  Tools: {softwareProficiency.join(" • ")}
+                </Text>
+              )}
+              {interests?.length > 0 && (
+                <Text
+                  style={{
+                    fontSize: 9,
+                    color: "#4b5563",
+                    width: "100%",
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  Interests: {interests.join(" • ")}
                 </Text>
               )}
             </View>

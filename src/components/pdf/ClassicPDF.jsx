@@ -196,13 +196,13 @@ const ClassicPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} - {exp.endDate}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
@@ -219,7 +219,7 @@ const ClassicPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View>
-            <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
@@ -247,7 +247,7 @@ const ClassicPDF = ({ data }) => {
         {technicalSkills &&
           Object.values(technicalSkills).some((a) => a?.length > 0) && (
             <View>
-              <Text style={dynamicStyles.sectionTitle}>SKILLS</Text>
+              <Text style={dynamicStyles.sectionTitle}>Skills</Text>
               <View style={styles.grid}>
                 {Object.entries(technicalSkills).map(
                   ([cat, list], i) =>
@@ -255,7 +255,11 @@ const ClassicPDF = ({ data }) => {
                       <View key={i} style={styles.gridItem}>
                         <Text style={[styles.skillText, { fontSize: 9 }]}>
                           <Text style={styles.skillLabel}>
-                            {cat.toUpperCase()}:{" "}
+                            {cat
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()
+                              .replace(/^\w/, (c) => c.toUpperCase())}
+                            :{" "}
                           </Text>
                           {list.join(", ")}
                         </Text>
@@ -266,9 +270,11 @@ const ClassicPDF = ({ data }) => {
             </View>
           )}
 
-        {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
+        {(competencies?.length > 0 ||
+          softwareProficiency?.length > 0 ||
+          interests?.length > 0) && (
           <View style={{ marginTop: 10 }}>
-            <Text style={dynamicStyles.sectionTitle}>CORE SKILLS</Text>
+            <Text style={dynamicStyles.sectionTitle}>Core Skills</Text>
             {softwareProficiency?.length > 0 && (
               <Text style={styles.skillText}>
                 <Text style={styles.skillLabel}>Software: </Text>
@@ -277,26 +283,30 @@ const ClassicPDF = ({ data }) => {
             )}
             {competencies?.length > 0 && (
               <View style={{ marginTop: 5 }}>
-                {competencies.map((c, i) => (
-                  <View key={i} style={styles.bullet}>
-                    <Text>•</Text>
-                    <Text style={styles.bulletText}>{c}</Text>
-                  </View>
-                ))}
+                <Text style={styles.skillText}>
+                  <Text style={styles.skillLabel}>Competencies: </Text>
+                  {competencies.join(", ")}
+                </Text>
               </View>
+            )}
+            {interests?.length > 0 && (
+              <Text style={styles.skillText}>
+                <Text style={styles.skillLabel}>Interests: </Text>
+                {interests.join(", ")}
+              </Text>
             )}
           </View>
         )}
 
         {education?.length > 0 && (
           <View style={{ marginTop: 15 }}>
-            <Text style={dynamicStyles.sectionTitle}>EDUCATION</Text>
+            <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.skillText}>{edu.degree}</Text>

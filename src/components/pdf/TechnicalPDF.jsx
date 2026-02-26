@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
   sidebarTitle: {
     fontSize: 10,
     fontWeight: "bold",
+    // textTransform: "uppercase",
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
     paddingBottom: 4,
     marginBottom: 8,
     color: "#0f172a",
-    textTransform: "uppercase",
   },
   sectionTitle: {
     fontSize: 14,
@@ -265,7 +265,7 @@ const TechnicalPDF = ({ data }) => {
             {technicalSkills &&
               Object.values(technicalSkills).some((a) => a?.length > 0) && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sidebarTitle}>SKILLS</Text>
+                  <Text style={styles.sidebarTitle}>Skills</Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
                       list?.length > 0 && (
@@ -282,7 +282,7 @@ const TechnicalPDF = ({ data }) => {
 
             {competencies?.length > 0 && (
               <View style={styles.sidebarBox} wrap={false}>
-                <Text style={styles.sidebarTitle}>CORE SKILLS</Text>
+                <Text style={styles.sidebarTitle}>Core Skills</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>
                     <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
@@ -298,7 +298,7 @@ const TechnicalPDF = ({ data }) => {
 
             {education?.length > 0 && (
               <View style={styles.sidebarBox}>
-                <Text style={styles.sidebarTitle}>EDUCATION</Text>
+                <Text style={styles.sidebarTitle}>Education</Text>
                 {education.map((edu, i) => (
                   <View key={i} style={{ marginBottom: 8 }} wrap={false}>
                     <Text style={{ fontSize: 9, fontWeight: "bold" }}>
@@ -308,7 +308,7 @@ const TechnicalPDF = ({ data }) => {
                       {edu.institution}
                     </Text>
                     <Text style={{ fontSize: 7, color: "#94a3b8" }}>
-                      {edu.startDate} - {edu.endDate}
+                      {edu.startDate} — {edu.endDate}
                     </Text>
                   </View>
                 ))}
@@ -321,7 +321,7 @@ const TechnicalPDF = ({ data }) => {
             {experience?.length > 0 && (
               <View>
                 <View wrap={false}>
-                  <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
+                  <Text style={styles.sectionTitle}>Work Experience</Text>
                 </View>
                 {experience.map((exp, i) => (
                   <View key={i} style={styles.entry} wrap={false}>
@@ -346,7 +346,7 @@ const TechnicalPDF = ({ data }) => {
             {projects?.length > 0 && (
               <View style={{ marginTop: 15 }}>
                 <View wrap={false}>
-                  <Text style={styles.sectionTitle}>KEY PROJECTS</Text>
+                  <Text style={styles.sectionTitle}>Key Projects</Text>
                 </View>
                 {projects.map((proj, i) => (
                   <View key={i} style={styles.projectBox} wrap={false}>

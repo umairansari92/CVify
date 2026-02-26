@@ -233,7 +233,7 @@ const ProfessionalPDF = ({ data }) => {
           </View>
 
           <View style={styles.sidebarSection}>
-            <Text style={dynamicStyles.sidebarTitle}>SKILLS</Text>
+            <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
@@ -248,7 +248,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {education?.length > 0 && (
             <View style={styles.sidebarSection}>
-              <Text style={dynamicStyles.sidebarTitle}>EDUCATION</Text>
+              <Text style={dynamicStyles.sidebarTitle}>Education</Text>
               {education.map((edu, i) => (
                 <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                   <Text
@@ -268,7 +268,7 @@ const ProfessionalPDF = ({ data }) => {
                       { fontSize: 7, color: "#9ca3af" },
                     ]}
                   >
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
               ))}
@@ -301,13 +301,13 @@ const ProfessionalPDF = ({ data }) => {
 
           {experience?.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
                     <Text style={styles.title}>{exp.position}</Text>
                     <Text style={styles.date}>
-                      {exp.startDate} - {exp.endDate}
+                      {exp.startDate} — {exp.endDate}
                     </Text>
                   </View>
                   <Text style={styles.subtitle}>{exp.company}</Text>
@@ -324,7 +324,7 @@ const ProfessionalPDF = ({ data }) => {
 
           {projects?.length > 0 && (
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader} wrap={false}>
@@ -365,7 +365,7 @@ const ProfessionalPDF = ({ data }) => {
                       marginBottom: 8,
                     }}
                   >
-                    CORE SKILLS
+                    Core Skills
                   </Text>
                   {competencies.map((c, i) => (
                     <View key={i} style={styles.bulletPoint}>
@@ -385,7 +385,7 @@ const ProfessionalPDF = ({ data }) => {
                       marginBottom: 4,
                     }}
                   >
-                    SOFTWARE & SYSTEMS
+                    Software & Systems
                   </Text>
                   <Text style={{ fontSize: 9, color: "#4b5563" }}>
                     {softwareProficiency.join(" • ")}

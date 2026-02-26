@@ -227,14 +227,14 @@ const BoldPDF = ({ data }) => {
               {experience?.length > 0 && (
                 <View>
                   <Text style={dynamicStyles.sectionTitle}>
-                    WORK EXPERIENCE
+                    Work Experience
                   </Text>
                   {experience.map((exp, i) => (
                     <View key={i} style={styles.entry} wrap={false}>
                       <View style={styles.entryHeader}>
                         <Text style={styles.title}>{exp.position}</Text>
                         <Text style={styles.subtitle}>
-                          {exp.company} | {exp.startDate} - {exp.endDate}
+                          {exp.company} | {exp.startDate} — {exp.endDate}
                         </Text>
                       </View>
                       {exp.responsibilities?.map((res, j) => (
@@ -250,7 +250,7 @@ const BoldPDF = ({ data }) => {
 
               {projects?.length > 0 && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={dynamicStyles.sectionTitle}>PROJECTS</Text>
+                  <Text style={dynamicStyles.sectionTitle}>Projects</Text>
                   {projects.map((proj, i) => (
                     <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                       <View
@@ -288,7 +288,7 @@ const BoldPDF = ({ data }) => {
             <View style={styles.rightCol}>
               {education?.length > 0 && (
                 <View style={styles.sidebarBox}>
-                  <Text style={dynamicStyles.sidebarTitle}>EDUCATION</Text>
+                  <Text style={dynamicStyles.sidebarTitle}>Education</Text>
                   {education.map((edu, i) => (
                     <View key={i} style={{ marginBottom: 10 }}>
                       <Text style={{ fontWeight: "bold", fontSize: 10 }}>
@@ -298,7 +298,7 @@ const BoldPDF = ({ data }) => {
                         {edu.degree}
                       </Text>
                       <Text style={{ fontSize: 8, color: "#9ca3af" }}>
-                        {edu.startDate} - {edu.endDate}
+                        {edu.startDate} — {edu.endDate}
                       </Text>
                     </View>
                   ))}
@@ -308,7 +308,7 @@ const BoldPDF = ({ data }) => {
               {technicalSkills &&
                 Object.values(technicalSkills).some((a) => a?.length > 0) && (
                   <View style={styles.sidebarBox}>
-                    <Text style={dynamicStyles.sidebarTitle}>SKILLS</Text>
+                    <Text style={dynamicStyles.sidebarTitle}>Expertise</Text>
                     {Object.entries(technicalSkills).map(
                       ([cat, list], i) =>
                         list?.length > 0 && (
@@ -318,11 +318,14 @@ const BoldPDF = ({ data }) => {
                                 fontSize: 8,
                                 color: "#6b7280",
                                 fontWeight: "bold",
-                                textTransform: "uppercase",
+                                // textTransform: "uppercase",
                                 marginBottom: 4,
                               }}
                             >
-                              {cat}
+                              {cat
+                                .replace(/([A-Z])/g, " $1")
+                                .trim()
+                                .replace(/^\w/, (c) => c.toUpperCase())}
                             </Text>
                             <View
                               style={{ flexDirection: "row", flexWrap: "wrap" }}
@@ -339,15 +342,25 @@ const BoldPDF = ({ data }) => {
                   </View>
                 )}
 
-              {competencies?.length > 0 && (
+              {(competencies?.length > 0 || interests?.length > 0) && (
                 <View style={styles.sidebarBox}>
-                  <Text style={styles.sectionTitle}>CORE SKILLS</Text>
-                  {competencies.map((c, i) => (
+                  <Text style={styles.sectionTitle}>Core Skills</Text>
+                  {competencies?.map((c, i) => (
                     <View key={i} style={styles.bullet}>
                       <Text>•</Text>
                       <Text style={styles.skillText}>{c}</Text>
                     </View>
                   ))}
+                  {interests?.length > 0 && (
+                    <View style={{ marginTop: 10 }}>
+                      <Text style={[styles.sidebarTitle, { fontSize: 9 }]}>
+                        Interests
+                      </Text>
+                      <Text style={styles.skillText}>
+                        {interests.join(", ")}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               )}
             </View>

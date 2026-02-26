@@ -219,20 +219,24 @@ const ClearPDF = ({ data }) => {
               </Text>
             )}
             {personalInfo?.linkedin && (
-              <Link
-                src={personalInfo.linkedin}
-                style={[styles.sideContactItem, { color: "#93c5fd" }]}
-              >
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.contactItem}>
+                <Link
+                  src={personalInfo.linkedin}
+                  style={{ color: "#64748b", textDecoration: "none" }}
+                >
+                  {personalInfo.linkedin}
+                </Link>
+              </View>
             )}
             {personalInfo?.github && (
-              <Link
-                src={personalInfo.github}
-                style={[styles.sideContactItem, { color: "#cbd5e1" }]}
-              >
-                {personalInfo.github.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.contactItem}>
+                <Link
+                  src={personalInfo.github}
+                  style={{ color: "#64748b", textDecoration: "none" }}
+                >
+                  {personalInfo.github}
+                </Link>
+              </View>
             )}
           </View>
 
@@ -278,10 +282,10 @@ const ClearPDF = ({ data }) => {
 
         <View style={styles.main}>
           {personalInfo?.profileSummary && (
-            <View style={{ marginBottom: 25 }}>
-              <Text style={dynamicStyles.sectionTitle}>SUMMARY</Text>
+            <View style={styles.section} wrap={false}>
+              <Text style={dynamicStyles.sectionTitle}>Summary</Text>
               <Text
-                style={{ fontSize: 9.5, lineHeight: 1.5, color: "#334155" }}
+                style={{ fontSize: 10, color: "#475569", textAlign: "justify" }}
               >
                 {personalInfo.profileSummary}
               </Text>
@@ -289,14 +293,14 @@ const ClearPDF = ({ data }) => {
           )}
 
           {experience?.length > 0 && (
-            <View>
-              <Text style={dynamicStyles.sectionTitle}>WORK EXPERIENCE</Text>
+            <View style={styles.section}>
+              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
               {experience.map((exp, i) => (
                 <View key={i} style={styles.entry} wrap={false}>
                   <View style={styles.entryHeader}>
                     <Text style={styles.title}>{exp.position}</Text>
                     <Text style={styles.date}>
-                      {exp.startDate} - {exp.endDate}
+                      {exp.startDate} — {exp.endDate}
                     </Text>
                   </View>
                   <Text style={styles.subtitle}>{exp.company}</Text>
@@ -308,12 +312,28 @@ const ClearPDF = ({ data }) => {
                   ))}
                 </View>
               ))}
+              {softwareProficiency?.length > 0 && (
+                <View style={styles.skillCategory}>
+                  <Text style={styles.skillCategoryTitle}>
+                    Software & Systems
+                  </Text>
+                  <Text style={styles.skillText}>
+                    {softwareProficiency.join(", ")}
+                  </Text>
+                </View>
+              )}
+              {interests?.length > 0 && (
+                <View style={styles.skillCategory}>
+                  <Text style={styles.skillCategoryTitle}>Interests</Text>
+                  <Text style={styles.skillText}>{interests.join(", ")}</Text>
+                </View>
+              )}
             </View>
           )}
 
           {projects?.length > 0 && (
-            <View style={{ marginTop: 10 }}>
-              <Text style={styles.sectionTitle}>PROJECTS</Text>
+            <View style={styles.section}>
+              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
               {projects.map((proj, i) => (
                 <View key={i} style={{ marginBottom: 15 }}>
                   <View style={styles.entryHeader} wrap={false}>

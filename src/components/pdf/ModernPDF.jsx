@@ -225,7 +225,7 @@ const ModernPDF = ({ data }) => {
 
         <View style={styles.columns} wrap={false}>
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>SKILLS</Text>
+            <Text style={styles.sectionTitle}>Skills</Text>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([key, val], i) =>
@@ -240,10 +240,10 @@ const ModernPDF = ({ data }) => {
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>CORE SKILLS</Text>
+            <Text style={styles.sectionTitle}>Core Skills</Text>
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>CORE SKILLS</Text>
+                <Text style={styles.skillLabel}>Core Skills</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bulletPoint}>
                     <Text style={{ width: 6, color: themeColor }}>•</Text>
@@ -254,10 +254,16 @@ const ModernPDF = ({ data }) => {
             )}
             {softwareProficiency?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>SOFTWARE & SYSTEMS</Text>
+                <Text style={styles.skillLabel}>Software & Systems</Text>
                 <Text style={styles.skillText}>
                   {softwareProficiency.join(", ")}
                 </Text>
+              </View>
+            )}
+            {interests?.length > 0 && (
+              <View style={styles.skillGroup} wrap={false}>
+                <Text style={styles.skillLabel}>Interests</Text>
+                <Text style={styles.skillText}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>
@@ -265,13 +271,13 @@ const ModernPDF = ({ data }) => {
 
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>WORK EXPERIENCE</Text>
+            <Text style={styles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, index) => (
               <View key={index} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.entryTitle}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} - {exp.endDate}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.entrySubtitle}>{exp.company}</Text>
@@ -288,7 +294,7 @@ const ModernPDF = ({ data }) => {
 
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>PROJECTS</Text>
+            <Text style={styles.sectionTitle}>Projects</Text>
             {projects.map((proj, index) => (
               <View key={index} style={styles.entry}>
                 <View style={styles.entryHeader} wrap={false}>
@@ -315,13 +321,13 @@ const ModernPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>EDUCATION</Text>
+            <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, index) => (
               <View key={index} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.entryTitle}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} — {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.skillText}>{edu.degree}</Text>
