@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderBottom: "2pt solid #2c3e50",
     paddingBottom: 15,
+    alignItems: "center",
   },
   name: {
     fontSize: 28,
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1.5,
     marginBottom: 5,
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 14,
@@ -48,12 +50,14 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 15,
+    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
     gap: 15,
     marginTop: 8,
     alignItems: "center",
+    justifyContent: "center",
   },
   contactItem: {
     flexDirection: "row",
@@ -67,6 +71,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 10,
     alignItems: "center",
+    justifyContent: "center",
   },
   badge: {
     flexDirection: "row",
@@ -282,7 +287,7 @@ const ElitePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
@@ -308,7 +313,7 @@ const ElitePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.degree}</Text>
                   <Text style={styles.date}>
@@ -384,7 +389,7 @@ const ElitePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (
