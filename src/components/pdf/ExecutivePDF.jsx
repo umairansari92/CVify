@@ -249,6 +249,19 @@ const ExecutivePDF = ({ data }) => {
               </View>
             )}
 
+            {/* Custom Sections */}
+            {customSections?.map((section, idx) => (
+              <View key={idx} style={styles.section} wrap={false}>
+                <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+                {section.items?.map((item, j) => (
+                  <View key={j} style={styles.bullet}>
+                    <Text style={styles.bulletSign}>•</Text>
+                    <Text style={styles.bulletText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+
             {experience?.length > 0 && (
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
@@ -349,6 +362,14 @@ const ExecutivePDF = ({ data }) => {
                           <Text style={{ fontSize: 9 }}>{list.join(", ")}</Text>
                         </View>
                       ),
+                  )}
+                  {softwareProficiency?.length > 0 && (
+                    <View style={{ marginBottom: 5 }} wrap={false}>
+                      <Text style={styles.skillLabel}>Software:</Text>
+                      <Text style={{ fontSize: 9 }}>
+                        {softwareProficiency.join(", ")}
+                      </Text>
+                    </View>
                   )}
                 </View>
               )}

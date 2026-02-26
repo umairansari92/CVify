@@ -284,6 +284,21 @@ const BoldPDF = ({ data }) => {
                   ))}
                 </View>
               )}
+
+              {/* Custom Sections */}
+              {customSections?.map((section, idx) => (
+                <View key={idx} style={{ marginTop: 15 }} wrap={false}>
+                  <Text style={dynamicStyles.sectionTitle}>
+                    {section.title}
+                  </Text>
+                  {section.items?.map((item, j) => (
+                    <View key={j} style={styles.bullet}>
+                      <Text style={{ color: themeColor }}>•</Text>
+                      <Text style={styles.bulletText}>{item}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
             </View>
 
             <View style={styles.rightCol}>
@@ -319,7 +334,6 @@ const BoldPDF = ({ data }) => {
                                 fontSize: 8,
                                 color: "#6b7280",
                                 fontWeight: "bold",
-                                // textTransform: "uppercase",
                                 marginBottom: 4,
                               }}
                             >
@@ -339,6 +353,29 @@ const BoldPDF = ({ data }) => {
                             </View>
                           </View>
                         ),
+                    )}
+                    {softwareProficiency?.length > 0 && (
+                      <View style={{ marginBottom: 10 }}>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            color: "#6b7280",
+                            fontWeight: "bold",
+                            marginBottom: 4,
+                          }}
+                        >
+                          SOFTWARE & SYSTEMS
+                        </Text>
+                        <View
+                          style={{ flexDirection: "row", flexWrap: "wrap" }}
+                        >
+                          {softwareProficiency.map((s, idx) => (
+                            <Text key={idx} style={styles.skillBadge}>
+                              {s}
+                            </Text>
+                          ))}
+                        </View>
+                      </View>
                     )}
                   </View>
                 )}

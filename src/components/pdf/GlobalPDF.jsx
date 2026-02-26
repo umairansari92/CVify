@@ -315,6 +315,14 @@ const GlobalPDF = ({ data }) => {
                 <Text style={styles.skillValue}>{interests.join(", ")}</Text>
               </View>
             )}
+            {softwareProficiency?.length > 0 && (
+              <View style={styles.skillCategory}>
+                <Text style={styles.skillLabel}>Software & Systems</Text>
+                <Text style={styles.skillValue}>
+                  {softwareProficiency.join(", ")}
+                </Text>
+              </View>
+            )}
           </View>
         </View>
 

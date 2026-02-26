@@ -150,6 +150,22 @@ const styles = StyleSheet.create({
     marginRight: 4,
     marginBottom: 4,
   },
+  skillCategory: {
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  skillCategoryTitle: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#1e293b",
+    marginBottom: 4,
+    textTransform: "uppercase",
+  },
+  skillText: {
+    fontSize: 9,
+    color: "#475569",
+    lineHeight: 1.4,
+  },
 });
 
 const ClearPDF = ({ data }) => {

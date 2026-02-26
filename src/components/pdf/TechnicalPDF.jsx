@@ -281,6 +281,22 @@ const TechnicalPDF = ({ data }) => {
                         </View>
                       ),
                   )}
+                  {softwareProficiency?.length > 0 && (
+                    <View style={styles.skillGroup} wrap={false}>
+                      <Text style={styles.skillLabel}>Software & Systems</Text>
+                      <Text style={styles.skillText}>
+                        {softwareProficiency.join(", ")}
+                      </Text>
+                    </View>
+                  )}
+                  {interests?.length > 0 && (
+                    <View style={styles.skillGroup} wrap={false}>
+                      <Text style={styles.skillLabel}>Interests</Text>
+                      <Text style={styles.skillText}>
+                        {interests.join(", ")}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               )}
 

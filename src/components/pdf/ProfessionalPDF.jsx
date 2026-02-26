@@ -142,6 +142,7 @@ const ProfessionalPDF = ({ data }) => {
     projects,
     competencies,
     softwareProficiency,
+    interests,
     customSections,
     themeColor = "#2563eb",
     fontFamily = "Inter",
@@ -244,6 +245,12 @@ const ProfessionalPDF = ({ data }) => {
                     </View>
                   ),
               )}
+            {interests?.length > 0 && (
+              <View style={{ marginBottom: 8 }} wrap={false}>
+                <Text style={styles.skillCategory}>Interests</Text>
+                <Text style={styles.sidebarText}>{interests.join(", ")}</Text>
+              </View>
+            )}
           </View>
 
           {education?.length > 0 && (
@@ -394,6 +401,21 @@ const ProfessionalPDF = ({ data }) => {
               )}
             </View>
           )}
+
+          {/* Custom Sections */}
+          {customSections?.map((section, idx) => (
+            <View key={idx} style={styles.section} wrap={false}>
+              <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+              <View style={{ marginTop: 5 }}>
+                {section.items?.map((item, j) => (
+                  <View key={j} style={styles.bulletPoint}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
         </View>
       </Page>
     </Document>

@@ -117,6 +117,7 @@ const StandardPDF = ({ data }) => {
     competencies,
     softwareProficiency,
     interests,
+    customSections,
   } = data || {};
 
   return (
@@ -291,6 +292,19 @@ const StandardPDF = ({ data }) => {
             ))}
           </View>
         )}
+
+        {/* Custom Sections */}
+        {customSections?.map((section, idx) => (
+          <View key={idx} style={styles.section} wrap={false}>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            {section.items?.map((item, j) => (
+              <View key={j} style={styles.bullet}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
       </Page>
     </Document>
   );
