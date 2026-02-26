@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: "#334155",
-    alignItems: "center",
   },
   windowButtons: {
     flexDirection: "row",
@@ -53,6 +52,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginBottom: 4,
     lineHeight: 1.2,
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 11,
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginBottom: 10,
     fontWeight: "bold",
+    textAlign: "center",
   },
   keyword: {
     color: "#60a5fa",

@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderBottom: "2pt solid #2c3e50",
     paddingBottom: 15,
-    alignItems: "center",
   },
   name: {
     fontSize: 28,
@@ -41,6 +40,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1.5,
     marginBottom: 5,
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 14,
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 15,
+    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",

@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: 20,
     marginBottom: 30,
-    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
   },
@@ -42,6 +41,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: "#1e293b",
     marginBottom: 6,
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 10,
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     color: "#64748b",
     letterSpacing: 1.5,
     marginBottom: 12,
+    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",

@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   header: {
     padding: "20 40",
     paddingBottom: 25,
-    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
     backgroundColor: "#fff",
@@ -124,6 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#111827",
     marginBottom: 4,
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 13,
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     textTransform: "uppercase",
     letterSpacing: 1,
+    textAlign: "center",
   },
   section: {
     marginBottom: 20,
