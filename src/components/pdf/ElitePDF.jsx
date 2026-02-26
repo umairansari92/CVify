@@ -275,7 +275,7 @@ const ElitePDF = ({ data }) => {
 
         {/* Summary */}
         {personalInfo?.profileSummary && (
-          <View style={styles.section}>
+          <View style={styles.section} wrap={false}>
             <Text style={dynamicStyles.sectionTitle}>Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
