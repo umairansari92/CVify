@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 4,
     color: "#111827",
+    textAlign: "center",
   },
   jobTitle: {
     fontSize: 16,
@@ -48,12 +49,14 @@ const styles = StyleSheet.create({
     fontWeight: "light",
     letterSpacing: 1,
     marginBottom: 20,
+    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
     gap: 15,
     marginTop: 8,
     alignItems: "center",
+    justifyContent: "center",
   },
   contactItem: {
     flexDirection: "row",
@@ -67,6 +70,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 10,
     alignItems: "center",
+    justifyContent: "center",
   },
   badge: {
     flexDirection: "row",
