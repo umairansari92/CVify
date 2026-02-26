@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     color: "#000",
     marginBottom: 8,
     lineHeight: 1.2,
-    textAlign: "center",
   },
   jobTitle: {
     fontSize: 14,
@@ -49,7 +48,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     lineHeight: 1.2,
-    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",

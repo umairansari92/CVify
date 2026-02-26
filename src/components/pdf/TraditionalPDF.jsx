@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginBottom: 10,
     lineHeight: 1.2,
-    textAlign: "center",
   },
   jobTitle: {
     fontSize: 11,
@@ -51,7 +50,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginBottom: 10,
     fontWeight: "bold",
-    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",

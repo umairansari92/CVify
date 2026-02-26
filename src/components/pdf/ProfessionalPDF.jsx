@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#111827",
     marginBottom: 4,
-    textAlign: "center",
   },
   jobTitle: {
     fontSize: 13,
@@ -133,7 +132,6 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     textTransform: "uppercase",
     letterSpacing: 1,
-    textAlign: "center",
   },
   section: {
     marginBottom: 20,

@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1.5,
     marginBottom: 5,
-    textAlign: "center",
   },
   jobTitle: {
     fontSize: 14,
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 15,
-    textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
