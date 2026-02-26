@@ -8,6 +8,14 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -20,16 +28,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    backgroundColor: "#111827",
-    padding: 40,
-    color: "#fff",
+    padding: 30,
+    paddingBottom: 20,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
   },
   name: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 2,
+    letterSpacing: 1,
     marginBottom: 4,
+    color: "#111827",
   },
   jobTitle: {
     fontSize: 16,
@@ -38,12 +49,39 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 20,
   },
-  contact: {
+  contactLine: {
     flexDirection: "row",
-    flexWrap: "wrap",
     gap: 15,
-    fontSize: 8,
-    color: "#94a3b8",
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    fontSize: 8.5,
+    color: "#4b5563",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "4 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 8.5,
+    color: "#334155",
+    textDecoration: "none",
   },
   mainContent: {
     padding: 40,
@@ -171,7 +209,7 @@ const BoldPDF = ({ data }) => {
   const dynamicStyles = {
     page: { ...styles.page, fontFamily: pdfFont },
     accentText: { color: themeColor },
-    header: { ...styles.header, backgroundColor: themeColor },
+    header: { ...styles.header },
     sectionTitle: {
       ...styles.sectionTitle,
       color: themeColor,
@@ -187,22 +225,55 @@ const BoldPDF = ({ data }) => {
           <Text style={styles.name}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
-          <Text style={styles.jobTitle}>
+          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
-          <View style={styles.contact}>
-            {personalInfo?.email && <Text>{personalInfo.email}</Text>}
-            {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
-            {personalInfo?.location && <Text>{personalInfo.location}</Text>}
+
+          <View style={styles.contactLine}>
+            {personalInfo?.email && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
+            )}
+            {personalInfo?.phone && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
+            )}
+            {personalInfo?.location && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.linkLine}>
             {personalInfo?.linkedin && (
-              <Link style={{ color: "#fff" }} src={personalInfo.linkedin}>
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
             {personalInfo?.github && (
-              <Link style={{ color: "#fff" }} src={personalInfo.github}>
-                {personalInfo.github.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
           </View>
         </View>

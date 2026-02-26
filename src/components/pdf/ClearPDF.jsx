@@ -8,16 +8,36 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "row",
-    backgroundColor: "#1e293b", // Sidebar color
+    flexDirection: "column",
+    backgroundColor: "#fff",
     fontFamily: "Helvetica",
     fontSize: 9,
     color: "#1e293b",
+  },
+  header: {
+    padding: "15 30",
+    paddingBottom: 20,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+    backgroundColor: "#fff",
+  },
+  contentWrapper: {
+    flexDirection: "row",
+    flex: 1,
   },
   sidebar: {
     width: "33%",
@@ -36,18 +56,53 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   name: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1,
-    marginBottom: 5,
-    color: "#FFFFFF",
+    marginBottom: 4,
+    color: "#1e293b",
   },
   jobTitle: {
     fontSize: 10,
-    color: "#e2e8f0",
+    color: "#64748b",
     textTransform: "uppercase",
     letterSpacing: 2,
+    marginBottom: 10,
+  },
+  contactLine: {
+    flexDirection: "row",
+    gap: 15,
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    fontSize: 8.5,
+    color: "#475569",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "3 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 8.5,
+    color: "#1e293b",
+    textDecoration: "none",
   },
   sideContact: {
     marginBottom: 25,
@@ -200,9 +255,8 @@ const ClearPDF = ({ data }) => {
   const pdfFont = getPDFFont(fontFamily);
 
   const dynamicStyles = {
-    page: { ...styles.page, fontFamily: pdfFont, backgroundColor: themeColor },
-    sidebarHeader: { ...styles.sidebarHeader },
-    sideSectionTitle: { ...styles.sideSectionTitle },
+    page: { ...styles.page, fontFamily: pdfFont },
+    sidebar: { ...styles.sidebar, backgroundColor: themeColor },
     sectionTitle: {
       ...styles.sectionTitle,
       color: themeColor,
@@ -213,182 +267,205 @@ const ClearPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
-        <View style={styles.sidebar}>
-          <View style={styles.sidebarHeader} wrap={false}>
-            <Text style={styles.name}>
-              {personalInfo?.fullName || "Your Name"}
-            </Text>
-            <Text style={styles.jobTitle}>
-              {personalInfo?.jobTitle || "Job Title"}
-            </Text>
-          </View>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.name}>
+            {personalInfo?.fullName || "Your Name"}
+          </Text>
+          <Text style={styles.jobTitle}>
+            {personalInfo?.jobTitle || "Job Title"}
+          </Text>
 
-          <View style={styles.sideContact}>
+          <View style={styles.contactLine}>
             {personalInfo?.email && (
-              <Text style={styles.sideContactItem}>{personalInfo.email}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
             )}
             {personalInfo?.phone && (
-              <Text style={styles.sideContactItem}>{personalInfo.phone}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
             )}
             {personalInfo?.location && (
-              <Text style={styles.sideContactItem}>
-                {personalInfo.location}
-              </Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
             )}
+          </View>
+
+          <View style={styles.linkLine}>
             {personalInfo?.linkedin && (
-              <View style={styles.contactItem}>
-                <Link
-                  src={personalInfo.linkedin}
-                  style={{ color: "#64748b", textDecoration: "none" }}
-                >
-                  {personalInfo.linkedin}
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
                 </Link>
               </View>
             )}
             {personalInfo?.github && (
-              <View style={styles.contactItem}>
-                <Link
-                  src={personalInfo.github}
-                  style={{ color: "#64748b", textDecoration: "none" }}
-                >
-                  {personalInfo.github}
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
                 </Link>
               </View>
             )}
           </View>
+        </View>
 
-          {technicalSkills &&
-            Object.values(technicalSkills).some((a) => a?.length > 0) && (
-              <View>
-                <Text style={styles.sideSectionTitle}>SKILLS</Text>
-                {Object.entries(technicalSkills).map(
-                  ([cat, list], i) =>
-                    list?.length > 0 && (
-                      <View key={i} style={styles.skillGroup} wrap={false}>
-                        <Text style={styles.skillLabel}>{cat}</Text>
-                        <View
-                          style={{ flexDirection: "row", flexWrap: "wrap" }}
-                        >
-                          {list.map((s, idx) => (
-                            <Text key={idx} style={styles.skillBadge}>
-                              {s}
-                            </Text>
-                          ))}
+        <View style={styles.contentWrapper}>
+          <View style={dynamicStyles.sidebar}>
+            {/* Removed redundant header from sidebar */}
+
+            {technicalSkills &&
+              Object.values(technicalSkills).some((a) => a?.length > 0) && (
+                <View>
+                  <Text style={styles.sideSectionTitle}>SKILLS</Text>
+                  {Object.entries(technicalSkills).map(
+                    ([cat, list], i) =>
+                      list?.length > 0 && (
+                        <View key={i} style={styles.skillGroup} wrap={false}>
+                          <Text style={styles.skillLabel}>{cat}</Text>
+                          <View
+                            style={{ flexDirection: "row", flexWrap: "wrap" }}
+                          >
+                            {list.map((s, idx) => (
+                              <Text key={idx} style={styles.skillBadge}>
+                                {s}
+                              </Text>
+                            ))}
+                          </View>
                         </View>
+                      ),
+                  )}
+                </View>
+              )}
+
+            {education?.length > 0 && (
+              <View style={{ marginTop: 15 }}>
+                <Text style={styles.sideSectionTitle}>EDUCATION</Text>
+                {education.map((edu, i) => (
+                  <View key={i} style={styles.eduItem} wrap={false}>
+                    <Text style={styles.eduInst}>{edu.institution}</Text>
+                    <Text style={styles.eduDate}>
+                      {edu.startDate} - {edu.endDate}
+                    </Text>
+                    <Text style={styles.eduDeg}>{edu.degree}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+
+          <View style={styles.main}>
+            {personalInfo?.profileSummary && (
+              <View style={styles.section} wrap={false}>
+                <Text style={dynamicStyles.sectionTitle}>Summary</Text>
+                <Text
+                  style={{
+                    fontSize: 10,
+                    color: "#475569",
+                    textAlign: "justify",
+                  }}
+                >
+                  {personalInfo.profileSummary}
+                </Text>
+              </View>
+            )}
+
+            {experience?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+                {experience.map((exp, i) => (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={styles.entryHeader}>
+                      <Text style={styles.title}>{exp.position}</Text>
+                      <Text style={styles.date}>
+                        {exp.startDate} — {exp.endDate}
+                      </Text>
+                    </View>
+                    <Text style={styles.subtitle}>{exp.company}</Text>
+                    {exp.responsibilities?.map((res, j) => (
+                      <View key={j} style={styles.bullet}>
+                        <Text style={{ color: "#cbd5e1" }}>•</Text>
+                        <Text style={styles.bulletText}>{res}</Text>
                       </View>
-                    ),
+                    ))}
+                  </View>
+                ))}
+                {softwareProficiency?.length > 0 && (
+                  <View style={styles.skillCategory}>
+                    <Text style={styles.skillCategoryTitle}>
+                      Software & Systems
+                    </Text>
+                    <Text style={styles.skillText}>
+                      {softwareProficiency.join(", ")}
+                    </Text>
+                  </View>
+                )}
+                {interests?.length > 0 && (
+                  <View style={styles.skillCategory}>
+                    <Text style={styles.skillCategoryTitle}>Interests</Text>
+                    <Text style={styles.skillText}>{interests.join(", ")}</Text>
+                  </View>
                 )}
               </View>
             )}
 
-          {education?.length > 0 && (
-            <View style={{ marginTop: 15 }}>
-              <Text style={styles.sideSectionTitle}>EDUCATION</Text>
-              {education.map((edu, i) => (
-                <View key={i} style={styles.eduItem} wrap={false}>
-                  <Text style={styles.eduInst}>{edu.institution}</Text>
-                  <Text style={styles.eduDate}>
-                    {edu.startDate} - {edu.endDate}
-                  </Text>
-                  <Text style={styles.eduDeg}>{edu.degree}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-
-        <View style={styles.main}>
-          {personalInfo?.profileSummary && (
-            <View style={styles.section} wrap={false}>
-              <Text style={dynamicStyles.sectionTitle}>Summary</Text>
-              <Text
-                style={{ fontSize: 10, color: "#475569", textAlign: "justify" }}
-              >
-                {personalInfo.profileSummary}
-              </Text>
-            </View>
-          )}
-
-          {experience?.length > 0 && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
-              {experience.map((exp, i) => (
-                <View key={i} style={styles.entry} wrap={false}>
-                  <View style={styles.entryHeader}>
-                    <Text style={styles.title}>{exp.position}</Text>
-                    <Text style={styles.date}>
-                      {exp.startDate} — {exp.endDate}
-                    </Text>
-                  </View>
-                  <Text style={styles.subtitle}>{exp.company}</Text>
-                  {exp.responsibilities?.map((res, j) => (
-                    <View key={j} style={styles.bullet}>
-                      <Text style={{ color: "#cbd5e1" }}>•</Text>
-                      <Text style={styles.bulletText}>{res}</Text>
+            {projects?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+                {projects.map((proj, i) => (
+                  <View key={i} style={{ marginBottom: 15 }}>
+                    <View style={styles.entryHeader} wrap={false}>
+                      <Text style={[styles.title, { fontSize: 10 }]}>
+                        {proj.name}
+                      </Text>
+                      {proj.link && (
+                        <Link
+                          style={{ fontSize: 7.5, color: "#2563eb" }}
+                          src={proj.link}
+                        >
+                          {proj.link.replace(/^https?:\/\//, "")}
+                        </Link>
+                      )}
                     </View>
-                  ))}
-                </View>
-              ))}
-              {softwareProficiency?.length > 0 && (
-                <View style={styles.skillCategory}>
-                  <Text style={styles.skillCategoryTitle}>
-                    Software & Systems
-                  </Text>
-                  <Text style={styles.skillText}>
-                    {softwareProficiency.join(", ")}
-                  </Text>
-                </View>
-              )}
-              {interests?.length > 0 && (
-                <View style={styles.skillCategory}>
-                  <Text style={styles.skillCategoryTitle}>Interests</Text>
-                  <Text style={styles.skillText}>{interests.join(", ")}</Text>
-                </View>
-              )}
-            </View>
-          )}
-
-          {projects?.length > 0 && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
-              {projects.map((proj, i) => (
-                <View key={i} style={{ marginBottom: 15 }}>
-                  <View style={styles.entryHeader} wrap={false}>
-                    <Text style={[styles.title, { fontSize: 10 }]}>
-                      {proj.name}
-                    </Text>
-                    {proj.link && (
-                      <Link
-                        style={{ fontSize: 7.5, color: "#2563eb" }}
-                        src={proj.link}
-                      >
-                        {proj.link.replace(/^https?:\/\//, "")}
-                      </Link>
-                    )}
+                    {proj.description?.map((desc, j) => (
+                      <View key={j} style={styles.bullet}>
+                        <Text style={{ color: "#cbd5e1" }}>-</Text>
+                        <Text style={styles.bulletText}>{desc}</Text>
+                      </View>
+                    ))}
                   </View>
-                  {proj.description?.map((desc, j) => (
-                    <View key={j} style={styles.bullet}>
-                      <Text style={{ color: "#cbd5e1" }}>-</Text>
-                      <Text style={styles.bulletText}>{desc}</Text>
-                    </View>
-                  ))}
-                </View>
-              ))}
-            </View>
-          )}
+                ))}
+              </View>
+            )}
 
-          {/* Custom Sections */}
-          {customSections?.map((section, idx) => (
-            <View key={idx} style={{ marginBottom: 20 }}>
-              <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
-              {section.items?.map((item, j) => (
-                <View key={j} style={styles.bullet}>
-                  <Text style={{ color: `${themeColor}40` }}>•</Text>
-                  <Text style={styles.bulletText}>{item}</Text>
-                </View>
-              ))}
-            </View>
-          ))}
+            {/* Custom Sections */}
+            {customSections?.map((section, idx) => (
+              <View key={idx} style={{ marginBottom: 20 }}>
+                <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+                {section.items?.map((item, j) => (
+                  <View key={j} style={styles.bullet}>
+                    <Text style={{ color: `${themeColor}40` }}>•</Text>
+                    <Text style={styles.bulletText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
         </View>
       </Page>
     </Document>

@@ -8,6 +8,14 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -21,11 +29,11 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
   header: {
-    borderBottomWidth: 3,
-    borderBottomColor: "#0f172a",
     paddingBottom: 20,
     marginBottom: 25,
-    textAlign: "center",
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#0f172a",
   },
   name: {
     fontSize: 26,
@@ -44,21 +52,39 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 15,
   },
-  contact: {
-    borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
-    paddingTop: 10,
-    gap: 8,
-  },
-  contactRow: {
+  contactLine: {
     flexDirection: "row",
-    justifyContent: "center",
-    flexWrap: "wrap",
     gap: 15,
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
     fontSize: 9,
-    fontWeight: "bold",
-    color: "#334155",
-    lineHeight: 1.2,
+    color: "#475569",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "3 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 9,
+    color: "#0f172a",
+    textDecoration: "none",
   },
   main: {
     flexDirection: "row",
@@ -192,40 +218,51 @@ const ExecutivePDF = ({ data }) => {
           <Text style={styles.jobTitle}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
-          <View style={styles.contact}>
-            <View style={styles.contactRow}>
-              {personalInfo?.email && <Text>{personalInfo.email}</Text>}
-              {personalInfo?.phone && <Text>{personalInfo.phone}</Text>}
-              {personalInfo?.location && <Text>{personalInfo.location}</Text>}
-            </View>
-            {(personalInfo?.linkedin ||
-              personalInfo?.github ||
-              personalInfo?.portfolio) && (
-              <View style={styles.contactRow}>
-                {personalInfo?.linkedin && (
-                  <Link
-                    style={{ color: themeColor, textDecoration: "none" }}
-                    src={personalInfo.linkedin}
-                  >
-                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                  </Link>
-                )}
-                {personalInfo?.github && (
-                  <Link
-                    style={{ color: "#2563eb", textDecoration: "none" }}
-                    src={personalInfo.github}
-                  >
-                    {personalInfo.github.replace(/^https?:\/\//, "")}
-                  </Link>
-                )}
-                {personalInfo?.portfolio && (
-                  <Link
-                    style={{ color: "#2563eb", textDecoration: "none" }}
-                    src={personalInfo.portfolio}
-                  >
-                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
-                  </Link>
-                )}
+
+          <View style={styles.contactLine}>
+            {personalInfo?.email && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
+            )}
+            {personalInfo?.phone && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
+            )}
+            {personalInfo?.location && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.linkLine}>
+            {personalInfo?.linkedin && (
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.github && (
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
               </View>
             )}
           </View>

@@ -8,6 +8,14 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -24,6 +32,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderBottomColor: "#111",
     paddingBottom: 20,
+    alignItems: "center",
   },
   name: {
     fontSize: 28,
@@ -40,15 +49,39 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     lineHeight: 1.2,
   },
-  contact: {
+  contactLine: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 9,
-    color: "#4b5563",
     gap: 15,
+    marginTop: 8,
+    alignItems: "center",
   },
   contactItem: {
-    marginBottom: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    fontSize: 9,
+    color: "#4b5563",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "3 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 9,
+    color: "#111",
+    textDecoration: "none",
   },
   link: {
     color: "#2563eb",
@@ -130,31 +163,52 @@ const StandardPDF = ({ data }) => {
           <Text style={styles.jobTitle}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
-          <View style={styles.contact}>
+
+          <View style={styles.contactLine}>
             {personalInfo?.email && (
-              <Text style={styles.contactItem}>{personalInfo.email}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
             )}
             {personalInfo?.phone && (
-              <Text style={styles.contactItem}>{personalInfo.phone}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
             )}
             {personalInfo?.location && (
-              <Text style={styles.contactItem}>{personalInfo.location}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
             )}
+          </View>
 
+          <View style={styles.linkLine}>
             {personalInfo?.linkedin && (
-              <Link style={styles.link} src={personalInfo.linkedin}>
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
             {personalInfo?.github && (
-              <Link style={styles.link} src={personalInfo.github}>
-                {personalInfo.github.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
             {personalInfo?.portfolio && (
-              <Link style={styles.link} src={personalInfo.portfolio}>
-                {personalInfo.portfolio.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
           </View>
         </View>

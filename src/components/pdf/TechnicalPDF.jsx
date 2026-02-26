@@ -8,6 +8,14 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -22,11 +30,12 @@ const styles = StyleSheet.create({
   },
   terminalHeader: {
     backgroundColor: "#0f172a",
-    padding: 20,
+    padding: "20 30",
     borderRadius: 6,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: "#334155",
+    alignItems: "center",
   },
   windowButtons: {
     flexDirection: "row",
@@ -39,11 +48,19 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   name: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 8,
+    marginBottom: 4,
     lineHeight: 1.2,
+  },
+  jobTitle: {
+    fontSize: 11,
+    textTransform: "uppercase",
+    color: "#60a5fa",
+    letterSpacing: 2,
+    marginBottom: 10,
+    fontWeight: "bold",
   },
   keyword: {
     color: "#60a5fa",
@@ -63,13 +80,39 @@ const styles = StyleSheet.create({
   params: {
     color: "#fdba74",
   },
-  contactRow: {
+  contactLine: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 10,
-    gap: 12,
-    fontSize: 8,
+    gap: 15,
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    fontSize: 9,
     color: "#94a3b8",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    padding: "3 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+  },
+  badgeText: {
+    fontSize: 9,
+    color: "#fff",
+    textDecoration: "none",
   },
   mainContent: {
     flexDirection: "row",
@@ -216,49 +259,57 @@ const TechnicalPDF = ({ data }) => {
           </View>
 
           <Text style={styles.name}>
-            <Text style={styles.keyword}>const </Text>
-            <Text style={dynamicStyles.accentText}>developer </Text>
-            <Text>= </Text>
-            <Text style={styles.string}>
-              "{personalInfo?.fullName || "User"}"
-            </Text>
-            <Text>;</Text>
+            {personalInfo?.fullName || "Your Name"}
+          </Text>
+          <Text style={styles.jobTitle}>
+            {personalInfo?.jobTitle || "Job Title"}
           </Text>
 
-          <Text style={{ fontSize: 11 }}>
-            <Text style={styles.function}>developer</Text>
-            <Text>.</Text>
-            <Text style={styles.method}>setTitle</Text>
-            <Text>(</Text>
-            <Text style={styles.params}>
-              "{personalInfo?.jobTitle || "Developer"}"
-            </Text>
-            <Text>);</Text>
-          </Text>
-
-          <View style={styles.contactRow}>
-            {personalInfo?.email && <Text>@ {personalInfo.email}</Text>}
-            {personalInfo?.phone && <Text># {personalInfo.phone}</Text>}
+          <View style={styles.contactLine}>
+            {personalInfo?.email && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
+            )}
+            {personalInfo?.phone && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
+            )}
             {personalInfo?.location && (
-              <Text>
-                {" > "} {personalInfo.location}
-              </Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.linkLine}>
+            {personalInfo?.linkedin && (
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
             {personalInfo?.github && (
-              <Link
-                style={{ color: "#4ade80", textDecoration: "none" }}
-                src={personalInfo.github}
-              >
-                {personalInfo.github.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
-            {personalInfo?.linkedin && (
-              <Link
-                style={{ color: "#60a5fa", textDecoration: "none" }}
-                src={personalInfo.linkedin}
-              >
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </Link>
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
           </View>
         </View>

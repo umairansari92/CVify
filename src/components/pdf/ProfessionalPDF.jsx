@@ -8,24 +8,43 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "row",
+    flexDirection: "column",
     fontFamily: "Helvetica",
     fontSize: 10,
     color: "#333",
     backgroundColor: "#fff",
-    paddingTop: 35,
-    paddingBottom: 35,
+  },
+  header: {
+    padding: "20 40",
+    paddingBottom: 25,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+    backgroundColor: "#fff",
+  },
+  contentWrapper: {
+    flexDirection: "row",
+    flex: 1,
+    position: "relative",
   },
   sidebarBackground: {
     position: "absolute",
     left: 0,
-    top: -35,
-    bottom: -35,
+    top: 0,
+    bottom: 0,
     width: "32%",
     backgroundColor: "#111827",
   },
@@ -54,7 +73,41 @@ const styles = StyleSheet.create({
   sidebarText: {
     fontSize: 9,
     marginBottom: 4,
-    color: "#9ca8b9ff",
+    color: "#9ca8b9",
+  },
+  contactLine: {
+    flexDirection: "row",
+    gap: 15,
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    fontSize: 9,
+    color: "#4b5563",
+  },
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "3 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 9,
+    color: "#111827",
+    textDecoration: "none",
   },
   skillCategory: {
     fontSize: 8,
@@ -181,241 +234,254 @@ const ProfessionalPDF = ({ data }) => {
   return (
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
-        <View style={styles.sidebarBackground} fixed />
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.name}>
+            {personalInfo?.fullName || "Your Name"}
+          </Text>
+          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
+            {personalInfo?.jobTitle || "Job Title"}
+          </Text>
 
-        {/* Sidebar Content */}
-        <View style={styles.sidebar}>
-          <View style={styles.sidebarSection}>
-            <Text style={dynamicStyles.sidebarTitle}>Contact</Text>
+          <View style={styles.contactLine}>
             {personalInfo?.email && (
-              <Link
-                src={`mailto:${personalInfo.email}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Text style={styles.sidebarText}>{personalInfo.email}</Text>
-              </Link>
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
             )}
             {personalInfo?.phone && (
-              <Text style={styles.sidebarText}>{personalInfo.phone}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
             )}
             {personalInfo?.location && (
-              <Text style={styles.sidebarText}>{personalInfo.location}</Text>
-            )}
-            {personalInfo?.linkedin && (
-              <Link
-                src={personalInfo.linkedin}
-                style={{ textDecoration: "none" }}
-              >
-                <Text style={styles.sidebarText}>
-                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                </Text>
-              </Link>
-            )}
-            {personalInfo?.github && (
-              <Link
-                src={personalInfo.github}
-                style={{ textDecoration: "none" }}
-              >
-                <Text style={styles.sidebarText}>
-                  {personalInfo.github.replace(/^https?:\/\//, "")}
-                </Text>
-              </Link>
-            )}
-            {personalInfo?.portfolio && (
-              <Link
-                src={personalInfo.portfolio}
-                style={{ textDecoration: "none" }}
-              >
-                <Text style={styles.sidebarText}>
-                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
-                </Text>
-              </Link>
-            )}
-          </View>
-
-          <View style={styles.sidebarSection}>
-            <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
-            {technicalSkills &&
-              Object.entries(technicalSkills).map(
-                ([cat, list], i) =>
-                  list?.length > 0 && (
-                    <View key={i} style={{ marginBottom: 8 }} wrap={false}>
-                      <Text style={styles.skillCategory}>{cat}</Text>
-                      <Text style={styles.sidebarText}>{list.join(", ")}</Text>
-                    </View>
-                  ),
-              )}
-            {interests?.length > 0 && (
-              <View style={{ marginBottom: 8 }} wrap={false}>
-                <Text style={styles.skillCategory}>Interests</Text>
-                <Text style={styles.sidebarText}>{interests.join(", ")}</Text>
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
               </View>
             )}
           </View>
 
-          {education?.length > 0 && (
-            <View style={styles.sidebarSection}>
-              <Text style={dynamicStyles.sidebarTitle}>Education</Text>
-              {education.map((edu, i) => (
-                <View key={i} style={{ marginBottom: 10 }} wrap={false}>
-                  <Text
-                    style={[
-                      styles.sidebarText,
-                      { fontWeight: "bold", color: "white" },
-                    ]}
-                  >
-                    {edu.degree}
-                  </Text>
-                  <Text style={[styles.sidebarText, { fontSize: 8 }]}>
-                    {edu.institution}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.sidebarText,
-                      { fontSize: 7, color: "#9ca3af" },
-                    ]}
-                  >
-                    {edu.startDate} — {edu.endDate}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-
-        {/* Main Content */}
-        <View style={styles.main}>
-          <View style={{ marginBottom: 20 }}>
-            <Text style={styles.name}>
-              {personalInfo?.fullName || "Your Name"}
-            </Text>
-            <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
-              {personalInfo?.jobTitle || "Job Title"}
-            </Text>
-            {personalInfo?.profileSummary && (
-              <Text
-                style={{
-                  fontSize: 9,
-                  lineHeight: 1.6,
-                  color: "#374151",
-                  textAlign: "justify",
-                }}
-              >
-                {personalInfo.profileSummary}
-              </Text>
+          <View style={styles.linkLine}>
+            {personalInfo?.linkedin && (
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.github && (
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
           </View>
+        </View>
 
-          {experience?.length > 0 && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
-              {experience.map((exp, i) => (
-                <View key={i} style={styles.entry} wrap={false}>
-                  <View style={styles.entryHeader}>
-                    <Text style={styles.title}>{exp.position}</Text>
-                    <Text style={styles.date}>
-                      {exp.startDate} — {exp.endDate}
-                    </Text>
-                  </View>
-                  <Text style={styles.subtitle}>{exp.company}</Text>
-                  {exp.responsibilities?.map((res, j) => (
-                    <View key={j} style={styles.bulletPoint}>
-                      <Text style={styles.bulletDot}>•</Text>
-                      <Text style={styles.bulletText}>{res}</Text>
-                    </View>
-                  ))}
-                </View>
-              ))}
-            </View>
-          )}
+        <View style={styles.contentWrapper}>
+          <View style={styles.sidebarBackground} fixed />
+          {/* Sidebar Content */}
+          <View style={styles.sidebar}>
+            {/* Removed redundant contact from sidebar */}
 
-          {projects?.length > 0 && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Projects</Text>
-              {projects.map((proj, i) => (
-                <View key={i} style={styles.entry}>
-                  <View style={styles.entryHeader} wrap={false}>
-                    <Text style={styles.title}>{proj.name}</Text>
-                    {proj.link && (
-                      <Link src={proj.link} style={{ textDecoration: "none" }}>
-                        <Text style={[styles.date, { color: "#2563eb" }]}>
-                          {proj.link.replace(/^https?:\/\//, "")}
+            <View style={styles.sidebarSection}>
+              <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
+              {technicalSkills &&
+                Object.entries(technicalSkills).map(
+                  ([cat, list], i) =>
+                    list?.length > 0 && (
+                      <View key={i} style={{ marginBottom: 8 }} wrap={false}>
+                        <Text style={styles.skillCategory}>{cat}</Text>
+                        <Text style={styles.sidebarText}>
+                          {list.join(", ")}
                         </Text>
-                      </Link>
-                    )}
-                  </View>
-                  {proj.description?.map((desc, j) => (
-                    <View key={j} style={styles.bulletPoint}>
-                      <Text style={[styles.bulletDot, { color: "#9ca3af" }]}>
-                        -
-                      </Text>
-                      <Text style={styles.bulletText}>{desc}</Text>
-                    </View>
-                  ))}
-                </View>
-              ))}
-            </View>
-          )}
-
-          {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
-            <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>
-                Core Skills & Tools
-              </Text>
-              {competencies?.length > 0 && (
-                <View style={{ marginBottom: 10 }}>
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      fontWeight: "bold",
-                      color: "#4b5563",
-                      marginBottom: 8,
-                    }}
-                  >
-                    Core Skills
-                  </Text>
-                  {competencies.map((c, i) => (
-                    <View key={i} style={styles.bulletPoint}>
-                      <Text style={styles.bulletDot}>•</Text>
-                      <Text style={styles.bulletText}>{c}</Text>
-                    </View>
-                  ))}
-                </View>
-              )}
-              {softwareProficiency?.length > 0 && (
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      fontWeight: "bold",
-                      color: "#4b5563",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Software & Systems
-                  </Text>
-                  <Text style={{ fontSize: 9, color: "#4b5563" }}>
-                    {softwareProficiency.join(" • ")}
-                  </Text>
+                      </View>
+                    ),
+                )}
+              {interests?.length > 0 && (
+                <View style={{ marginBottom: 8 }} wrap={false}>
+                  <Text style={styles.skillCategory}>Interests</Text>
+                  <Text style={styles.sidebarText}>{interests.join(", ")}</Text>
                 </View>
               )}
             </View>
-          )}
 
-          {/* Custom Sections */}
-          {customSections?.map((section, idx) => (
-            <View key={idx} style={styles.section} wrap={false}>
-              <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
-              <View style={{ marginTop: 5 }}>
-                {section.items?.map((item, j) => (
-                  <View key={j} style={styles.bulletPoint}>
-                    <Text style={styles.bulletDot}>•</Text>
-                    <Text style={styles.bulletText}>{item}</Text>
+            {education?.length > 0 && (
+              <View style={styles.sidebarSection}>
+                <Text style={dynamicStyles.sidebarTitle}>Education</Text>
+                {education.map((edu, i) => (
+                  <View key={i} style={{ marginBottom: 10 }} wrap={false}>
+                    <Text
+                      style={[
+                        styles.sidebarText,
+                        { fontWeight: "bold", color: "white" },
+                      ]}
+                    >
+                      {edu.degree}
+                    </Text>
+                    <Text style={[styles.sidebarText, { fontSize: 8 }]}>
+                      {edu.institution}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.sidebarText,
+                        { fontSize: 7, color: "#9ca3af" },
+                      ]}
+                    >
+                      {edu.startDate} — {edu.endDate}
+                    </Text>
                   </View>
                 ))}
               </View>
+            )}
+          </View>
+
+          {/* Main Content */}
+          <View style={styles.main}>
+            <View style={{ marginBottom: 20 }}>
+              {/* Removed redundant name/title from main */}
+              {personalInfo?.profileSummary && (
+                <Text
+                  style={{
+                    fontSize: 9,
+                    lineHeight: 1.6,
+                    color: "#374151",
+                    textAlign: "justify",
+                  }}
+                >
+                  {personalInfo.profileSummary}
+                </Text>
+              )}
             </View>
-          ))}
+
+            {experience?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+                {experience.map((exp, i) => (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={styles.entryHeader}>
+                      <Text style={styles.title}>{exp.position}</Text>
+                      <Text style={styles.date}>
+                        {exp.startDate} — {exp.endDate}
+                      </Text>
+                    </View>
+                    <Text style={styles.subtitle}>{exp.company}</Text>
+                    {exp.responsibilities?.map((res, j) => (
+                      <View key={j} style={styles.bulletPoint}>
+                        <Text style={styles.bulletDot}>•</Text>
+                        <Text style={styles.bulletText}>{res}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {projects?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+                {projects.map((proj, i) => (
+                  <View key={i} style={styles.entry}>
+                    <View style={styles.entryHeader} wrap={false}>
+                      <Text style={styles.title}>{proj.name}</Text>
+                      {proj.link && (
+                        <Link
+                          src={proj.link}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Text style={[styles.date, { color: "#2563eb" }]}>
+                            {proj.link.replace(/^https?:\/\//, "")}
+                          </Text>
+                        </Link>
+                      )}
+                    </View>
+                    {proj.description?.map((desc, j) => (
+                      <View key={j} style={styles.bulletPoint}>
+                        <Text style={[styles.bulletDot, { color: "#9ca3af" }]}>
+                          -
+                        </Text>
+                        <Text style={styles.bulletText}>{desc}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>
+                  Core Skills & Tools
+                </Text>
+                {competencies?.length > 0 && (
+                  <View style={{ marginBottom: 10 }}>
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        fontWeight: "bold",
+                        color: "#4b5563",
+                        marginBottom: 8,
+                      }}
+                    >
+                      Core Skills
+                    </Text>
+                    {competencies.map((c, i) => (
+                      <View key={i} style={styles.bulletPoint}>
+                        <Text style={styles.bulletDot}>•</Text>
+                        <Text style={styles.bulletText}>{c}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+                {softwareProficiency?.length > 0 && (
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        fontWeight: "bold",
+                        color: "#4b5563",
+                        marginBottom: 4,
+                      }}
+                    >
+                      Software & Systems
+                    </Text>
+                    <Text style={{ fontSize: 9, color: "#4b5563" }}>
+                      {softwareProficiency.join(" • ")}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+
+            {/* Custom Sections */}
+            {customSections?.map((section, idx) => (
+              <View key={idx} style={styles.section} wrap={false}>
+                <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
+                <View style={{ marginTop: 5 }}>
+                  {section.items?.map((item, j) => (
+                    <View key={j} style={styles.bulletPoint}>
+                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletText}>{item}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
       </Page>
     </Document>

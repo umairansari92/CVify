@@ -8,6 +8,14 @@ import {
   Link,
   Font,
 } from "@react-pdf/renderer";
+import {
+  IconEmail,
+  IconPhone,
+  IconLocation,
+  IconLinkedIn,
+  IconGitHub,
+  IconPortfolio,
+} from "./PDFIcons";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -41,17 +49,37 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 15,
   },
-  contactGrid: {
+  contactLine: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    gap: 15,
+    marginTop: 8,
+    alignItems: "center",
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
     fontSize: 9,
     color: "#34495e",
   },
-  contactItem: {
-    marginBottom: 3,
+  linkLine: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+    alignItems: "center",
   },
-  link: {
+  badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f1f5f9",
+    padding: "4 8",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  badgeText: {
+    fontSize: 9,
     color: "#2980b9",
     textDecoration: "none",
   },
@@ -191,19 +219,52 @@ const ElitePDF = ({ data }) => {
           <Text style={styles.jobTitle}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
-          <View style={styles.contactGrid}>
-            <Text style={styles.contactItem}>{personalInfo?.email}</Text>
-            <Text style={styles.contactItem}>{personalInfo?.phone}</Text>
-            <Text style={styles.contactItem}>{personalInfo?.location}</Text>
+
+          <View style={styles.contactLine}>
+            {personalInfo?.email && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconEmail />
+                <Text>{personalInfo.email}</Text>
+              </View>
+            )}
+            {personalInfo?.phone && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconPhone />
+                <Text>{personalInfo.phone}</Text>
+              </View>
+            )}
+            {personalInfo?.location && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconLocation />
+                <Text>{personalInfo.location}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.linkLine}>
             {personalInfo?.linkedin && (
-              <Link src={personalInfo.linkedin} style={styles.link}>
-                {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconLinkedIn />
+                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
             {personalInfo?.github && (
-              <Link src={personalInfo.github} style={styles.link}>
-                {personalInfo.github.replace(/^https?:\/\//, "")}
-              </Link>
+              <View style={styles.badge} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={styles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.badge} wrap={false}>
+                <IconPortfolio />
+                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
             )}
           </View>
         </View>
