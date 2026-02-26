@@ -340,9 +340,11 @@ const TechnicalTemplate = ({ data }) => {
                       {proj.link && (
                         <a
                           href={proj.link}
-                          className="text-blue-500 hover:underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline text-xs font-mono"
                         >
-                          git push
+                          {`./view_source`}
                         </a>
                       )}
                     </div>

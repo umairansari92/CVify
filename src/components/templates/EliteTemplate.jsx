@@ -5,6 +5,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaGlobe,
 } from "react-icons/fa";
 
 const EliteTemplate = ({ data }) => {
@@ -100,6 +101,17 @@ const EliteTemplate = ({ data }) => {
                 <span className="text-xs">
                   {personalInfo.github.replace(/^https?:\/\//, "")}
                 </span>
+              </a>
+            )}
+            {personalInfo?.portfolio && (
+              <a
+                href={personalInfo.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-slate-100 rounded hover:bg-slate-900 hover:text-white transition-all flex items-center gap-1"
+              >
+                <FaGlobe size={14} />
+                <span className="text-xs">Portfolio</span>
               </a>
             )}
           </div>
@@ -219,9 +231,21 @@ const EliteTemplate = ({ data }) => {
                         <h4 className="text-sm font-black text-slate-900 group-hover:text-blue-800 transition-colors uppercase">
                           {proj.name}
                         </h4>
-                        <span className="text-[10px] font-bold text-slate-300">
-                          {proj.startDate}
-                        </span>
+                        <div className="flex items-center gap-3">
+                          {proj.link && (
+                            <a
+                              href={proj.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] font-black text-blue-600 hover:underline"
+                            >
+                              VIEW_PROJECT
+                            </a>
+                          )}
+                          <span className="text-[10px] font-bold text-slate-300">
+                            {proj.startDate}
+                          </span>
+                        </div>
                       </div>
                       <p className="text-xs text-slate-600 leading-relaxed italic border-l-2 border-slate-100 pl-4">
                         {proj.description?.join(" ")}

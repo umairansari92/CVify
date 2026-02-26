@@ -89,7 +89,8 @@ const GlobalTemplate = ({ data }) => {
               href={personalInfo.github}
               className="text-slate-500 hover:text-primary flex items-center gap-2 transition-colors"
             >
-              <FaGithub className="text-slate-900" /> {personalInfo.github.replace(/^https?:\/\//, "")}
+              <FaGithub className="text-slate-900" />{" "}
+              {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -179,9 +180,21 @@ const GlobalTemplate = ({ data }) => {
                     <h3 className="text-[15px] font-bold text-slate-900">
                       {proj.name}
                     </h3>
-                    <span className="text-[10px] uppercase font-black text-slate-300 tracking-widest">
-                      {proj.startDate}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      {proj.link && (
+                        <a
+                          href={proj.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] font-bold text-blue-600 hover:underline"
+                        >
+                          LINK
+                        </a>
+                      )}
+                      <span className="text-[10px] uppercase font-black text-slate-300 tracking-widest">
+                        {proj.startDate}
+                      </span>
+                    </div>
                   </div>
                   <ul className="space-y-2">
                     {proj.description?.map((desc, j) => (

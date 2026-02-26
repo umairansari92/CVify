@@ -185,6 +185,50 @@ const ElegantTemplate = ({ data }) => {
           </section>
         ))}
 
+        {/* Projects */}
+        {projects?.length > 0 && (
+          <section>
+            <h2
+              className="text-center text-xl uppercase tracking-widest border-t border-b py-2 mb-6"
+              style={{ color: themeColor, borderColor: `${themeColor}20` }}
+            >
+              Key Projects
+            </h2>
+            <div className="max-w-2xl mx-auto mb-10">
+              {projects.map((proj, index) => (
+                <div
+                  key={index}
+                  className="mb-6 last:mb-0"
+                  style={{ pageBreakInside: "avoid" }}
+                >
+                  <div className="flex justify-between items-baseline mb-2">
+                    <h3 className="text-lg font-bold text-gray-900 font-serif uppercase">
+                      {proj.name}
+                    </h3>
+                    {proj.link && (
+                      <a
+                        href={proj.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs italic underline hover:text-[#2c3e50]"
+                      >
+                        Visit Project
+                      </a>
+                    )}
+                  </div>
+                  {proj.description && (
+                    <ul className="list-disc list-outside ml-4 text-sm text-gray-700 leading-6">
+                      {proj.description.map((desc, i) => (
+                        <li key={i}>{desc}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Education & Projects Grid */}
         <div className="grid grid-cols-2 gap-10">
           {education?.length > 0 && (

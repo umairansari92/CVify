@@ -169,7 +169,19 @@ const MinimalTemplate = ({ data }) => {
                 className="mb-8"
                 style={{ pageBreakInside: "avoid" }}
               >
-                <h3 className="font-semibold text-sm mb-1">{proj.name}</h3>
+                <div className="flex justify-between items-baseline mb-1">
+                  <h3 className="font-semibold text-sm">{proj.name}</h3>
+                  {proj.link && (
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-gray-400 hover:text-black underline tracking-tighter transition-colors"
+                    >
+                      View Project
+                    </a>
+                  )}
+                </div>
                 {proj.description?.map((desc, i) => (
                   <p key={i} className="text-xs text-gray-600 leading-5">
                     {desc}

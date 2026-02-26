@@ -185,7 +185,7 @@ const BoldTemplate = ({ data }) => {
                         href={proj.link}
                         className="text-blue-600 text-xs underline"
                       >
-                        Link
+                        View Project
                       </a>
                     )}
                     <ul className="list-none mt-1 text-sm text-gray-700">

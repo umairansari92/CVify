@@ -95,7 +95,7 @@ const ClassicTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-blue-800 hover:underline mr-6 mb-2"
             >
-              <FaGlobe /> Portfolio
+              <FaGlobe />
             </a>
           )}
         </div>
@@ -166,7 +166,7 @@ const ClassicTemplate = ({ data }) => {
                       href={proj.link}
                       className="text-blue-600 text-xs underline"
                     >
-                      Link
+                      View Project
                     </a>
                   )}
                 </div>

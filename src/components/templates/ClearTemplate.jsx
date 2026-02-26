@@ -83,7 +83,8 @@ const ClearTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-blue-400 transition-colors break-all mb-3"
             >
-              <FaLinkedin className="text-slate-400" /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+              <FaLinkedin className="text-slate-400" />{" "}
+              {personalInfo.linkedin.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.github && (
@@ -93,7 +94,8 @@ const ClearTemplate = ({ data }) => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-slate-300 transition-colors break-all mb-3"
             >
-              <FaGithub className="text-slate-400" /> {personalInfo.github.replace(/^https?:\/\//, "")}
+              <FaGithub className="text-slate-400" />{" "}
+              {personalInfo.github.replace(/^https?:\/\//, "")}
             </a>
           )}
           {personalInfo?.portfolio && (
@@ -335,11 +337,14 @@ const ClearTemplate = ({ data }) => {
                     <h3 className="font-bold text-md text-slate-700">
                       {proj.name}
                     </h3>
-                    {proj.link && (
-                      <a href={proj.link} className="text-blue-500 text-xs">
-                        Link
-                      </a>
-                    )}
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 text-xs hover:underline"
+                    >
+                      Visit Project
+                    </a>
                   </div>
                   <ul className="list-disc list-outside ml-4 text-sm text-gray-600">
                     {proj.description?.map((desc, i) => (

@@ -156,7 +156,19 @@ const ExecutiveTemplate = ({ data }) => {
                     className="mb-4"
                     style={{ pageBreakInside: "avoid" }}
                   >
-                    <h4 className="font-bold text-gray-900">{proj.name}</h4>
+                    <div className="flex justify-between items-baseline mb-2">
+                      <h4 className="font-bold text-gray-900">{proj.name}</h4>
+                      {proj.link && (
+                        <a
+                          href={proj.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-bold text-blue-800 hover:underline flex items-center gap-1"
+                        >
+                          View Project <FaGlobe size={10} />
+                        </a>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-700">
                       {proj.description?.join(". ")}
                     </p>
@@ -286,7 +298,7 @@ const ExecutiveTemplate = ({ data }) => {
 
           {/* Links Box */}
           <div className="bg-gray-800 text-white p-6">
-              <h3 className="text-base font-bold mb-6 text-white text-center border-b border-gray-700 pb-3">
+            <h3 className="text-base font-bold mb-6 text-white text-center border-b border-gray-700 pb-3">
               Professional Links
             </h3>
             <div className="space-y-4">
@@ -297,7 +309,8 @@ const ExecutiveTemplate = ({ data }) => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm hover:text-blue-300 transition-colors mb-4"
                 >
-                  <FaLinkedin className="text-gray-400" /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  <FaLinkedin className="text-gray-400" />{" "}
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
                 </a>
               )}
               {personalInfo?.github && (
@@ -307,7 +320,8 @@ const ExecutiveTemplate = ({ data }) => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm hover:text-slate-300 transition-colors"
                 >
-                  <FaGithub className="text-gray-400" /> {personalInfo.github.replace(/^https?:\/\//, "")}
+                  <FaGithub className="text-gray-400" />{" "}
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
                 </a>
               )}
               {personalInfo?.portfolio && (

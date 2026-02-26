@@ -159,6 +159,49 @@ const TraditionalTemplate = ({ data }) => {
         </div>
       )}
 
+      {/* Projects */}
+      {projects?.length > 0 && (
+        <div className="mb-6">
+          <h2
+            className="text-lg font-bold border-b mb-4 uppercase"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
+            Key Projects
+          </h2>
+          <div className="space-y-4">
+            {projects.map((proj, index) => (
+              <div
+                key={index}
+                className="mb-4"
+                style={{ pageBreakInside: "avoid" }}
+              >
+                <div className="flex justify-between font-bold text-gray-900">
+                  <h3>{proj.name}</h3>
+                  {proj.link && (
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs hover:underline font-normal italic"
+                      style={{ color: themeColor }}
+                    >
+                      View Project
+                    </a>
+                  )}
+                </div>
+                {proj.description && (
+                  <ul className="list-disc list-outside ml-5 text-sm space-y-1 text-gray-700">
+                    {proj.description.map((desc, i) => (
+                      <li key={i}>{desc}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Education */}
       {education?.length > 0 && (
         <div className="mb-6">

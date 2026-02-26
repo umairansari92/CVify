@@ -292,6 +292,43 @@ const ProfessionalTemplate = ({ data }) => {
           </ResumeSection>
         )}
 
+        {/* Projects */}
+        {projects?.length > 0 && (
+          <ResumeSection
+            title="Projects"
+            titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
+          >
+            {projects.map((proj, index) => (
+              <div
+                key={index}
+                className="mb-6 last:mb-0"
+                style={{ pageBreakInside: "avoid" }}
+              >
+                <div className="flex justify-between items-baseline mb-1">
+                  <h3 className="font-bold text-gray-900">{proj.name}</h3>
+                  {proj.link && (
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 text-xs hover:underline flex items-center gap-1"
+                    >
+                      View Project <FaGlobe size={10} />
+                    </a>
+                  )}
+                </div>
+                {proj.description && (
+                  <ul className="list-disc list-outside ml-4 space-y-1 text-sm text-gray-700">
+                    {proj.description.map((desc, i) => (
+                      <li key={i}>{desc}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </ResumeSection>
+        )}
+
         {/* Custom Sections */}
         {customSections?.map((section, i) => (
           <ResumeSection
