@@ -437,7 +437,7 @@ const ProfessionalPDF = ({ data }) => {
                         marginBottom: 8,
                       }}
                     >
-                      Core Skills
+                      Core Strengths
                     </Text>
                     {competencies.map((c, i) => (
                       <View key={i} style={styles.bulletPoint}>

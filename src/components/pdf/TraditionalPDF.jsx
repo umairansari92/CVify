@@ -327,7 +327,7 @@ const TraditionalPDF = ({ data }) => {
                 <Text
                   style={{ fontSize: 10, fontWeight: "bold", marginBottom: 3 }}
                 >
-                  Core Skills
+                  Core Strengths
                 </Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>

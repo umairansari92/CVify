@@ -405,6 +405,21 @@ const ClearPDF = ({ data }) => {
                     ))}
                   </View>
                 ))}
+
+                {competencies?.length > 0 && (
+                  <View style={{ marginTop: 10, marginBottom: 20 }}>
+                    <Text style={styles.skillCategoryTitle}>
+                      Core Strengths
+                    </Text>
+                    {competencies.map((c, i) => (
+                      <View key={i} style={styles.bullet}>
+                        <Text style={{ color: "#cbd5e1" }}>•</Text>
+                        <Text style={styles.bulletText}>{c}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+
                 {softwareProficiency?.length > 0 && (
                   <View style={styles.skillCategory}>
                     <Text style={styles.skillCategoryTitle}>

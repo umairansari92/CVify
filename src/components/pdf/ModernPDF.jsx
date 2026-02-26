@@ -288,10 +288,10 @@ const ModernPDF = ({ data }) => {
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Core Skills</Text>
+            <Text style={styles.sectionTitle}>Core Strengths</Text>
             {competencies?.length > 0 && (
               <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>Core Skills</Text>
+                <Text style={styles.skillLabel}>Core Strengths</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bulletPoint}>
                     <Text style={{ width: 6, color: themeColor }}>•</Text>

@@ -305,7 +305,7 @@ const StandardPDF = ({ data }) => {
 
         {(competencies?.length > 0 || interests?.length > 0) && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Core Competencies</Text>
+            <Text style={styles.sectionTitle}>Core Strengths</Text>
             {competencies?.map((c, i) => (
               <View key={i} style={styles.bullet}>
                 <Text style={styles.bulletDot}>•</Text>

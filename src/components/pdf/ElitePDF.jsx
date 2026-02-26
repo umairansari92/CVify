@@ -342,11 +342,23 @@ const ElitePDF = ({ data }) => {
                     ),
                 )}
               {competencies?.length > 0 && (
-                <View style={styles.skillRow}>
-                  <Text style={styles.skillLabel}>Core Skills</Text>
-                  <Text style={styles.skillValue}>
-                    {competencies.join(", ")}
+                <View
+                  style={[
+                    styles.skillRow,
+                    { flexDirection: "column", borderBottom: 0 },
+                  ]}
+                >
+                  <Text style={[styles.skillLabel, { marginBottom: 8 }]}>
+                    Core Strengths
                   </Text>
+                  <View style={styles.bulletList}>
+                    {competencies.map((c, i) => (
+                      <View key={i} style={styles.bullet}>
+                        <Text style={styles.bulletDot}>•</Text>
+                        <Text style={styles.bulletText}>{c}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
               )}
               {softwareProficiency?.length > 0 && (

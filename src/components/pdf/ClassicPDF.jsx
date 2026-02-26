@@ -352,10 +352,20 @@ const ClassicPDF = ({ data }) => {
             )}
             {competencies?.length > 0 && (
               <View style={{ marginTop: 5 }}>
-                <Text style={styles.skillText}>
-                  <Text style={styles.skillLabel}>Competencies: </Text>
-                  {competencies.join(", ")}
+                <Text
+                  style={[
+                    styles.skillLabel,
+                    { marginBottom: 5, fontSize: 10, color: "#111" },
+                  ]}
+                >
+                  Core Strengths
                 </Text>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bullet}>
+                    <Text style={dynamicStyles.accentText}>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
               </View>
             )}
             {interests?.length > 0 && (

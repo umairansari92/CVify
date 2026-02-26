@@ -353,7 +353,7 @@ const TechnicalPDF = ({ data }) => {
 
             {competencies?.length > 0 && (
               <View style={styles.sidebarBox} wrap={false}>
-                <Text style={styles.sidebarTitle}>Core Skills</Text>
+                <Text style={styles.sidebarTitle}>Core Strengths</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet}>
                     <Text style={[styles.bulletSign, dynamicStyles.accentText]}>

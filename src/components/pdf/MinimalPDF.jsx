@@ -423,10 +423,17 @@ const MinimalPDF = ({ data }) => {
 
                 {competencies?.length > 0 && (
                   <View style={styles.skillCategory} wrap={false}>
-                    <Text style={styles.skillCategoryTitle}>Core Skills</Text>
-                    <Text style={styles.skillText}>
-                      {competencies.join(" • ")}
+                    <Text style={styles.skillCategoryTitle}>
+                      Core Strengths
                     </Text>
+                    <View style={styles.bulletList}>
+                      {competencies.map((c, i) => (
+                        <View key={i} style={styles.bullet}>
+                          <Text style={styles.bulletDot}>•</Text>
+                          <Text style={styles.bulletText}>{c}</Text>
+                        </View>
+                      ))}
+                    </View>
                   </View>
                 )}
 

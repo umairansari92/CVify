@@ -419,7 +419,7 @@ const ExecutivePDF = ({ data }) => {
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  Core Skills
+                  Core Strengths
                 </Text>
                 {competencies.map((c, i) => (
                   <Text key={i} style={styles.sidebarItem}>
