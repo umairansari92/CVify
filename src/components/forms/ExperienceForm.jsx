@@ -21,7 +21,7 @@ const ExperienceForm = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "experience",
   });
@@ -42,11 +42,11 @@ const ExperienceForm = () => {
 
   const summarizeOld = () => {
     const tenYearsAgo = new Date().getFullYear() - 10;
-    const oldEx = watch("experience") || [];
+    const currentEx = watch("experience") || [];
     const remaining = [];
     const oldEntries = [];
 
-    oldEx.forEach((exp) => {
+    currentEx.forEach((exp) => {
       const year = parseInt(exp.startDate?.split(" ")[1]);
       if (year && year < tenYearsAgo) {
         oldEntries.push(exp);
@@ -61,28 +61,12 @@ const ExperienceForm = () => {
         company: "Multiple Employers",
         startDate: oldEntries[0]?.startDate,
         endDate: oldEntries[oldEntries.length - 1]?.endDate,
-        responsibilities: ["Summary of earlier experience (collapsed)"],
+        responsibilities: "Summary of earlier experience (collapsed)",
       });
     }
 
-    // update form values directly, react-hook-form will trigger onChange
-    remaining.forEach((exp, idx) => {
-      Object.keys(exp).forEach((key) => {
-        if (key === "responsibilities") return; // we handle separately
-        const fieldName = `experience.${idx}.${key}`;
-        control.setValue(fieldName, exp[key]);
-      });
-      if (exp.responsibilities) {
-        control.setValue(
-          `experience.${idx}.responsibilities`,
-          exp.responsibilities.join("\n"),
-        );
-      }
-    });
-    // if there are more fields than remaining, remove extras
-    for (let i = remaining.length; i < fields.length; i += 1) {
-      remove(i);
-    }
+    // Use replace for a clean update of the field array
+    replace(remaining);
   };
 
   useEffect(() => {
@@ -114,7 +98,7 @@ const ExperienceForm = () => {
       );
     });
     return () => subscription.unsubscribe();
-  }, [watch, dispatch, titleSuggestions, control, fields, remove]);
+  }, [watch, dispatch, titleSuggestions, control, fields, remove, replace]);
 
   // derive values for use within render
   const experienceValues = watch("experience") || [];
@@ -127,11 +111,16 @@ const ExperienceForm = () => {
   return (
     <div className="space-y-10 animate-fadeIn">
       {oldExists && (
-        <div className="bg-yellow-100 border-l-4 border-yellow-400 p-4 text-yellow-800">
-          You have experience entries older than 10 years.
+        <div className="bg-yellow-100/80 backdrop-blur-sm border-l-4 border-yellow-400 p-6 rounded-2xl text-yellow-900 shadow-sm animate-fadeIn flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">💡</span>
+            <p className="font-medium">
+              You have experience entries older than 10 years.
+            </p>
+          </div>
           <button
             type="button"
-            className="underline ml-2"
+            className="underline font-bold hover:text-primary transition-colors cursor-pointer ml-4 bg-yellow-400/20 px-4 py-2 rounded-xl"
             onClick={summarizeOld}
           >
             Summarize them automatically
