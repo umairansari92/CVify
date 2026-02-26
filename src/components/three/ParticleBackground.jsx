@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -14,7 +14,7 @@ export default function ParticleBackground() {
       const radius = Math.random() * 8;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
-      
+
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = radius * Math.cos(phi);
@@ -44,7 +44,8 @@ export default function ParticleBackground() {
     if (points.current) {
       // Smooth, slow rotation
       points.current.rotation.y = state.clock.getElapsedTime() * 0.02;
-      points.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.01) * 0.1;
+      points.current.rotation.x =
+        Math.sin(state.clock.getElapsedTime() * 0.01) * 0.1;
     }
   });
 

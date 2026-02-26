@@ -1,3 +1,4 @@
+import React from "react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import TraditionalTemplate from "./templates/TraditionalTemplate";
 import ClearTemplate from "./templates/ClearTemplate";
