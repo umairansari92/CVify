@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
   },
   header: {
-    marginBottom: 25,
+    marginBottom: 18,
     borderBottom: "1pt solid #eeeeee",
-    paddingBottom: 20,
+    paddingBottom: 12,
   },
   name: {
     fontSize: 24,
@@ -42,17 +42,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   jobTitle: {
-    fontSize: 11,
+    fontSize: 10,
     color: "#666",
     textTransform: "uppercase",
-    letterSpacing: 2,
-    marginBottom: 10,
+    letterSpacing: 1.5,
+    marginBottom: 8,
     textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
-    gap: 15,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -65,8 +66,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 8,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 10,
@@ -212,12 +214,20 @@ const GlobalPDF = ({ data }) => {
       <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>
-            {personalInfo?.fullName || "Your Name"}
-          </Text>
-          <Text style={styles.jobTitle}>
-            {personalInfo?.jobTitle || "Job Title"}
-          </Text>
+          <View
+            style={{ width: "100%", alignItems: "center", marginBottom: 4 }}
+          >
+            <Text style={styles.name}>
+              {personalInfo?.fullName || "Your Name"}
+            </Text>
+          </View>
+          <View
+            style={{ width: "100%", alignItems: "center", marginBottom: 8 }}
+          >
+            <Text style={styles.jobTitle}>
+              {personalInfo?.jobTitle || "Job Title"}
+            </Text>
+          </View>
 
           <View style={styles.contactLine}>
             {personalInfo?.email && (
