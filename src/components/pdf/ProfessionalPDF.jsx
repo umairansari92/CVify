@@ -35,12 +35,18 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
   },
   headerLeft: {
     width: "65%",
     flexDirection: "column",
-    gap: 4,
+  },
+  nameContainer: {
+    marginBottom: 8,
+  },
+  jobTitleContainer: {
+    marginTop: 2,
+    paddingTop: 4,
   },
   headerRight: {
     width: "35%",
@@ -75,7 +81,7 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   section: {
-    marginBottom: 14,
+    marginBottom: 12,
   },
   sectionTitleContainer: {
     flexDirection: "row",
@@ -228,12 +234,12 @@ const ProfessionalPDF = ({ data }) => {
         {/* Header */}
         <View style={dynamicStyles.header}>
           <View style={styles.headerLeft}>
-            <View>
+            <View style={styles.nameContainer}>
               <Text style={styles.name}>
                 {personalInfo?.fullName || "Your Name"}
               </Text>
             </View>
-            <View>
+            <View style={styles.jobTitleContainer}>
               <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
                 {personalInfo?.jobTitle || "Job Title"}
               </Text>
@@ -292,7 +298,7 @@ const ProfessionalPDF = ({ data }) => {
           </View>
         </View>
 
-        <View style={{ paddingVertical: 10 }}>
+        <View style={{ paddingVertical: 5 }}>
           {/* Summary */}
           {personalInfo?.profileSummary && (
             <View style={styles.section}>
