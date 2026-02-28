@@ -350,6 +350,19 @@ const ExecutivePDF = ({ data }) => {
                 ))}
               </View>
             )}
+
+            {/* Core Strengths - moved below Projects */}
+            {competencies?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Core Strengths</Text>
+                {competencies.map((c, i) => (
+                  <View key={i} style={styles.bullet}>
+                    <Text style={styles.bulletSign}>•</Text>
+                    <Text style={styles.bulletText}>{c}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
 
           <View style={styles.sidebar}>
@@ -414,29 +427,20 @@ const ExecutivePDF = ({ data }) => {
                 </View>
               )}
 
-            {competencies?.length > 0 && (
-              <View style={styles.sidebarBox} wrap={false}>
+            {/* Interests in sidebar */}
+            {interests?.length > 0 && (
+              <View style={dynamicStyles.sidebarBox}>
                 <Text
                   style={[
                     styles.sectionTitle,
                     { borderBottomWidth: 0, paddingBottom: 0 },
                   ]}
                 >
-                  Core Strengths
+                  Interests
                 </Text>
-                {competencies.map((c, i) => (
-                  <Text key={i} style={styles.sidebarItem}>
-                    • {c}
-                  </Text>
-                ))}
-                {interests?.length > 0 && (
-                  <View style={{ marginTop: 10 }}>
-                    <Text style={[styles.skillLabel, { fontSize: 10 }]}>
-                      Interests:
-                    </Text>
-                    <Text style={{ fontSize: 9 }}>{interests.join(", ")}</Text>
-                  </View>
-                )}
+                <Text style={{ fontSize: 9, marginTop: 6 }}>
+                  {interests.join(" • ")}
+                </Text>
               </View>
             )}
           </View>
