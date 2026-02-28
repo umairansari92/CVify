@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
+    flexWrap: "wrap",
+    gap: 15,
   },
   headerLeft: {
     flex: 1,
@@ -252,27 +254,46 @@ const ProfessionalPDF = ({ data }) => {
                 <Text>{personalInfo.location}</Text>
               </View>
             )}
-            <View style={{ flexDirection: "row", gap: 10, marginTop: 4 }}>
+            <View
+              style={{
+                flexDirection: "column",
+                gap: 3,
+                marginTop: 4,
+                alignItems: "flex-end",
+              }}
+            >
               {personalInfo?.linkedin && (
-                <Link
-                  src={personalInfo.linkedin}
-                  style={dynamicStyles.badgeText}
-                >
-                  LinkedIn
-                </Link>
+                <View style={styles.badge} wrap={false}>
+                  <IconLinkedIn />
+                  <Link
+                    src={personalInfo.linkedin}
+                    style={dynamicStyles.badgeText}
+                  >
+                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
               )}
               {personalInfo?.github && (
-                <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
-                  GitHub
-                </Link>
+                <View style={styles.badge} wrap={false}>
+                  <IconGitHub />
+                  <Link
+                    src={personalInfo.github}
+                    style={dynamicStyles.badgeText}
+                  >
+                    {personalInfo.github.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
               )}
               {personalInfo?.portfolio && (
-                <Link
-                  src={personalInfo.portfolio}
-                  style={dynamicStyles.badgeText}
-                >
-                  Portfolio
-                </Link>
+                <View style={styles.badge} wrap={false}>
+                  <IconPortfolio />
+                  <Link
+                    src={personalInfo.portfolio}
+                    style={dynamicStyles.badgeText}
+                  >
+                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
               )}
             </View>
           </View>
