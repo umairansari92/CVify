@@ -219,12 +219,20 @@ const ElitePDF = ({ data }) => {
       <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
         <View style={[styles.header, { borderBottomColor: themeColor }]}>
-          <Text style={styles.name}>
-            {personalInfo?.fullName || "Your Name"}
-          </Text>
-          <Text style={styles.jobTitle}>
-            {personalInfo?.jobTitle || "Job Title"}
-          </Text>
+          <View
+            style={{ width: "100%", alignItems: "center", marginBottom: 4 }}
+          >
+            <Text style={styles.name}>
+              {personalInfo?.fullName || "Your Name"}
+            </Text>
+          </View>
+          <View
+            style={{ width: "100%", alignItems: "center", marginBottom: 10 }}
+          >
+            <Text style={styles.jobTitle}>
+              {personalInfo?.jobTitle || "Job Title"}
+            </Text>
+          </View>
 
           <View style={styles.contactLine}>
             {personalInfo?.email && (
