@@ -29,22 +29,21 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   header: {
-    marginBottom: 25,
+    marginBottom: 15,
     borderBottomWidth: 2,
     borderBottomColor: "#2563eb",
-    paddingBottom: 20,
+    paddingBottom: 15,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    flexWrap: "wrap",
-    gap: 15,
   },
   headerLeft: {
-    flex: 1,
+    width: "65%",
   },
   headerRight: {
+    width: "35%",
     alignItems: "flex-end",
-    gap: 4,
+    gap: 3,
   },
   name: {
     fontSize: 26,
@@ -74,15 +73,15 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   section: {
-    marginBottom: 18,
+    marginBottom: 14,
   },
   sectionTitleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 6,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   sectionTitleAccent: {
     width: 4,
@@ -254,48 +253,36 @@ const ProfessionalPDF = ({ data }) => {
                 <Text>{personalInfo.location}</Text>
               </View>
             )}
-            <View
-              style={{
-                flexDirection: "column",
-                gap: 3,
-                marginTop: 4,
-                alignItems: "flex-end",
-              }}
-            >
-              {personalInfo?.linkedin && (
-                <View style={styles.badge} wrap={false}>
-                  <IconLinkedIn />
-                  <Link
-                    src={personalInfo.linkedin}
-                    style={dynamicStyles.badgeText}
-                  >
-                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                  </Link>
-                </View>
-              )}
-              {personalInfo?.github && (
-                <View style={styles.badge} wrap={false}>
-                  <IconGitHub />
-                  <Link
-                    src={personalInfo.github}
-                    style={dynamicStyles.badgeText}
-                  >
-                    {personalInfo.github.replace(/^https?:\/\//, "")}
-                  </Link>
-                </View>
-              )}
-              {personalInfo?.portfolio && (
-                <View style={styles.badge} wrap={false}>
-                  <IconPortfolio />
-                  <Link
-                    src={personalInfo.portfolio}
-                    style={dynamicStyles.badgeText}
-                  >
-                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
-                  </Link>
-                </View>
-              )}
-            </View>
+            {personalInfo?.linkedin && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconLinkedIn />
+                <Link
+                  src={personalInfo.linkedin}
+                  style={dynamicStyles.badgeText}
+                >
+                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.github && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconGitHub />
+                <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
+                  {personalInfo.github.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
+            {personalInfo?.portfolio && (
+              <View style={styles.contactItem} wrap={false}>
+                <IconPortfolio />
+                <Link
+                  src={personalInfo.portfolio}
+                  style={dynamicStyles.badgeText}
+                >
+                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                </Link>
+              </View>
+            )}
           </View>
         </View>
 
