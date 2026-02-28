@@ -21,171 +21,150 @@ Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "column",
+    padding: "20mm",
     fontFamily: "Helvetica",
     fontSize: 10,
-    color: "#333",
+    color: "#334155",
     backgroundColor: "#fff",
+    lineHeight: 1.5,
   },
   header: {
-    padding: "20 40",
-    paddingBottom: 25,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-    backgroundColor: "#fff",
-  },
-  contentWrapper: {
+    marginBottom: 25,
+    borderBottomWidth: 2,
+    borderBottomColor: "#2563eb",
+    paddingBottom: 20,
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+  headerLeft: {
     flex: 1,
-    position: "relative",
   },
-  sidebarBackground: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: "32%",
-    backgroundColor: "#111827",
+  headerRight: {
+    alignItems: "flex-end",
+    gap: 4,
   },
-  sidebar: {
-    width: "32%",
-    paddingHorizontal: 25,
-    color: "white",
+  name: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#0f172a",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 4,
   },
-  main: {
-    width: "68%",
-    paddingHorizontal: 35,
-  },
-  sidebarSection: {
-    marginBottom: 20,
-  },
-  sidebarTitle: {
-    fontSize: 10,
+  jobTitle: {
+    fontSize: 12,
+    color: "#2563eb",
     fontWeight: "bold",
     textTransform: "uppercase",
-    borderBottomWidth: 1,
-    borderBottomColor: "#374151",
-    paddingBottom: 5,
-    marginBottom: 10,
-    color: "#145bf5ff",
-  },
-  sidebarText: {
-    fontSize: 9,
-    marginBottom: 4,
-    color: "#9ca8b9",
-  },
-  contactLine: {
-    flexDirection: "row",
-    gap: 15,
-    marginTop: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    letterSpacing: 1.5,
   },
   contactItem: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
     fontSize: 9,
-    color: "#4b5563",
-  },
-  linkLine: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badge: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    backgroundColor: "#f1f5f9",
-    padding: "3 8",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
+    color: "#64748b",
   },
   badgeText: {
     fontSize: 9,
-    color: "#111827",
+    color: "#2563eb",
     textDecoration: "none",
   },
-  skillCategory: {
-    fontSize: 8,
-    fontWeight: "bold",
-    color: "#9ca3af",
-    marginTop: 8,
-    marginBottom: 3,
-    textTransform: "uppercase",
-  },
-  name: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  jobTitle: {
-    fontSize: 13,
-    color: "#2563eb",
-    fontWeight: "bold",
-    marginBottom: 25,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    textAlign: "center",
-  },
   section: {
-    marginBottom: 20,
+    marginBottom: 18,
+  },
+  sectionTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+    paddingBottom: 4,
+  },
+  sectionTitleAccent: {
+    width: 4,
+    height: 14,
+    backgroundColor: "#2563eb",
+    marginRight: 8,
   },
   sectionTitle: {
     fontSize: 11,
     fontWeight: "bold",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-    paddingBottom: 5,
-    marginBottom: 12,
-    marginTop: 10,
-    color: "#1c5eecff",
     textTransform: "uppercase",
+    letterSpacing: 1,
+    color: "#0f172a",
+  },
+  summary: {
+    fontSize: 9.5,
+    color: "#475569",
+    textAlign: "justify",
+    lineHeight: 1.6,
   },
   entry: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   entryHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 3,
+    alignItems: "baseline",
+    marginBottom: 2,
   },
   title: {
-    fontWeight: "bold",
     fontSize: 11,
-    color: "#111827",
+    fontWeight: "bold",
+    color: "#1e293b",
   },
   subtitle: {
     fontSize: 10,
     color: "#2563eb",
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 4,
   },
   date: {
-    fontSize: 8,
-    color: "#6b7280",
+    fontSize: 9,
+    color: "#64748b",
+    fontWeight: "medium",
+  },
+  bulletPointContainer: {
+    paddingLeft: 4,
+    marginTop: 2,
   },
   bulletPoint: {
     flexDirection: "row",
     gap: 6,
-    marginBottom: 4,
-    paddingLeft: 5,
+    marginBottom: 3,
   },
   bulletDot: {
     width: 6,
-    color: "#2563eb",
+    color: "#cbd5e1",
+    fontSize: 10,
   },
   bulletText: {
     flex: 1,
     fontSize: 9,
-    color: "#4b5563",
+    color: "#475569",
     lineHeight: 1.4,
+  },
+  skillsTable: {
+    marginTop: 5,
+  },
+  skillRow: {
+    flexDirection: "row",
+    marginBottom: 6,
+    paddingBottom: 4,
+  },
+  skillLabel: {
+    width: 100,
+    fontSize: 8.5,
+    fontWeight: "bold",
+    color: "#64748b",
+    textTransform: "uppercase",
+  },
+  skillValue: {
+    flex: 1,
+    fontSize: 9,
+    color: "#334155",
   },
 });
 
@@ -222,15 +201,21 @@ const ProfessionalPDF = ({ data }) => {
   const dynamicStyles = {
     page: { ...styles.page, fontFamily: pdfFont },
     accentText: { color: themeColor },
-    sidebarTitle: {
-      ...styles.sidebarTitle,
-      color: themeColor,
-      borderBottomColor: `${themeColor}40`,
+    header: {
+      ...styles.header,
+      borderBottomColor: themeColor,
     },
-    sectionTitle: {
-      ...styles.sectionTitle,
+    sectionTitleAccent: {
+      ...styles.sectionTitleAccent,
+      backgroundColor: themeColor,
+    },
+    badgeText: {
+      ...styles.badgeText,
       color: themeColor,
-      borderBottomColor: `${themeColor}20`,
+    },
+    subtitle: {
+      ...styles.subtitle,
+      color: themeColor,
     },
   };
 
@@ -238,15 +223,17 @@ const ProfessionalPDF = ({ data }) => {
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.name}>
-            {personalInfo?.fullName || "Your Name"}
-          </Text>
-          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
-            {personalInfo?.jobTitle || "Job Title"}
-          </Text>
+        <View style={dynamicStyles.header}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.name}>
+              {personalInfo?.fullName || "Your Name"}
+            </Text>
+            <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
+              {personalInfo?.jobTitle || "Job Title"}
+            </Text>
+          </View>
 
-          <View style={styles.contactLine}>
+          <View style={styles.headerRight}>
             {personalInfo?.email && (
               <View style={styles.contactItem} wrap={false}>
                 <IconEmail />
@@ -265,124 +252,61 @@ const ProfessionalPDF = ({ data }) => {
                 <Text>{personalInfo.location}</Text>
               </View>
             )}
-          </View>
-
-          <View style={styles.linkLine}>
-            {personalInfo?.linkedin && (
-              <View style={styles.badge} wrap={false}>
-                <IconLinkedIn />
-                <Link src={personalInfo.linkedin} style={styles.badgeText}>
-                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+            <View style={{ flexDirection: "row", gap: 10, marginTop: 4 }}>
+              {personalInfo?.linkedin && (
+                <Link
+                  src={personalInfo.linkedin}
+                  style={dynamicStyles.badgeText}
+                >
+                  LinkedIn
                 </Link>
-              </View>
-            )}
-            {personalInfo?.github && (
-              <View style={styles.badge} wrap={false}>
-                <IconGitHub />
-                <Link src={personalInfo.github} style={styles.badgeText}>
-                  {personalInfo.github.replace(/^https?:\/\//, "")}
+              )}
+              {personalInfo?.github && (
+                <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
+                  GitHub
                 </Link>
-              </View>
-            )}
-            {personalInfo?.portfolio && (
-              <View style={styles.badge} wrap={false}>
-                <IconPortfolio />
-                <Link src={personalInfo.portfolio} style={styles.badgeText}>
-                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+              )}
+              {personalInfo?.portfolio && (
+                <Link
+                  src={personalInfo.portfolio}
+                  style={dynamicStyles.badgeText}
+                >
+                  Portfolio
                 </Link>
-              </View>
-            )}
+              )}
+            </View>
           </View>
         </View>
 
-        <View style={styles.contentWrapper}>
-          <View style={styles.sidebarBackground} fixed />
-          {/* Sidebar Content */}
-          <View style={styles.sidebar}>
-            {/* Removed redundant contact from sidebar */}
-
-            <View style={styles.sidebarSection}>
-              <Text style={dynamicStyles.sidebarTitle}>Skills</Text>
-              {technicalSkills &&
-                Object.entries(technicalSkills).map(
-                  ([cat, list], i) =>
-                    list?.length > 0 && (
-                      <View key={i} style={{ marginBottom: 8 }} wrap={false}>
-                        <Text style={styles.skillCategory}>{cat}</Text>
-                        <Text style={styles.sidebarText}>
-                          {list.join(", ")}
-                        </Text>
-                      </View>
-                    ),
-                )}
-              {interests?.length > 0 && (
-                <View style={{ marginBottom: 8 }} wrap={false}>
-                  <Text style={styles.skillCategory}>Interests</Text>
-                  <Text style={styles.sidebarText}>{interests.join(", ")}</Text>
-                </View>
-              )}
+        <View style={{ paddingVertical: 10 }}>
+          {/* Summary */}
+          {personalInfo?.profileSummary && (
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>Profile Summary</Text>
+              </View>
+              <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
             </View>
+          )}
 
-            {education?.length > 0 && (
-              <View style={styles.sidebarSection}>
-                <Text style={dynamicStyles.sidebarTitle}>Education</Text>
-                {education.map((edu, i) => (
-                  <View key={i} style={{ marginBottom: 10 }} wrap={false}>
-                    <Text
-                      style={[
-                        styles.sidebarText,
-                        { fontWeight: "bold", color: "white" },
-                      ]}
-                    >
-                      {edu.degree}
-                    </Text>
-                    <Text style={[styles.sidebarText, { fontSize: 8 }]}>
-                      {edu.institution}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.sidebarText,
-                        { fontSize: 7, color: "#9ca3af" },
-                      ]}
-                    >
-                      {edu.startDate} — {edu.endDate}
+          {/* Experience */}
+          {experience?.length > 0 && (
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>Experience</Text>
+              </View>
+              {experience.map((exp, i) => (
+                <View key={i} style={styles.entry} wrap={false}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.title}>{exp.position}</Text>
+                    <Text style={styles.date}>
+                      {exp.startDate} — {exp.endDate}
                     </Text>
                   </View>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {/* Main Content */}
-          <View style={styles.main}>
-            <View style={{ marginBottom: 20 }}>
-              {/* Removed redundant name/title from main */}
-              {personalInfo?.profileSummary && (
-                <Text
-                  style={{
-                    fontSize: 9,
-                    lineHeight: 1.6,
-                    color: "#374151",
-                    textAlign: "justify",
-                  }}
-                >
-                  {personalInfo.profileSummary}
-                </Text>
-              )}
-            </View>
-
-            {experience?.length > 0 && (
-              <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
-                {experience.map((exp, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
-                    <View style={styles.entryHeader}>
-                      <Text style={styles.title}>{exp.position}</Text>
-                      <Text style={styles.date}>
-                        {exp.startDate} — {exp.endDate}
-                      </Text>
-                    </View>
-                    <Text style={styles.subtitle}>{exp.company}</Text>
+                  <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
+                  <View style={styles.bulletPointContainer}>
                     {exp.responsibilities?.map((res, j) => (
                       <View key={j} style={styles.bulletPoint}>
                         <Text style={styles.bulletDot}>•</Text>
@@ -390,101 +314,129 @@ const ProfessionalPDF = ({ data }) => {
                       </View>
                     ))}
                   </View>
-                ))}
-              </View>
-            )}
+                </View>
+              ))}
+            </View>
+          )}
 
-            {projects?.length > 0 && (
-              <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Projects</Text>
-                {projects.map((proj, i) => (
-                  <View key={i} style={styles.entry}>
-                    <View style={styles.entryHeader} wrap={false}>
-                      <Text style={styles.title}>{proj.name}</Text>
-                      {proj.link && (
-                        <Link
-                          src={proj.link}
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Text style={[styles.date, { color: "#2563eb" }]}>
-                            {proj.link.replace(/^https?:\/\//, "")}
-                          </Text>
-                        </Link>
-                      )}
-                    </View>
+          {/* Projects */}
+          {projects?.length > 0 && (
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>Key Projects</Text>
+              </View>
+              {projects.map((proj, i) => (
+                <View key={i} style={styles.entry} wrap={false}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.title}>{proj.name}</Text>
+                    {proj.link && (
+                      <Link src={proj.link} style={styles.date}>
+                        {proj.link.replace(/^https?:\/\//, "")}
+                      </Link>
+                    )}
+                  </View>
+                  <View style={styles.bulletPointContainer}>
                     {proj.description?.map((desc, j) => (
                       <View key={j} style={styles.bulletPoint}>
-                        <Text style={[styles.bulletDot, { color: "#9ca3af" }]}>
-                          -
-                        </Text>
+                        <Text style={styles.bulletDot}>•</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
                     ))}
                   </View>
-                ))}
-              </View>
-            )}
+                </View>
+              ))}
+            </View>
+          )}
 
-            {(competencies?.length > 0 || softwareProficiency?.length > 0) && (
-              <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>
-                  Core Skills & Tools
-                </Text>
-                {competencies?.length > 0 && (
-                  <View style={{ marginBottom: 10 }}>
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        fontWeight: "bold",
-                        color: "#4b5563",
-                        marginBottom: 8,
-                      }}
-                    >
-                      Core Strengths
+          {/* Education */}
+          {education?.length > 0 && (
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>Education</Text>
+              </View>
+              {education.map((edu, i) => (
+                <View key={i} style={styles.entry} wrap={false}>
+                  <View style={styles.entryHeader}>
+                    <Text style={styles.title}>{edu.degree}</Text>
+                    <Text style={styles.date}>
+                      {edu.startDate} — {edu.endDate}
                     </Text>
-                    {competencies.map((c, i) => (
-                      <View key={i} style={styles.bulletPoint}>
-                        <Text style={styles.bulletDot}>•</Text>
-                        <Text style={styles.bulletText}>{c}</Text>
-                      </View>
-                    ))}
+                  </View>
+                  <Text style={dynamicStyles.subtitle}>{edu.institution}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Skills Table Style */}
+          {(technicalSkills ||
+            competencies?.length > 0 ||
+            softwareProficiency?.length > 0) && (
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>Technical Expertise</Text>
+              </View>
+              <View style={styles.skillsTable}>
+                {technicalSkills &&
+                  Object.entries(technicalSkills).map(
+                    ([cat, list], i) =>
+                      list?.length > 0 && (
+                        <View key={i} style={styles.skillRow} wrap={false}>
+                          <Text style={styles.skillLabel}>{cat}:</Text>
+                          <Text style={styles.skillValue}>
+                            {list.join(", ")}
+                          </Text>
+                        </View>
+                      ),
+                  )}
+                {competencies?.length > 0 && (
+                  <View style={styles.skillRow} wrap={false}>
+                    <Text style={styles.skillLabel}>Core strengths:</Text>
+                    <Text style={styles.skillValue}>
+                      {competencies.join(", ")}
+                    </Text>
                   </View>
                 )}
                 {softwareProficiency?.length > 0 && (
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 9,
-                        fontWeight: "bold",
-                        color: "#4b5563",
-                        marginBottom: 4,
-                      }}
-                    >
-                      Software & Systems
+                  <View style={styles.skillRow} wrap={false}>
+                    <Text style={styles.skillLabel}>Tools:</Text>
+                    <Text style={styles.skillValue}>
+                      {softwareProficiency.join(", ")}
                     </Text>
-                    <Text style={{ fontSize: 9, color: "#4b5563" }}>
-                      {softwareProficiency.join(" • ")}
+                  </View>
+                )}
+                {interests?.length > 0 && (
+                  <View style={styles.skillRow} wrap={false}>
+                    <Text style={styles.skillLabel}>Interests:</Text>
+                    <Text style={styles.skillValue}>
+                      {interests.join(", ")}
                     </Text>
                   </View>
                 )}
               </View>
-            )}
+            </View>
+          )}
 
-            {/* Custom Sections */}
-            {customSections?.map((section, idx) => (
-              <View key={idx} style={styles.section} wrap={false}>
-                <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
-                <View style={{ marginTop: 5 }}>
-                  {section.items?.map((item, j) => (
-                    <View key={j} style={styles.bulletPoint}>
-                      <Text style={styles.bulletDot}>•</Text>
-                      <Text style={styles.bulletText}>{item}</Text>
-                    </View>
-                  ))}
-                </View>
+          {/* Custom Sections */}
+          {customSections?.map((section, idx) => (
+            <View key={idx} style={styles.section} wrap={false}>
+              <View style={styles.sectionTitleContainer}>
+                <View style={dynamicStyles.sectionTitleAccent} />
+                <Text style={styles.sectionTitle}>{section.title}</Text>
               </View>
-            ))}
-          </View>
+              <View style={styles.bulletPointContainer}>
+                {section.items?.map((item, j) => (
+                  <View key={j} style={styles.bulletPoint}>
+                    <Text style={styles.bulletDot}>•</Text>
+                    <Text style={styles.bulletText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
         </View>
       </Page>
     </Document>
