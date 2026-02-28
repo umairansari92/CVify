@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     width: "65%",
+    flexDirection: "column",
+    gap: 4,
   },
   headerRight: {
     width: "35%",
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     textTransform: "uppercase",
     letterSpacing: 1,
-    marginBottom: 4,
   },
   jobTitle: {
     fontSize: 12,
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 1.5,
+    lineHeight: 1.2,
   },
   contactItem: {
     flexDirection: "row",
@@ -226,12 +228,16 @@ const ProfessionalPDF = ({ data }) => {
         {/* Header */}
         <View style={dynamicStyles.header}>
           <View style={styles.headerLeft}>
-            <Text style={styles.name}>
-              {personalInfo?.fullName || "Your Name"}
-            </Text>
-            <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
-              {personalInfo?.jobTitle || "Job Title"}
-            </Text>
+            <View>
+              <Text style={styles.name}>
+                {personalInfo?.fullName || "Your Name"}
+              </Text>
+            </View>
+            <View>
+              <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
+                {personalInfo?.jobTitle || "Job Title"}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.headerRight}>
