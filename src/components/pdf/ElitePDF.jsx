@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 12,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
   },
   entry: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   entryHeader: {
     flexDirection: "row",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
-    marginBottom: 4,
+    marginBottom: 3,
   },
   bulletDot: {
     width: 12,
