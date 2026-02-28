@@ -322,9 +322,17 @@ const GlobalPDF = ({ data }) => {
               <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
-                  <Text style={styles.date}>
-                    {proj.startDate} — {proj.endDate}
-                  </Text>
+                  {proj.link && (
+                    <Link
+                      src={proj.link}
+                      style={[
+                        styles.date,
+                        { color: "#2980b9", textDecoration: "none" },
+                      ]}
+                    >
+                      {proj.link.replace(/^https?:\/\//, "")}
+                    </Link>
+                  )}
                 </View>
                 <View style={styles.bulletList}>
                   {proj.description?.map((desc, j) => (
