@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   nameContainer: {
-    marginBottom: 8,
+    marginBottom: 14,
   },
   jobTitleContainer: {
     marginTop: 2,
