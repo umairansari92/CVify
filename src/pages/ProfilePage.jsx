@@ -321,6 +321,44 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {/* ── Share Profile ── */}
+        {user?.username && (
+          <Card className="bg-gradient-to-br from-action/10 to-violet-500/10 border-action/20">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white dark:bg-midnight rounded-2xl flex items-center justify-center text-action shadow-sm border border-action/10">
+                  <FaGlobe size={24} />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-text-primary">
+                    Your Portfolio is Live!
+                  </h3>
+                  <p className="text-[10px] text-text-muted font-bold">
+                    Share this link with recruiters and on LinkedIn.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <code className="flex-1 sm:flex-none text-[10px] font-black p-2 bg-white dark:bg-midnight rounded-xl border border-action/10 truncate max-w-[200px]">
+                  cvify.pro/p/{user.username}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://app-cvifypro.vercel.app/p/${user.username}`,
+                    );
+                    toast.success("Link copied to clipboard!");
+                  }}
+                  className="px-6 py-2.5 bg-action text-white font-black text-xs rounded-xl flex items-center gap-2 hover:bg-blue-600 transition-all shadow-lg shadow-action/20"
+                >
+                  <FaShareAlt /> Copy Link
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* ── Portfolio Branding ── */}
         <Card>
           <SectionTitle icon="🚀" title="Portfolio Branding" />
