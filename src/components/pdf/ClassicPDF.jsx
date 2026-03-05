@@ -327,10 +327,17 @@ const ClassicPDF = ({ data }) => {
                       <View key={i} style={styles.gridItem}>
                         <Text style={[styles.skillText, { fontSize: 9 }]}>
                           <Text style={styles.skillLabel}>
-                            {cat
-                              .replace(/([A-Z])/g, " $1")
-                              .trim()
-                              .replace(/^\w/, (c) => c.toUpperCase())}
+                            {{
+                              frontend: "Skills",
+                              backend: "Additional Skills",
+                              database: "Systems",
+                              aiDevOps: "Tools & Platforms",
+                              tools: "Other Tools",
+                            }[cat] ||
+                              cat
+                                .replace(/([A-Z])/g, " $1")
+                                .trim()
+                                .replace(/^\w/, (c) => c.toUpperCase())}
                             :{" "}
                           </Text>
                           {list.join(", ")}

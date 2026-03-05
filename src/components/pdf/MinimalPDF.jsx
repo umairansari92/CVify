@@ -412,10 +412,17 @@ const MinimalPDF = ({ data }) => {
                       list.length > 0 && (
                         <View key={i} style={styles.skillCategory} wrap={false}>
                           <Text style={styles.skillCategoryTitle}>
-                            {cat
-                              .replace(/([A-Z])/g, " $1")
-                              .trim()
-                              .replace(/^\w/, (c) => c.toUpperCase())}
+                            {{
+                              frontend: "Skills",
+                              backend: "Additional Skills",
+                              database: "Systems",
+                              aiDevOps: "Tools & Platforms",
+                              tools: "Other Tools",
+                            }[cat] ||
+                              cat
+                                .replace(/([A-Z])/g, " $1")
+                                .trim()
+                                .replace(/^\w/, (c) => c.toUpperCase())}
                           </Text>
                           <Text style={styles.skillText}>
                             {list.join(", ")}

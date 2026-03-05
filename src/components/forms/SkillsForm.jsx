@@ -1,161 +1,584 @@
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 
-const InputGroup = ({ label, name, register, height = "h-24", hint }) => (
-  <div className="flex flex-col gap-3">
-    <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-2">
-      {label}
-    </label>
-    <textarea
-      {...register(name)}
-      placeholder="e.g. Skill 1&#10;Skill 2&#10;Skill 3..."
-      className={`input-premium resize-none leading-relaxed ${height}`}
-    />
-    {hint && (
-      <p className="text-[10px] text-text-muted/60 font-bold italic ml-2">
-        {hint}
-      </p>
-    )}
-  </div>
+// ─── Smart Skill Suggestions by Job Title ───────────────────────────────────
+const SKILL_SUGGESTIONS = {
+  // Tech roles
+  developer: [
+    "JavaScript",
+    "React",
+    "Node.js",
+    "Git",
+    "REST API",
+    "TypeScript",
+    "HTML/CSS",
+    "SQL",
+    "Docker",
+    "Agile",
+  ],
+  engineer: [
+    "Python",
+    "Java",
+    "C++",
+    "System Design",
+    "AWS",
+    "Linux",
+    "CI/CD",
+    "Kubernetes",
+    "Microservices",
+    "Testing",
+  ],
+  "data scientist": [
+    "Python",
+    "Machine Learning",
+    "TensorFlow",
+    "Pandas",
+    "NumPy",
+    "SQL",
+    "Data Visualization",
+    "Statistics",
+    "R",
+    "Jupyter",
+  ],
+  "ui/ux": [
+    "Figma",
+    "Adobe XD",
+    "Wireframing",
+    "User Research",
+    "Prototyping",
+    "Sketch",
+    "InVision",
+    "CSS",
+    "Accessibility",
+    "Design Systems",
+  ],
+  devops: [
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Jenkins",
+    "AWS",
+    "Terraform",
+    "Linux",
+    "Bash",
+    "Monitoring",
+    "Git",
+  ],
+
+  // Business / Office roles
+  manager: [
+    "Team Leadership",
+    "Project Management",
+    "MS Excel",
+    "Strategic Planning",
+    "Budget Management",
+    "Communication",
+    "Problem Solving",
+    "MS Office",
+    "Stakeholder Management",
+    "Report Writing",
+  ],
+  accountant: [
+    "MS Excel",
+    "QuickBooks",
+    "Tally",
+    "Financial Reporting",
+    "Tax Compliance",
+    "Bookkeeping",
+    "SAP",
+    "IFRS",
+    "Budget Analysis",
+    "Payroll",
+  ],
+  hr: [
+    "Recruitment",
+    "Employee Relations",
+    "HRIS",
+    "Performance Management",
+    "Labor Law",
+    "Payroll",
+    "Onboarding",
+    "Training & Development",
+    "MS Excel",
+    "Communication",
+  ],
+  sales: [
+    "CRM",
+    "Lead Generation",
+    "Negotiation",
+    "Cold Calling",
+    "MS Excel",
+    "Client Relations",
+    "Presentation Skills",
+    "Target Achievement",
+    "Market Research",
+    "Communication",
+  ],
+  marketing: [
+    "SEO/SEM",
+    "Google Analytics",
+    "Social Media Marketing",
+    "Content Writing",
+    "Adobe Photoshop",
+    "Email Marketing",
+    "Campaign Management",
+    "Canva",
+    "Meta Ads",
+    "Brand Management",
+  ],
+
+  // Healthcare
+  doctor: [
+    "Patient Diagnosis",
+    "Clinical Research",
+    "Medical Records",
+    "MS Word",
+    "Prescription Management",
+    "Patient Communication",
+    "EMR Systems",
+    "ICD Coding",
+    "Surgical Skills",
+    "Team Collaboration",
+  ],
+  nurse: [
+    "Patient Care",
+    "IV Administration",
+    "Wound Care",
+    "Medical Documentation",
+    "Emergency Response",
+    "Vital Signs Monitoring",
+    "Patient Assessment",
+    "HIPAA Compliance",
+    "BLS/CPR",
+    "Communication",
+  ],
+
+  // Education
+  teacher: [
+    "Lesson Planning",
+    "Curriculum Development",
+    "MS Word",
+    "MS PowerPoint",
+    "Student Assessment",
+    "Classroom Management",
+    "E-Learning Tools",
+    "Student Mentoring",
+    "Parent Communication",
+    "Report Writing",
+  ],
+
+  // Operations / Non-Tech
+  peon: [
+    "Inventory Management",
+    "Cleaning & Maintenance",
+    "Document Handling",
+    "Basic Computer Skills",
+    "Time Management",
+    "Communication",
+    "MS Office",
+    "Filing System",
+  ],
+  driver: [
+    "Defensive Driving",
+    "Route Planning",
+    "Vehicle Maintenance",
+    "Time Management",
+    "GPS Navigation",
+    "Customer Service",
+    "Safety Compliance",
+    "Heavy Vehicle License",
+  ],
+  admin: [
+    "MS Office",
+    "Data Entry",
+    "Record Keeping",
+    "Scheduling",
+    "Communication",
+    "Filing & Documentation",
+    "Customer Service",
+    "Multi-tasking",
+    "Email Management",
+    "MS Excel",
+  ],
+  receptionist: [
+    "Customer Service",
+    "MS Office",
+    "Phone Handling",
+    "Scheduling",
+    "Data Entry",
+    "Communication",
+    "Problem Solving",
+    "Multi-tasking",
+    "Email Management",
+    "Record Keeping",
+  ],
+};
+
+// Get suggestions based on job title keyword matching
+const getSuggestions = (jobTitle = "") => {
+  if (!jobTitle) return [];
+  const lower = jobTitle.toLowerCase();
+  for (const [key, suggestions] of Object.entries(SKILL_SUGGESTIONS)) {
+    if (lower.includes(key)) return suggestions;
+  }
+  // Default general skills
+  return [
+    "MS Office",
+    "Communication",
+    "Problem Solving",
+    "Team Work",
+    "Time Management",
+    "MS Excel",
+    "Leadership",
+    "Customer Service",
+    "Data Entry",
+    "Adaptability",
+  ];
+};
+
+// ─── Single Tag Component ────────────────────────────────────────────────────
+const SkillTag = ({ skill, onRemove, color }) => (
+  <span
+    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 group"
+    style={{
+      backgroundColor: `${color}18`,
+      color: color,
+      border: `1.5px solid ${color}30`,
+    }}
+  >
+    {skill}
+    <button
+      onClick={() => onRemove(skill)}
+      className="w-3.5 h-3.5 rounded-full flex items-center justify-center opacity-50 hover:opacity-100 hover:bg-red-500 hover:text-white transition-all duration-150 text-[10px] leading-none"
+      type="button"
+      title="Remove skill"
+    >
+      ×
+    </button>
+  </span>
 );
 
+// ─── Tag Input Field ─────────────────────────────────────────────────────────
+const TagInput = ({
+  label,
+  placeholder,
+  skills,
+  onAdd,
+  onRemove,
+  color,
+  hint,
+}) => {
+  const [inputVal, setInputVal] = useState("");
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (e) => {
+    if ((e.key === "Enter" || e.key === ",") && inputVal.trim()) {
+      e.preventDefault();
+      onAdd(inputVal.trim().replace(/,$/, ""));
+      setInputVal("");
+    } else if (e.key === "Backspace" && !inputVal && skills.length > 0) {
+      onRemove(skills[skills.length - 1]);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-1">
+        {label}
+      </label>
+      <div
+        className="min-h-[3rem] p-3 rounded-2xl border-2 border-border-subtle bg-midground flex flex-wrap gap-2 items-center cursor-text transition-all duration-200 focus-within:border-primary"
+        onClick={() => inputRef.current?.focus()}
+      >
+        {skills.map((skill) => (
+          <SkillTag
+            key={skill}
+            skill={skill}
+            onRemove={onRemove}
+            color={color}
+          />
+        ))}
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputVal}
+          onChange={(e) => setInputVal(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={skills.length === 0 ? placeholder : "Add more..."}
+          className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-text-primary placeholder:text-text-muted/50 font-medium"
+        />
+      </div>
+      {hint && (
+        <p className="text-[10px] text-text-muted/60 font-bold italic ml-1">
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+};
+
+// ─── Main SkillsForm Component ───────────────────────────────────────────────
 const SkillsForm = () => {
   const dispatch = useDispatch();
   const { currentResume } = useSelector((state) => state.resume);
 
-  // Helper to safely join arrays
-  // Helper to safely join arrays with newlines for the textarea
-  const join = (arr) => (Array.isArray(arr) ? arr.join("\n") : "");
+  // Get flat skills array (new universal field)
+  const skills = currentResume?.skills || [];
+  // Competencies (strengths)
+  const competencies = currentResume?.competencies || [];
+  // Interests
+  const interests = currentResume?.interests || [];
 
-  const { register, watch } = useForm({
-    defaultValues: {
-      frontend: join(currentResume?.technicalSkills?.frontend),
-      backend: join(currentResume?.technicalSkills?.backend),
-      database: join(currentResume?.technicalSkills?.database),
-      aiDevOps: join(currentResume?.technicalSkills?.aiDevOps),
-      tools: join(currentResume?.technicalSkills?.tools),
-      competencies: join(currentResume?.competencies),
-      softwareProficiency: join(currentResume?.softwareProficiency),
-      interests: join(currentResume?.interests),
-    },
-  });
+  const jobTitle = currentResume?.personalInfo?.jobTitle || "";
+  const themeColor = currentResume?.themeColor || "#0f172a";
+  const suggestions = getSuggestions(jobTitle);
 
-  useEffect(() => {
-    const subscription = watch((value) => {
-      const split = (str) =>
-        str
-          ? str
-              .split(/[\n,;]/)
-              .map((s) => s.trim())
-              .filter(Boolean)
-          : [];
+  // ── Backward Compatibility: Migrate old technicalSkills → skills ──
+  // If an existing resume has old category-based skills but no flat skills array,
+  // auto-merge them into the new universal skills field on first load.
+  React.useEffect(() => {
+    const hasOldSkills =
+      currentResume?.technicalSkills &&
+      Object.values(currentResume.technicalSkills).some(
+        (a) => Array.isArray(a) && a.length > 0,
+      );
+    const hasNewSkills =
+      currentResume?.skills && currentResume.skills.length > 0;
 
-      // Dispatch technicalSkills update
+    if (hasOldSkills && !hasNewSkills) {
+      const merged = Object.values(currentResume.technicalSkills)
+        .flat()
+        .filter(Boolean);
+      if (merged.length > 0) {
+        dispatch(setResumeField({ field: "skills", value: merged }));
+      }
+    }
+    // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentResume?._id]);
+
+  // ── Handlers for "skills" field ──
+  const addSkill = useCallback(
+    (skill) => {
+      const formatted = skill.trim();
+      if (!formatted || skills.includes(formatted)) return;
+      const updated = [...skills, formatted];
+      dispatch(setResumeField({ field: "skills", value: updated }));
+      // Also sync to technicalSkills.frontend for PDF compatibility
       dispatch(
         setResumeField({
           field: "technicalSkills",
           value: {
-            frontend: split(value.frontend),
-            backend: split(value.backend),
-            database: split(value.database),
-            aiDevOps: split(value.aiDevOps),
-            tools: split(value.tools),
+            frontend: updated,
+            backend: [],
+            database: [],
+            aiDevOps: [],
+            tools: [],
           },
         }),
       );
+    },
+    [skills, dispatch],
+  );
 
-      // Dispatch other independent fields
+  const removeSkill = useCallback(
+    (skill) => {
+      const updated = skills.filter((s) => s !== skill);
+      dispatch(setResumeField({ field: "skills", value: updated }));
+      dispatch(
+        setResumeField({
+          field: "technicalSkills",
+          value: {
+            frontend: updated,
+            backend: [],
+            database: [],
+            aiDevOps: [],
+            tools: [],
+          },
+        }),
+      );
+    },
+    [skills, dispatch],
+  );
+
+  // ── Handlers for "competencies" field ──
+  const addCompetency = useCallback(
+    (item) => {
+      const formatted = item.trim();
+      if (!formatted || competencies.includes(formatted)) return;
       dispatch(
         setResumeField({
           field: "competencies",
-          value: split(value.competencies),
+          value: [...competencies, formatted],
         }),
       );
+    },
+    [competencies, dispatch],
+  );
+
+  const removeCompetency = useCallback(
+    (item) => {
       dispatch(
         setResumeField({
-          field: "softwareProficiency",
-          value: split(value.softwareProficiency),
+          field: "competencies",
+          value: competencies.filter((c) => c !== item),
         }),
       );
+    },
+    [competencies, dispatch],
+  );
+
+  // ── Handlers for "interests" field ──
+  const addInterest = useCallback(
+    (item) => {
+      const formatted = item.trim();
+      if (!formatted || interests.includes(formatted)) return;
       dispatch(
-        setResumeField({ field: "interests", value: split(value.interests) }),
+        setResumeField({
+          field: "interests",
+          value: [...interests, formatted],
+        }),
       );
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, dispatch]);
+    },
+    [interests, dispatch],
+  );
+
+  const removeInterest = useCallback(
+    (item) => {
+      dispatch(
+        setResumeField({
+          field: "interests",
+          value: interests.filter((i) => i !== item),
+        }),
+      );
+    },
+    [interests, dispatch],
+  );
+
+  const notInList = suggestions.filter((s) => !skills.includes(s));
 
   return (
-    <div className="space-y-12 animate-fadeIn">
-      <section className="space-y-6">
-        <h3 className="text-xs font-black text-action dark:text-accent uppercase tracking-[0.2em] flex items-center gap-3">
-          Skills & Abilities
-          <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800"></span>
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <InputGroup
-            label="Primary Skills"
-            name="frontend"
-            register={register}
-            hint="e.g. Project Management, Microsoft Office, Customer Service"
-          />
-          <InputGroup
-            label="Secondary Skills"
-            name="backend"
-            register={register}
-            hint="e.g. Accounting, Data Entry, Inventory Management"
-          />
-          <InputGroup
-            label="Systems & Software"
-            name="aiDevOps"
-            register={register}
-            hint="e.g. SAP, CRM, Adobe Photoshop, AutoCAD"
-          />
-          <InputGroup
-            label="Specialized Tools"
-            name="database"
-            register={register}
-            hint="e.g. Public Speaking, Multi-language Support, Budgeting"
-          />
+    <div className="space-y-10 animate-fadeIn">
+      {/* ── Section 1: Technical & Professional Skills ── */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xs font-black text-action dark:text-accent uppercase tracking-[0.2em] whitespace-nowrap">
+            Technical &amp; Professional Skills
+          </h3>
+          <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+          {skills.length > 0 && (
+            <span className="text-[10px] font-black text-text-muted bg-foreground/10 px-2 py-0.5 rounded-full">
+              {skills.length} skills
+            </span>
+          )}
         </div>
-        <InputGroup
-          label="Workplace Tools"
-          name="tools"
-          register={register}
-          hint="e.g. Microsoft Teams, Zoom, Slack, Trello"
-          height="h-32"
+
+        <TagInput
+          label="Your Skills"
+          placeholder={`Type any skill and press Enter (e.g. ${jobTitle ? getSuggestions(jobTitle)[0] || "MS Excel" : "MS Excel, Leadership"})`}
+          skills={skills}
+          onAdd={addSkill}
+          onRemove={removeSkill}
+          color={themeColor}
+          hint="Press Enter or comma (,) after each skill. Press Backspace to remove last skill."
         />
+
+        {/* Smart Suggestions */}
+        {notInList.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-text-muted/70 uppercase tracking-widest ml-1">
+              💡 Suggested for{" "}
+              <span className="text-action">{jobTitle || "your role"}</span> —
+              click to add
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {notInList.slice(0, 10).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => addSkill(s)}
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-action hover:text-action hover:bg-action/5 transition-all duration-200"
+                >
+                  + {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ATS tip */}
+        <div className="flex items-start gap-2 p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200/50 dark:border-emerald-800/30">
+          <span className="text-emerald-500 text-base leading-none">✓</span>
+          <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold leading-relaxed">
+            <strong>ATS Friendly:</strong> Skills are rendered as plain,
+            comma-separated text in the PDF — no bars, no graphics — ensuring
+            100% ATS readability.
+          </p>
+        </div>
       </section>
 
-      <section className="space-y-8">
-        <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] flex items-center gap-4">
-          Key Strengths
-          <span className="flex-1 h-px bg-border-subtle"></span>
-        </h3>
-        <div className="space-y-10">
-          <InputGroup
-            label="Professional Strengths"
-            name="competencies"
-            register={register}
-            hint="Enter each strength on a new line for better organization (e.g. Team Leadership, Problem Solving)"
-            height="h-40"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <InputGroup
-              label="Digital Literacy"
-              name="softwareProficiency"
-              register={register}
-              hint="Office 365, Adobe CC, CRM Software"
-            />
-            <InputGroup
-              label="Personal Interests"
-              name="interests"
-              register={register}
-              hint="e.g. Reading, Sports, Traveling, Volunteering"
-            />
-          </div>
+      {/* ── Section 2: Core Strengths ── */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] whitespace-nowrap">
+            Core Strengths
+          </h3>
+          <span className="flex-1 h-px bg-border-subtle" />
         </div>
+        <TagInput
+          label="Professional Strengths"
+          placeholder="e.g. Team Leadership, Problem Solving, Communication..."
+          skills={competencies}
+          onAdd={addCompetency}
+          onRemove={removeCompetency}
+          color="#6366f1"
+          hint="Soft skills, leadership qualities, work style attributes."
+        />
+        {/* Strength suggestions */}
+        {competencies.length === 0 && (
+          <div className="flex flex-wrap gap-2 mt-1">
+            {[
+              "Team Leadership",
+              "Problem Solving",
+              "Communication",
+              "Adaptability",
+              "Attention to Detail",
+              "Time Management",
+            ].map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => addCompetency(s)}
+                className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-indigo-400 hover:text-indigo-500 hover:bg-indigo-50/50 transition-all duration-200"
+              >
+                + {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ── Section 3: Interests / Hobbies ── */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xs font-black text-text-muted uppercase tracking-[0.3em] whitespace-nowrap">
+            Interests &amp; Hobbies
+          </h3>
+          <span className="flex-1 h-px bg-border-subtle" />
+          <span className="text-[9px] text-text-muted/50 font-bold uppercase tracking-wider">
+            Optional
+          </span>
+        </div>
+        <TagInput
+          label="Personal Interests"
+          placeholder="e.g. Reading, Traveling, Football, Volunteering..."
+          skills={interests}
+          onAdd={addInterest}
+          onRemove={removeInterest}
+          color="#94a3b8"
+          hint="Personal hobbies or passions (optional but adds personality)."
+        />
       </section>
     </div>
   );

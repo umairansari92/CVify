@@ -35,6 +35,7 @@ const resumeSlice = createSlice({
         },
         education: [],
         experience: [],
+        skills: [], // Universal flat skills array (any profession)
         technicalSkills: {
           frontend: [],
           backend: [],

@@ -411,10 +411,17 @@ const BoldPDF = ({ data }) => {
                                 marginBottom: 4,
                               }}
                             >
-                              {cat
-                                .replace(/([A-Z])/g, " $1")
-                                .trim()
-                                .replace(/^\w/, (c) => c.toUpperCase())}
+                              {{
+                                frontend: "Skills",
+                                backend: "Additional Skills",
+                                database: "Systems",
+                                aiDevOps: "Tools & Platforms",
+                                tools: "Other Tools",
+                              }[cat] ||
+                                cat
+                                  .replace(/([A-Z])/g, " $1")
+                                  .trim()
+                                  .replace(/^\w/, (c) => c.toUpperCase())}
                             </Text>
                             <View
                               style={{ flexDirection: "row", flexWrap: "wrap" }}

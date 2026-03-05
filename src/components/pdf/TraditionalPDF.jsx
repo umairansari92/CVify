@@ -309,10 +309,17 @@ const TraditionalPDF = ({ data }) => {
                   list?.length > 0 && (
                     <View key={i} style={styles.skillRow}>
                       <Text style={styles.skillLabel}>
-                        {cat
-                          .replace(/([A-Z])/g, " $1")
-                          .trim()
-                          .replace(/^\w/, (c) => c.toUpperCase())}
+                        {{
+                          frontend: "Skills",
+                          backend: "Additional Skills",
+                          database: "Systems",
+                          aiDevOps: "Tools & Platforms",
+                          tools: "Other Tools",
+                        }[cat] ||
+                          cat
+                            .replace(/([A-Z])/g, " $1")
+                            .trim()
+                            .replace(/^\w/, (c) => c.toUpperCase())}
                         :
                       </Text>
                       <Text style={styles.skillList}>{list.join(", ")}</Text>
