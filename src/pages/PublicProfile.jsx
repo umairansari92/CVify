@@ -453,6 +453,52 @@ const PublicProfile = () => {
                 ))}
               </div>
             </section>
+
+            {/* Languages Card */}
+            {user.languages && user.languages.length > 0 && (
+              <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl hover:shadow-action/10 transition-all">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
+                  {sectionNames.languages || "Languages"}
+                </h3>
+                <div className="space-y-4">
+                  {user.languages.map((lang, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between p-4 bg-foreground/5 dark:bg-midnight/30 rounded-2xl border border-border-subtle group hover:border-action/30 transition-all"
+                    >
+                      <div>
+                        <h4 className="text-sm font-black text-text-primary">
+                          {lang.name}
+                        </h4>
+                        <div className="flex gap-1 mt-1">
+                          {[1, 2, 3, 4].map((step) => {
+                            const levels = [
+                              "Beginner",
+                              "Professional",
+                              "Advanced",
+                              "Native",
+                            ];
+                            const currentLevelIdx = levels.indexOf(
+                              lang.proficiency,
+                            );
+                            const isActive = step <= currentLevelIdx + 1;
+                            return (
+                              <div
+                                key={step}
+                                className={`h-1 w-6 rounded-full transition-all duration-500 ${isActive ? "bg-action" : "bg-foreground/10"}`}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <span className="text-[8px] font-black bg-action/10 text-action px-2 py-1 rounded-lg uppercase tracking-widest border border-action/20">
+                        {lang.proficiency}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
 
