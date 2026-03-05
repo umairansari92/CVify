@@ -47,16 +47,19 @@ const PublicProfile = () => {
   };
 
   const ensureAbsoluteUrl = (url) => {
-    if (!url) return "";
+    if (!url || typeof url !== "string") return "";
+    const trimmed = url.trim();
+    if (!trimmed) return "";
     if (
-      url.startsWith("http://") ||
-      url.startsWith("https://") ||
-      url.startsWith("mailto:") ||
-      url.startsWith("tel:")
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("mailto:") ||
+      trimmed.startsWith("tel:")
     ) {
-      return url;
+      return trimmed;
     }
-    return `https://${url}`;
+    if (trimmed.startsWith("//")) return `https:${trimmed}`;
+    return `https://${trimmed}`;
   };
 
   if (loading)
@@ -194,8 +197,29 @@ const PublicProfile = () => {
                     rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-action rounded-2xl transition-all backdrop-blur-md border border-white/10"
                     onClick={() => handleTrackInteraction("contact")}
+                    title="Portfolio"
                   >
                     <FaGlobe size={22} />
+                  </a>
+                )}
+                {user.email && (
+                  <a
+                    href={`mailto:${user.email}?subject=${encodeURIComponent("Professional Inquiry")}`}
+                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-red-500 rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
+                    title="Email Me"
+                  >
+                    <FaEnvelope size={22} />
+                  </a>
+                )}
+                {user.phoneNumber && (
+                  <a
+                    href={`tel:${user.phoneNumber}`}
+                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-green-500 rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
+                    title="Call Me"
+                  >
+                    <FaBriefcase size={22} />
                   </a>
                 )}
                 <button
@@ -515,14 +539,16 @@ const PublicProfile = () => {
                 <FaWhatsapp size={20} />
               </a>
             )}
-            <a
-              href={`mailto:${user.email}?subject=Inquiry Regarding Professional Services&body=Hello ${user.firstName}, I viewed your profile on CVify and would like to discuss a professional opportunity.`}
-              onClick={() => handleTrackInteraction("contact")}
-              className="flex-1 px-6 py-4 bg-action text-white rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest hover:bg-blue-600 transition-all hover:-translate-y-1 shadow-lg shadow-action/20 text-center relative group"
-            >
-              <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
-              Hire {user.firstName} Now
-            </a>
+            {user.email && (
+              <a
+                href={`mailto:${user.email}?subject=${encodeURIComponent("Inquiry Regarding Professional Services")}&body=${encodeURIComponent(`Hello ${user.firstName}, I viewed your profile on CVify and would like to discuss a professional opportunity.`)}`}
+                onClick={() => handleTrackInteraction("contact")}
+                className="flex-1 px-6 py-4 bg-action text-white rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest hover:bg-blue-600 transition-all hover:-translate-y-1 shadow-lg shadow-action/20 text-center relative group"
+              >
+                <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+                Hire {user.firstName} Now
+              </a>
+            )}
           </div>
 
           {/* Social Icons (Mobile Hide) */}
