@@ -76,6 +76,15 @@ const ProfilePage = () => {
   const [previewImg, setPreview] = useState(user?.profileImage || "");
   const [imageFile, setImgFile] = useState(null);
 
+  // Phase 5: Additional Fields
+  const [location, setLocation] = useState(user?.location || "");
+  const [experience, setExperience] = useState(user?.experience || []);
+  const [education, setEducation] = useState(user?.education || []);
+  const [skills, setSkills] = useState(
+    user?.skills || { technical: [], professional: [] },
+  );
+  const [services, setServices] = useState(user?.services || []);
+
   // Project state
   const [projects, setProjects] = useState(user?.projects || []);
   const [pTitle, setPTitle] = useState("");
@@ -118,6 +127,11 @@ const ProfilePage = () => {
         },
       );
       setProjects(user.projects || []);
+      setExperience(user.experience || []);
+      setEducation(user.education || []);
+      setSkills(user.skills || { technical: [], professional: [] });
+      setServices(user.services || []);
+      setLocation(user.location || "");
       setPreview(user.profileImage || "");
       setHasInitialized(true);
     }
@@ -156,6 +170,15 @@ const ProfilePage = () => {
       fd.append("socialLinks[github]", socialLinks.github);
       fd.append("socialLinks[twitter]", socialLinks.twitter);
       fd.append("socialLinks[portfolio]", socialLinks.portfolio);
+
+      // Phase 5 Fields (Handling objects/arrays as JSON or indexed keys)
+      fd.append("location", location.trim());
+      // For simplicity in Multer/Express with complex nested objects, we can use JSON.stringify for some or indexed fields
+      // Here we'll use JSON.stringify for complex arrays to avoid manual indexing of 10+ fields
+      fd.append("experience", JSON.stringify(experience));
+      fd.append("education", JSON.stringify(education));
+      fd.append("skills", JSON.stringify(skills));
+      fd.append("services", JSON.stringify(services));
 
       if (imageFile) fd.append("profileImage", imageFile);
 
