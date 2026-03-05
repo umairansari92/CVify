@@ -64,6 +64,7 @@ const ProfilePage = () => {
   const [headline, setHeadline] = useState(user?.headline || "");
   const [bio, setBio] = useState(user?.bio || "");
   const [username, setUsername] = useState(user?.username || "");
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [isPublic, setIsPublic] = useState(user?.isPublic || false);
   const [socialLinks, setSocialLinks] = useState(
     user?.socialLinks || {
@@ -106,6 +107,8 @@ const ProfilePage = () => {
   const [pThumbPreview, setPThumbPreview] = useState("");
   const [pAdding, setPAdding] = useState(false);
   const [showPForm, setShowPForm] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const isEditingProject = !!editingProjectId;
 
   const [currentPwd, setCurrPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
@@ -126,6 +129,7 @@ const ProfilePage = () => {
       setHeadline(user.headline || "");
       setBio(user.bio || "");
       setUsername(user.username || "");
+      setPhoneNumber(user.phoneNumber || "");
       setIsPublic(user.isPublic || false);
       setSocialLinks(
         user.socialLinks || {
@@ -182,8 +186,9 @@ const ProfilePage = () => {
       fd.append("lastName", lastName.trim());
       fd.append("headline", headline.trim());
       fd.append("bio", bio);
-      fd.append("username", username.trim());
-      fd.append("isPublic", isPublic);
+      fd.append("username", username);
+      fd.append("phoneNumber", phoneNumber);
+      fd.append("isPublic", String(isPublic));
       fd.append("socialLinks[linkedin]", socialLinks.linkedin);
       fd.append("socialLinks[github]", socialLinks.github);
       fd.append("socialLinks[twitter]", socialLinks.twitter);
@@ -220,7 +225,7 @@ const ProfilePage = () => {
   };
 
   // ── Project Actions ──
-  const handleAddProject = async (e) => {
+  const handleSaveProject = async (e) => {
     e.preventDefault();
     if (!pTitle.trim()) return toast.error("Project title is required.");
     setPAdding(true);
@@ -234,26 +239,55 @@ const ProfilePage = () => {
       fd.append("isFeatured", pFeatured);
       if (pThumb) fd.append("thumbnail", pThumb);
 
-      const res = await api.post("/auth/projects", fd);
-      if (res.data.project) {
-        setProjects([...projects, res.data.project]);
-        // Reset form
-        setPTitle("");
-        setPDesc("");
-        setPTech("");
-        setPLive("");
-        setPGit("");
-        setPFeatured(false);
-        setPThumb(null);
-        setPThumbPreview("");
-        setShowPForm(false);
-        toast.success("Project added!");
+      let res;
+      if (isEditingProject) {
+        res = await api.patch(`/auth/projects/${editingProjectId}`, fd);
+        if (res.data.project) {
+          setProjects(
+            projects.map((p) =>
+              p._id === editingProjectId ? res.data.project : p,
+            ),
+          );
+          toast.success("Project updated!");
+        }
+      } else {
+        res = await api.post("/auth/projects", fd);
+        if (res.data.project) {
+          setProjects([...projects, res.data.project]);
+          toast.success("Project added!");
+        }
       }
+
+      // Reset form
+      setPTitle("");
+      pDesc && setPDesc("");
+      pTech && setPTech("");
+      pLive && setPLive("");
+      pGit && setPGit("");
+      setPFeatured(false);
+      setPThumb(null);
+      setPThumbPreview("");
+      setShowPForm(false);
+      setEditingProjectId(null);
     } catch (err) {
       toast.error(err.message);
     } finally {
       setPAdding(false);
     }
+  };
+
+  const handleEditProject = (proj) => {
+    setEditingProjectId(proj._id);
+    setPTitle(proj.title || "");
+    setPDesc(proj.description || "");
+    setPTech(proj.techStack?.join(", ") || "");
+    setPLive(proj.liveLink || "");
+    setPGit(proj.githubLink || "");
+    setPFeatured(proj.isFeatured || false);
+    setPThumbPreview(proj.thumbnail || "");
+    setShowPForm(true);
+    // Scroll to form
+    window.scrollTo({ top: 800, behavior: "smooth" });
   };
 
   const handleDeleteProject = async (pid) => {
@@ -727,7 +761,20 @@ const ProfilePage = () => {
               />
             </div>
             <button
-              onClick={() => setShowPForm(!showPForm)}
+              onClick={() => {
+                setShowPForm(!showPForm);
+                if (isEditingProject) {
+                  setEditingProjectId(null);
+                  setPTitle("");
+                  setPDesc("");
+                  setPTech("");
+                  setPLive("");
+                  setPGit("");
+                  setPFeatured(false);
+                  setPThumb(null);
+                  setPThumbPreview("");
+                }
+              }}
               className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all w-fit"
             >
               {showPForm ? "Cancel" : "+ Add Accomplishment"}
@@ -736,9 +783,14 @@ const ProfilePage = () => {
 
           {showPForm && (
             <form
-              onSubmit={handleAddProject}
+              onSubmit={handleSaveProject}
               className="mb-10 p-6 bg-action/5 border border-action/20 rounded-3xl space-y-4 animate-fadeIn"
             >
+              <h4 className="text-xs font-black text-action uppercase tracking-widest mb-2">
+                {isEditingProject
+                  ? "Edit Accomplishment"
+                  : "Add New Accomplishment"}
+              </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase ml-1">
@@ -839,7 +891,11 @@ const ProfilePage = () => {
                 type="submit"
                 className="w-full py-3 bg-action text-white font-black rounded-2xl"
               >
-                {pAdding ? "Uploading..." : "Publish Project"}
+                {pAdding
+                  ? "Processing..."
+                  : isEditingProject
+                    ? "Update Project"
+                    : "Publish Project"}
               </button>
             </form>
           )}
@@ -897,12 +953,22 @@ const ProfilePage = () => {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDeleteProject(proj._id)}
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-2 text-red-400 hover:text-red-500 transition-all"
-                >
-                  🗑️
-                </button>
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                  <button
+                    onClick={() => handleEditProject(proj)}
+                    className="p-2 text-action hover:bg-white dark:hover:bg-midnight rounded-lg transition-all"
+                    title="Edit"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProject(proj._id)}
+                    className="p-2 text-red-400 hover:bg-white dark:hover:bg-midnight rounded-lg transition-all"
+                    title="Delete"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             ))}
           </div>

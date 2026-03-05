@@ -80,10 +80,13 @@ const PublicProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-midnight transition-colors duration-500 pb-32">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-midnight transition-colors duration-500 pb-40">
       <Helmet>
         <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Universal Portfolio"}`}</title>
-        <meta name="description" content={user.bio?.substring(0, 160)} />
+        <meta
+          name="description"
+          content={`Hire ${user.firstName} ${user.lastName}, a professional ${user.headline} based in ${user.location || "Pakistan"}. View portfolio and achievements.`}
+        />
         <meta
           property="og:title"
           content={`${user.firstName} ${user.lastName} - ${user.headline}`}
@@ -252,42 +255,46 @@ const PublicProfile = () => {
 
           {/* Right Column (Skills & Stats) */}
           <div className="lg:col-span-4 space-y-10">
-            {/* Impact Widget */}
-            <section className="bg-gradient-to-br from-indigo-600 to-violet-700 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform">
-                <FaGem size={100} />
-              </div>
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 opacity-80">
-                Industry Impact
-              </h3>
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                  <FaGem size={28} />
-                </div>
-                <div>
-                  <p className="text-4xl font-black">{user.diamonds || 100}</p>
-                  <p className="text-[10px] font-bold uppercase opacity-70">
-                    Diamonds Gained
-                  </p>
+            {/* Community Impact & Analytics Widget */}
+            <section className="bg-white dark:bg-slate-800/80 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl relative overflow-hidden group">
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-action/5 rounded-full blur-3xl group-hover:bg-action/10 transition-colors"></div>
+
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">
+                  Professional Analytics
+                </h3>
+                <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-600 rounded-full border border-amber-500/20">
+                  <FaGem size={12} className="animate-pulse" />
+                  <span className="text-[10px] font-black uppercase">
+                    {user.diamonds || 100} Diamonds
+                  </span>
                 </div>
               </div>
-              <div className="mt-8 pt-8 border-t border-white/10 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xl font-black">
+
+              <div className="grid grid-cols-2 gap-6">
+                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all">
+                  <p className="text-3xl font-black text-text-primary">
                     {user.stats?.profileViews || 0}
                   </p>
-                  <p className="text-[8px] font-bold uppercase opacity-60 italic">
+                  <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
                     Profile Views
                   </p>
                 </div>
-                <div>
-                  <p className="text-xl font-black">
+                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all">
+                  <p className="text-3xl font-black text-text-primary">
                     {user.stats?.contactClicks || 0}
                   </p>
-                  <p className="text-[8px] font-bold uppercase opacity-60 italic">
-                    Connections
+                  <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
+                    Recruiter Interests
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-action/5 rounded-2xl border border-action/10">
+                <p className="text-[10px] font-medium text-action flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-action animate-ping"></div>
+                  Currently trending in {user.headline || "your industry"}
+                </p>
               </div>
             </section>
 
@@ -437,47 +444,59 @@ const PublicProfile = () => {
         </div>
       </main>
 
-      {/* Floating Contact Row */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl">
-        <div className="bg-white/80 dark:bg-midnight/80 backdrop-blur-2xl border border-white/20 dark:border-white/10 p-4 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-4">
-          <div className="hidden sm:flex items-center gap-4 pl-4">
-            <div className="w-10 h-10 rounded-full bg-action/10 flex items-center justify-center text-action">
-              <FaBriefcase />
-            </div>
-            <div>
-              <p className="text-[10px] font-black uppercase text-action">
-                Hire now
-              </p>
-              <p className="text-xs font-bold text-text-primary">
-                Interest tracking active
-              </p>
-            </div>
+      {/* Recruiter Sticky Action Footer */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 flex justify-center pointer-events-none">
+        <motion.div
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          className="bg-white/80 dark:bg-midnight/80 backdrop-blur-2xl border-2 border-white/20 dark:border-white/5 shadow-[0_-20px_50px_rgba(0,0,0,0.1)] rounded-[2.5rem] px-4 py-3 md:px-8 md:py-4 flex items-center gap-4 md:gap-8 w-full max-w-2xl pointer-events-auto"
+        >
+          {/* Quick Stats (Mobile Hide) */}
+          <div className="hidden md:flex flex-col border-right pr-8 border-border-subtle">
+            <span className="text-[9px] font-black text-text-muted uppercase tracking-tighter">
+              Active Status
+            </span>
+            <span className="text-xs font-black text-action flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+              Open to Hire
+            </span>
           </div>
 
-          <div className="flex-1 flex justify-end gap-3">
-            <button
-              onClick={() => {
-                handleTrackInteraction("contact");
-                window.open(
-                  `https://wa.me/?text=Hi ${user.firstName}, I saw your profile on CVify and I'm interested in your services!`,
-                  "_blank",
-                );
-              }}
-              className="p-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors shadow-lg"
+          <div className="flex items-center gap-3 flex-1">
+            {user.phoneNumber && (
+              <a
+                href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
+                target="_blank"
+                onClick={() => handleTrackInteraction("contact")}
+                className="p-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-all hover:-translate-y-1 shadow-lg shadow-green-500/20"
+                title="WhatsApp Candidate"
+              >
+                <FaWhatsapp size={20} />
+              </a>
+            )}
+            <a
+              href={`mailto:${user.email}?subject=Inquiry Regarding Professional Services&body=Hello ${user.firstName}, I viewed your profile on CVify and would like to discuss a professional opportunity.`}
+              onClick={() => handleTrackInteraction("contact")}
+              className="flex-1 px-6 py-4 bg-action text-white rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest hover:bg-blue-600 transition-all hover:-translate-y-1 shadow-lg shadow-action/20 text-center relative group"
             >
-              <FaWhatsapp size={20} />
-            </button>
-            <button
-              onClick={() => {
-                handleTrackInteraction("contact");
-                window.location.href = `mailto:${user.email}`;
-              }}
-              className="px-8 py-4 bg-action text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-lg hover:bg-indigo-600 transition-colors"
-            >
-              <FaEnvelope /> Hire {user.firstName}
-            </button>
+              <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+              Hire {user.firstName} Now
+            </a>
           </div>
-        </div>
+
+          {/* Social Icons (Mobile Hide) */}
+          <div className="hidden sm:flex items-center gap-4">
+            {user.socialLinks?.linkedin && (
+              <a
+                href={user.socialLinks.linkedin}
+                target="_blank"
+                className="text-text-muted hover:text-blue-600 transition-colors"
+              >
+                <FaLinkedin size={20} />
+              </a>
+            )}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
