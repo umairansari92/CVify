@@ -574,6 +574,19 @@ const ProfilePage = () => {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Mobile Number
+              </label>
+              <input
+                type="text"
+                value={phoneNumber || ""}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="e.g. +92 300 1234567"
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
             {/* Email — Read Only */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 ml-1">
