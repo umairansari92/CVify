@@ -21,7 +21,7 @@ const Avatar = ({ src, name, size = "lg" }) => {
       <img
         src={src}
         alt={name}
-        className={`${dim} rounded-full object-cover ring-4 ring-action/20 dark:ring-accent/20`}
+        className={`${dim} rounded-full object-cover object-top ring-4 ring-action/20 dark:ring-accent/20`}
       />
     );
   }
@@ -276,7 +276,7 @@ const ProfilePage = () => {
                 <img
                   src={previewImg}
                   alt="Preview"
-                  className="w-10 h-10 rounded-xl object-cover"
+                  className="w-10 h-10 rounded-xl object-cover object-top"
                 />
                 <div>
                   <p className="text-xs font-black text-action">

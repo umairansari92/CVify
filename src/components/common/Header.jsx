@@ -96,7 +96,7 @@ const Header = () => {
               <img
                 src={user.profileImage}
                 alt="Profile"
-                className="w-8 h-8 lg:w-11 lg:h-11 rounded-2xl object-cover border-2 border-white/20 relative z-10 shadow-lg group-hover:shadow-primary/30 transition-all"
+                className="w-8 h-8 lg:w-11 lg:h-11 rounded-2xl object-cover object-top border-2 border-white/20 relative z-10 shadow-lg group-hover:shadow-primary/30 transition-all"
               />
             </div>
           ) : (
