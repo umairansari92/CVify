@@ -102,11 +102,15 @@ const ProfilePage = () => {
 
       const res = await api.patch("/auth/profile", fd);
       const data = res.data;
-      if (!res.ok) throw new Error(data.message || "Failed to update profile.");
 
-      dispatch(updateUser(data.user));
-      setImgFile(null);
-      toast.success("✅ Profile updated successfully!", { duration: 3000 });
+      // Ensure data.user exists before dispatching
+      if (data.user) {
+        dispatch(updateUser(data.user));
+        setImgFile(null);
+        toast.success("✅ Profile updated successfully!", { duration: 3000 });
+      } else {
+        throw new Error("No user data returned from server.");
+      }
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -132,8 +136,6 @@ const ProfilePage = () => {
         newPassword: newPwd,
       });
       const data = res.data;
-      if (!res.ok)
-        throw new Error(data.message || "Failed to change password.");
 
       setCurrPwd("");
       setNewPwd("");
