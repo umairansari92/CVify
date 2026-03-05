@@ -8,10 +8,12 @@ import VerifyOtp from "../pages/VerifyOtp";
 import Dashboard from "../pages/Dashboard";
 import CreateResume from "../pages/CreateResume";
 import Templates from "../pages/Templates";
-
 import CoverLetterPage from "../pages/CoverLetterPage";
 import ATSPage from "../pages/ATSPage";
 import ReferralPage from "../pages/ReferralPage";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
+import ProfilePage from "../pages/ProfilePage";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -45,15 +47,17 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Root: Landing Page for guests, Dashboard for users */}
       <Route
         path="/"
         element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
       />
 
+      {/* Public auth routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Protected Routes with Layout */}
       <Route
@@ -70,6 +74,7 @@ const AppRoutes = () => {
         <Route path="/cover-letter" element={<CoverLetterPage />} />
         <Route path="/ats" element={<ATSPage />} />
         <Route path="/referral" element={<ReferralPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

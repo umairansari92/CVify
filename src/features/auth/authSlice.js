@@ -22,8 +22,12 @@ const authSlice = createSlice({
       localStorage.removeItem("token");
     },
     updateDiamonds(state, action) {
+      if (state.user) state.user.diamonds = action.payload;
+    },
+    updateUser(state, action) {
+      // Merge updated user fields into existing state (keeps token intact)
       if (state.user) {
-        state.user.diamonds = action.payload;
+        state.user = { ...state.user, ...action.payload };
       }
     },
   },
@@ -95,5 +99,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, updateDiamonds } = authSlice.actions;
+export const { logout, updateDiamonds, updateUser } = authSlice.actions;
 export default authSlice.reducer;

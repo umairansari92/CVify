@@ -65,6 +65,12 @@ const Sidebar = ({ onClose }) => {
       icon: <FaRocket />,
       color: "from-red-500 to-pink-500",
     },
+    {
+      path: "/profile",
+      label: "My Profile",
+      icon: <FaUser />,
+      color: "from-violet-500 to-purple-600",
+    },
   ];
 
   return (

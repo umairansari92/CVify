@@ -102,6 +102,15 @@ const Login = () => {
               />
             </div>
 
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-[11px] font-bold text-slate-400 hover:text-action dark:hover:text-accent transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
             <button
               className="w-full bg-action hover:bg-blue-600 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-action/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
               disabled={loading}
