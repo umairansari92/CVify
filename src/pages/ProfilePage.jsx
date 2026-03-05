@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
+import { FaShareAlt, FaGlobe } from "react-icons/fa";
 
 import api from "../api/axios";
 
@@ -60,8 +61,33 @@ const ProfilePage = () => {
 
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
+  const [headline, setHeadline] = useState(user?.headline || "");
+  const [bio, setBio] = useState(user?.bio || "");
+  const [username, setUsername] = useState(user?.username || "");
+  const [isPublic, setIsPublic] = useState(user?.isPublic || false);
+  const [socialLinks, setSocialLinks] = useState(
+    user?.socialLinks || {
+      linkedin: "",
+      github: "",
+      twitter: "",
+      portfolio: "",
+    },
+  );
   const [previewImg, setPreview] = useState(user?.profileImage || "");
   const [imageFile, setImgFile] = useState(null);
+
+  // Project state
+  const [projects, setProjects] = useState(user?.projects || []);
+  const [pTitle, setPTitle] = useState("");
+  const [pDesc, setPDesc] = useState("");
+  const [pTech, setPTech] = useState("");
+  const [pLive, setPLive] = useState("");
+  const [pGit, setPGit] = useState("");
+  const [pFeatured, setPFeatured] = useState(false);
+  const [pThumb, setPThumb] = useState(null);
+  const [pThumbPreview, setPThumbPreview] = useState("");
+  const [pAdding, setPAdding] = useState(false);
+  const [showPForm, setShowPForm] = useState(false);
 
   const [currentPwd, setCurrPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
@@ -79,6 +105,19 @@ const ProfilePage = () => {
     if (user && !hasInitialized) {
       setFirstName(user.firstName || "");
       setLastName(user.lastName || "");
+      setHeadline(user.headline || "");
+      setBio(user.bio || "");
+      setUsername(user.username || "");
+      setIsPublic(user.isPublic || false);
+      setSocialLinks(
+        user.socialLinks || {
+          linkedin: "",
+          github: "",
+          twitter: "",
+          portfolio: "",
+        },
+      );
+      setProjects(user.projects || []);
       setPreview(user.profileImage || "");
       setHasInitialized(true);
     }
@@ -109,6 +148,15 @@ const ProfilePage = () => {
       const fd = new FormData();
       fd.append("firstName", firstName.trim());
       fd.append("lastName", lastName.trim());
+      fd.append("headline", headline.trim());
+      fd.append("bio", bio);
+      fd.append("username", username.trim());
+      fd.append("isPublic", isPublic);
+      fd.append("socialLinks[linkedin]", socialLinks.linkedin);
+      fd.append("socialLinks[github]", socialLinks.github);
+      fd.append("socialLinks[twitter]", socialLinks.twitter);
+      fd.append("socialLinks[portfolio]", socialLinks.portfolio);
+
       if (imageFile) fd.append("profileImage", imageFile);
 
       const res = await api.patch("/auth/profile", fd);
@@ -129,7 +177,52 @@ const ProfilePage = () => {
     }
   };
 
-  // ── Change password ──
+  // ── Project Actions ──
+  const handleAddProject = async (e) => {
+    e.preventDefault();
+    if (!pTitle.trim()) return toast.error("Project title is required.");
+    setPAdding(true);
+    try {
+      const fd = new FormData();
+      fd.append("title", pTitle.trim());
+      fd.append("description", pDesc.trim());
+      fd.append("techStack", pTech);
+      fd.append("liveLink", pLive);
+      fd.append("githubLink", pGit);
+      fd.append("isFeatured", pFeatured);
+      if (pThumb) fd.append("thumbnail", pThumb);
+
+      const res = await api.post("/auth/projects", fd);
+      if (res.data.project) {
+        setProjects([...projects, res.data.project]);
+        // Reset form
+        setPTitle("");
+        setPDesc("");
+        setPTech("");
+        setPLive("");
+        setPGit("");
+        setPFeatured(false);
+        setPThumb(null);
+        setPThumbPreview("");
+        setShowPForm(false);
+        toast.success("Project added!");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setPAdding(false);
+    }
+  };
+
+  const handleDeleteProject = async (pid) => {
+    try {
+      await api.delete(`/auth/projects/${pid}`);
+      setProjects(projects.filter((p) => p._id !== pid));
+      toast.success("Project removed.");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!currentPwd) return toast.error("Please enter your current password.");
@@ -227,6 +320,101 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+
+        {/* ── Portfolio Branding ── */}
+        <Card>
+          <SectionTitle icon="🚀" title="Portfolio Branding" />
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-4 bg-action/5 p-4 rounded-2xl border border-action/10">
+              <div>
+                <h4 className="text-sm font-black text-text-primary">
+                  Public Profile
+                </h4>
+                <p className="text-[10px] text-text-muted font-bold">
+                  Make your profile visible to recruiters
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPublic(!isPublic)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ring-2 ring-offset-2 ring-transparent ${isPublic ? "bg-action" : "bg-border-subtle"}`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isPublic ? "translate-x-6" : "translate-x-1"}`}
+                />
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Custom Username (URL Slug)
+              </label>
+              <div className="relative">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted text-sm font-bold">
+                  cvify.pro/p/
+                </span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="your-name"
+                  className="w-full pl-28 pr-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Professional Headline
+              </label>
+              <input
+                type="text"
+                value={headline}
+                onChange={(e) => setHeadline(e.target.value)}
+                placeholder="e.g. Senior Frontend Developer | React Specialist"
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Bio / About Me
+              </label>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell your professional story..."
+                className="w-full px-5 py-3.5 h-32 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm resize-none"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* ── Social Links ── */}
+        <Card>
+          <SectionTitle icon="🔗" title="Social Presence" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Object.keys(socialLinks).map((platform) => (
+              <div key={platform} className="space-y-2">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1 capitalize">
+                  {platform}
+                </label>
+                <input
+                  type="text"
+                  value={socialLinks[platform]}
+                  onChange={(e) =>
+                    setSocialLinks({
+                      ...socialLinks,
+                      [platform]: e.target.value,
+                    })
+                  }
+                  placeholder={`${platform} URL`}
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        </Card>
 
         {/* ── Personal Info ── */}
         <Card>
@@ -429,6 +617,199 @@ const ProfilePage = () => {
               {pwdSaving ? "Updating..." : "🔐 Update Password"}
             </button>
           </form>
+        </Card>
+
+        {/* ── Project Gallery ── */}
+        <Card>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
+              <span className="text-xl">🛠️</span> Project gallery
+            </h3>
+            <button
+              onClick={() => setShowPForm(!showPForm)}
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+            >
+              {showPForm ? "Cancel" : "+ Add Project"}
+            </button>
+          </div>
+
+          {showPForm && (
+            <form
+              onSubmit={handleAddProject}
+              className="mb-10 p-6 bg-action/5 border border-action/20 rounded-3xl space-y-4 animate-fadeIn"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase ml-1">
+                    Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={pTitle}
+                    onChange={(e) => setPTitle(e.target.value)}
+                    placeholder="Project Name"
+                    className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase ml-1">
+                    Tech Stack
+                  </label>
+                  <input
+                    type="text"
+                    value={pTech}
+                    onChange={(e) => setPTech(e.target.value)}
+                    placeholder="React, Node, MongoDB"
+                    className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase ml-1">
+                  Description
+                </label>
+                <textarea
+                  value={pDesc}
+                  onChange={(e) => setPDesc(e.target.value)}
+                  placeholder="What did you build?"
+                  className="w-full px-5 py-3 h-24 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm resize-none"
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  value={pLive}
+                  onChange={(e) => setPLive(e.target.value)}
+                  placeholder="Live Link"
+                  className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
+                />
+                <input
+                  type="text"
+                  value={pGit}
+                  onChange={(e) => setPGit(e.target.value)}
+                  placeholder="GitHub Link"
+                  className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
+                />
+              </div>
+
+              <div className="flex items-center gap-6">
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase ml-1 block mb-2">
+                    Thumbnail
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const f = e.target.files[0];
+                      if (f) {
+                        setPThumb(f);
+                        setPThumbPreview(URL.createObjectURL(f));
+                      }
+                    }}
+                    className="text-xs"
+                  />
+                </div>
+                {pThumbPreview && (
+                  <img
+                    src={pThumbPreview}
+                    className="w-16 h-16 rounded-xl object-cover border border-action/30"
+                  />
+                )}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="feat"
+                    checked={pFeatured}
+                    onChange={(e) => setPFeatured(e.target.checked)}
+                    className="accent-action"
+                  />
+                  <label
+                    htmlFor="feat"
+                    className="text-[10px] font-black uppercase\"
+                  >
+                    Featured
+                  </label>
+                </div>
+              </div>
+
+              <button
+                disabled={pAdding}
+                type="submit"
+                className="w-full py-3 bg-action text-white font-black rounded-2xl"
+              >
+                {pAdding ? "Uploading..." : "Publish Project"}
+              </button>
+            </form>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {projects.map((proj) => (
+              <div
+                key={proj._id}
+                className="group relative bg-foreground/30 dark:bg-midnight/20 rounded-2xl p-4 border border-border-subtle hover:border-action/30 transition-all"
+              >
+                <div className="flex gap-4">
+                  {proj.thumbnail ? (
+                    <img
+                      src={proj.thumbnail}
+                      className="w-20 h-20 rounded-xl object-cover border border-white/10"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-xl bg-action/5 flex items-center justify-center text-2xl">
+                      📦
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-black text-sm text-text-primary truncate">
+                        {proj.title}
+                      </h4>
+                      {proj.isFeatured && (
+                        <span className="text-[8px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-text-muted font-bold line-clamp-2 mt-1">
+                      {proj.description}
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      {proj.liveLink && (
+                        <a
+                          href={proj.liveLink}
+                          target="_blank"
+                          className="text-[9px] font-black text-action uppercase"
+                        >
+                          Live 🔗
+                        </a>
+                      )}
+                      {proj.githubLink && (
+                        <a
+                          href={proj.githubLink}
+                          target="_blank"
+                          className="text-[9px] font-black text-text-muted uppercase"
+                        >
+                          Git 💻
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDeleteProject(proj._id)}
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-2 text-red-400 hover:text-red-500 transition-all"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+          </div>
+          {projects.length === 0 && !showPForm && (
+            <p className="text-center py-10 text-xs font-bold text-text-muted italic">
+              No projects added yet.
+            </p>
+          )}
         </Card>
 
         {/* ── Referral Info ── */}

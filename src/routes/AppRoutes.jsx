@@ -14,6 +14,7 @@ import ReferralPage from "../pages/ReferralPage";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import ProfilePage from "../pages/ProfilePage";
+import PublicProfile from "../pages/PublicProfile";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -77,6 +78,7 @@ const AppRoutes = () => {
         <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
+      <Route path="/p/:username" element={<PublicProfile />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
