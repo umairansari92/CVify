@@ -72,6 +72,17 @@ const ProfilePage = () => {
   const [pwdSaving, setPwdSave] = useState(false);
 
   const fileRef = useRef(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  // Sync state when user data is fetched (important for refresh)
+  useEffect(() => {
+    if (user && !hasInitialized) {
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+      setPreview(user.profileImage || "");
+      setHasInitialized(true);
+    }
+  }, [user, hasInitialized]);
 
   // Headers are handled by axios interceptor
 
