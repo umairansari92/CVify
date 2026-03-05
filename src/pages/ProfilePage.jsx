@@ -85,6 +85,7 @@ const ProfilePage = () => {
     user?.skills || { technical: [], professional: [] },
   );
   const [services, setServices] = useState(user?.services || []);
+  const [languages, setLanguages] = useState(user?.languages || []);
   const [sectionNames, setSectionNames] = useState(
     user?.sectionNames || {
       experience: "Professional Experience",
@@ -151,8 +152,10 @@ const ProfilePage = () => {
           skills: "Expertise & Skills",
           projects: "Key Accomplishments",
           services: "Professional Services",
+          languages: "Languages",
         },
       );
+      setLanguages(user.languages || []);
       setLocation(user.location || "");
       setPreview(user.profileImage || "");
       setHasInitialized(true);
@@ -202,6 +205,7 @@ const ProfilePage = () => {
       fd.append("education", JSON.stringify(education));
       fd.append("skills", JSON.stringify(skills));
       fd.append("services", JSON.stringify(services));
+      fd.append("languages", JSON.stringify(languages));
       fd.append("sectionNames", JSON.stringify(sectionNames));
 
       if (imageFile) fd.append("profileImage", imageFile);
@@ -1339,6 +1343,86 @@ const ProfilePage = () => {
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
             </div>
+          </div>
+        </Card>
+
+        {/* ── Languages ── */}
+        <Card>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🌐</span>
+              <input
+                type="text"
+                value={sectionNames.languages || "Languages"}
+                onChange={(e) =>
+                  setSectionNames({
+                    ...sectionNames,
+                    languages: e.target.value,
+                  })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setLanguages([
+                  ...languages,
+                  { name: "", proficiency: "Advanced" },
+                ]);
+              }}
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all w-fit"
+            >
+              + Add language
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {languages.map((lang, idx) => (
+              <div
+                key={idx}
+                className="p-4 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle flex flex-col gap-3 relative group"
+              >
+                <input
+                  type="text"
+                  placeholder="Language (e.g. English, Urdu)"
+                  value={lang.name}
+                  onChange={(e) => {
+                    const newLangs = [...languages];
+                    newLangs[idx].name = e.target.value;
+                    setLanguages(newLangs);
+                  }}
+                  className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm font-bold"
+                />
+                <select
+                  value={lang.proficiency}
+                  onChange={(e) => {
+                    const newLangs = [...languages];
+                    newLangs[idx].proficiency = e.target.value;
+                    setLanguages(newLangs);
+                  }}
+                  className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-xs font-black uppercase tracking-widest text-action"
+                >
+                  <option value="Native">Native</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Professional">Professional</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setLanguages(languages.filter((_, i) => i !== idx))
+                  }
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {languages.length === 0 && (
+              <div className="sm:col-span-2 text-center py-6 text-[10px] font-bold text-text-muted italic bg-foreground/10 rounded-2xl">
+                Add your language proficiency (Native, Beginner, etc.)
+              </div>
+            )}
           </div>
         </Card>
 
