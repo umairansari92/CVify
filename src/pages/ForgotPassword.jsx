@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import logo from "../assets/logo.png";
 import ThemeToggle from "../components/common/ThemeToggle";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import api from "../api/axios";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -17,12 +17,10 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+      const res = await api.post("/auth/forgot-password", {
+        email: email.trim(),
       });
-      const data = await res.json();
+      const data = res.data;
 
       if (!res.ok) throw new Error(data.message || "Something went wrong.");
 

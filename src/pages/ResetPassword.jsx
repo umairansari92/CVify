@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import logo from "../assets/logo.png";
 import ThemeToggle from "../components/common/ThemeToggle";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import api from "../api/axios";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -27,12 +27,10 @@ const ResetPassword = () => {
 
     setLoad(true);
     try {
-      const res = await fetch(`${API}/api/auth/reset-password/${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+      const res = await api.post(`/auth/reset-password/${token}`, {
+        password,
       });
-      const data = await res.json();
+      const data = res.data;
       if (!res.ok) throw new Error(data.message || "Failed to reset password.");
 
       setDone(true);

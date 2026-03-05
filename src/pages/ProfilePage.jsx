@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import api from "../api/axios";
 
 // ─── Avatar Helper ────────────────────────────────────────────────────────────
 const Avatar = ({ src, name, size = "lg" }) => {
@@ -73,7 +73,7 @@ const ProfilePage = () => {
 
   const fileRef = useRef(null);
 
-  const authHeader = { Authorization: `Bearer ${token}` };
+  // Headers are handled by axios interceptor
 
   // Handle image preview
   const handleImageChange = (e) => {
@@ -100,12 +100,8 @@ const ProfilePage = () => {
       fd.append("lastName", lastName.trim());
       if (imageFile) fd.append("profileImage", imageFile);
 
-      const res = await fetch(`${API}/api/auth/profile`, {
-        method: "PATCH",
-        headers: authHeader,
-        body: fd,
-      });
-      const data = await res.json();
+      const res = await api.patch("/auth/profile", fd);
+      const data = res.data;
       if (!res.ok) throw new Error(data.message || "Failed to update profile.");
 
       dispatch(updateUser(data.user));
@@ -131,15 +127,11 @@ const ProfilePage = () => {
 
     setPwdSave(true);
     try {
-      const res = await fetch(`${API}/api/auth/profile`, {
-        method: "PATCH",
-        headers: { ...authHeader, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          currentPassword: currentPwd,
-          newPassword: newPwd,
-        }),
+      const res = await api.patch("/auth/profile", {
+        currentPassword: currentPwd,
+        newPassword: newPwd,
       });
-      const data = await res.json();
+      const data = res.data;
       if (!res.ok)
         throw new Error(data.message || "Failed to change password.");
 
