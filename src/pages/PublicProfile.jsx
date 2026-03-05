@@ -46,6 +46,19 @@ const PublicProfile = () => {
     }
   };
 
+  const ensureAbsoluteUrl = (url) => {
+    if (!url) return "";
+    if (
+      url.startsWith("http://") ||
+      url.startsWith("https://") ||
+      url.startsWith("mailto:") ||
+      url.startsWith("tel:")
+    ) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   if (loading)
     return (
       <div className="min-h-screen bg-midnight flex items-center justify-center">
@@ -143,20 +156,46 @@ const PublicProfile = () => {
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
                 {user.socialLinks?.linkedin && (
                   <a
-                    href={user.socialLinks.linkedin}
+                    href={ensureAbsoluteUrl(user.socialLinks.linkedin)}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-600 rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
                   >
                     <FaLinkedin size={22} />
                   </a>
                 )}
                 {user.socialLinks?.github && (
                   <a
-                    href={user.socialLinks.github}
+                    href={ensureAbsoluteUrl(user.socialLinks.github)}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-slate-900 rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
                   >
                     <FaGithub size={22} />
+                  </a>
+                )}
+                {user.socialLinks?.twitter && (
+                  <a
+                    href={ensureAbsoluteUrl(user.socialLinks.twitter)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-400 rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
+                  >
+                    <FaTwitter size={22} />
+                  </a>
+                )}
+                {user.socialLinks?.portfolio && (
+                  <a
+                    href={ensureAbsoluteUrl(user.socialLinks.portfolio)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-action rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    onClick={() => handleTrackInteraction("contact")}
+                  >
+                    <FaGlobe size={22} />
                   </a>
                 )}
                 <button
@@ -414,8 +453,9 @@ const PublicProfile = () => {
                     <div className="flex gap-4">
                       {proj.liveLink && (
                         <a
-                          href={proj.liveLink}
+                          href={ensureAbsoluteUrl(proj.liveLink)}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="text-action hover:scale-110 transition-transform"
                         >
                           <FaGlobe size={18} />
@@ -423,8 +463,9 @@ const PublicProfile = () => {
                       )}
                       {proj.githubLink && (
                         <a
-                          href={proj.githubLink}
+                          href={ensureAbsoluteUrl(proj.githubLink)}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="text-text-primary hover:scale-110 transition-transform"
                         >
                           <FaGithub size={18} />
@@ -488,11 +529,50 @@ const PublicProfile = () => {
           <div className="hidden sm:flex items-center gap-4">
             {user.socialLinks?.linkedin && (
               <a
-                href={user.socialLinks.linkedin}
+                href={ensureAbsoluteUrl(user.socialLinks.linkedin)}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-text-muted hover:text-blue-600 transition-colors"
+                onClick={() => handleTrackInteraction("contact")}
+                title="LinkedIn"
               >
                 <FaLinkedin size={20} />
+              </a>
+            )}
+            {user.socialLinks?.github && (
+              <a
+                href={ensureAbsoluteUrl(user.socialLinks.github)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-muted hover:text-black dark:hover:text-white transition-colors"
+                onClick={() => handleTrackInteraction("contact")}
+                title="GitHub"
+              >
+                <FaGithub size={20} />
+              </a>
+            )}
+            {user.socialLinks?.twitter && (
+              <a
+                href={ensureAbsoluteUrl(user.socialLinks.twitter)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-muted hover:text-blue-400 transition-colors"
+                onClick={() => handleTrackInteraction("contact")}
+                title="Twitter / X"
+              >
+                <FaTwitter size={20} />
+              </a>
+            )}
+            {user.socialLinks?.portfolio && (
+              <a
+                href={ensureAbsoluteUrl(user.socialLinks.portfolio)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-muted hover:text-action transition-colors"
+                onClick={() => handleTrackInteraction("contact")}
+                title="Personal Portfolio"
+              >
+                <FaGlobe size={20} />
               </a>
             )}
           </div>
