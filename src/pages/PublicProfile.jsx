@@ -156,6 +156,31 @@ const PublicProfile = () => {
                 {user.headline || "Professional Member"}
               </motion.p>
 
+              {user.phoneNumber && (
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="flex items-center justify-center lg:justify-start gap-4 mt-6"
+                >
+                  <a
+                    href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleTrackInteraction("contact")}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded-xl transition-all group"
+                  >
+                    <FaWhatsapp className="text-green-500 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-black text-white">
+                      {user.phoneNumber}
+                    </span>
+                  </a>
+                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-white/50">
+                    Available on WhatsApp
+                  </span>
+                </motion.div>
+              )}
+
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
                 {user.socialLinks?.linkedin && (
                   <a
