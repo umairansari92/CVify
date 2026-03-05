@@ -84,6 +84,15 @@ const ProfilePage = () => {
     user?.skills || { technical: [], professional: [] },
   );
   const [services, setServices] = useState(user?.services || []);
+  const [sectionNames, setSectionNames] = useState(
+    user?.sectionNames || {
+      experience: "Professional Experience",
+      education: "Education History",
+      skills: "Expertise & Skills",
+      projects: "Key Accomplishments",
+      services: "Professional Services",
+    },
+  );
 
   // Project state
   const [projects, setProjects] = useState(user?.projects || []);
@@ -131,6 +140,15 @@ const ProfilePage = () => {
       setEducation(user.education || []);
       setSkills(user.skills || { technical: [], professional: [] });
       setServices(user.services || []);
+      setSectionNames(
+        user.sectionNames || {
+          experience: "Professional Experience",
+          education: "Education History",
+          skills: "Expertise & Skills",
+          projects: "Key Accomplishments",
+          services: "Professional Services",
+        },
+      );
       setLocation(user.location || "");
       setPreview(user.profileImage || "");
       setHasInitialized(true);
@@ -179,6 +197,7 @@ const ProfilePage = () => {
       fd.append("education", JSON.stringify(education));
       fd.append("skills", JSON.stringify(skills));
       fd.append("services", JSON.stringify(services));
+      fd.append("sectionNames", JSON.stringify(sectionNames));
 
       if (imageFile) fd.append("profileImage", imageFile);
 
@@ -457,7 +476,7 @@ const ProfilePage = () => {
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                placeholder="Tell your professional story..."
+                placeholder="E.g., Experienced banker with 10 years in retail banking... or MERN stack developer specialized in AI..."
                 className="w-full px-5 py-3.5 h-32 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm resize-none"
               />
             </div>
@@ -695,15 +714,23 @@ const ProfilePage = () => {
 
         {/* ── Project Gallery ── */}
         <Card>
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
-              <span className="text-xl">🛠️</span> Project gallery
-            </h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🏆</span>
+              <input
+                type="text"
+                value={sectionNames.projects}
+                onChange={(e) =>
+                  setSectionNames({ ...sectionNames, projects: e.target.value })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
             <button
               onClick={() => setShowPForm(!showPForm)}
-              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all w-fit"
             >
-              {showPForm ? "Cancel" : "+ Add Project"}
+              {showPForm ? "Cancel" : "+ Add Accomplishment"}
             </button>
           </div>
 
@@ -721,19 +748,19 @@ const ProfilePage = () => {
                     type="text"
                     value={pTitle}
                     onChange={(e) => setPTitle(e.target.value)}
-                    placeholder="Project Name"
+                    placeholder="E.g., Annual Sales Meet / Smart Home App"
                     className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase ml-1">
-                    Tech Stack
+                    Skills / Tools
                   </label>
                   <input
                     type="text"
                     value={pTech}
                     onChange={(e) => setPTech(e.target.value)}
-                    placeholder="React, Node, MongoDB"
+                    placeholder="E.g., Event Planning, Management"
                     className="w-full px-5 py-3 rounded-2xl border-2 border-border-subtle bg-white dark:bg-midnight/30 text-sm"
                   />
                 </div>
@@ -888,10 +915,22 @@ const ProfilePage = () => {
 
         {/* ── Experience Timeline ── */}
         <Card>
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
-              <span className="text-xl">💼</span> Experience
-            </h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">💼</span>
+              <input
+                type="text"
+                value={sectionNames.experience}
+                onChange={(e) =>
+                  setSectionNames({
+                    ...sectionNames,
+                    experience: e.target.value,
+                  })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+                title="Click to rename section"
+              />
+            </div>
             <button
               onClick={() => {
                 setExperience([
@@ -908,7 +947,7 @@ const ProfilePage = () => {
                   },
                 ]);
               }}
-              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all w-fit"
             >
               + Add role
             </button>
@@ -923,11 +962,11 @@ const ProfilePage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[9px] font-black uppercase text-text-muted ml-1">
-                      Company
+                      Org / Company
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Google"
+                      placeholder="e.g. Standard Chartered / Government High School"
                       value={exp.company}
                       onChange={(e) => {
                         const newExp = [...experience];
@@ -939,11 +978,11 @@ const ProfilePage = () => {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-black uppercase text-text-muted ml-1">
-                      Role
+                      Professional Role
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Senior Developer"
+                      placeholder="e.g. Branch Manager / Receptionist"
                       value={exp.role}
                       onChange={(e) => {
                         const newExp = [...experience];
@@ -1011,10 +1050,10 @@ const ProfilePage = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-[9px] font-black uppercase text-text-muted ml-1">
-                    Key achievements
+                    Key achievements / Outcome
                   </label>
                   <textarea
-                    placeholder="Describe your impact..."
+                    placeholder="E.g., Managed daily cash flow of $100k+ / Led classroom for 40+ students..."
                     value={exp.achievements}
                     onChange={(e) => {
                       const newExp = [...experience];
@@ -1026,11 +1065,11 @@ const ProfilePage = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-[9px] font-black uppercase text-text-muted ml-1">
-                    Tools (Comma separated)
+                    Tools / Competencies used
                   </label>
                   <input
                     type="text"
-                    placeholder="React, AWS, Node.js"
+                    placeholder="e.g. MS Excel, Tally, Communication, Leadership"
                     value={exp.tools?.join(", ")}
                     onChange={(e) => {
                       const newExp = [...experience];
@@ -1062,10 +1101,21 @@ const ProfilePage = () => {
 
         {/* ── Education ── */}
         <Card>
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
-              <span className="text-xl">🎓</span> Education
-            </h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🎓</span>
+              <input
+                type="text"
+                value={sectionNames.education}
+                onChange={(e) =>
+                  setSectionNames({
+                    ...sectionNames,
+                    education: e.target.value,
+                  })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
             <button
               onClick={() => {
                 setEducation([
@@ -1078,7 +1128,7 @@ const ProfilePage = () => {
                   },
                 ]);
               }}
-              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all w-fit"
             >
               + Add education
             </button>
@@ -1158,16 +1208,24 @@ const ProfilePage = () => {
 
         {/* ── Skills & Services ── */}
         <Card>
-          <div className="mb-5">
-            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
-              <span className="text-xl">🛠️</span> Skills & Expertise
-            </h3>
+          <div className="mb-8">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🛠️</span>
+              <input
+                type="text"
+                value={sectionNames.skills}
+                onChange={(e) =>
+                  setSectionNames({ ...sectionNames, skills: e.target.value })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Technical Skills (Comma separated)
+                Core Competencies & Tools (Comma separated)
               </label>
               <input
                 type="text"
@@ -1178,14 +1236,14 @@ const ProfilePage = () => {
                     technical: e.target.value.split(",").map((s) => s.trim()),
                   })
                 }
-                placeholder="MERN, AI Integration, Python..."
+                placeholder="E.g., Retail Management, CRM, Office 365..."
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
             </div>
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Professional Services (Comma separated)
+                Professional Services / Offerings (Comma separated)
               </label>
               <input
                 type="text"
@@ -1198,7 +1256,7 @@ const ProfilePage = () => {
                       .map((s) => s.trim()),
                   })
                 }
-                placeholder="Curriculum Design, English Instruction..."
+                placeholder="E.g., Home Tutoring, Financial Consulting..."
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
             </div>

@@ -71,11 +71,18 @@ const PublicProfile = () => {
 
   const featuredProject = user.projects?.find((p) => p.isFeatured);
   const otherProjects = user.projects?.filter((p) => !p.isFeatured) || [];
+  const sectionNames = user.sectionNames || {
+    experience: "Professional Experience",
+    education: "Education History",
+    skills: "Expertise & Skills",
+    projects: "Key Accomplishments",
+    services: "Professional Services",
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-midnight transition-colors duration-500 pb-32">
       <Helmet>
-        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Portfolio"}`}</title>
+        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Universal Portfolio"}`}</title>
         <meta name="description" content={user.bio?.substring(0, 160)} />
         <meta
           property="og:title"
@@ -127,7 +134,7 @@ const PublicProfile = () => {
                 transition={{ delay: 0.1 }}
                 className="text-xl md:text-2xl font-bold opacity-90 mt-3 max-w-3xl"
               >
-                {user.headline || "Full Stack Developer"}
+                {user.headline || "Professional Member"}
               </motion.p>
 
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
@@ -152,11 +159,12 @@ const PublicProfile = () => {
                 <button
                   onClick={() => {
                     handleTrackInteraction("contact");
-                    window.location.href = `mailto:${user.email}`;
+                    // Dynamic Download logic would go here
+                    alert("Preparing Resume for Download...");
                   }}
                   className="px-8 py-4 bg-white text-action rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
                 >
-                  <FaDownload /> Download Resume
+                  <FaDownload /> Get Professional Resume
                 </button>
               </div>
             </div>
@@ -175,19 +183,19 @@ const PublicProfile = () => {
               className="bg-white dark:bg-slate-800/80 p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-white/50 dark:border-white/10"
             >
               <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
-                Professional Story{" "}
+                Professional Overview{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
               <p className="text-text-primary text-lg leading-relaxed font-medium whitespace-pre-wrap">
                 {user.bio ||
-                  "Crafting digital experiences and solving complex problems."}
+                  "Crafting excellence and delivering results in my field."}
               </p>
             </motion.section>
 
             {/* Experience Timeline */}
             <section className="space-y-6">
               <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] flex items-center gap-4">
-                Career Timeline{" "}
+                {sectionNames.experience}{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
               <div className="space-y-8 relative before:absolute before:left-4 md:before:left-1/2 before:top-4 before:bottom-4 before:w-1 before:bg-action/20 before:-translate-x-1/2">
@@ -250,7 +258,7 @@ const PublicProfile = () => {
                 <FaGem size={100} />
               </div>
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 opacity-80">
-                Community Impact
+                Industry Impact
               </h3>
               <div className="flex items-center gap-6">
                 <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
@@ -259,7 +267,7 @@ const PublicProfile = () => {
                 <div>
                   <p className="text-4xl font-black">{user.diamonds || 100}</p>
                   <p className="text-[10px] font-bold uppercase opacity-70">
-                    Diamonds Earned
+                    Diamonds Gained
                   </p>
                 </div>
               </div>
@@ -277,7 +285,7 @@ const PublicProfile = () => {
                     {user.stats?.contactClicks || 0}
                   </p>
                   <p className="text-[8px] font-bold uppercase opacity-60 italic">
-                    Interests
+                    Connections
                   </p>
                 </div>
               </div>
@@ -286,13 +294,13 @@ const PublicProfile = () => {
             {/* Hybrid Skill Cloud */}
             <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
-                Expertise
+                {sectionNames.skills}
               </h3>
 
               <div className="space-y-8">
                 <div>
                   <label className="text-[9px] font-black uppercase text-action mb-4 block">
-                    Development & Technical
+                    Core Competencies
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {user.skills?.technical?.map((skill) => (
@@ -327,7 +335,7 @@ const PublicProfile = () => {
             {/* Education Card */}
             <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
-                Education
+                {sectionNames.education}
               </h3>
               <div className="space-y-6">
                 {(user.education || []).map((edu, i) => (
@@ -356,7 +364,7 @@ const PublicProfile = () => {
         {/* Projects Section 2.0 */}
         <div className="mt-20 space-y-10">
           <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] flex items-center gap-4">
-            Featured Projects{" "}
+            {sectionNames.projects}{" "}
             <span className="flex-1 h-px bg-border-subtle"></span>
           </h3>
 
