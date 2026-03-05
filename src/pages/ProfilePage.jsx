@@ -439,6 +439,19 @@ const ProfilePage = () => {
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Lahore, Pakistan"
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                 Bio / About Me
               </label>
               <textarea
@@ -871,6 +884,325 @@ const ProfilePage = () => {
               No projects added yet.
             </p>
           )}
+        </Card>
+
+        {/* ── Experience Timeline ── */}
+        <Card>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
+              <span className="text-xl">💼</span> Experience
+            </h3>
+            <button
+              onClick={() => {
+                setExperience([
+                  ...experience,
+                  {
+                    company: "",
+                    role: "",
+                    location: "",
+                    startDate: "",
+                    endDate: "",
+                    isCurrent: false,
+                    achievements: "",
+                    tools: [],
+                  },
+                ]);
+              }}
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+            >
+              + Add role
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {experience.map((exp, idx) => (
+              <div
+                key={idx}
+                className="p-6 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle space-y-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Google"
+                      value={exp.company}
+                      onChange={(e) => {
+                        const newExp = [...experience];
+                        newExp[idx].company = e.target.value;
+                        setExperience(newExp);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                      Role
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Senior Developer"
+                      value={exp.role}
+                      onChange={(e) => {
+                        const newExp = [...experience];
+                        newExp[idx].role = e.target.value;
+                        setExperience(newExp);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                      Start Date
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Jan 2022"
+                      value={exp.startDate}
+                      onChange={(e) => {
+                        const newExp = [...experience];
+                        newExp[idx].startDate = e.target.value;
+                        setExperience(newExp);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                      End Date
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="End Date"
+                      disabled={exp.isCurrent}
+                      value={exp.isCurrent ? "Present" : exp.endDate}
+                      onChange={(e) => {
+                        const newExp = [...experience];
+                        newExp[idx].endDate = e.target.value;
+                        setExperience(newExp);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                  <div className="flex items-end pb-2 gap-2">
+                    <input
+                      type="checkbox"
+                      id={`curr-${idx}`}
+                      checked={exp.isCurrent}
+                      onChange={(e) => {
+                        const newExp = [...experience];
+                        newExp[idx].isCurrent = e.target.checked;
+                        if (e.target.checked) newExp[idx].endDate = "";
+                        setExperience(newExp);
+                      }}
+                      className="accent-action"
+                    />
+                    <label
+                      htmlFor={`curr-${idx}`}
+                      className="text-[10px] font-black uppercase text-text-muted"
+                    >
+                      Present
+                    </label>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                    Key achievements
+                  </label>
+                  <textarea
+                    placeholder="Describe your impact..."
+                    value={exp.achievements}
+                    onChange={(e) => {
+                      const newExp = [...experience];
+                      newExp[idx].achievements = e.target.value;
+                      setExperience(newExp);
+                    }}
+                    className="w-full px-4 py-2 h-20 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm resize-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                    Tools (Comma separated)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="React, AWS, Node.js"
+                    value={exp.tools?.join(", ")}
+                    onChange={(e) => {
+                      const newExp = [...experience];
+                      newExp[idx].tools = e.target.value
+                        .split(",")
+                        .map((t) => t.trim());
+                      setExperience(newExp);
+                    }}
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                  />
+                </div>
+                <button
+                  onClick={() =>
+                    setExperience(experience.filter((_, i) => i !== idx))
+                  }
+                  className="text-[9px] font-black text-red-500 uppercase tracking-widest hover:underline"
+                >
+                  Delete Role
+                </button>
+              </div>
+            ))}
+            {experience.length === 0 && (
+              <p className="text-center py-6 text-[10px] font-bold text-text-muted italic bg-foreground/10 rounded-2xl">
+                Click + Add Role to start your timeline
+              </p>
+            )}
+          </div>
+        </Card>
+
+        {/* ── Education ── */}
+        <Card>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
+              <span className="text-xl">🎓</span> Education
+            </h3>
+            <button
+              onClick={() => {
+                setEducation([
+                  ...education,
+                  {
+                    institution: "",
+                    degree: "",
+                    fieldOfStudy: "",
+                    graduationDate: "",
+                  },
+                ]);
+              }}
+              className="text-xs font-black bg-action text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all"
+            >
+              + Add education
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {education.map((edu, idx) => (
+              <div
+                key={idx}
+                className="p-6 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle space-y-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Institution"
+                    value={edu.institution}
+                    onChange={(e) => {
+                      const newEdu = [...education];
+                      newEdu[idx].institution = e.target.value;
+                      setEducation(newEdu);
+                    }}
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Degree"
+                    value={edu.degree}
+                    onChange={(e) => {
+                      const newEdu = [...education];
+                      newEdu[idx].degree = e.target.value;
+                      setEducation(newEdu);
+                    }}
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Field of Study"
+                    value={edu.fieldOfStudy}
+                    onChange={(e) => {
+                      const newEdu = [...education];
+                      newEdu[idx].fieldOfStudy = e.target.value;
+                      setEducation(newEdu);
+                    }}
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Graduation Date"
+                    value={edu.graduationDate}
+                    onChange={(e) => {
+                      const newEdu = [...education];
+                      newEdu[idx].graduationDate = e.target.value;
+                      setEducation(newEdu);
+                    }}
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                  />
+                </div>
+                <button
+                  onClick={() =>
+                    setEducation(education.filter((_, i) => i !== idx))
+                  }
+                  className="text-[9px] font-black text-red-500 uppercase tracking-widest hover:underline"
+                >
+                  Delete Education
+                </button>
+              </div>
+            ))}
+            {education.length === 0 && (
+              <p className="text-center py-6 text-[10px] font-bold text-text-muted italic bg-foreground/10 rounded-2xl">
+                Tell recruiters about your academic background
+              </p>
+            )}
+          </div>
+        </Card>
+
+        {/* ── Skills & Services ── */}
+        <Card>
+          <div className="mb-5">
+            <h3 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] flex items-center gap-3">
+              <span className="text-xl">🛠️</span> Skills & Expertise
+            </h3>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Technical Skills (Comma separated)
+              </label>
+              <input
+                type="text"
+                value={skills.technical?.join(", ")}
+                onChange={(e) =>
+                  setSkills({
+                    ...skills,
+                    technical: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+                placeholder="MERN, AI Integration, Python..."
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Professional Services (Comma separated)
+              </label>
+              <input
+                type="text"
+                value={skills.professional?.join(", ")}
+                onChange={(e) =>
+                  setSkills({
+                    ...skills,
+                    professional: e.target.value
+                      .split(",")
+                      .map((s) => s.trim()),
+                  })
+                }
+                placeholder="Curriculum Design, English Instruction..."
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+          </div>
         </Card>
 
         {/* ── Referral Info ── */}
