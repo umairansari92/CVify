@@ -8,7 +8,7 @@ import SkillsForm from "../components/forms/SkillsForm";
 import ProjectsForm from "../components/forms/ProjectsForm";
 import StyleSettings from "../components/forms/StyleSettings";
 import CustomSectionsForm from "../components/forms/CustomSectionsForm";
-import ResumePreview from "../components/ResumePreview";
+import PDFPreviewPanel from "../components/PDFPreviewPanel";
 import { handleDownloadPDF } from "../utils/pdfExport";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -192,21 +192,24 @@ const CreateResume = () => {
         </div>
       </div>
 
-      {/* Right Panel - Live Preview */}
-      <div className="w-full lg:w-1/2 bg-slate-200 dark:bg-midnight p-4 lg:p-10 overflow-y-auto flex justify-center items-start border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10 order-first lg:order-last">
-        <div className="sticky top-0 w-full flex flex-col items-center">
-          <div className="mb-4 lg:mb-6 flex items-center gap-2 lg:gap-3">
-            <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-            <h2 className="text-[9px] lg:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
-              Real-Time Canvas Preview
-            </h2>
-          </div>
-          <div className="scale-[0.7] sm:scale-[0.8] lg:scale-[0.85] xl:scale-95 origin-top transition-transform duration-500 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]">
-            <ResumePreview
-              resume={currentResume}
-              templateId={currentResume?.templateId || "classic"}
-            />
-          </div>
+      {/* Right Panel - Live PDF Preview */}
+      <div className="w-full lg:w-1/2 bg-slate-200 dark:bg-midnight flex flex-col border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10 order-first lg:order-last">
+        {/* Header */}
+        <div className="flex-shrink-0 px-4 lg:px-6 py-3 flex items-center gap-2 border-b border-slate-300 dark:border-slate-800/50 bg-white/60 dark:bg-midnight/80 backdrop-blur-sm">
+          <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+          <h2 className="text-[9px] lg:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
+            Live PDF Preview
+          </h2>
+          <span className="ml-auto text-[9px] text-slate-400 font-medium">
+            Exactly what you'll download
+          </span>
+        </div>
+        {/* PDF Viewer */}
+        <div className="flex-1 overflow-hidden">
+          <PDFPreviewPanel
+            resume={currentResume}
+            templateId={currentResume?.templateId || "classic"}
+          />
         </div>
       </div>
     </div>
