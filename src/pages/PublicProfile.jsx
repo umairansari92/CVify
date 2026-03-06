@@ -98,17 +98,56 @@ const PublicProfile = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-midnight transition-colors duration-500 pb-40">
       <Helmet>
-        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Universal Portfolio"}`}</title>
+        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Unstoppable Professional"} | Portfolio on CVify`}</title>
         <meta
           name="description"
-          content={`Hire ${user.firstName} ${user.lastName}, a professional ${user.headline} based in ${user.location || "Pakistan"}. View portfolio and achievements.`}
+          content={`${user.firstName} ${user.lastName}'s professional portfolio. ${user.bio?.substring(0, 150)}... View experiences, skills, and projects.`}
         />
+        <link rel="canonical" href={`https://cvify.pro/p/${username}`} />
+
+        {/* OpenGraph */}
+        <meta property="og:type" content="profile" />
         <meta
           property="og:title"
-          content={`${user.firstName} ${user.lastName} - ${user.headline}`}
+          content={`${user.firstName} ${user.lastName} | ${user.headline}`}
         />
-        <meta property="og:image" content={user.profileImage} />
+        <meta property="og:description" content={user.bio?.substring(0, 160)} />
+        <meta property="og:url" content={`https://cvify.pro/p/${username}`} />
+        <meta
+          property="og:image"
+          content={user.profileImage || "/og-profile.png"}
+        />
+
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content={`${user.firstName} ${user.lastName} - Portfolio`}
+        />
+        <meta name="twitter:description" content={user.headline} />
+        <meta name="twitter:image" content={user.profileImage} />
+
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: `${user.firstName} ${user.lastName}`,
+            jobTitle: user.headline,
+            description: user.bio,
+            image: user.profileImage,
+            url: `https://cvify.pro/p/${username}`,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: user.location || "Pakistan",
+            },
+            sameAs: [
+              user.socialLinks?.linkedin,
+              user.socialLinks?.github,
+              user.socialLinks?.twitter,
+            ].filter(Boolean),
+          })}
+        </script>
       </Helmet>
 
       {/* Hero 2.0 */}
@@ -289,51 +328,54 @@ const PublicProfile = () => {
                 {sectionNames.experience}{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
-              <div className="space-y-8 relative before:absolute before:left-4 md:before:left-1/2 before:top-4 before:bottom-4 before:w-1 before:bg-action/20 before:-translate-x-1/2">
+              <div className="space-y-12 relative before:absolute before:left-0 md:before:left-0 before:top-4 before:bottom-4 before:w-1 before:bg-gradient-to-b before:from-action before:via-violet-500 before:to-indigo-500 before:rounded-full ml-4">
                 {(user.experience || []).map((exp, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    className={`relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${idx % 2 === 0 ? "" : "md:flex-row-reverse"}`}
+                    initial={{ x: -20, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    className="relative pl-10"
                   >
-                    <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white dark:bg-midnight border-4 border-action z-10 flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-action animate-ping"></div>
+                    <div className="absolute left-[-22px] top-1 w-10 h-10 rounded-2xl bg-white dark:bg-midnight border-4 border-action z-10 flex items-center justify-center shadow-lg shadow-action/20">
+                      <FaBriefcase className="text-action text-xs" />
                     </div>
 
-                    <div
-                      className={`${idx % 2 === 0 ? "md:text-right md:pr-12 ml-10 md:ml-0" : "md:order-last md:pl-12 ml-10 md:ml-0"}`}
-                    >
-                      <h4 className="text-2xl font-black text-text-primary">
-                        {exp.role}
-                      </h4>
-                      <p className="text-action font-black text-lg">
-                        {exp.company}
-                      </p>
-                      <p className="text-text-muted font-bold text-sm mt-1">
-                        {exp.startDate} —{" "}
-                        {exp.isCurrent ? "Present" : exp.endDate}
-                      </p>
-                    </div>
+                    <div className="bg-white dark:bg-slate-800/40 p-8 rounded-[2rem] border border-border-subtle shadow-xl hover:shadow-action/5 transition-all group overflow-hidden relative">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
 
-                    <div
-                      className={`bg-white dark:bg-midnight/40 p-6 rounded-3xl border border-border-subtle shadow-lg hover:shadow-action/10 transition-all ${idx % 2 === 0 ? "md:pl-12 ml-10 md:ml-0" : "md:pr-12 ml-10 md:ml-0 md:text-right"}`}
-                    >
-                      <p className="text-sm font-medium text-text-muted leading-relaxed whitespace-pre-wrap">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 relative z-10">
+                        <div>
+                          <h4 className="text-2xl font-black text-text-primary group-hover:text-action transition-colors">
+                            {exp.role}
+                          </h4>
+                          <p className="text-violet-500 font-black text-lg">
+                            {exp.company}
+                          </p>
+                        </div>
+                        <div className="text-left md:text-right">
+                          <span className="px-4 py-1.5 bg-foreground/5 rounded-full text-[10px] font-black uppercase tracking-widest text-text-muted border border-border-subtle">
+                            {exp.startDate} —{" "}
+                            {exp.isCurrent ? "Present" : exp.endDate}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-base font-medium text-text-muted leading-relaxed whitespace-pre-wrap relative z-10">
                         {exp.achievements}
                       </p>
-                      <div
-                        className={`flex flex-wrap gap-2 mt-4 ${idx % 2 === 0 ? "" : "md:justify-end"}`}
-                      >
-                        {exp.tools?.map((tool) => (
-                          <span
-                            key={tool}
-                            className="text-[9px] font-black bg-foreground/10 px-2 py-1 rounded-lg uppercase"
-                          >
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
+
+                      {exp.tools && exp.tools.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-6 relative z-10">
+                          {exp.tools.map((tool) => (
+                            <span
+                              key={tool}
+                              className="text-[10px] font-black bg-action/10 text-action px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 ))}
@@ -349,18 +391,18 @@ const PublicProfile = () => {
 
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">
-                  Professional Analytics
+                  Community Impact
                 </h3>
-                <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-600 rounded-full border border-amber-500/20">
+                <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-600 rounded-full border border-blue-500/20">
                   <FaGem size={12} className="animate-pulse" />
                   <span className="text-[10px] font-black uppercase">
-                    {user.diamonds || 100} Diamonds
+                    Skill Diamonds Badge
                   </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all">
+                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
                   <p className="text-3xl font-black text-text-primary">
                     {user.stats?.profileViews || 0}
                   </p>
@@ -368,7 +410,7 @@ const PublicProfile = () => {
                     Profile Views
                   </p>
                 </div>
-                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all">
+                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
                   <p className="text-3xl font-black text-text-primary">
                     {user.stats?.contactClicks || 0}
                   </p>
@@ -378,9 +420,12 @@ const PublicProfile = () => {
                 </div>
               </div>
 
-              <div className="mt-8 p-4 bg-action/5 rounded-2xl border border-action/10">
-                <p className="text-[10px] font-medium text-action flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-action animate-ping"></div>
+              <div className="mt-8 p-4 bg-action/5 rounded-2xl border border-action/10 text-center">
+                <p className="text-[10px] font-medium text-action flex items-center justify-center gap-2">
+                  <span className="flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-action opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-action"></span>
+                  </span>
                   Currently trending in {user.headline || "your industry"}
                 </p>
               </div>
@@ -427,27 +472,30 @@ const PublicProfile = () => {
               </div>
             </section>
 
-            {/* Education Card */}
+            {/* Education Timeline */}
             <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-text-muted flex items-center gap-3">
                 {sectionNames.education}
+                <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-8 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-0.5 before:bg-orange-500/20">
                 {(user.education || []).map((edu, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
+                  <div key={i} className="relative pl-12">
+                    <div className="absolute left-0 top-0 w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20 z-10">
                       <FaGraduationCap size={18} />
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-text-primary leading-tight">
+                      <h4 className="text-base font-black text-text-primary leading-tight">
                         {edu.degree}
                       </h4>
-                      <p className="text-[11px] font-bold text-text-muted">
+                      <p className="text-sm font-bold text-text-muted mt-1">
                         {edu.institution}
                       </p>
-                      <p className="text-[9px] font-black text-action uppercase mt-1">
-                        {edu.graduationDate}
-                      </p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
+                          {edu.graduationDate}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -522,6 +570,7 @@ const PublicProfile = () => {
                       proj.thumbnail ||
                       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800"
                     }
+                    alt={proj.title || "Project Snapshot"}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-midnight/80 to-transparent p-6 flex flex-col justify-end">
@@ -603,8 +652,9 @@ const PublicProfile = () => {
               <a
                 href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
                 target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => handleTrackInteraction("contact")}
-                className="p-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-all hover:-translate-y-1 shadow-lg shadow-green-500/20"
+                className="p-4 bg-[#25D366] text-white rounded-2xl hover:bg-[#20ba5c] transition-all hover:-translate-y-1 shadow-lg shadow-green-500/20"
                 title="WhatsApp Candidate"
               >
                 <FaWhatsapp size={20} />
@@ -612,11 +662,11 @@ const PublicProfile = () => {
             )}
             {user.email && (
               <a
-                href={`mailto:${user.email}?subject=${encodeURIComponent("Inquiry Regarding Professional Services")}&body=${encodeURIComponent(`Hello ${user.firstName}, I viewed your profile on CVify and would like to discuss a professional opportunity.`)}`}
+                href={`mailto:${user.email}?subject=${encodeURIComponent(`Hiring Inquiry: ${user.firstName} ${user.lastName}`)}&body=${encodeURIComponent(`Hello ${user.firstName},\n\nI viewed your professional portfolio on CVify and I am interested in discussing a potential opportunity with you.\n\nBest regards.`)}`}
                 onClick={() => handleTrackInteraction("contact")}
-                className="flex-1 px-6 py-4 bg-action text-white rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest hover:bg-blue-600 transition-all hover:-translate-y-1 shadow-lg shadow-action/20 text-center relative group"
+                className="flex-1 px-6 py-4 bg-action text-white rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest hover:bg-blue-600 transition-all hover:-translate-y-1 shadow-lg shadow-action/20 text-center relative group overflow-hidden"
               >
-                <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
                 Hire {user.firstName} Now
               </a>
             )}
