@@ -117,8 +117,14 @@ const Signup = () => {
     </div>
   );
 
+  const HelperTip = ({ text }) => (
+    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium ml-1 mt-1.5 animate-fadeIn">
+      {text}
+    </p>
+  );
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-soft dark:bg-midnight p-6 transition-colors duration-500 overflow-hidden relative">
+    <div className="min-h-screen flex items-center justify-center bg-slate-soft dark:bg-Midnight p-6 transition-colors duration-500 overflow-hidden relative">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-action/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-success/5 dark:bg-success/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
@@ -161,6 +167,7 @@ const Signup = () => {
                   placeholder="e.g. John"
                   className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
                 />
+                <HelperTip text="Use your legal first name for resumes" />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
@@ -171,6 +178,7 @@ const Signup = () => {
                   placeholder="e.g. Doe"
                   className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
                 />
+                <HelperTip text="Professional last name as per ID" />
               </div>
             </div>
 
@@ -212,6 +220,7 @@ const Signup = () => {
                   {errors.username.message}
                 </p>
               )}
+              <HelperTip text="This will be your unique public profile link" />
             </div>
 
             <div className="space-y-2">
@@ -223,6 +232,7 @@ const Signup = () => {
                 placeholder="name@company.com"
                 className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
               />
+              <HelperTip text="We will send a verification code to this email" />
             </div>
 
             <div className="space-y-4">
@@ -233,17 +243,28 @@ const Signup = () => {
                 <input
                   type="password"
                   {...register("password", {
-                    required: true,
-                    pattern:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
+                    required: "Password is required",
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
+                      message:
+                        "Complete the checklist below for a strong password",
+                    },
                   })}
                   placeholder="••••••••"
                   className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
                 />
+                <HelperTip text="Must be strong to protect your professional data" />
               </div>
 
-              {password && (
-                <div className="bg-slate-50 dark:bg-midnight/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 grid grid-cols-2 gap-y-2 gap-x-4">
+              {errors.password && (
+                <p className="text-[10px] text-red-500 font-bold ml-1 animate-fadeIn">
+                  {errors.password.message}
+                </p>
+              )}
+
+              {(password || errors.password) && (
+                <div className="bg-slate-50 dark:bg-midnight/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 grid grid-cols-2 gap-y-2 gap-x-4 animate-fadeIn">
                   <ValidationItem
                     label="7+ Characters"
                     passed={passwordValidation.length}
@@ -303,6 +324,7 @@ const Signup = () => {
                   {...register("profileImage")}
                   className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-6 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-action/10 file:text-action hover:file:bg-action/20 dark:file:bg-accent/10 dark:file:text-accent transition-all cursor-pointer border-2 border-dashed border-slate-100 dark:border-slate-800 p-3 rounded-2xl"
                 />
+                <HelperTip text="A professional photo increases your selection chances by 40%" />
               </div>
             </div>
 
