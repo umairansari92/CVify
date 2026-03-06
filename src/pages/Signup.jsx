@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../features/auth/authThunk";
@@ -7,6 +7,7 @@ import logo from "../assets/logo.png";
 import ThemeToggle from "../components/common/ThemeToggle";
 import { isDisposableEmail } from "../utils/blockedDomains";
 import { toast } from "react-hot-toast";
+import { AtSign, Edit3, CheckCircle2, XCircle } from "lucide-react";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -14,13 +15,35 @@ const Signup = () => {
   const { search } = useLocation();
   const referralCode = new URLSearchParams(search).get("ref");
   const { loading, error, token } = useSelector((state) => state.auth);
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      gender: "Male",
+    },
+  });
 
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const firstName = watch("firstName");
+  const lastName = watch("lastName");
+  const password = watch("password");
+
+  // Autogenerate username
   useEffect(() => {
-    if (token) {
-      navigate("/", { replace: true });
+    if (!isEditingUsername && (firstName || lastName)) {
+      const generated =
+        `${(firstName || "").toLowerCase()}${(lastName || "").toLowerCase()}`
+          .replace(/[^a-z0-9]/g, "")
+          .slice(0, 15);
+      if (generated) {
+        setValue("username", generated);
+      }
     }
-  }, [token, navigate]);
+  }, [firstName, lastName, isEditingUsername, setValue]);
 
   const onSubmit = async (data) => {
     // Frontend check for disposable emails
@@ -35,11 +58,10 @@ const Signup = () => {
       return;
     }
 
-    // Create FormData for file upload
-
     const formData = new FormData();
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
+    formData.append("username", data.username.toLowerCase());
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("gender", data.gender);
@@ -63,6 +85,27 @@ const Signup = () => {
       // Error shown via auth slice
     }
   };
+
+  const passwordValidation = {
+    length: (password || "").length >= 7,
+    hasUpper: /[A-Z]/.test(password || ""),
+    hasLower: /[a-z]/.test(password || ""),
+    hasNumber: /\d/.test(password || ""),
+    hasSpecial: /[@$!%*?&]/.test(password || ""),
+  };
+
+  const ValidationItem = ({ label, passed }) => (
+    <div
+      className={`flex items-center gap-1.5 text-[10px] font-bold transition-colors ${passed ? "text-success" : "text-slate-400"}`}
+    >
+      {passed ? (
+        <CheckCircle2 className="w-3 h-3" />
+      ) : (
+        <XCircle className="w-3 h-3 opacity-40" />
+      )}
+      {label}
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-soft dark:bg-midnight p-6 transition-colors duration-500 overflow-hidden relative">
@@ -122,6 +165,46 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
+              <label className="flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                <span>Custom Username (URL SLUG)</span>
+                {!isEditingUsername && (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingUsername(true)}
+                    className="flex items-center gap-1 text-action dark:text-accent hover:underline lowercase"
+                  >
+                    <Edit3 className="w-3 h-3" /> edit
+                  </button>
+                )}
+              </label>
+              <div className="relative group">
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-slate-400 pointer-events-none">
+                  <AtSign className="w-4 h-4 text-action/50" />
+                  <span className="text-sm font-bold opacity-30">
+                    cvify.pro/p/
+                  </span>
+                </div>
+                <input
+                  {...register("username", {
+                    required: true,
+                    pattern: {
+                      value: /^[a-z0-9._]+$/,
+                      message: "Small letters, numbers, . and _ only",
+                    },
+                  })}
+                  readOnly={!isEditingUsername}
+                  placeholder="your-handle"
+                  className={`w-full pl-36 pr-6 py-4 rounded-2xl border-2 ${isEditingUsername ? "border-action dark:border-accent" : "border-slate-100 dark:border-slate-800"} bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold lowercase`}
+                />
+              </div>
+              {errors.username && (
+                <p className="text-[10px] text-red-500 font-bold ml-1">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                 Professional Email
               </label>
@@ -132,16 +215,47 @@ const Signup = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                Secure Password
-              </label>
-              <input
-                type="password"
-                {...register("password", { required: true })}
-                placeholder="••••••••"
-                className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
-              />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  Secure Password
+                </label>
+                <input
+                  type="password"
+                  {...register("password", {
+                    required: true,
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
+                  })}
+                  placeholder="••••••••"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                />
+              </div>
+
+              {password && (
+                <div className="bg-slate-50 dark:bg-midnight/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 grid grid-cols-2 gap-y-2 gap-x-4">
+                  <ValidationItem
+                    label="7+ Characters"
+                    passed={passwordValidation.length}
+                  />
+                  <ValidationItem
+                    label="Uppercase (A-Z)"
+                    passed={passwordValidation.hasUpper}
+                  />
+                  <ValidationItem
+                    label="Lowercase (a-z)"
+                    passed={passwordValidation.hasLower}
+                  />
+                  <ValidationItem
+                    label="One Number"
+                    passed={passwordValidation.hasNumber}
+                  />
+                  <ValidationItem
+                    label="Special (@$!%*?&)"
+                    passed={passwordValidation.hasSpecial}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex gap-8 justify-center py-2">
