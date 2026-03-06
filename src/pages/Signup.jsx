@@ -101,7 +101,7 @@ const Signup = () => {
     hasUpper: /[A-Z]/.test(password || ""),
     hasLower: /[a-z]/.test(password || ""),
     hasNumber: /\d/.test(password || ""),
-    hasSpecial: /[@$!%*?&]/.test(password || ""),
+    hasSpecial: /[@$!%*?&._]/.test(password || ""),
   };
 
   const ValidationItem = ({ label, passed }) => (
@@ -246,7 +246,7 @@ const Signup = () => {
                     required: "Password is required",
                     pattern: {
                       value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{7,}$/,
                       message:
                         "Complete the checklist below for a strong password",
                     },
@@ -282,7 +282,7 @@ const Signup = () => {
                     passed={passwordValidation.hasNumber}
                   />
                   <ValidationItem
-                    label="Special (@$!%*?&)"
+                    label="Special (@$!%*?&._)"
                     passed={passwordValidation.hasSpecial}
                   />
                 </div>
