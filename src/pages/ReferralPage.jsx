@@ -1,5 +1,6 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import api from "../api/axios";
 import {
   FaGem,
   FaRocket,
@@ -11,8 +12,30 @@ import { toast } from "react-hot-toast";
 
 const ReferralPage = () => {
   const { user } = useSelector((state) => state.auth);
+  const [stats, setStats] = useState({
+    totalReferred: 0,
+    activeReferrals: 0,
+    pendingReferrals: 0,
+    potentialDiamonds: 0,
+    earnedDiamonds: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
   const referralLink = `${window.location.origin}/signup?ref=${user?.referralCode}`;
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/auth/referral-stats");
+        setStats(res.data);
+      } catch (err) {
+        console.error("Failed to fetch referral stats", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -29,8 +52,12 @@ const ReferralPage = () => {
       text: "They sign up and get 100 free diamonds.",
     },
     {
+      icon: <FaRocket size={24} className="text-secondary" />,
+      text: "Invitees must save at least one resume.",
+    },
+    {
       icon: <FaGem size={24} className="text-blue-400" />,
-      text: "You instantly receive 50 diamonds per referral!",
+      text: "You receive 50 diamonds when they save it!",
     },
   ];
 
@@ -117,18 +144,45 @@ const ReferralPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center gap-4 py-8 border-y border-white/5 border-dashed">
-            <div className="flex items-center gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-white/5 border-dashed">
+            <div className="text-center md:text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary opacity-50 mb-1">
+                Total Referred
+              </p>
+              <p className="text-2xl font-black text-text-primary tracking-tight">
+                {stats.totalReferred}
+              </p>
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-50 mb-1">
+                Pending Reward
+              </p>
+              <p className="text-2xl font-black text-secondary tracking-tight">
+                {stats.pendingReferrals}
+                <span className="text-[10px] ml-1 opacity-70">
+                  ({stats.potentialDiamonds} 💎)
+                </span>
+              </p>
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-success opacity-50 mb-1">
+                Active Reward
+              </p>
+              <p className="text-2xl font-black text-success tracking-tight">
+                {stats.activeReferrals}
+              </p>
+            </div>
+            <div className="flex items-center justify-center md:justify-end gap-3">
               <div className="text-right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary opacity-50">
-                  Current Balance
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary opacity-50 mb-1">
+                  Diamond Balance
                 </p>
-                <p className="text-3xl font-black text-text-primary tracking-tight">
+                <p className="text-2xl font-black text-text-primary tracking-tight">
                   {user?.diamonds || 0}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20 animate-bounce">
-                <FaGem size={24} />
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20 shadow-glow animate-float">
+                <FaGem size={20} />
               </div>
             </div>
           </div>
