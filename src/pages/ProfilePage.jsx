@@ -168,8 +168,8 @@ const ProfilePage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be under 5MB.");
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error("Image must be under 4MB.");
       return;
     }
     setImgFile(file);

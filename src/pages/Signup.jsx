@@ -58,6 +58,16 @@ const Signup = () => {
       return;
     }
 
+    // Check profile image size
+    if (
+      data.profileImage &&
+      data.profileImage[0] &&
+      data.profileImage[0].size > 4 * 1024 * 1024
+    ) {
+      toast.error("Profile image must be under 4MB.", { icon: "📁" });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
