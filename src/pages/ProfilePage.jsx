@@ -260,7 +260,7 @@ const ProfilePage = () => {
     hasUpper: /[A-Z]/.test(pwd),
     hasLower: /[a-z]/.test(pwd),
     hasNumber: /[0-9]/.test(pwd),
-    hasSpecial: /[@$!%*?&]/.test(pwd),
+    hasSpecial: /[@$!%*?&._]/.test(pwd),
   });
 
   const pwdChecks = validatePassword(newPwd);
