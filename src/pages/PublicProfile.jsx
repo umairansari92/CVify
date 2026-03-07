@@ -27,6 +27,7 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
+import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
 
 const PublicProfile = () => {
@@ -162,6 +163,63 @@ const PublicProfile = () => {
       icon: "🌿",
     },
   ];
+
+  const handleDownload = async () => {
+    if (!user) return;
+    handleTrackInteraction("contact");
+
+    toast.loading("Preparing your professional resume...", { id: "pdf-gen" });
+
+    try {
+      // Transform public profile data to match Resume schema expected by templates
+      const resumeData = {
+        personalInfo: {
+          fullName: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          phone: user.phoneNumber,
+          location: user.location,
+          jobTitle: user.headline,
+          linkedin: user.socialLinks?.linkedin,
+          github: user.socialLinks?.github,
+          portfolio: user.socialLinks?.portfolio,
+          profileSummary: user.bio,
+        },
+        experience: (user.experience || []).map((exp) => ({
+          position: exp.role,
+          company: exp.company,
+          startDate: exp.startDate,
+          endDate: exp.isCurrent ? "Present" : exp.endDate,
+          responsibilities: exp.achievements
+            ? exp.achievements.split("\n").filter((line) => line.trim())
+            : [],
+        })),
+        education: (user.education || []).map((edu) => ({
+          institution: edu.institution,
+          degree: edu.degree,
+          startDate: "",
+          endDate: edu.graduationDate,
+        })),
+        technicalSkills: {
+          technical: user.skills?.technical || [],
+          professional: user.skills?.professional || [],
+        },
+        projects: (user.projects || []).map((proj) => ({
+          name: proj.title,
+          link: proj.liveLink,
+          description: proj.description
+            ? proj.description.split("\n").filter((line) => line.trim())
+            : [],
+        })),
+        languages: user.languages || [],
+      };
+
+      await handleDownloadPDF(resumeData, user.selectedTemplate || "modern");
+      toast.success("Resume downloaded!", { id: "pdf-gen" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate PDF", { id: "pdf-gen" });
+    }
+  };
 
   const ensureAbsoluteUrl = (url) => {
     if (!url || typeof url !== "string") return "";
@@ -743,11 +801,7 @@ const PublicProfile = () => {
                   </a>
                 )}
                 <button
-                  onClick={() => {
-                    handleTrackInteraction("contact");
-                    // Dynamic Download logic would go here
-                    alert("Preparing Resume for Download...");
-                  }}
+                  onClick={handleDownload}
                   className="px-8 py-4 bg-white text-action rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
                 >
                   <FaDownload /> Get Professional Resume
