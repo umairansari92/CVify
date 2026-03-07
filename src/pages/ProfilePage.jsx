@@ -254,7 +254,17 @@ const ProfilePage = () => {
     }
   };
 
-  // ── Project Actions ──
+  // ── Password Validation Helper ──
+  const validatePassword = (pwd) => ({
+    length: pwd.length >= 7,
+    hasUpper: /[A-Z]/.test(pwd),
+    hasLower: /[a-z]/.test(pwd),
+    hasNumber: /[0-9]/.test(pwd),
+    hasSpecial: /[@$!%*?&]/.test(pwd),
+  });
+
+  const pwdChecks = validatePassword(newPwd);
+  const isPwdValid = Object.values(pwdChecks).every(Boolean);
   const handleSaveProject = async (e) => {
     e.preventDefault();
     if (!pTitle.trim()) return toast.error("Project title is required.");
@@ -332,8 +342,10 @@ const ProfilePage = () => {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!currentPwd) return toast.error("Please enter your current password.");
-    if (newPwd.length < 6)
-      return toast.error("New password must be at least 6 characters.");
+    if (!isPwdValid)
+      return toast.error(
+        "Password must be at least 7 characters and include uppercase, lowercase, a number, and a special character.",
+      );
     if (newPwd !== confirmPwd)
       return toast.error("New passwords do not match.");
     if (currentPwd === newPwd)
@@ -752,22 +764,32 @@ const ProfilePage = () => {
                   {showPwd ? "🙈" : "👁️"}
                 </button>
               </div>
-              {/* Strength meter */}
+
+              {/* Secure Password Checklist */}
               {newPwd.length > 0 && (
-                <div className="flex items-center gap-2 ml-1">
-                  <div className="flex gap-1">
-                    {[1, 2, 3].map((lvl) => (
+                <div className="grid grid-cols-2 gap-y-2 gap-x-4 p-4 mt-2 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border border-border-subtle animate-fadeIn">
+                  {[
+                    { label: "7+ Characters", met: pwdChecks.length },
+                    { label: "1 Number", met: pwdChecks.hasNumber },
+                    {
+                      label: "Upper & Lower",
+                      met: pwdChecks.hasUpper && pwdChecks.hasLower,
+                    },
+                    { label: "Special Char", met: pwdChecks.hasSpecial },
+                  ].map((check, i) => (
+                    <div key={i} className="flex items-center gap-2">
                       <div
-                        key={lvl}
-                        className={`h-1 w-8 rounded-full transition-all duration-300 ${pwdStrength >= lvl ? pwdColor : "bg-slate-200 dark:bg-slate-700"}`}
-                      />
-                    ))}
-                  </div>
-                  <span
-                    className={`text-[10px] font-black ${["", "text-red-400", "text-amber-400", "text-emerald-500"][pwdStrength]}`}
-                  >
-                    {pwdLabel}
-                  </span>
+                        className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${check.met ? "bg-emerald-500 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-400"}`}
+                      >
+                        {check.met ? "✓" : "•"}
+                      </div>
+                      <span
+                        className={`text-[10px] font-black tracking-tight ${check.met ? "text-emerald-500" : "text-text-muted"}`}
+                      >
+                        {check.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
