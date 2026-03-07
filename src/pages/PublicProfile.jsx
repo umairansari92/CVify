@@ -14,6 +14,7 @@ import {
   FaMapMarkerAlt,
   FaBriefcase,
   FaGraduationCap,
+  FaTimes,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
