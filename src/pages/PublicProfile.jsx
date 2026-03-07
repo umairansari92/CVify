@@ -97,6 +97,7 @@ const PublicProfile = () => {
 
   const theme = user.themeSettings || {
     headerBg: "#2563eb",
+    headerBgSecondary: "#9333ea",
     bodyBg: "#0f172a",
     cardStyle: "glass",
     fontPrimary: "Inter",
@@ -121,9 +122,23 @@ const PublicProfile = () => {
     >
       <Helmet>
         <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Unstoppable Professional"} | Portfolio on CVify`}</title>
+        {/* Dynamic Font Import */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href={`https://fonts.googleapis.com/css2?family=${theme.fontPrimary.replace(/\s+/g, "+")}:wght@300;400;500;600;700;800;900&display=swap`}
+          rel="stylesheet"
+        />
         <meta
           name="description"
-          content={`${user.firstName} ${user.lastName}'s professional portfolio. ${user.bio?.substring(0, 150)}... View experiences, skills, and projects.`}
+          content={
+            user.bio ||
+            `Check out ${user.firstName}'s professional portfolio on CVify.`
+          }
         />
         <link rel="canonical" href={`https://cvify.pro/p/${username}`} />
 
@@ -179,7 +194,7 @@ const PublicProfile = () => {
           style={{
             background: theme.bannerUrl
               ? `url(${theme.bannerUrl}) center/cover no-repeat`
-              : `linear-gradient(to bottom right, ${theme.headerBg}, #4c1d95, #1e1b4b)`,
+              : `linear-gradient(to bottom right, ${theme.headerBg}, ${theme.headerBgSecondary || "#4c1d95"}, #1e1b4b)`,
             opacity: (theme.bannerOpacity || 95) / 100,
           }}
         >

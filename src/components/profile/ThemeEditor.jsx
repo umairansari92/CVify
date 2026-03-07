@@ -12,6 +12,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
   const [localSettings, setLocalSettings] = useState(
     settings || {
       headerBg: "#2563eb",
+      headerBgSecondary: "#9333ea",
       bodyBg: "#0f172a",
       cardStyle: "glass",
       fontPrimary: "Inter",
@@ -45,9 +46,81 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     "Roboto",
     "Outfit",
     "Poppins",
+    "Montserrat",
+    "JetBrains Mono",
     "Space Grotesk",
     "Playfair Display",
   ];
+
+  const presets = [
+    {
+      name: "CVify Classic",
+      headerBg: "#2563eb",
+      headerBgSecondary: "#9333ea",
+      bodyBg: "#f8fafc",
+      fontPrimary: "Inter",
+      cardStyle: "glass",
+      icon: "⚡",
+    },
+    {
+      name: "Midnight Dev",
+      headerBg: "#0f172a",
+      headerBgSecondary: "#1e293b",
+      bodyBg: "#020617",
+      fontPrimary: "JetBrains Mono",
+      cardStyle: "minimal",
+      icon: "🌙",
+    },
+    {
+      name: "Corporate Gold",
+      headerBg: "#1e3a8a",
+      headerBgSecondary: "#1e40af",
+      bodyBg: "#ffffff",
+      fontPrimary: "Outfit",
+      cardStyle: "classic",
+      icon: "🏢",
+    },
+    {
+      name: "Creative Sunset",
+      headerBg: "#f97316",
+      headerBgSecondary: "#db2777",
+      bodyBg: "#fff7ed",
+      fontPrimary: "Poppins",
+      cardStyle: "glass",
+      icon: "🌅",
+    },
+    {
+      name: "Slate Minimalist",
+      headerBg: "#475569",
+      headerBgSecondary: "#64748b",
+      bodyBg: "#f1f5f9",
+      fontPrimary: "Roboto",
+      cardStyle: "minimal",
+      icon: "🎨",
+    },
+    {
+      name: "Emerald Leader",
+      headerBg: "#059669",
+      headerBgSecondary: "#10b981",
+      bodyBg: "#f0fdf4",
+      fontPrimary: "Montserrat",
+      cardStyle: "classic",
+      icon: "🌿",
+    },
+  ];
+
+  const applyPreset = (preset) => {
+    const updated = {
+      ...localSettings,
+      headerBg: preset.headerBg,
+      headerBgSecondary: preset.headerBgSecondary,
+      bodyBg: preset.bodyBg,
+      fontPrimary: preset.fontPrimary,
+      cardStyle: preset.cardStyle,
+    };
+    setLocalSettings(updated);
+    toast.success(`Theme Applied: ${preset.name}`);
+  };
 
   const styleOptions = [
     { id: "minimal", name: "Minimalist", desc: "Clean, flat backgrounds" },
@@ -57,6 +130,28 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* ── One-Click Presets ── */}
+      <div className="space-y-4">
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
+          <FaFillDrip className="text-action" /> One-Click Theme Presets
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+          {presets.map((p) => (
+            <button
+              key={p.name}
+              onClick={() => applyPreset(p)}
+              className="group p-3 bg-foreground/5 rounded-2xl border border-border-subtle hover:border-action transition-all flex flex-col items-center justify-center text-center gap-1"
+            >
+              <span className="text-lg group-hover:scale-110 transition-transform">
+                {p.icon}
+              </span>
+              <span className="text-[8px] font-black uppercase leading-tight tracking-tighter">
+                {p.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Colors */}
         <div className="space-y-4">
@@ -66,9 +161,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
               <span className="text-[9px] font-bold text-text-muted block mb-2 uppercase">
-                Hero Gradient / Accents
+                Hero Gradient Primary
               </span>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <input
                   type="color"
                   value={localSettings.headerBg}
@@ -79,7 +174,30 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
                   type="text"
                   value={localSettings.headerBg}
                   onChange={(e) => handleChange("headerBg", e.target.value)}
-                  className="text-xs font-mono bg-transparent border-b border-border-subtle outline-none w-20"
+                  className="text-[10px] font-mono bg-transparent border-b border-border-subtle outline-none w-16"
+                />
+              </div>
+            </div>
+            <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
+              <span className="text-[9px] font-bold text-text-muted block mb-2 uppercase">
+                Hero Gradient Secondary
+              </span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={localSettings.headerBgSecondary}
+                  onChange={(e) =>
+                    handleChange("headerBgSecondary", e.target.value)
+                  }
+                  className="w-10 h-10 rounded-lg cursor-pointer bg-transparent"
+                />
+                <input
+                  type="text"
+                  value={localSettings.headerBgSecondary}
+                  onChange={(e) =>
+                    handleChange("headerBgSecondary", e.target.value)
+                  }
+                  className="text-[10px] font-mono bg-transparent border-b border-border-subtle outline-none w-16"
                 />
               </div>
             </div>

@@ -99,6 +99,7 @@ const ProfilePage = () => {
   const [themeSettings, setThemeSettings] = useState(
     user?.themeSettings || {
       headerBg: "#2563eb",
+      headerBgSecondary: "#9333ea",
       bodyBg: "#0f172a",
       cardStyle: "glass",
       fontPrimary: "Inter",
@@ -173,6 +174,7 @@ const ProfilePage = () => {
       setThemeSettings(
         user.themeSettings || {
           headerBg: "#2563eb",
+          headerBgSecondary: "#9333ea",
           bodyBg: "#0f172a",
           cardStyle: "glass",
           fontPrimary: "Inter",
