@@ -21,6 +21,11 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     },
   );
 
+  const [bannerFile, setBannerFile] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(
+    localSettings.bannerUrl || "",
+  );
+
   const handleChange = (field, value) => {
     const updated = { ...localSettings, [field]: value };
     setLocalSettings(updated);
@@ -281,16 +286,20 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         </label>
         <div className="p-6 bg-foreground/5 rounded-3xl border-2 border-dashed border-border-subtle group hover:border-action/50 transition-all">
           <div className="flex flex-col items-center justify-center text-center">
-            {localSettings.bannerUrl ? (
+            {bannerPreview ? (
               <div className="relative w-full h-32 rounded-2xl overflow-hidden mb-4 border border-border-subtle">
                 <img
-                  src={localSettings.bannerUrl}
+                  src={bannerPreview}
                   alt="Banner Preview"
                   className="w-full h-full object-cover"
                   style={{ opacity: localSettings.bannerOpacity / 100 }}
                 />
                 <button
-                  onClick={() => handleChange("bannerUrl", "")}
+                  onClick={() => {
+                    setBannerPreview("");
+                    setBannerFile(null);
+                    handleChange("bannerUrl", "");
+                  }}
                   className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-xl text-xs hover:scale-110 transition-transform"
                 >
                   Remove
@@ -298,25 +307,38 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
               </div>
             ) : (
               <div className="mb-4">
-                <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action mx-auto mb-2 group-hover:scale-110 transition-transform">
-                  <FaImage size={20} />
-                </div>
-                <p className="text-[10px] font-black text-text-muted uppercase tracking-tighter">
-                  Upload high-res banner (1920x400)
-                </p>
+                <label className="cursor-pointer">
+                  <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <FaImage size={20} />
+                  </div>
+                  <p className="text-[10px] font-black text-text-muted uppercase tracking-tighter">
+                    Click to upload banner (1920x400)
+                  </p>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleBannerFileChange}
+                  />
+                </label>
               </div>
             )}
 
-            <input
-              type="text"
-              placeholder="Or paste image URL (Cloudinary Integration Ready)"
-              value={localSettings.bannerUrl}
-              onChange={(e) => handleChange("bannerUrl", e.target.value)}
-              className="w-full max-w-md px-4 py-2 bg-white dark:bg-midnight rounded-xl border border-border-subtle text-xs outline-none focus:border-action"
-            />
+            {!bannerFile && (
+              <input
+                type="text"
+                placeholder="Or paste image URL"
+                value={localSettings.bannerUrl}
+                onChange={(e) => {
+                  setBannerPreview(e.target.value);
+                  handleChange("bannerUrl", e.target.value);
+                }}
+                className="w-full max-w-md px-4 py-2 bg-white dark:bg-midnight rounded-xl border border-border-subtle text-xs outline-none focus:border-action"
+              />
+            )}
           </div>
 
-          {localSettings.bannerUrl && (
+          {bannerPreview && (
             <div className="mt-6 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black text-text-muted uppercase">
