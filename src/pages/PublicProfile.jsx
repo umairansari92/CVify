@@ -15,11 +15,6 @@ import {
   FaBriefcase,
   FaGraduationCap,
   FaTimes,
-} from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-hot-toast";
-import InlineEdit from "../components/profile/InlineEdit";
-import {
   FaPalette,
   FaFillDrip,
   FaCog,
@@ -28,6 +23,9 @@ import {
   FaTrashAlt,
   FaPlus,
 } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
+import InlineEdit from "../components/profile/InlineEdit";
 
 const PublicProfile = () => {
   const { username } = useParams();
