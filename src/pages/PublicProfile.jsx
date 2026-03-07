@@ -256,37 +256,55 @@ const PublicProfile = () => {
 
             {showThemePanel && (
               <motion.div
-                initial={{ x: 300, opacity: 0 }}
+                initial={{ x: 450, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 300, opacity: 0 }}
-                className="fixed right-20 top-1/2 -translate-y-1/2 z-[99] w-72 bg-white dark:bg-slate-900 border border-border-subtle rounded-[2rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-6 overflow-hidden"
+                exit={{ x: 450, opacity: 0 }}
+                className="fixed right-24 top-1/2 -translate-y-1/2 z-[99] w-[30rem] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-[3rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] p-10 overflow-hidden flex flex-col max-h-[90vh]"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xs font-black uppercase tracking-widest text-text-primary">
-                    Theme Palette
-                  </h3>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-10 flex-shrink-0">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action shadow-sm shadow-action/10">
+                      <FaPalette size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black uppercase tracking-widest text-text-primary mb-0.5">
+                        Portfolio Editor
+                      </h3>
+                      <p className="text-[10px] text-text-muted font-black uppercase opacity-60 tracking-tighter">
+                        Live WYSIWYG Mode
+                      </p>
+                    </div>
+                  </div>
                   <button
                     onClick={() => setShowThemePanel(false)}
-                    className="text-text-muted hover:text-red-500 transition-colors"
+                    className="w-10 h-10 flex items-center justify-center rounded-2xl bg-foreground/5 text-text-muted hover:text-red-500 hover:bg-red-50 transition-all active:scale-90"
                   >
                     <FaTimes />
                   </button>
                 </div>
 
-                <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
-                  <div>
-                    <label className="text-[9px] font-black uppercase text-text-muted mb-3 block">
-                      One-Click Presets
+                <div className="space-y-10 overflow-y-auto pr-3 custom-scrollbar pb-8">
+                  {/* Presets */}
+                  <div className="space-y-5">
+                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
+                      <FaFillDrip className="text-action" /> Theme Presets
                     </label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-3">
                       {themePresets.map((p) => (
                         <button
                           key={p.name}
                           onClick={() => handleThemeUpdate({ ...theme, ...p })}
-                          className="flex flex-col items-center gap-1 p-2 rounded-xl bg-foreground/5 border border-border-subtle hover:border-action transition-all"
+                          className={`flex flex-col items-center gap-2 p-5 rounded-[2.5rem] border-2 transition-all ${
+                            theme.headerBg === p.headerBg
+                              ? "bg-action/5 border-action ring-4 ring-action/5"
+                              : "bg-foreground/5 border-transparent hover:border-action/20"
+                          }`}
                         >
-                          <span className="text-lg">{p.icon}</span>
-                          <span className="text-[7px] font-bold uppercase leading-tight">
+                          <span className="text-3xl filter drop-shadow-md">
+                            {p.icon}
+                          </span>
+                          <span className="text-[9px] font-black uppercase leading-tight tracking-tighter text-text-primary">
                             {p.name.split(" ")[0]}
                           </span>
                         </button>
@@ -294,13 +312,155 @@ const PublicProfile = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border-subtle">
-                    <label className="text-[9px] font-black uppercase text-text-muted mb-3 block flex justify-between items-center">
-                      Banner Dimming
-                      <span className="text-action font-black">
+                  {/* Colors */}
+                  <div className="pt-8 border-t border-border-subtle/50 space-y-5">
+                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
+                      <FaPalette className="text-action text-[10px]" /> Brand
+                      Identity
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      {[
+                        { label: "Gradient Primary", key: "headerBg" },
+                        {
+                          label: "Gradient Secondary",
+                          key: "headerBgSecondary",
+                        },
+                        { label: "Page Background", key: "bodyBg" },
+                      ].map((c, i) => (
+                        <div
+                          key={c.key}
+                          className={`p-5 bg-foreground/5 rounded-[2rem] border-2 border-border-subtle/50 flex flex-col gap-3 group transition-all hover:border-action/30 ${i === 2 ? "col-span-2" : ""}`}
+                        >
+                          <span className="text-[9px] font-black text-text-muted uppercase tracking-tighter opacity-80">
+                            {c.label}
+                          </span>
+                          <div className="flex items-center gap-4">
+                            <div className="relative w-10 h-10 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/50 dark:border-white/10 group-hover:scale-110 transition-transform">
+                              <input
+                                type="color"
+                                value={theme[c.key]}
+                                onChange={(e) =>
+                                  handleThemeUpdate({
+                                    ...theme,
+                                    [c.key]: e.target.value,
+                                  })
+                                }
+                                className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                              />
+                            </div>
+                            <span className="text-xs font-black font-mono tracking-widest uppercase opacity-70">
+                              {theme[c.key]}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Typography Style */}
+                  <div className="pt-8 border-t border-border-subtle/50 space-y-5">
+                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
+                      <FaFont className="text-action text-[10px]" /> Typography
+                      Style
+                    </label>
+                    <div className="relative group">
+                      <select
+                        value={theme.fontPrimary}
+                        onChange={(e) =>
+                          handleThemeUpdate({
+                            ...theme,
+                            fontPrimary: e.target.value,
+                          })
+                        }
+                        className="w-full bg-foreground/5 p-5 rounded-[2rem] text-sm font-black outline-none cursor-pointer appearance-none border-2 border-transparent focus:border-action transition-all"
+                      >
+                        {[
+                          "Inter",
+                          "Roboto",
+                          "Outfit",
+                          "Poppins",
+                          "Montserrat",
+                          "JetBrains Mono",
+                          "Space Grotesk",
+                          "Playfair Display",
+                        ].map((f) => (
+                          <option key={f} value={f}>
+                            {f}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted opacity-50 group-hover:opacity-100 transition-opacity">
+                        ▼
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Aesthetics */}
+                  <div className="pt-8 border-t border-border-subtle/50 space-y-5">
+                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
+                      <FaLayerGroup className="text-action" /> Card Aesthetics
+                    </label>
+                    <div className="grid grid-cols-1 gap-3">
+                      {[
+                        {
+                          id: "minimal",
+                          name: "Minimalist",
+                          desc: "Clean, professional & flat",
+                        },
+                        {
+                          id: "glass",
+                          name: "Glassmorphism",
+                          desc: "Modern frosted depth",
+                        },
+                        {
+                          id: "classic",
+                          name: "Classic Hub",
+                          desc: "Solid elevation & shadows",
+                        },
+                      ].map((style) => (
+                        <button
+                          key={style.id}
+                          onClick={() =>
+                            handleThemeUpdate({ ...theme, cardStyle: style.id })
+                          }
+                          className={`p-6 rounded-[2.5rem] border-2 text-left transition-all flex items-center justify-between ${
+                            theme.cardStyle === style.id
+                              ? "border-action bg-action/5 shadow-xl shadow-action/5"
+                              : "border-transparent bg-foreground/5 hover:border-action/20"
+                          }`}
+                        >
+                          <div>
+                            <h5 className="text-[11px] font-black text-text-primary uppercase mb-1 tracking-tight">
+                              {style.name}
+                            </h5>
+                            <p className="text-[9px] text-text-muted font-bold opacity-70 tracking-tight">
+                              {style.desc}
+                            </p>
+                          </div>
+                          <div
+                            className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${theme.cardStyle === style.id ? "bg-action text-white shadow-lg" : "bg-foreground/10 text-text-muted"}`}
+                          >
+                            {theme.cardStyle === style.id ? (
+                              <FaGem size={14} className="animate-pulse" />
+                            ) : (
+                              <FaCheckCircle size={14} />
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Banner & Sync Status */}
+                  <div className="pt-8 border-t border-border-subtle/50 space-y-6 pb-6">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
+                        <FaCog className="text-action" /> Banner Contrast
+                      </label>
+                      <span className="text-xs font-black text-action bg-action/10 px-3 py-1 rounded-full">
                         {theme.bannerOpacity}%
                       </span>
-                    </label>
+                    </div>
                     <input
                       type="range"
                       min="0"
@@ -312,22 +472,28 @@ const PublicProfile = () => {
                           bannerOpacity: parseInt(e.target.value),
                         })
                       }
-                      className="w-full h-1.5 bg-foreground/10 rounded-lg appearance-none cursor-pointer accent-action"
+                      className="w-full h-2 bg-foreground/10 rounded-lg appearance-none cursor-pointer accent-action"
                     />
-                  </div>
 
-                  <div className="pt-4 border-t border-border-subtle flex items-center justify-center">
-                    <p className="text-[10px] font-bold text-emerald-500 flex items-center gap-2">
+                    <div
+                      className={`mt-4 p-4 rounded-3xl border flex items-center justify-center gap-3 transition-all duration-500 bg-white/50 dark:bg-black/20 ${isUpdating ? "border-amber-500/20 text-amber-500" : "border-emerald-500/20 text-emerald-500"}`}
+                    >
                       {isUpdating ? (
                         <>
-                          <FaCog className="animate-spin" /> Saving Changes...
+                          <FaCog className="animate-spin text-sm" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">
+                            Saving live...
+                          </span>
                         </>
                       ) : (
                         <>
-                          <FaCheckCircle /> All changes synced
+                          <FaCheckCircle className="text-sm" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">
+                            System Synced
+                          </span>
                         </>
                       )}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </motion.div>

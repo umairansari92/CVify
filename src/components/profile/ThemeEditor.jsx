@@ -21,6 +21,11 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     },
   );
 
+  // Sync local settings if prop changes
+  React.useEffect(() => {
+    if (settings) setLocalSettings(settings);
+  }, [settings]);
+
   const [bannerFile, setBannerFile] = useState(null);
   const [bannerPreview, setBannerPreview] = useState(
     localSettings.bannerUrl || "",
@@ -134,160 +139,196 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* ── One-Click Presets ── */}
       <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-          <FaFillDrip className="text-action" /> One-Click Theme Presets
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
+          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
+            <FaFillDrip className="text-action text-[10px]" />
+          </div>
+          One-Click Theme Presets
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {presets.map((p) => (
             <button
               key={p.name}
               onClick={() => applyPreset(p)}
-              className="group p-3 bg-foreground/5 rounded-2xl border border-border-subtle hover:border-action transition-all flex flex-col items-center justify-center text-center gap-1"
+              className={`group p-4 bg-white dark:bg-black/20 rounded-3xl border-2 transition-all flex flex-col items-center justify-center text-center gap-2 hover:shadow-xl hover:shadow-action/5 ${
+                localSettings.name === p.name
+                  ? "border-action bg-action/5"
+                  : "border-border-subtle hover:border-action/30"
+              }`}
             >
-              <span className="text-lg group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                 {p.icon}
-              </span>
-              <span className="text-[8px] font-black uppercase leading-tight tracking-tighter">
+              </div>
+              <span className="text-[9px] font-black uppercase tracking-tight text-text-primary">
                 {p.name}
               </span>
             </button>
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Colors */}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Colors Section */}
         <div className="space-y-4">
-          <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-            <FaPalette className="text-action" /> Brand Identity Colors
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
+            <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
+              <FaPalette className="text-action text-[10px]" />
+            </div>
+            Brand Identity Colors
           </label>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
-              <span className="text-[9px] font-bold text-text-muted block mb-2 uppercase">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
+              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
                 Hero Gradient Primary
               </span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={localSettings.headerBg}
-                  onChange={(e) => handleChange("headerBg", e.target.value)}
-                  className="w-10 h-10 rounded-lg cursor-pointer bg-transparent"
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                  <input
+                    type="color"
+                    value={localSettings.headerBg}
+                    onChange={(e) => handleChange("headerBg", e.target.value)}
+                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                  />
+                </div>
                 <input
                   type="text"
                   value={localSettings.headerBg}
                   onChange={(e) => handleChange("headerBg", e.target.value)}
-                  className="text-[10px] font-mono bg-transparent border-b border-border-subtle outline-none w-16"
+                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
                 />
               </div>
             </div>
-            <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
-              <span className="text-[9px] font-bold text-text-muted block mb-2 uppercase">
+
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
+              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
                 Hero Gradient Secondary
               </span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={localSettings.headerBgSecondary}
-                  onChange={(e) =>
-                    handleChange("headerBgSecondary", e.target.value)
-                  }
-                  className="w-10 h-10 rounded-lg cursor-pointer bg-transparent"
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                  <input
+                    type="color"
+                    value={localSettings.headerBgSecondary}
+                    onChange={(e) =>
+                      handleChange("headerBgSecondary", e.target.value)
+                    }
+                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                  />
+                </div>
                 <input
                   type="text"
                   value={localSettings.headerBgSecondary}
                   onChange={(e) =>
                     handleChange("headerBgSecondary", e.target.value)
                   }
-                  className="text-[10px] font-mono bg-transparent border-b border-border-subtle outline-none w-16"
+                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
                 />
               </div>
             </div>
-            <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
-              <span className="text-[9px] font-bold text-text-muted block mb-2 uppercase">
+
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2 sm:col-span-2">
+              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
                 Page Background
               </span>
-              <div className="flex items-center gap-3">
-                <input
-                  type="color"
-                  value={localSettings.bodyBg}
-                  onChange={(e) => handleChange("bodyBg", e.target.value)}
-                  className="w-10 h-10 rounded-lg cursor-pointer bg-transparent"
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                  <input
+                    type="color"
+                    value={localSettings.bodyBg}
+                    onChange={(e) => handleChange("bodyBg", e.target.value)}
+                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                  />
+                </div>
                 <input
                   type="text"
                   value={localSettings.bodyBg}
                   onChange={(e) => handleChange("bodyBg", e.target.value)}
-                  className="text-xs font-mono bg-transparent border-b border-border-subtle outline-none w-20"
+                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Typography */}
+        {/* Typography Section */}
         <div className="space-y-4">
-          <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-            <FaFont className="text-violet-500" /> Typography Style
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
+            <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
+              <FaFont className="text-violet-500 text-[10px]" />
+            </div>
+            Typography Style
           </label>
-          <div className="p-4 bg-foreground/5 rounded-2xl border border-border-subtle">
-            <select
-              value={localSettings.fontPrimary}
-              onChange={(e) => handleChange("fontPrimary", e.target.value)}
-              className="w-full bg-transparent text-sm font-semibold outline-none cursor-pointer"
-            >
-              {fontOptions.map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
-              ))}
-            </select>
-            <p className="text-[9px] text-text-muted mt-2 font-medium">
+          <div className="p-8 bg-white dark:bg-black/20 rounded-[2.5rem] border-2 border-border-subtle h-fit min-h-[180px] flex flex-col justify-center gap-4">
+            <div className="relative">
+              <select
+                value={localSettings.fontPrimary}
+                onChange={(e) => handleChange("fontPrimary", e.target.value)}
+                className="w-full bg-foreground/5 p-4 rounded-2xl text-lg font-black outline-none cursor-pointer appearance-none border-2 border-transparent focus:border-action"
+              >
+                {fontOptions.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
+                ▼
+              </div>
+            </div>
+            <p className="text-[10px] text-text-muted font-bold tracking-tight">
               This font will be applied to headings and body text.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Card Style Selector */}
+      {/* Component Aesthetics */}
       <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-          <FaLayerGroup className="text-amber-500" /> Component Aesthetics
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
+          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
+            <FaLayerGroup className="text-amber-500 text-[10px]" />
+          </div>
+          Component Aesthetics
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {styleOptions.map((style) => (
             <button
               key={style.id}
               onClick={() => handleChange("cardStyle", style.id)}
-              className={`p-4 rounded-2xl border-2 text-left transition-all ${
+              className={`p-6 rounded-[2.5rem] border-2 text-left transition-all relative overflow-hidden ${
                 localSettings.cardStyle === style.id
-                  ? "border-action bg-action/5 shadow-lg shadow-action/10"
+                  ? "border-action bg-white dark:bg-black/20 ring-4 ring-action/5 shadow-2xl"
                   : "border-border-subtle bg-foreground/5 hover:border-action/30"
               }`}
             >
-              <h5 className="text-xs font-black text-text-primary mb-1">
+              <h5 className="text-sm font-black text-text-primary mb-1">
                 {style.name}
               </h5>
-              <p className="text-[9px] text-text-muted font-bold leading-tight">
+              <p className="text-[10px] text-text-muted font-black leading-tight opacity-70">
                 {style.desc}
               </p>
+              {localSettings.cardStyle === style.id && (
+                <div className="absolute top-4 right-6 w-2 h-2 rounded-full bg-action animate-pulse" />
+              )}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Banner Upload Mockup (Integration Point) */}
+      {/* Banner Upload Section */}
       <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-          <FaImage className="text-emerald-500" /> Custom Background Banner
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
+          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
+            <FaImage className="text-emerald-500 text-[10px]" />
+          </div>
+          Custom Background Banner
         </label>
-        <div className="p-6 bg-foreground/5 rounded-3xl border-2 border-dashed border-border-subtle group hover:border-action/50 transition-all">
+        <div className="p-8 bg-white dark:bg-black/20 rounded-[2.5rem] border-2 border-dashed border-border-subtle group hover:border-action/50 transition-all">
           <div className="flex flex-col items-center justify-center text-center">
             {bannerPreview ? (
-              <div className="relative w-full h-32 rounded-2xl overflow-hidden mb-4 border border-border-subtle">
+              <div className="relative w-full max-w-2xl h-48 rounded-[2.5rem] overflow-hidden mb-6 border-2 border-border-subtle shadow-2xl">
                 <img
                   src={bannerPreview}
                   alt="Banner Preview"
@@ -300,19 +341,22 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
                     setBannerFile(null);
                     handleChange("bannerUrl", "");
                   }}
-                  className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-xl text-xs hover:scale-110 transition-transform"
+                  className="absolute top-4 right-4 bg-red-500/90 backdrop-blur-md text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
                 >
                   Remove
                 </button>
               </div>
             ) : (
-              <div className="mb-4">
-                <label className="cursor-pointer">
-                  <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <FaImage size={20} />
+              <div className="mb-6 w-full py-10">
+                <label className="cursor-pointer block">
+                  <div className="w-16 h-16 bg-action/10 rounded-3xl flex items-center justify-center text-action mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <FaImage size={24} />
                   </div>
-                  <p className="text-[10px] font-black text-text-muted uppercase tracking-tighter">
-                    Click to upload banner (1920x400)
+                  <h4 className="text-xs font-black text-text-primary uppercase tracking-tighter mb-1">
+                    Click to upload banner
+                  </h4>
+                  <p className="text-[9px] font-bold text-text-muted uppercase opacity-60">
+                    Recommended: 1920x480 (Under 5MB)
                   </p>
                   <input
                     type="file"
@@ -325,49 +369,60 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
             )}
 
             {!bannerFile && (
-              <input
-                type="text"
-                placeholder="Or paste image URL"
-                value={localSettings.bannerUrl}
-                onChange={(e) => {
-                  setBannerPreview(e.target.value);
-                  handleChange("bannerUrl", e.target.value);
-                }}
-                className="w-full max-w-md px-4 py-2 bg-white dark:bg-midnight rounded-xl border border-border-subtle text-xs outline-none focus:border-action"
-              />
+              <div className="w-full max-w-md relative group">
+                <input
+                  type="text"
+                  placeholder="Or paste image URL"
+                  value={
+                    localSettings.bannerUrl === "PREVIEW"
+                      ? ""
+                      : localSettings.bannerUrl
+                  }
+                  onChange={(e) => {
+                    setBannerPreview(e.target.value);
+                    handleChange("bannerUrl", e.target.value);
+                  }}
+                  className="w-full px-6 py-4 bg-foreground/5 rounded-2xl border-2 border-transparent focus:border-action text-xs font-bold outline-none transition-all pr-12"
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40">
+                  🔗
+                </div>
+              </div>
             )}
           </div>
 
           {bannerPreview && (
-            <div className="mt-6 space-y-3">
+            <div className="mt-8 space-y-4 max-w-xl mx-auto">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black text-text-muted uppercase">
+                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
                   Banner Opacity
                 </span>
-                <span className="text-xs font-black text-action">
+                <span className="text-sm font-black text-action">
                   {localSettings.bannerOpacity}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={localSettings.bannerOpacity}
-                onChange={(e) =>
-                  handleChange("bannerOpacity", parseInt(e.target.value))
-                }
-                className="w-full h-1.5 bg-border-subtle rounded-lg appearance-none cursor-pointer accent-action"
-              />
+              <div className="relative pt-1">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={localSettings.bannerOpacity}
+                  onChange={(e) =>
+                    handleChange("bannerOpacity", parseInt(e.target.value))
+                  }
+                  className="w-full h-2 bg-foreground/10 rounded-full appearance-none cursor-pointer accent-action"
+                />
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-end pt-8">
         <button
           onClick={handleApply}
           disabled={saving}
-          className="px-8 py-3 bg-action hover:bg-blue-600 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
+          className="px-10 py-4 bg-action hover:bg-blue-600 text-white font-black text-sm uppercase tracking-widest rounded-3xl transition-all shadow-[0_20px_40px_-10px_rgba(37,99,235,0.3)] active:scale-[0.98] disabled:opacity-50"
         >
           {saving ? "Applying..." : "Apply Transformations"}
         </button>
