@@ -95,8 +95,30 @@ const PublicProfile = () => {
     services: "Professional Services",
   };
 
+  const theme = user.themeSettings || {
+    headerBg: "#2563eb",
+    bodyBg: "#0f172a",
+    cardStyle: "glass",
+    fontPrimary: "Inter",
+    bannerUrl: "",
+    bannerOpacity: 95,
+  };
+
+  const cardClasses = {
+    glass:
+      "bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/50 dark:border-white/10",
+    minimal: "bg-white dark:bg-slate-900 border-border-subtle",
+    classic: "bg-white dark:bg-slate-800 shadow-2xl border-none",
+  }[theme.cardStyle || "glass"];
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-midnight transition-colors duration-500 pb-40">
+    <div
+      className="min-h-screen transition-colors duration-500 pb-40"
+      style={{
+        backgroundColor: theme.bodyBg,
+        fontFamily: `'${theme.fontPrimary}', sans-serif`,
+      }}
+    >
       <Helmet>
         <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Unstoppable Professional"} | Portfolio on CVify`}</title>
         <meta
@@ -152,8 +174,18 @@ const PublicProfile = () => {
 
       {/* Hero 2.0 */}
       <header className="relative pt-20 pb-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-action via-violet-600 to-indigo-900 animate-gradient opacity-95">
-          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div
+          className="absolute inset-0 animate-gradient"
+          style={{
+            background: theme.bannerUrl
+              ? `url(${theme.bannerUrl}) center/cover no-repeat`
+              : `linear-gradient(to bottom right, ${theme.headerBg}, #4c1d95, #1e1b4b)`,
+            opacity: (theme.bannerOpacity || 95) / 100,
+          }}
+        >
+          {!theme.bannerUrl && (
+            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+          )}
         </div>
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -310,7 +342,7 @@ const PublicProfile = () => {
             <motion.section
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              className="bg-white dark:bg-slate-800/80 p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-white/50 dark:border-white/10"
+              className={`${cardClasses} p-8 md:p-12 rounded-[2.5rem] shadow-xl border`}
             >
               <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
                 Professional Overview{" "}
@@ -386,7 +418,9 @@ const PublicProfile = () => {
           {/* Right Column (Skills & Stats) */}
           <div className="lg:col-span-4 space-y-10">
             {/* Community Impact & Analytics Widget */}
-            <section className="bg-white dark:bg-slate-800/80 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl relative overflow-hidden group">
+            <section
+              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl relative overflow-hidden group`}
+            >
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-action/5 rounded-full blur-3xl group-hover:bg-action/10 transition-colors"></div>
 
               <div className="flex items-center justify-between mb-8">
@@ -396,29 +430,42 @@ const PublicProfile = () => {
                 <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-600 rounded-full border border-blue-500/20">
                   <FaGem size={12} className="animate-pulse" />
                   <span className="text-[10px] font-black uppercase">
-                    Skill Diamonds Badge
+                    Impact Badge
                   </span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
-                  <p className="text-3xl font-black text-text-primary">
-                    {user.stats?.profileViews || 0}
+              {/* Conditional Stats: Only show if they exist (returned for owner) */}
+              {user.stats?.profileViews !== undefined ||
+              user.stats?.contactClicks !== undefined ? (
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
+                    <p className="text-3xl font-black text-text-primary">
+                      {user.stats?.profileViews || 0}
+                    </p>
+                    <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
+                      Profile Views
+                    </p>
+                  </div>
+                  <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
+                    <p className="text-3xl font-black text-text-primary">
+                      {user.stats?.contactClicks || 0}
+                    </p>
+                    <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
+                      Recruiter Interests
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-sm font-black text-text-primary">
+                    Stellar Growth Track
                   </p>
-                  <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
-                    Profile Views
+                  <p className="text-[10px] text-text-muted mt-1 uppercase font-bold tracking-widest">
+                    Active Professional Portfolio
                   </p>
                 </div>
-                <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
-                  <p className="text-3xl font-black text-text-primary">
-                    {user.stats?.contactClicks || 0}
-                  </p>
-                  <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
-                    Recruiter Interests
-                  </p>
-                </div>
-              </div>
+              )}
 
               <div className="mt-8 p-4 bg-action/5 rounded-2xl border border-action/10 text-center">
                 <p className="text-[10px] font-medium text-action flex items-center justify-center gap-2">
@@ -432,7 +479,9 @@ const PublicProfile = () => {
             </section>
 
             {/* Hybrid Skill Cloud */}
-            <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl">
+            <section
+              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
+            >
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
                 {sectionNames.skills}
               </h3>
@@ -473,7 +522,9 @@ const PublicProfile = () => {
             </section>
 
             {/* Education Timeline */}
-            <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl">
+            <section
+              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
+            >
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-text-muted flex items-center gap-3">
                 {sectionNames.education}
                 <span className="flex-1 h-px bg-border-subtle"></span>
@@ -504,7 +555,9 @@ const PublicProfile = () => {
 
             {/* Languages Card */}
             {user.languages && user.languages.length > 0 && (
-              <section className="bg-white dark:bg-slate-800/50 p-8 rounded-[2.5rem] border border-border-subtle shadow-xl hover:shadow-action/10 transition-all">
+              <section
+                className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl hover:shadow-action/10 transition-all`}
+              >
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
                   {sectionNames.languages || "Languages"}
                 </h3>

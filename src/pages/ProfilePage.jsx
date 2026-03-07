@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
-import { FaShareAlt, FaGlobe } from "react-icons/fa";
+import { FaShareAlt, FaGlobe, FaPalette } from "react-icons/fa";
+import ThemeEditor from "../components/profile/ThemeEditor";
 
 import api from "../api/axios";
 
@@ -95,6 +96,17 @@ const ProfilePage = () => {
       services: "Professional Services",
     },
   );
+  const [themeSettings, setThemeSettings] = useState(
+    user?.themeSettings || {
+      headerBg: "#2563eb",
+      bodyBg: "#0f172a",
+      cardStyle: "glass",
+      fontPrimary: "Inter",
+      bannerUrl: "",
+      bannerOpacity: 95,
+    },
+  );
+  const [bannerFile, setBannerFile] = useState(null);
 
   // Project state
   const [projects, setProjects] = useState(user?.projects || []);
@@ -158,6 +170,16 @@ const ProfilePage = () => {
       setLanguages(user.languages || []);
       setLocation(user.location || "");
       setPreview(user.profileImage || "");
+      setThemeSettings(
+        user.themeSettings || {
+          headerBg: "#2563eb",
+          bodyBg: "#0f172a",
+          cardStyle: "glass",
+          fontPrimary: "Inter",
+          bannerUrl: "",
+          bannerOpacity: 95,
+        },
+      );
       setHasInitialized(true);
     }
   }, [user, hasInitialized]);
@@ -207,8 +229,10 @@ const ProfilePage = () => {
       fd.append("services", JSON.stringify(services));
       fd.append("languages", JSON.stringify(languages));
       fd.append("sectionNames", JSON.stringify(sectionNames));
+      fd.append("themeSettings", JSON.stringify(themeSettings));
 
       if (imageFile) fd.append("profileImage", imageFile);
+      if (bannerFile) fd.append("bannerImage", bannerFile);
 
       const res = await api.patch("/auth/profile", fd);
       const data = res.data;
@@ -519,6 +543,22 @@ const ProfilePage = () => {
               />
             </div>
           </div>
+        </Card>
+
+        {/* ── Theme Editor ── */}
+        <Card>
+          <SectionTitle icon={<FaPalette />} title="Portfolio Theme Editor" />
+          <ThemeEditor
+            settings={themeSettings}
+            saving={saving}
+            onUpdate={(updated, file) => {
+              setThemeSettings(updated);
+              if (file) setBannerFile(file);
+              toast.success(
+                "Theme settings staged. Don't forget to Save Profile!",
+              );
+            }}
+          />
         </Card>
 
         {/* ── Social Links ── */}
