@@ -22,6 +22,8 @@ import {
   FaCheckCircle,
   FaTrashAlt,
   FaPlus,
+  FaFont,
+  FaLayerGroup,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
