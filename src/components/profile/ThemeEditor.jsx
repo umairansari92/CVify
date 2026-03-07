@@ -18,6 +18,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Inter",
       bannerUrl: "",
       bannerOpacity: 95,
+      textPrimary: "#ffffff",
+      textSecondary: "#94a3b8",
+      accentColor: "#2563eb",
     },
   );
 
@@ -116,6 +119,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Montserrat",
       cardStyle: "classic",
       icon: "🌿",
+      textPrimary: "#064e3b",
+      textSecondary: "#065f46",
+      accentColor: "#059669",
     },
   ];
 
@@ -127,6 +133,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       bodyBg: preset.bodyBg,
       fontPrimary: preset.fontPrimary,
       cardStyle: preset.cardStyle,
+      textPrimary: preset.textPrimary || "#ffffff",
+      textSecondary: preset.textSecondary || "#94a3b8",
+      accentColor: preset.accentColor || "#2563eb",
     };
     setLocalSettings(updated);
     toast.success(`Theme Applied: ${preset.name}`);
@@ -228,23 +237,75 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2 sm:col-span-2">
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
               <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Page Background
+                Primary Accent
               </span>
               <div className="flex items-center gap-4">
                 <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
                   <input
                     type="color"
-                    value={localSettings.bodyBg}
-                    onChange={(e) => handleChange("bodyBg", e.target.value)}
+                    value={localSettings.accentColor || "#2563eb"}
+                    onChange={(e) =>
+                      handleChange("accentColor", e.target.value)
+                    }
                     className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
                   />
                 </div>
                 <input
                   type="text"
-                  value={localSettings.bodyBg}
-                  onChange={(e) => handleChange("bodyBg", e.target.value)}
+                  value={localSettings.accentColor || "#2563eb"}
+                  onChange={(e) => handleChange("accentColor", e.target.value)}
+                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
+                />
+              </div>
+            </div>
+
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
+              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
+                Main Text (Heading)
+              </span>
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                  <input
+                    type="color"
+                    value={localSettings.textPrimary || "#ffffff"}
+                    onChange={(e) =>
+                      handleChange("textPrimary", e.target.value)
+                    }
+                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                  />
+                </div>
+                <input
+                  type="text"
+                  value={localSettings.textPrimary || "#ffffff"}
+                  onChange={(e) => handleChange("textPrimary", e.target.value)}
+                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
+                />
+              </div>
+            </div>
+
+            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
+              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
+                Muted Text (Body)
+              </span>
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                  <input
+                    type="color"
+                    value={localSettings.textSecondary || "#94a3b8"}
+                    onChange={(e) =>
+                      handleChange("textSecondary", e.target.value)
+                    }
+                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                  />
+                </div>
+                <input
+                  type="text"
+                  value={localSettings.textSecondary || "#94a3b8"}
+                  onChange={(e) =>
+                    handleChange("textSecondary", e.target.value)
+                  }
                   className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
                 />
               </div>

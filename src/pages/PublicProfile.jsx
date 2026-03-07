@@ -248,7 +248,7 @@ const PublicProfile = () => {
     return (
       <div className="min-h-screen bg-midnight text-white flex flex-col items-center justify-center p-6 text-center">
         <h1 className="text-6xl font-black mb-4">404</h1>
-        <p className="text-xl text-text-muted mb-8">
+        <p className="text-xl text-[var(--text-secondary)] mb-8">
           {error || "This profile is private or does not exist."}
         </p>
         <a
@@ -269,7 +269,6 @@ const PublicProfile = () => {
     projects: "Key Accomplishments",
     services: "Professional Services",
   };
-
   const theme = localTheme || {
     headerBg: "#2563eb",
     headerBgSecondary: "#9333ea",
@@ -278,6 +277,9 @@ const PublicProfile = () => {
     fontPrimary: "Inter",
     bannerUrl: "",
     bannerOpacity: 95,
+    textPrimary: "#ffffff",
+    textSecondary: "#94a3b8",
+    accentColor: "#2563eb",
   };
 
   const cardClasses = {
@@ -293,6 +295,10 @@ const PublicProfile = () => {
       style={{
         backgroundColor: theme.bodyBg,
         fontFamily: `'${theme.fontPrimary}', sans-serif`,
+        "--action": theme.accentColor || "#2563eb",
+        "--text-primary": theme.textPrimary || "#ffffff",
+        "--text-secondary": theme.textSecondary || "#94a3b8",
+        color: "var(--text-primary)",
       }}
     >
       {/* ── Owner Live Editor Sidebar ── */}
@@ -324,21 +330,21 @@ const PublicProfile = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-10 flex-shrink-0">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action shadow-sm shadow-action/10">
+                    <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-[var(--action)] shadow-sm shadow-action/10">
                       <FaPalette size={20} />
                     </div>
                     <div>
-                      <h3 className="text-base font-black uppercase tracking-widest text-text-primary mb-0.5">
+                      <h3 className="text-base font-black uppercase tracking-widest text-[var(--text-primary)] mb-0.5">
                         Portfolio Editor
                       </h3>
-                      <p className="text-[10px] text-text-muted font-black uppercase opacity-60 tracking-tighter">
+                      <p className="text-[10px] text-[var(--text-secondary)] font-black uppercase opacity-60 tracking-tighter">
                         Live WYSIWYG Mode
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setShowThemePanel(false)}
-                    className="w-10 h-10 flex items-center justify-center rounded-2xl bg-foreground/5 text-text-muted hover:text-red-500 hover:bg-red-50 transition-all active:scale-90"
+                    className="w-10 h-10 flex items-center justify-center rounded-2xl bg-foreground/5 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-50 transition-all active:scale-90"
                   >
                     <FaTimes />
                   </button>
@@ -347,8 +353,9 @@ const PublicProfile = () => {
                 <div className="space-y-10 overflow-y-auto pr-3 custom-scrollbar pb-8">
                   {/* Presets */}
                   <div className="space-y-5">
-                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
-                      <FaFillDrip className="text-action" /> Theme Presets
+                    <label className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-[0.2em] flex items-center gap-2">
+                      <FaFillDrip className="text-[var(--action)]" /> Theme
+                      Presets
                     </label>
                     <div className="grid grid-cols-3 gap-3">
                       {themePresets.map((p) => (
@@ -364,7 +371,7 @@ const PublicProfile = () => {
                           <span className="text-3xl filter drop-shadow-md">
                             {p.icon}
                           </span>
-                          <span className="text-[9px] font-black uppercase leading-tight tracking-tighter text-text-primary">
+                          <span className="text-[9px] font-black uppercase leading-tight tracking-tighter text-[var(--text-primary)]">
                             {p.name.split(" ")[0]}
                           </span>
                         </button>
@@ -374,9 +381,9 @@ const PublicProfile = () => {
 
                   {/* Colors */}
                   <div className="pt-8 border-t border-border-subtle/50 space-y-5">
-                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
-                      <FaPalette className="text-action text-[10px]" /> Brand
-                      Identity
+                    <label className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-[0.2em] flex items-center gap-2">
+                      <FaPalette className="text-[var(--action)] text-[10px]" />{" "}
+                      Brand Identity
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       {[
@@ -386,12 +393,15 @@ const PublicProfile = () => {
                           key: "headerBgSecondary",
                         },
                         { label: "Page Background", key: "bodyBg" },
-                      ].map((c, i) => (
+                        { label: "Primary Accent", key: "accentColor" },
+                        { label: "Main Text Color", key: "textPrimary" },
+                        { label: "Muted Text Color", key: "textSecondary" },
+                      ].map((c) => (
                         <div
                           key={c.key}
-                          className={`p-5 bg-foreground/5 rounded-[2rem] border-2 border-border-subtle/50 flex flex-col gap-3 group transition-all hover:border-action/30 ${i === 2 ? "col-span-2" : ""}`}
+                          className="p-5 bg-foreground/5 rounded-[2rem] border-2 border-border-subtle/50 flex flex-col gap-3 group transition-all hover:border-action/30"
                         >
-                          <span className="text-[9px] font-black text-text-muted uppercase tracking-tighter opacity-80">
+                          <span className="text-[9px] font-black text-[var(--text-secondary)] uppercase tracking-tighter opacity-80">
                             {c.label}
                           </span>
                           <div className="flex items-center gap-4">
@@ -419,9 +429,9 @@ const PublicProfile = () => {
 
                   {/* Typography Style */}
                   <div className="pt-8 border-t border-border-subtle/50 space-y-5">
-                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
-                      <FaFont className="text-action text-[10px]" /> Typography
-                      Style
+                    <label className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-[0.2em] flex items-center gap-2">
+                      <FaFont className="text-[var(--action)] text-[10px]" />{" "}
+                      Typography Style
                     </label>
                     <div className="relative group">
                       <select
@@ -449,7 +459,7 @@ const PublicProfile = () => {
                           </option>
                         ))}
                       </select>
-                      <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted opacity-50 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-secondary)] opacity-50 group-hover:opacity-100 transition-opacity">
                         ▼
                       </div>
                     </div>
@@ -457,8 +467,9 @@ const PublicProfile = () => {
 
                   {/* Aesthetics */}
                   <div className="pt-8 border-t border-border-subtle/50 space-y-5">
-                    <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
-                      <FaLayerGroup className="text-action" /> Card Aesthetics
+                    <label className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-[0.2em] flex items-center gap-2">
+                      <FaLayerGroup className="text-[var(--action)]" /> Card
+                      Aesthetics
                     </label>
                     <div className="grid grid-cols-1 gap-3">
                       {[
@@ -490,15 +501,15 @@ const PublicProfile = () => {
                           }`}
                         >
                           <div>
-                            <h5 className="text-[11px] font-black text-text-primary uppercase mb-1 tracking-tight">
+                            <h5 className="text-[11px] font-black text-[var(--text-primary)] uppercase mb-1 tracking-tight">
                               {style.name}
                             </h5>
-                            <p className="text-[9px] text-text-muted font-bold opacity-70 tracking-tight">
+                            <p className="text-[9px] text-[var(--text-secondary)] font-bold opacity-70 tracking-tight">
                               {style.desc}
                             </p>
                           </div>
                           <div
-                            className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${theme.cardStyle === style.id ? "bg-action text-white shadow-lg" : "bg-foreground/10 text-text-muted"}`}
+                            className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${theme.cardStyle === style.id ? "bg-action text-white shadow-lg" : "bg-foreground/10 text-[var(--text-secondary)]"}`}
                           >
                             {theme.cardStyle === style.id ? (
                               <FaGem size={14} className="animate-pulse" />
@@ -514,10 +525,11 @@ const PublicProfile = () => {
                   {/* Banner & Sync Status */}
                   <div className="pt-8 border-t border-border-subtle/50 space-y-6 pb-6">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-black uppercase text-text-muted tracking-[0.2em] flex items-center gap-2">
-                        <FaCog className="text-action" /> Banner Contrast
+                      <label className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-[0.2em] flex items-center gap-2">
+                        <FaCog className="text-[var(--action)]" /> Banner
+                        Contrast
                       </label>
-                      <span className="text-xs font-black text-action bg-action/10 px-3 py-1 rounded-full">
+                      <span className="text-xs font-black text-[var(--action)] bg-action/10 px-3 py-1 rounded-full">
                         {theme.bannerOpacity}%
                       </span>
                     </div>
@@ -679,8 +691,8 @@ const PublicProfile = () => {
                 />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-white dark:bg-midnight p-3 rounded-2xl shadow-xl flex items-center gap-2 border border-border-subtle z-20">
-                <FaMapMarkerAlt className="text-action" />
-                <span className="text-xs font-black text-text-primary">
+                <FaMapMarkerAlt className="text-[var(--action)]" />
+                <span className="text-xs font-black text-[var(--text-primary)]">
                   {user.location || "Available Remote"}
                 </span>
               </div>
@@ -728,7 +740,7 @@ const PublicProfile = () => {
                       {user.phoneNumber}
                     </span>
                   </a>
-                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-white/50">
+                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">
                     Available on WhatsApp
                   </span>
                 </motion.div>
@@ -773,7 +785,7 @@ const PublicProfile = () => {
                     href={ensureAbsoluteUrl(user.socialLinks.portfolio)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-action rounded-2xl transition-all backdrop-blur-md border border-white/10"
+                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-[var(--action)] rounded-2xl transition-all backdrop-blur-md border border-white/10"
                     onClick={() => handleTrackInteraction("contact")}
                     title="Portfolio"
                   >
@@ -802,7 +814,7 @@ const PublicProfile = () => {
                 )}
                 <button
                   onClick={handleDownload}
-                  className="px-8 py-4 bg-white text-action rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
+                  className="px-8 py-4 bg-white text-[var(--action)] rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
                 >
                   <FaDownload /> Get Professional Resume
                 </button>
@@ -822,7 +834,7 @@ const PublicProfile = () => {
               whileInView={{ y: 0, opacity: 1 }}
               className={`${cardClasses} p-8 md:p-12 rounded-[2.5rem] shadow-xl border`}
             >
-              <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
+              <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] mb-6 flex items-center gap-4">
                 Professional Overview{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
@@ -832,13 +844,13 @@ const PublicProfile = () => {
                 isOwner={user.isOwner}
                 multiline={true}
                 label="Bio"
-                className="text-text-primary text-lg leading-relaxed font-medium whitespace-pre-wrap"
+                className="text-[var(--text-primary)] text-lg leading-relaxed font-medium whitespace-pre-wrap"
               />
             </motion.section>
 
             {/* Experience Timeline */}
             <section className="space-y-6">
-              <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] flex items-center gap-4">
+              <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
                 {sectionNames.experience}{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
@@ -851,7 +863,7 @@ const PublicProfile = () => {
                     className="relative pl-10"
                   >
                     <div className="absolute left-[-22px] top-1 w-10 h-10 rounded-2xl bg-white dark:bg-midnight border-4 border-action z-10 flex items-center justify-center shadow-lg shadow-action/20">
-                      <FaBriefcase className="text-action text-xs" />
+                      <FaBriefcase className="text-[var(--action)] text-xs" />
                     </div>
 
                     <div className="bg-white dark:bg-slate-800/40 p-8 rounded-[2rem] border border-border-subtle shadow-xl hover:shadow-action/5 transition-all group overflow-hidden relative">
@@ -859,15 +871,15 @@ const PublicProfile = () => {
 
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 relative z-10">
                         <div>
-                          <h4 className="text-2xl font-black text-text-primary group-hover:text-action transition-colors">
+                          <h4 className="text-2xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors">
                             {exp.role}
                           </h4>
-                          <p className="text-violet-500 font-black text-lg">
+                          <p className="text-[var(--action)] font-black text-lg">
                             {exp.company}
                           </p>
                         </div>
                         <div className="text-left md:text-right">
-                          <span className="px-4 py-1.5 bg-foreground/5 rounded-full text-[10px] font-black uppercase tracking-widest text-text-muted border border-border-subtle">
+                          <span className="px-4 py-1.5 bg-foreground/5 rounded-full text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-border-subtle">
                             {exp.startDate} —{" "}
                             {exp.isCurrent ? "Present" : exp.endDate}
                           </span>
@@ -884,7 +896,7 @@ const PublicProfile = () => {
                         isOwner={user.isOwner}
                         multiline={true}
                         label="Experience Achievements"
-                        className="text-base font-medium text-text-muted leading-relaxed whitespace-pre-wrap relative z-10"
+                        className="text-base font-medium text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap relative z-10"
                       />
 
                       {exp.tools && exp.tools.length > 0 && (
@@ -892,7 +904,7 @@ const PublicProfile = () => {
                           {exp.tools.map((tool) => (
                             <span
                               key={tool}
-                              className="text-[10px] font-black bg-action/10 text-action px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10"
+                              className="text-[10px] font-black bg-action/10 text-[var(--action)] px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10"
                             >
                               {tool}
                             </span>
@@ -915,7 +927,7 @@ const PublicProfile = () => {
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-action/5 rounded-full blur-3xl group-hover:bg-action/10 transition-colors"></div>
 
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">
                   Community Impact
                 </h3>
                 <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-600 rounded-full border border-blue-500/20">
@@ -931,35 +943,35 @@ const PublicProfile = () => {
               user.stats?.contactClicks !== undefined ? (
                 <div className="grid grid-cols-2 gap-6">
                   <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
-                    <p className="text-3xl font-black text-text-primary">
+                    <p className="text-3xl font-black text-[var(--text-primary)]">
                       {user.stats?.profileViews || 0}
                     </p>
-                    <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
+                    <p className="text-[9px] font-bold uppercase text-[var(--text-secondary)] mt-1 tracking-widest">
                       Profile Views
                     </p>
                   </div>
                   <div className="p-6 bg-foreground/5 dark:bg-midnight/30 rounded-3xl border border-border-subtle hover:border-action/30 transition-all text-center">
-                    <p className="text-3xl font-black text-text-primary">
+                    <p className="text-3xl font-black text-[var(--text-primary)]">
                       {user.stats?.contactClicks || 0}
                     </p>
-                    <p className="text-[9px] font-bold uppercase text-text-muted mt-1 tracking-widest">
+                    <p className="text-[9px] font-bold uppercase text-[var(--text-secondary)] mt-1 tracking-widest">
                       Recruiter Interests
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <p className="text-sm font-black text-text-primary">
+                  <p className="text-sm font-black text-[var(--text-primary)]">
                     Stellar Growth Track
                   </p>
-                  <p className="text-[10px] text-text-muted mt-1 uppercase font-bold tracking-widest">
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-1 uppercase font-bold tracking-widest">
                     Active Professional Portfolio
                   </p>
                 </div>
               )}
 
               <div className="mt-8 p-4 bg-action/5 rounded-2xl border border-action/10 text-center">
-                <p className="text-[10px] font-medium text-action flex items-center justify-center gap-2">
+                <p className="text-[10px] font-medium text-[var(--action)] flex items-center justify-center gap-2">
                   <span className="flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-action opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-action"></span>
@@ -973,20 +985,20 @@ const PublicProfile = () => {
             <section
               className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
             >
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-[var(--text-secondary)]">
                 {sectionNames.skills}
               </h3>
 
               <div className="space-y-8">
                 <div>
-                  <label className="text-[9px] font-black uppercase text-action mb-4 block">
+                  <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block">
                     Core Competencies
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {user.skills?.technical?.map((skill) => (
                       <span
                         key={skill}
-                        className="px-4 py-2 bg-action/5 text-action rounded-xl text-xs font-black border border-action/10"
+                        className="px-4 py-2 bg-action/5 text-[var(--action)] rounded-xl text-xs font-black border border-action/10"
                       >
                         {skill}
                       </span>
@@ -995,7 +1007,7 @@ const PublicProfile = () => {
                 </div>
 
                 <div>
-                  <label className="text-[9px] font-black uppercase text-violet-500 mb-4 block">
+                  <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block">
                     Professional Services
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -1016,7 +1028,7 @@ const PublicProfile = () => {
             <section
               className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
             >
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-text-muted flex items-center gap-3">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
                 {sectionNames.education}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
@@ -1034,7 +1046,7 @@ const PublicProfile = () => {
                         }
                         isOwner={user.isOwner}
                         label="Degree"
-                        className="text-base font-black text-text-primary leading-tight block"
+                        className="text-base font-black text-[var(--text-primary)] leading-tight block"
                       />
                       <InlineEdit
                         value={edu.institution}
@@ -1045,7 +1057,7 @@ const PublicProfile = () => {
                         }
                         isOwner={user.isOwner}
                         label="Institution"
-                        className="text-sm font-bold text-text-muted mt-1 block"
+                        className="text-sm font-bold text-[var(--text-secondary)] mt-1 block"
                       />
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
@@ -1063,7 +1075,7 @@ const PublicProfile = () => {
               <section
                 className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl hover:shadow-action/10 transition-all`}
               >
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-text-muted">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-[var(--text-secondary)]">
                   {sectionNames.languages || "Languages"}
                 </h3>
                 <div className="space-y-4">
@@ -1073,7 +1085,7 @@ const PublicProfile = () => {
                       className="flex items-center justify-between p-4 bg-foreground/5 dark:bg-midnight/30 rounded-2xl border border-border-subtle group hover:border-action/30 transition-all"
                     >
                       <div>
-                        <h4 className="text-sm font-black text-text-primary">
+                        <h4 className="text-sm font-black text-[var(--text-primary)]">
                           {lang.name}
                         </h4>
                         <div className="flex gap-1 mt-1">
@@ -1097,7 +1109,7 @@ const PublicProfile = () => {
                           })}
                         </div>
                       </div>
-                      <span className="text-[8px] font-black bg-action/10 text-action px-2 py-1 rounded-lg uppercase tracking-widest border border-action/20">
+                      <span className="text-[8px] font-black bg-action/10 text-[var(--action)] px-2 py-1 rounded-lg uppercase tracking-widest border border-action/20">
                         {lang.proficiency}
                       </span>
                     </div>
@@ -1110,7 +1122,7 @@ const PublicProfile = () => {
 
         {/* Projects Section 2.0 */}
         <div className="mt-20 space-y-10">
-          <h3 className="text-sm font-black text-text-muted uppercase tracking-[0.3em] flex items-center gap-4">
+          <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
             {sectionNames.projects}{" "}
             <span className="flex-1 h-px bg-border-subtle"></span>
           </h3>
@@ -1152,7 +1164,7 @@ const PublicProfile = () => {
                     }
                     isOwner={user.isOwner}
                     label="Project Title"
-                    className="text-xl font-black text-text-primary mb-2 line-clamp-1 block"
+                    className="text-xl font-black text-[var(--text-primary)] mb-2 line-clamp-1 block"
                   />
                   <InlineEdit
                     value={proj.description}
@@ -1162,7 +1174,7 @@ const PublicProfile = () => {
                     isOwner={user.isOwner}
                     multiline={true}
                     label="Project Description"
-                    className="text-xs text-text-muted font-medium line-clamp-2 leading-relaxed mb-6 block"
+                    className="text-xs text-[var(--text-secondary)] font-medium line-clamp-2 leading-relaxed mb-6 block"
                   />
                   <div className="flex items-center justify-between">
                     <div className="flex gap-4">
@@ -1171,7 +1183,7 @@ const PublicProfile = () => {
                           href={ensureAbsoluteUrl(proj.liveLink)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-action hover:scale-110 transition-transform"
+                          className="text-[var(--action)] hover:scale-110 transition-transform"
                         >
                           <FaGlobe size={18} />
                         </a>
@@ -1181,7 +1193,7 @@ const PublicProfile = () => {
                           href={ensureAbsoluteUrl(proj.githubLink)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-text-primary hover:scale-110 transition-transform"
+                          className="text-[var(--text-primary)] hover:scale-110 transition-transform"
                         >
                           <FaGithub size={18} />
                         </a>
@@ -1209,10 +1221,10 @@ const PublicProfile = () => {
         >
           {/* Quick Stats (Mobile Hide) */}
           <div className="hidden md:flex flex-col border-right pr-8 border-border-subtle">
-            <span className="text-[9px] font-black text-text-muted uppercase tracking-tighter">
+            <span className="text-[9px] font-black text-[var(--text-secondary)] uppercase tracking-tighter">
               Active Status
             </span>
-            <span className="text-xs font-black text-action flex items-center gap-2">
+            <span className="text-xs font-black text-[var(--action)] flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
               Open to Hire
             </span>
@@ -1250,7 +1262,7 @@ const PublicProfile = () => {
                 href={ensureAbsoluteUrl(user.socialLinks.linkedin)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-muted hover:text-blue-600 transition-colors"
+                className="text-[var(--text-secondary)] hover:text-blue-600 transition-colors"
                 onClick={() => handleTrackInteraction("contact")}
                 title="LinkedIn"
               >
@@ -1262,7 +1274,7 @@ const PublicProfile = () => {
                 href={ensureAbsoluteUrl(user.socialLinks.github)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-muted hover:text-black dark:hover:text-white transition-colors"
+                className="text-[var(--text-secondary)] hover:text-black dark:hover:text-white transition-colors"
                 onClick={() => handleTrackInteraction("contact")}
                 title="GitHub"
               >
@@ -1274,7 +1286,7 @@ const PublicProfile = () => {
                 href={ensureAbsoluteUrl(user.socialLinks.twitter)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-muted hover:text-blue-400 transition-colors"
+                className="text-[var(--text-secondary)] hover:text-blue-400 transition-colors"
                 onClick={() => handleTrackInteraction("contact")}
                 title="Twitter / X"
               >
@@ -1286,7 +1298,7 @@ const PublicProfile = () => {
                 href={ensureAbsoluteUrl(user.socialLinks.portfolio)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-muted hover:text-action transition-colors"
+                className="text-[var(--text-secondary)] hover:text-[var(--action)] transition-colors"
                 onClick={() => handleTrackInteraction("contact")}
                 title="Personal Portfolio"
               >
