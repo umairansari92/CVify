@@ -16,6 +16,17 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
+import InlineEdit from "../components/profile/InlineEdit";
+import {
+  FaPalette,
+  FaFillDrip,
+  FaCog,
+  FaSave,
+  FaCheckCircle,
+  FaTrashAlt,
+  FaPlus,
+} from "react-icons/fa";
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -27,12 +38,28 @@ const PublicProfile = () => {
     try {
       const res = await api.get(`/auth/public/${username}`);
       setUser(res.data);
+      // Initialize local theme settings for live preview
+      setLocalTheme(
+        res.data.themeSettings || {
+          headerBg: "#2563eb",
+          headerBgSecondary: "#9333ea",
+          bodyBg: "#0f172a",
+          cardStyle: "glass",
+          fontPrimary: "Inter",
+          bannerUrl: "",
+          bannerOpacity: 95,
+        },
+      );
     } catch (err) {
       setError(err.response?.data?.message || "Profile not found.");
     } finally {
       setLoading(false);
     }
   }, [username]);
+
+  const [localTheme, setLocalTheme] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [showThemePanel, setShowThemePanel] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -45,6 +72,95 @@ const PublicProfile = () => {
       console.error("Interaction failed:", err);
     }
   };
+
+  const handleLiveUpdate = async (updates) => {
+    if (!user.isOwner) return;
+    setIsUpdating(true);
+    try {
+      // Optimistic Update
+      setUser((prev) => ({ ...prev, ...updates }));
+
+      const res = await api.patch("/auth/profile", updates);
+      if (res.data.user) {
+        toast.success("Changes saved live!", { id: "live-update" });
+      }
+    } catch (err) {
+      toast.error("Failed to save changes.");
+      console.error(err);
+      fetchProfile(); // Revert on failure
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleArrayUpdate = (field, index, updatedItem) => {
+    if (!user.isOwner) return;
+    const newArray = [...user[field]];
+    newArray[index] = { ...newArray[index], ...updatedItem };
+    handleLiveUpdate({ [field]: newArray });
+  };
+
+  const handleThemeUpdate = async (newTheme) => {
+    setLocalTheme(newTheme);
+    handleLiveUpdate({ themeSettings: newTheme });
+  };
+
+  const themePresets = [
+    {
+      name: "CVify Classic",
+      headerBg: "#2563eb",
+      headerBgSecondary: "#9333ea",
+      bodyBg: "#f8fafc",
+      fontPrimary: "Inter",
+      cardStyle: "glass",
+      icon: "⚡",
+    },
+    {
+      name: "Midnight Dev",
+      headerBg: "#0f172a",
+      headerBgSecondary: "#1e293b",
+      bodyBg: "#020617",
+      fontPrimary: "JetBrains Mono",
+      cardStyle: "minimal",
+      icon: "🌙",
+    },
+    {
+      name: "Corporate Gold",
+      headerBg: "#1e3a8a",
+      headerBgSecondary: "#1e40af",
+      bodyBg: "#ffffff",
+      fontPrimary: "Outfit",
+      cardStyle: "classic",
+      icon: "🏢",
+    },
+    {
+      name: "Creative Sunset",
+      headerBg: "#f97316",
+      headerBgSecondary: "#db2777",
+      bodyBg: "#fff7ed",
+      fontPrimary: "Poppins",
+      cardStyle: "glass",
+      icon: "🌅",
+    },
+    {
+      name: "Slate Minimalist",
+      headerBg: "#475569",
+      headerBgSecondary: "#64748b",
+      bodyBg: "#f1f5f9",
+      fontPrimary: "Roboto",
+      cardStyle: "minimal",
+      icon: "🎨",
+    },
+    {
+      name: "Emerald Leader",
+      headerBg: "#059669",
+      headerBgSecondary: "#10b981",
+      bodyBg: "#f0fdf4",
+      fontPrimary: "Montserrat",
+      cardStyle: "classic",
+      icon: "🌿",
+    },
+  ];
 
   const ensureAbsoluteUrl = (url) => {
     if (!url || typeof url !== "string") return "";
@@ -95,7 +211,7 @@ const PublicProfile = () => {
     services: "Professional Services",
   };
 
-  const theme = user.themeSettings || {
+  const theme = localTheme || {
     headerBg: "#2563eb",
     headerBgSecondary: "#9333ea",
     bodyBg: "#0f172a",
@@ -114,12 +230,112 @@ const PublicProfile = () => {
 
   return (
     <div
-      className="min-h-screen transition-colors duration-500 pb-40"
+      className="min-h-screen transition-colors duration-500 pb-40 relative"
       style={{
         backgroundColor: theme.bodyBg,
         fontFamily: `'${theme.fontPrimary}', sans-serif`,
       }}
     >
+      {/* ── Owner Live Editor Sidebar ── */}
+      <AnimatePresence>
+        {user.isOwner && (
+          <>
+            <motion.button
+              initial={{ x: 100 }}
+              animate={{ x: 0 }}
+              onClick={() => setShowThemePanel(!showThemePanel)}
+              className="fixed right-6 top-1/2 -translate-y-1/2 z-[100] p-4 bg-action text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+            >
+              <FaPalette
+                size={20}
+                className="group-hover:rotate-12 transition-transform"
+              />
+              {isUpdating && (
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white animate-pulse" />
+              )}
+            </motion.button>
+
+            {showThemePanel && (
+              <motion.div
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 300, opacity: 0 }}
+                className="fixed right-20 top-1/2 -translate-y-1/2 z-[99] w-72 bg-white dark:bg-slate-900 border border-border-subtle rounded-[2rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-6 overflow-hidden"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-text-primary">
+                    Theme Palette
+                  </h3>
+                  <button
+                    onClick={() => setShowThemePanel(false)}
+                    className="text-text-muted hover:text-red-500 transition-colors"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+
+                <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+                  <div>
+                    <label className="text-[9px] font-black uppercase text-text-muted mb-3 block">
+                      One-Click Presets
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {themePresets.map((p) => (
+                        <button
+                          key={p.name}
+                          onClick={() => handleThemeUpdate({ ...theme, ...p })}
+                          className="flex flex-col items-center gap-1 p-2 rounded-xl bg-foreground/5 border border-border-subtle hover:border-action transition-all"
+                        >
+                          <span className="text-lg">{p.icon}</span>
+                          <span className="text-[7px] font-bold uppercase leading-tight">
+                            {p.name.split(" ")[0]}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-border-subtle">
+                    <label className="text-[9px] font-black uppercase text-text-muted mb-3 block flex justify-between items-center">
+                      Banner Dimming
+                      <span className="text-action font-black">
+                        {theme.bannerOpacity}%
+                      </span>
+                    </label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={theme.bannerOpacity}
+                      onChange={(e) =>
+                        handleThemeUpdate({
+                          ...theme,
+                          bannerOpacity: parseInt(e.target.value),
+                        })
+                      }
+                      className="w-full h-1.5 bg-foreground/10 rounded-lg appearance-none cursor-pointer accent-action"
+                    />
+                  </div>
+
+                  <div className="pt-4 border-t border-border-subtle flex items-center justify-center">
+                    <p className="text-[10px] font-bold text-emerald-500 flex items-center gap-2">
+                      {isUpdating ? (
+                        <>
+                          <FaCog className="animate-spin" /> Saving Changes...
+                        </>
+                      ) : (
+                        <>
+                          <FaCheckCircle /> All changes synced
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </>
+        )}
+      </AnimatePresence>
       <Helmet>
         <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Unstoppable Professional"} | Portfolio on CVify`}</title>
         {/* Dynamic Font Import */}
@@ -164,7 +380,6 @@ const PublicProfile = () => {
         <meta name="twitter:description" content={user.headline} />
         <meta name="twitter:image" content={user.profileImage} />
 
-        {/* JSON-LD Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -176,12 +391,33 @@ const PublicProfile = () => {
             url: `https://cvify.pro/p/${username}`,
             address: {
               "@type": "PostalAddress",
-              addressLocality: user.location || "Pakistan",
+              addressLocality: user.location || "Available Remote",
+            },
+            alumniOf: user.education?.map((edu) => ({
+              "@type": "EducationalOrganization",
+              name: edu.institution,
+            })),
+            knowsLanguage: user.languages?.map((lang) => ({
+              "@type": "Language",
+              name: lang.name,
+            })),
+            skills: [
+              ...(user.skills?.expertise || []),
+              ...(user.skills?.professional || []),
+            ],
+            hasOccupation: {
+              "@type": "Occupation",
+              name: user.headline,
+            },
+            worksFor: {
+              "@type": "Organization",
+              name: "CVify",
             },
             sameAs: [
               user.socialLinks?.linkedin,
               user.socialLinks?.github,
               user.socialLinks?.twitter,
+              user.socialLinks?.portfolio,
             ].filter(Boolean),
           })}
         </script>
@@ -233,14 +469,20 @@ const PublicProfile = () => {
               >
                 {user.firstName} {user.lastName}
               </motion.h1>
-              <motion.p
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-xl md:text-2xl font-bold opacity-90 mt-3 max-w-3xl"
+                className="mt-3 max-w-3xl mx-auto lg:mx-0"
               >
-                {user.headline || "Professional Member"}
-              </motion.p>
+                <InlineEdit
+                  value={user.headline}
+                  onSave={(val) => handleLiveUpdate({ headline: val })}
+                  isOwner={user.isOwner}
+                  label="Headline"
+                  className="text-xl md:text-2xl font-bold opacity-90"
+                />
+              </motion.div>
 
               {user.phoneNumber && (
                 <motion.div
@@ -363,10 +605,14 @@ const PublicProfile = () => {
                 Professional Overview{" "}
                 <span className="flex-1 h-px bg-border-subtle"></span>
               </h3>
-              <p className="text-text-primary text-lg leading-relaxed font-medium whitespace-pre-wrap">
-                {user.bio ||
-                  "Crafting excellence and delivering results in my field."}
-              </p>
+              <InlineEdit
+                value={user.bio}
+                onSave={(val) => handleLiveUpdate({ bio: val })}
+                isOwner={user.isOwner}
+                multiline={true}
+                label="Bio"
+                className="text-text-primary text-lg leading-relaxed font-medium whitespace-pre-wrap"
+              />
             </motion.section>
 
             {/* Experience Timeline */}
@@ -407,9 +653,18 @@ const PublicProfile = () => {
                         </div>
                       </div>
 
-                      <p className="text-base font-medium text-text-muted leading-relaxed whitespace-pre-wrap relative z-10">
-                        {exp.achievements}
-                      </p>
+                      <InlineEdit
+                        value={exp.achievements}
+                        onSave={(val) =>
+                          handleArrayUpdate("experience", idx, {
+                            achievements: val,
+                          })
+                        }
+                        isOwner={user.isOwner}
+                        multiline={true}
+                        label="Experience Achievements"
+                        className="text-base font-medium text-text-muted leading-relaxed whitespace-pre-wrap relative z-10"
+                      />
 
                       {exp.tools && exp.tools.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-6 relative z-10">
@@ -551,12 +806,26 @@ const PublicProfile = () => {
                       <FaGraduationCap size={18} />
                     </div>
                     <div>
-                      <h4 className="text-base font-black text-text-primary leading-tight">
-                        {edu.degree}
-                      </h4>
-                      <p className="text-sm font-bold text-text-muted mt-1">
-                        {edu.institution}
-                      </p>
+                      <InlineEdit
+                        value={edu.degree}
+                        onSave={(val) =>
+                          handleArrayUpdate("education", i, { degree: val })
+                        }
+                        isOwner={user.isOwner}
+                        label="Degree"
+                        className="text-base font-black text-text-primary leading-tight block"
+                      />
+                      <InlineEdit
+                        value={edu.institution}
+                        onSave={(val) =>
+                          handleArrayUpdate("education", i, {
+                            institution: val,
+                          })
+                        }
+                        isOwner={user.isOwner}
+                        label="Institution"
+                        className="text-sm font-bold text-text-muted mt-1 block"
+                      />
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
                           {edu.graduationDate}
@@ -655,12 +924,25 @@ const PublicProfile = () => {
                   </div>
                 </div>
                 <div className="p-8">
-                  <h4 className="text-xl font-black text-text-primary mb-2 line-clamp-1">
-                    {proj.title}
-                  </h4>
-                  <p className="text-xs text-text-muted font-medium line-clamp-2 leading-relaxed mb-6">
-                    {proj.description}
-                  </p>
+                  <InlineEdit
+                    value={proj.title}
+                    onSave={(val) =>
+                      handleArrayUpdate("projects", i, { title: val })
+                    }
+                    isOwner={user.isOwner}
+                    label="Project Title"
+                    className="text-xl font-black text-text-primary mb-2 line-clamp-1 block"
+                  />
+                  <InlineEdit
+                    value={proj.description}
+                    onSave={(val) =>
+                      handleArrayUpdate("projects", i, { description: val })
+                    }
+                    isOwner={user.isOwner}
+                    multiline={true}
+                    label="Project Description"
+                    className="text-xs text-text-muted font-medium line-clamp-2 leading-relaxed mb-6 block"
+                  />
                   <div className="flex items-center justify-between">
                     <div className="flex gap-4">
                       {proj.liveLink && (
