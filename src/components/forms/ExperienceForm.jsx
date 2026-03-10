@@ -253,7 +253,7 @@ const ExperienceForm = () => {
                       )
                     : ""
                 }
-                maxLength={500}
+                maxLength={2000}
                 placeholder="Describe your duties and achievements (one per line)..."
                 className="input-premium h-44 resize-none leading-relaxed"
               />
@@ -262,10 +262,10 @@ const ExperienceForm = () => {
                   Use line breaks for bullet points in the preview.
                 </p>
                 <span
-                  className={`text-[10px] font-black tracking-widest ${(watch(`experience.${index}.responsibilities`)?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}
+                  className={`text-[10px] font-black tracking-widest ${(watch(`experience.${index}.responsibilities`)?.length || 0) >= 1800 ? "text-orange-500" : "text-text-muted"}`}
                 >
                   {watch(`experience.${index}.responsibilities`)?.length || 0} /
-                  500
+                  2000
                 </span>
               </div>
             </div>
