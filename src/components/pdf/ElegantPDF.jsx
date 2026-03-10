@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -35,24 +49,24 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   name: {
-    fontSize: 36,
+    fontSize: 34,
     color: "#2c3e50",
-    marginBottom: 12,
-    lineHeight: 1.1,
+    marginBottom: 8,
+    lineHeight: 1.2,
     textAlign: "center",
   },
   jobTitle: {
-    fontSize: 12,
+    fontSize: 10,
     textTransform: "uppercase",
-    letterSpacing: 3,
+    letterSpacing: 2,
     color: "#9ca3af",
-    marginBottom: 10,
-    lineHeight: 1.3,
+    marginBottom: 12,
+    lineHeight: 1.2,
     textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
-    gap: 15,
+    gap: 20,
     marginTop: 8,
     alignItems: "center",
     justifyContent: "center",
@@ -199,6 +213,8 @@ const ElegantPDF = ({ data }) => {
         return "Times-Roman";
       case "Public Sans":
         return "Helvetica";
+      case "Outfit":
+        return "Outfit";
       default:
         return "Times-Roman";
     }

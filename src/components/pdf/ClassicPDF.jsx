@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -41,22 +55,23 @@ const styles = StyleSheet.create({
     color: "#000",
     letterSpacing: 1,
     marginBottom: 8,
-    lineHeight: 1,
+    lineHeight: 1.2,
     textAlign: "center",
   },
   jobTitle: {
-    fontSize: 13,
+    fontSize: 11,
     color: "#4b5563",
     marginTop: 0,
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 1.5,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 12,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   contactLine: {
     flexDirection: "row",
-    gap: 15,
+    gap: 20,
     marginTop: 8,
     alignItems: "center",
     justifyContent: "center",
@@ -185,6 +200,8 @@ const ClassicPDF = ({ data }) => {
         return "Helvetica";
       case "Playfair Display":
         return "Times-Roman";
+      case "Outfit":
+        return "Outfit";
       default:
         return "Helvetica";
     }
@@ -207,7 +224,7 @@ const ClassicPDF = ({ data }) => {
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
         <View style={[styles.header, { borderBottomColor: themeColor }]}>
-          <Text style={styles.name}>
+          <Text style={[styles.name, dynamicStyles.accentText]}>
             {personalInfo?.fullName || "Your Name"}
           </Text>
           <Text style={[styles.jobTitle, dynamicStyles.accentText]}>

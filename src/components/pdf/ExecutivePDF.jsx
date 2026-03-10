@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -45,17 +59,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   jobTitle: {
-    fontSize: 12,
+    fontSize: 11,
     textTransform: "uppercase",
     color: "#475569",
     fontWeight: "bold",
-    letterSpacing: 1,
-    marginBottom: 15,
+    letterSpacing: 1.5,
+    marginBottom: 12,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   contactLine: {
     flexDirection: "row",
-    gap: 15,
+    gap: 20,
     marginTop: 8,
     alignItems: "center",
     justifyContent: "center",
@@ -193,6 +208,8 @@ const ExecutivePDF = ({ data }) => {
         return "Helvetica";
       case "Playfair Display":
         return "Times-Roman";
+      case "Outfit":
+        return "Outfit";
       default:
         return "Helvetica";
     }

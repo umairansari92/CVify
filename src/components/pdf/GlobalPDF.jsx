@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: "15mm",
@@ -38,21 +52,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 1,
     color: "#000",
-    marginBottom: 4,
+    marginBottom: 8,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   jobTitle: {
-    fontSize: 10,
+    fontSize: 9,
     color: "#666",
     textTransform: "uppercase",
     letterSpacing: 1.5,
-    marginBottom: 8,
+    marginBottom: 12,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   contactLine: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
+    gap: 20,
     marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
@@ -193,6 +209,8 @@ const GlobalPDF = ({ data }) => {
         return "Helvetica";
       case "Playfair Display":
         return "Times-Roman";
+      case "Outfit":
+        return "Outfit";
       default:
         return "Helvetica";
     }
@@ -218,7 +236,7 @@ const GlobalPDF = ({ data }) => {
           <View
             style={{ width: "100%", alignItems: "center", marginBottom: 4 }}
           >
-            <Text style={styles.name}>
+            <Text style={[styles.name, dynamicStyles.accentText]}>
               {personalInfo?.fullName || "Your Name"}
             </Text>
           </View>

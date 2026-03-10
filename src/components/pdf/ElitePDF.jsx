@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: "20mm",
@@ -39,22 +53,24 @@ const styles = StyleSheet.create({
     color: "#2c3e50",
     textTransform: "uppercase",
     letterSpacing: 1,
-    marginBottom: 4,
+    marginBottom: 8,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   jobTitle: {
-    fontSize: 11,
+    fontSize: 10,
     color: "#7f8c8d",
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 10,
+    letterSpacing: 1.5,
+    marginBottom: 12,
     textAlign: "center",
+    lineHeight: 1.2,
   },
   contactLine: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
+    gap: 20,
     marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
@@ -200,6 +216,8 @@ const ElitePDF = ({ data }) => {
         return "Helvetica";
       case "Playfair Display":
         return "Times-Roman";
+      case "Outfit":
+        return "Outfit";
       default:
         return "Helvetica";
     }
@@ -221,7 +239,7 @@ const ElitePDF = ({ data }) => {
       <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
         <View style={dynamicStyles.header}>
-          <Text style={styles.name}>{personalInfo?.fullName || "Your Name"}</Text>
+          <Text style={[styles.name, dynamicStyles.accentText]}>{personalInfo?.fullName || "Your Name"}</Text>
           <Text style={styles.jobTitle}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>

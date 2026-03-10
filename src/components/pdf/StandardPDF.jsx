@@ -19,6 +19,20 @@ import {
 
 Font.registerHyphenationCallback((word) => [word]);
 
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
 const styles = StyleSheet.create({
   page: {
     padding: 50,
@@ -42,17 +56,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   jobTitle: {
-    fontSize: 14,
+    fontSize: 11,
     color: "#444",
-    marginBottom: 15,
+    marginBottom: 12,
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 1.5,
     lineHeight: 1.2,
     textAlign: "center",
   },
   contactLine: {
     flexDirection: "row",
-    gap: 15,
+    gap: 20,
     marginTop: 8,
     alignItems: "center",
     justifyContent: "center",

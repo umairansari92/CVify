@@ -1,5 +1,19 @@
 import React from "react";
-import { Page, Text, View, Document, StyleSheet, Link } from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet, Link, Font } from "@react-pdf/renderer";
+
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "https://github.com/Outfitio/Outfit-Fonts/raw/main/fonts/ttf/Outfit-Bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
 
 const styles = StyleSheet.create({
   page: {
@@ -18,8 +32,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "heavy",
     color: "#0f172a",
-    marginBottom: 4,
+    marginBottom: 8,
     textTransform: "uppercase",
+    lineHeight: 1.2,
   },
   contact: {
     fontSize: 10,
