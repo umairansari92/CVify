@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
-import { FaShareAlt, FaGlobe, FaPalette } from "react-icons/fa";
+import { FaShareAlt, FaGlobe, FaPalette, FaCheckCircle, FaCloudUploadAlt, FaImage } from "react-icons/fa";
 import ThemeEditor from "../components/profile/ThemeEditor";
 
 import api from "../api/axios";
@@ -144,6 +144,7 @@ const ProfilePage = () => {
 
   const [saving, setSaving] = useState(false);
   const [pwdSaving, setPwdSave] = useState(false);
+  const [pDragging, setPDragging] = useState(false);
 
   const fileRef = useRef(null);
   const [hasInitialized, setHasInitialized] = useState(false);
@@ -954,12 +955,34 @@ const ProfilePage = () => {
                 />
               </div>
 
-              <div className="flex items-center gap-6">
-                <div className="flex-1">
-                  <label className="text-[10px] font-black uppercase ml-1 block mb-2">
-                    Thumbnail
-                  </label>
+              <div className="flex flex-col gap-3">
+                <label className="text-[10px] font-black uppercase ml-1">
+                  Thumbnail / Cover Image
+                </label>
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setPDragging(true);
+                  }}
+                  onDragLeave={() => setPDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setPDragging(false);
+                    const f = e.dataTransfer.files[0];
+                    if (f && f.type.startsWith("image/")) {
+                      setPThumb(f);
+                      setPThumbPreview(URL.createObjectURL(f));
+                    }
+                  }}
+                  onClick={() => document.getElementById("pThumbInput").click()}
+                  className={`relative group h-40 rounded-[2.5rem] border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 overflow-hidden ${
+                    pDragging
+                      ? "border-action bg-action/10 scale-[0.99]"
+                      : "border-border-subtle bg-foreground/5 hover:border-action/50"
+                  }`}
+                >
                   <input
+                    id="pThumbInput"
                     type="file"
                     accept="image/*"
                     onChange={(e) => {
@@ -969,16 +992,52 @@ const ProfilePage = () => {
                         setPThumbPreview(URL.createObjectURL(f));
                       }
                     }}
-                    className="text-xs"
+                    className="hidden"
                   />
+
+                  {pThumbPreview ? (
+                    <>
+                      <img
+                        src={pThumbPreview}
+                        className="absolute inset-0 w-full h-full object-cover opacity-30 blur-[2px]"
+                      />
+                      <div className="relative z-10 flex flex-col items-center gap-2 animate-fadeIn">
+                        <img
+                          src={pThumbPreview}
+                          className="w-20 h-20 rounded-2xl object-cover shadow-2xl border-2 border-white/50"
+                        />
+                        <span className="text-[10px] font-black text-white bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
+                          Replace Media
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3 text-text-muted/40 group-hover:text-action/70 transition-colors">
+                      <div className="relative">
+                        <FaCloudUploadAlt
+                          size={48}
+                          className="opacity-20 group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <FaImage
+                          size={18}
+                          className="absolute -bottom-1 -right-1 text-action opacity-0 group-hover:opacity-100 transition-all"
+                        />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-[11px] font-black uppercase tracking-widest text-text-primary">
+                          Drag & Drop Image Here
+                        </p>
+                        <p className="text-[9px] font-bold uppercase opacity-60">
+                          Recommended: 1280x720 (Max 5MB)
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {pThumbPreview && (
-                  <img
-                    src={pThumbPreview}
-                    className="w-16 h-16 rounded-xl object-cover border border-action/30"
-                  />
-                )}
-                <div className="flex items-center gap-2">
+              </div>
+
+              <div className="flex items-center gap-6 pt-2">
+                <div className="flex-1 flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="feat"
@@ -1440,8 +1499,8 @@ const ProfilePage = () => {
                     key={idx}
                     className="flex gap-4 p-5 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle group hover:border-action/30 transition-all"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-action/10 flex items-center justify-center text-action">
-                      •
+                    <div className="flex-shrink-0 w-12 h-12 rounded-[1.25rem] bg-gradient-to-br from-action/20 to-violet-500/20 flex items-center justify-center text-action shadow-inner group-hover:scale-110 transition-transform duration-500 hover:rotate-12">
+                      <FaCheckCircle className="text-sm" />
                     </div>
                     <div className="flex-1 space-y-2">
                       <input
@@ -1625,7 +1684,7 @@ const ProfilePage = () => {
               <button
                 onClick={handleSaveProfile}
                 disabled={saving}
-                className="flex-[2] sm:flex-none px-10 py-2.5 bg-action text-white font-black text-xs rounded-xl hover:bg-blue-600 transition-all shadow-lg shadow-action/25 active:scale-95 disabled:opacity-50"
+                className="flex-[2] sm:flex-none px-10 py-3 bg-gradient-to-r from-action to-violet-600 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:shadow-[0_10px_30px_-5px_rgba(37,99,235,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50"
               >
                 {saving ? "Saving Changes..." : "Save Profile Now"}
               </button>
