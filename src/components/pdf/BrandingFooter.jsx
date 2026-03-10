@@ -4,20 +4,18 @@ import { View, Text, Link, StyleSheet } from "@react-pdf/renderer";
 const styles = StyleSheet.create({
   footer: {
     position: "absolute",
-    bottom: 30,
+    bottom: 20,
     left: 40,
     right: 40,
-    borderTopWidth: 0.5,
-    borderTopColor: "#e2e8f0",
     paddingTop: 10,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   footerText: {
-    fontSize: 9,
+    fontSize: 10,
     color: "#94a3b8",
-    textAlign: "center",
+    textAlign: "right",
   },
   cvifyLink: {
     color: "#2563eb",

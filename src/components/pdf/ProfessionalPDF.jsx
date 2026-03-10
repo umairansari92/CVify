@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   },
   bulletPoint: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 6,
     marginBottom: 3,
   },
@@ -330,7 +331,7 @@ const ProfessionalPDF = ({ data }) => {
                   <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
                   <View style={styles.bulletPointContainer}>
                     {exp.responsibilities?.map((res, j) => (
-                      <View key={j} style={styles.bulletPoint}>
+                      <View key={j} style={styles.bulletPoint} wrap={false}>
                         <Text style={styles.bulletDot}>•</Text>
                         <Text style={styles.bulletText}>{res}</Text>
                       </View>
@@ -360,7 +361,7 @@ const ProfessionalPDF = ({ data }) => {
                   </View>
                   <View style={styles.bulletPointContainer}>
                     {proj.description?.map((desc, j) => (
-                      <View key={j} style={styles.bulletPoint}>
+                      <View key={j} style={styles.bulletPoint} wrap={false}>
                         <Text style={styles.bulletDot}>•</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
@@ -451,7 +452,7 @@ const ProfessionalPDF = ({ data }) => {
               </View>
               <View style={styles.bulletPointContainer}>
                 {section.items?.map((item, j) => (
-                  <View key={j} style={styles.bulletPoint}>
+                  <View key={j} style={styles.bulletPoint} wrap={false}>
                     <Text style={styles.bulletDot}>•</Text>
                     <Text style={styles.bulletText}>{item}</Text>
                   </View>

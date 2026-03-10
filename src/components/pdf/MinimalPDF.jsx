@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 3,
   },
   bulletDot: {
@@ -318,7 +319,7 @@ const MinimalPDF = ({ data }) => {
                 <Text style={styles.subtitle}>{exp.company}</Text>
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
-                    <View key={j} style={styles.bullet}>
+                    <View key={j} style={styles.bullet} wrap={false}>
                       <Text style={styles.bulletDot}>•</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
@@ -354,7 +355,7 @@ const MinimalPDF = ({ data }) => {
                   </View>
                   <View style={styles.bulletList}>
                     {proj.description?.map((desc, j) => (
-                      <View key={j} style={styles.bullet}>
+                      <View key={j} style={styles.bullet} wrap={false}>
                         <Text style={styles.bulletDot}>-</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>

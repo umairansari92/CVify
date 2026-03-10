@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 3,
     paddingLeft: 10,
@@ -272,7 +273,7 @@ const TraditionalPDF = ({ data }) => {
                 </View>
                 <Text style={styles.subtitle}>{exp.position}</Text>
                 {exp.responsibilities?.map((res, j) => (
-                  <View key={j} style={styles.bullet}>
+                  <View key={j} style={styles.bullet} wrap={false}>
                     <Text>•</Text>
                     <Text style={styles.bulletText}>{res}</Text>
                   </View>
@@ -340,7 +341,7 @@ const TraditionalPDF = ({ data }) => {
                   Core Strengths
                 </Text>
                 {competencies.map((c, i) => (
-                  <View key={i} style={styles.bullet}>
+                  <View key={i} style={styles.bullet} wrap={false}>
                     <Text>•</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
@@ -369,7 +370,7 @@ const TraditionalPDF = ({ data }) => {
           <View key={idx}>
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.items?.map((item, j) => (
-              <View key={j} style={styles.bullet}>
+              <View key={j} style={styles.bullet} wrap={false}>
                 <Text style={dynamicStyles.accentText}>•</Text>
                 <Text style={styles.bulletText}>{item}</Text>
               </View>

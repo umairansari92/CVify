@@ -146,9 +146,15 @@ const styles = StyleSheet.create({
   },
   bulletPoint: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 6,
     marginBottom: 4,
     paddingLeft: 8,
+  },
+  bulletIcon: {
+    width: 8,
+    fontSize: 9,
+    color: "#334155",
   },
   bulletText: {
     flex: 1,
@@ -292,8 +298,8 @@ const ModernPDF = ({ data }) => {
                     <Text style={dynamicStyles.entrySubtitle}>{exp.company}</Text>
                     <View style={{ marginTop: 4 }}>
                       {exp.responsibilities?.map((res, j) => (
-                        <View key={j} style={styles.bulletPoint}>
-                          <Text style={[styles.bulletText, { width: 8 }]}>•</Text>
+                        <View key={j} style={styles.bulletPoint} wrap={false}>
+                          <Text style={styles.bulletIcon}>•</Text>
                           <Text style={styles.bulletText}>{res}</Text>
                         </View>
                       ))}
@@ -319,8 +325,8 @@ const ModernPDF = ({ data }) => {
                     </View>
                     <View style={{ marginTop: 4 }}>
                       {proj.description?.map((desc, j) => (
-                        <View key={j} style={styles.bulletPoint}>
-                          <Text style={[styles.bulletText, { width: 8 }]}>•</Text>
+                        <View key={j} style={styles.bulletPoint} wrap={false}>
+                          <Text style={styles.bulletIcon}>•</Text>
                           <Text style={styles.bulletText}>{desc}</Text>
                         </View>
                       ))}

@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 4,
     paddingLeft: 10,
   },

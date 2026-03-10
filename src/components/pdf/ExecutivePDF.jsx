@@ -134,9 +134,14 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 4,
     paddingLeft: 10,
+  },
+  bulletIcon: {
+    width: 6,
+    fontSize: 8,
   },
   bulletSign: {
     fontSize: 8,
@@ -294,8 +299,8 @@ const ExecutivePDF = ({ data }) => {
               <View key={idx} style={styles.section} wrap={false}>
                 <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
                 {section.items?.map((item, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={styles.bulletSign}>•</Text>
+                  <View key={j} style={styles.bullet} wrap={false}>
+                    <Text style={[styles.bulletIcon, { color: themeColor }]}>•</Text>
                     <Text style={styles.bulletText}>{item}</Text>
                   </View>
                 ))}
@@ -315,8 +320,8 @@ const ExecutivePDF = ({ data }) => {
                     </View>
                     <Text style={styles.subtitle}>{exp.company}</Text>
                     {exp.responsibilities?.map((res, j) => (
-                      <View key={j} style={styles.bullet}>
-                        <Text style={styles.bulletSign}>-</Text>
+                      <View key={j} style={styles.bullet} wrap={false}>
+                        <Text style={styles.bulletIcon}>-</Text>
                         <Text style={styles.bulletText}>{res}</Text>
                       </View>
                     ))}
@@ -341,8 +346,8 @@ const ExecutivePDF = ({ data }) => {
                       )}
                     </View>
                     {proj.description?.map((desc, j) => (
-                      <View key={j} style={styles.bullet}>
-                        <Text style={styles.bulletSign}>•</Text>
+                      <View key={j} style={styles.bullet} wrap={false}>
+                        <Text style={styles.bulletIcon}>•</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
                     ))}
@@ -356,8 +361,8 @@ const ExecutivePDF = ({ data }) => {
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Core Strengths</Text>
                 {competencies.map((c, i) => (
-                  <View key={i} style={styles.bullet}>
-                    <Text style={styles.bulletSign}>•</Text>
+                  <View key={i} style={styles.bullet} wrap={false}>
+                    <Text style={styles.bulletIcon}>•</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}

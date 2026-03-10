@@ -143,13 +143,20 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 4,
   },
+  bulletIcon: {
+    width: 6,
+    color: "#9ca3af",
+  },
   bulletText: {
+    flex: 1,
     fontSize: 9.5,
     lineHeight: 1.4,
     color: "#374151",
+    textAlign: "justify",
   },
   skillText: {
     fontSize: 9.5,
@@ -313,8 +320,8 @@ const BoldPDF = ({ data }) => {
                         </Text>
                       </View>
                       {exp.responsibilities?.map((res, j) => (
-                        <View key={j} style={styles.bullet}>
-                          <Text style={{ color: "#9ca3af" }}>•</Text>
+                        <View key={j} style={styles.bullet} wrap={false}>
+                          <Text style={styles.bulletIcon}>•</Text>
                           <Text style={styles.bulletText}>{res}</Text>
                         </View>
                       ))}
@@ -349,8 +356,8 @@ const BoldPDF = ({ data }) => {
                         )}
                       </View>
                       {proj.description?.map((desc, j) => (
-                        <View key={j} style={styles.bullet}>
-                          <Text style={{ color: "#6b7280" }}>»</Text>
+                        <View key={j} style={styles.bullet} wrap={false}>
+                          <Text style={[styles.bulletIcon, { color: "#6b7280" }]}>»</Text>
                           <Text style={styles.bulletText}>{desc}</Text>
                         </View>
                       ))}
@@ -366,8 +373,8 @@ const BoldPDF = ({ data }) => {
                     {section.title}
                   </Text>
                   {section.items?.map((item, j) => (
-                    <View key={j} style={styles.bullet}>
-                      <Text style={{ color: themeColor }}>•</Text>
+                    <View key={j} style={styles.bullet} wrap={false}>
+                      <Text style={[styles.bulletIcon, { color: themeColor }]}>•</Text>
                       <Text style={styles.bulletText}>{item}</Text>
                     </View>
                   ))}

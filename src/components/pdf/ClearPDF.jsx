@@ -182,13 +182,20 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 4,
   },
+  bulletIcon: {
+    width: 6,
+    color: "#cbd5e1",
+  },
   bulletText: {
+    flex: 1,
     fontSize: 9,
     color: "#475569",
     lineHeight: 1.4,
+    textAlign: "justify",
   },
   skillGroup: {
     marginBottom: 8,
@@ -401,8 +408,8 @@ const ClearPDF = ({ data }) => {
                     </View>
                     <Text style={styles.subtitle}>{exp.company}</Text>
                     {exp.responsibilities?.map((res, j) => (
-                      <View key={j} style={styles.bullet}>
-                        <Text style={{ color: "#cbd5e1" }}>•</Text>
+                      <View key={j} style={styles.bullet} wrap={false}>
+                        <Text style={styles.bulletIcon}>•</Text>
                         <Text style={styles.bulletText}>{res}</Text>
                       </View>
                     ))}
@@ -415,8 +422,8 @@ const ClearPDF = ({ data }) => {
                       Core Strengths
                     </Text>
                     {competencies.map((c, i) => (
-                      <View key={i} style={styles.bullet}>
-                        <Text style={{ color: "#cbd5e1" }}>•</Text>
+                      <View key={i} style={styles.bullet} wrap={false}>
+                        <Text style={styles.bulletIcon}>•</Text>
                         <Text style={styles.bulletText}>{c}</Text>
                       </View>
                     ))}
@@ -461,8 +468,8 @@ const ClearPDF = ({ data }) => {
                       )}
                     </View>
                     {proj.description?.map((desc, j) => (
-                      <View key={j} style={styles.bullet}>
-                        <Text style={{ color: "#cbd5e1" }}>-</Text>
+                      <View key={j} style={styles.bullet} wrap={false}>
+                        <Text style={[styles.bulletIcon, { color: "#cbd5e1" }]}>-</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
                     ))}
@@ -476,8 +483,8 @@ const ClearPDF = ({ data }) => {
               <View key={idx} style={{ marginBottom: 20 }}>
                 <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
                 {section.items?.map((item, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={{ color: `${themeColor}40` }}>•</Text>
+                  <View key={j} style={styles.bullet} wrap={false}>
+                    <Text style={[styles.bulletIcon, { color: `${themeColor}40` }]}>•</Text>
                     <Text style={styles.bulletText}>{item}</Text>
                   </View>
                 ))}

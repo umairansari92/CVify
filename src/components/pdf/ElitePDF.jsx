@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     marginBottom: 3,
   },
   bulletDot: {
@@ -297,7 +298,7 @@ const ElitePDF = ({ data }) => {
                 <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
-                    <View key={j} style={styles.bullet}>
+                    <View key={j} style={styles.bullet} wrap={false}>
                       <Text style={styles.bulletDot}>•</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
@@ -324,7 +325,7 @@ const ElitePDF = ({ data }) => {
                 </View>
                 <View style={styles.bulletList}>
                   {proj.description?.map((desc, j) => (
-                    <View key={j} style={styles.bullet}>
+                    <View key={j} style={styles.bullet} wrap={false}>
                       <Text style={styles.bulletDot}>•</Text>
                       <Text style={styles.bulletText}>{desc}</Text>
                     </View>
@@ -384,7 +385,7 @@ const ElitePDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             <View style={styles.bulletList}>
               {section.items?.map((item, j) => (
-                <View key={j} style={styles.bullet}>
+                <View key={j} style={styles.bullet} wrap={false}>
                   <Text style={styles.bulletDot}>•</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>

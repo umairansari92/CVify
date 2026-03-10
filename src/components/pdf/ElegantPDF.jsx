@@ -153,8 +153,13 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 4,
+  },
+  bulletIcon: {
+    width: 6,
+    color: "#d1d5db",
   },
   bulletText: {
     flex: 1,
@@ -288,8 +293,8 @@ const ElegantPDF = ({ data }) => {
                   <Text style={styles.title}>{exp.company}</Text>
                   <Text style={styles.subtitle}>{exp.position}</Text>
                   {exp.responsibilities?.map((res, j) => (
-                    <View key={j} style={styles.bullet}>
-                      <Text style={{ color: "#d1d5db" }}>•</Text>
+                    <View key={j} style={styles.bullet} wrap={false}>
+                      <Text style={styles.bulletIcon}>•</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
                   ))}
@@ -328,8 +333,8 @@ const ElegantPDF = ({ data }) => {
                   )}
                 </View>
                 {proj.description?.map((desc, j) => (
-                  <View key={j} style={styles.bullet}>
-                    <Text style={{ color: "#d1d5db" }}>•</Text>
+                  <View key={j} style={styles.bullet} wrap={false}>
+                    <Text style={styles.bulletIcon}>•</Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
                 ))}
@@ -420,8 +425,8 @@ const ElegantPDF = ({ data }) => {
               {competencies?.length > 0 && (
                 <View style={{ width: "100%", marginTop: 10 }}>
                   {competencies.map((c, i) => (
-                    <View key={i} style={styles.bullet}>
-                      <Text style={{ color: "#d1d5db" }}>•</Text>
+                    <View key={i} style={styles.bullet} wrap={false}>
+                      <Text style={styles.bulletIcon}>•</Text>
                       <Text
                         style={[styles.bulletText, { textAlign: "justify" }]}
                       >
@@ -467,8 +472,8 @@ const ElegantPDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             <View style={{ paddingHorizontal: 40 }}>
               {section.items?.map((item, j) => (
-                <View key={j} style={styles.bullet}>
-                  <Text style={{ color: "#d1d5db" }}>•</Text>
+                <View key={j} style={styles.bullet} wrap={false}>
+                  <Text style={styles.bulletIcon}>•</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}

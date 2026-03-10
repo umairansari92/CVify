@@ -178,8 +178,12 @@ const styles = StyleSheet.create({
   },
   bullet: {
     flexDirection: "row",
+    alignItems: "flex-start",
     gap: 8,
     marginBottom: 4,
+  },
+  bulletIcon: {
+    width: 12,
   },
   bulletSign: {
     color: "#64748b",
@@ -358,8 +362,8 @@ const TechnicalPDF = ({ data }) => {
               <View style={styles.sidebarBox} wrap={false}>
                 <Text style={styles.sidebarTitle}>Core Strengths</Text>
                 {competencies.map((c, i) => (
-                  <View key={i} style={styles.bullet}>
-                    <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
+                  <View key={i} style={styles.bullet} wrap={false}>
+                    <Text style={[styles.bulletIcon, dynamicStyles.accentText]}>
                       {">"}
                     </Text>
                     <Text style={[styles.bulletText, { fontSize: 8 }]}>
@@ -407,8 +411,8 @@ const TechnicalPDF = ({ data }) => {
                     </View>
                     <Text style={styles.subtitle}>@ {exp.company}</Text>
                     {exp.responsibilities?.map((res, j) => (
-                      <View key={j} style={styles.bullet}>
-                        <Text style={styles.bulletSign}>{" > "}</Text>
+                      <View key={j} style={styles.bullet} wrap={false}>
+                        <Text style={styles.bulletIcon}>{" > "}</Text>
                         <Text style={styles.bulletText}>{res}</Text>
                       </View>
                     ))}
@@ -463,8 +467,8 @@ const TechnicalPDF = ({ data }) => {
               }}
             >
               {section.items?.map((item, j) => (
-                <View key={j} style={styles.bullet}>
-                  <Text style={[styles.bulletSign, dynamicStyles.accentText]}>
+                <View key={j} style={styles.bullet} wrap={false}>
+                  <Text style={[styles.bulletIcon, dynamicStyles.accentText]}>
                     {">> "}
                   </Text>
                   <Text style={styles.bulletText}>{item}</Text>
