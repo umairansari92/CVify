@@ -167,7 +167,7 @@ const PersonalInfoForm = () => {
         <textarea
           {...register("profileSummary")}
           placeholder="e.g. Dedicated professional with over 5 years of experience in office management, known for efficiency and strong organization skills..."
-          maxLength={500}
+          maxLength={1500}
           className="input-premium h-44 resize-none leading-relaxed"
         />
         <div className="flex justify-between items-center px-2">
@@ -175,9 +175,9 @@ const PersonalInfoForm = () => {
             Focus on your top achievements and unique skills and experience.
           </p>
           <span
-            className={`text-[10px] font-black tracking-widest ${(watch("profileSummary")?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}
+            className={`text-[10px] font-black tracking-widest ${(watch("profileSummary")?.length || 0) >= 1450 ? "text-orange-500" : "text-text-muted"}`}
           >
-            {watch("profileSummary")?.length || 0} / 500
+            {watch("profileSummary")?.length || 0} / 1500
           </span>
         </div>
         {errors.profileSummary && (
