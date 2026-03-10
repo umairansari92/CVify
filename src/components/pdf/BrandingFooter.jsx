@@ -4,34 +4,28 @@ import { View, Text, Link, StyleSheet } from "@react-pdf/renderer";
 const styles = StyleSheet.create({
   footer: {
     position: "absolute",
-    bottom: 20,
+    bottom: 28,
     left: 40,
-    right: 40,
-    paddingTop: 10,
+    right: 38,
+    paddingTop: 5,
+    borderTopWidth: 1,
+    borderTopColor: "#E4E4E7",
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
   },
   footerText: {
-    fontSize: 10,
-    color: "#94a3b8",
+    fontSize: 9,
+    color: "#A1A1AA",
     textAlign: "right",
-  },
-  cvifyLink: {
-    color: "#2563eb",
-    textDecoration: "none",
-    fontWeight: "bold",
   },
 });
 
 const BrandingFooter = ({ themeColor = "#2563eb" }) => {
   return (
-    <View style={styles.footer} fixed>
+    <View style={styles.footer}>
       <Text style={styles.footerText}>
-        Designed and developed by{" "}
-        <Link src="https://cvifypro.vercel.app/" style={[styles.cvifyLink, { color: themeColor }]}>
-          CVify
-        </Link>
+        Designed and developed by CVify | https://cvifypro.vercel.app/
       </Text>
     </View>
   );

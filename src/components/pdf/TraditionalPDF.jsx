@@ -285,7 +285,6 @@ const TraditionalPDF = ({ data }) => {
 
         {education?.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>Education</Text>
             <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.entry} wrap={false}>
