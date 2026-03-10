@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import isEqual from "lodash/isEqual";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
@@ -148,6 +149,7 @@ const ProfilePage = () => {
 
   const fileRef = useRef(null);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [isManuallyDirty, setIsManuallyDirty] = useState(false);
 
   // Sync state when user data is fetched (important for refresh)
   useEffect(() => {
@@ -264,6 +266,7 @@ const ProfilePage = () => {
     } catch (err) {
       toast.error(err.message);
     } finally {
+      setIsManuallyDirty(false);
       setSaving(false);
     }
   };
@@ -401,28 +404,53 @@ const ProfilePage = () => {
   ];
   const pwdLabel = ["", "Weak", "Good", "Strong"][pwdStrength];
 
-  const isDirty =
-    firstName !== (user?.firstName || "") ||
-    lastName !== (user?.lastName || "") ||
-    headline !== (user?.headline || "") ||
-    bio !== (user?.bio || "") ||
-    username !== (user?.username || "") ||
-    phoneNumber !== (user?.phoneNumber || "") ||
-    isPublic !== (user?.isPublic || false) ||
-    location !== (user?.location || "") ||
-    JSON.stringify(socialLinks) !== JSON.stringify(user?.socialLinks) ||
-    JSON.stringify(experience) !== JSON.stringify(user?.experience) ||
-    JSON.stringify(education) !== JSON.stringify(user?.education) ||
-    JSON.stringify(skills) !== JSON.stringify(user?.skills) ||
-    JSON.stringify(services) !== JSON.stringify(user?.services) ||
-    JSON.stringify(languages) !== JSON.stringify(user?.languages) ||
-    JSON.stringify(sectionNames) !== JSON.stringify(user?.sectionNames) ||
-    JSON.stringify(themeSettings) !== JSON.stringify(user?.themeSettings) ||
-    !!imageFile ||
-    !!bannerFile;
+  const isDeepDirty = useMemo(() => {
+    if (!user) return false;
+    return (
+      firstName !== (user.firstName || "") ||
+      lastName !== (user.lastName || "") ||
+      headline !== (user.headline || "") ||
+      bio !== (user.bio || "") ||
+      username !== (user.username || "") ||
+      phoneNumber !== (user.phoneNumber || "") ||
+      isPublic !== (user.isPublic || false) ||
+      location !== (user.location || "") ||
+      !isEqual(socialLinks, user.socialLinks || { linkedin: "", github: "", twitter: "", portfolio: "" }) ||
+      !isEqual(experience, user.experience || []) ||
+      !isEqual(education, user.education || []) ||
+      !isEqual(skills, user.skills || { technical: [], professional: [] }) ||
+      !isEqual(services, user.services || []) ||
+      !isEqual(languages, user.languages || []) ||
+      !isEqual(sectionNames, user.sectionNames || { 
+        experience: "Professional Experience", 
+        education: "Education History", 
+        skills: "Expertise & Skills", 
+        projects: "Key Accomplishments", 
+        services: "Professional Services",
+        languages: "Languages"
+      }) ||
+      !isEqual(themeSettings, user.themeSettings || {
+        headerBg: "#2563eb",
+        headerBgSecondary: "#9333ea",
+        bodyBg: "#0f172a",
+        cardStyle: "glass",
+        fontPrimary: "Inter",
+        bannerUrl: "",
+        bannerOpacity: 95,
+      }) ||
+      !!imageFile ||
+      !!bannerFile
+    );
+  }, [
+    user, firstName, lastName, headline, bio, username, phoneNumber, isPublic, location,
+    socialLinks, experience, education, skills, services, languages, sectionNames,
+    themeSettings, imageFile, bannerFile
+  ]);
+
+  const isDirty = isManuallyDirty || isDeepDirty;
 
   return (
-    <div className="min-h-screen bg-foreground dark:bg-midnight p-6 md:p-8 transition-colors duration-300">
+    <div className="min-h-screen bg-foreground dark:bg-midnight p-6 md:p-8 pb-32 transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* ── Hero Header ── */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-action/80 to-violet-600 p-8 text-white shadow-xl">
@@ -546,7 +574,10 @@ const ProfilePage = () => {
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setIsManuallyDirty(true);
+                  }}
                   placeholder="your-name"
                   className="w-full pl-28 pr-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
                 />
@@ -560,7 +591,10 @@ const ProfilePage = () => {
               <input
                 type="text"
                 value={headline}
-                onChange={(e) => setHeadline(e.target.value)}
+                onChange={(e) => {
+                  setHeadline(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
                 placeholder="e.g. Senior Frontend Developer | React Specialist"
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
@@ -573,7 +607,10 @@ const ProfilePage = () => {
               <input
                 type="text"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
                 placeholder="e.g. Lahore, Pakistan"
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
@@ -585,7 +622,10 @@ const ProfilePage = () => {
               </label>
               <textarea
                 value={bio}
-                onChange={(e) => setBio(e.target.value)}
+                onChange={(e) => {
+                  setBio(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
                 placeholder="E.g., Experienced banker with 10 years in retail banking... or MERN stack developer specialized in AI..."
                 className="w-full px-5 py-3.5 h-32 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm resize-none"
               />
@@ -604,6 +644,7 @@ const ProfilePage = () => {
             onUpdate={(updated, file) => {
               setThemeSettings(updated);
               if (file) setBannerFile(file);
+              setIsManuallyDirty(true);
             }}
           />
         </Card>
@@ -620,12 +661,13 @@ const ProfilePage = () => {
                 <input
                   type="text"
                   value={socialLinks[platform]}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setSocialLinks({
                       ...socialLinks,
                       [platform]: e.target.value,
-                    })
-                  }
+                    });
+                    setIsManuallyDirty(true);
+                  }}
                   placeholder={`${platform} URL`}
                   className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
                 />
@@ -649,7 +691,10 @@ const ProfilePage = () => {
                   id="profile-first-name"
                   type="text"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    setIsManuallyDirty(true);
+                  }}
                   className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold text-sm"
                 />
               </div>
@@ -661,7 +706,10 @@ const ProfilePage = () => {
                   id="profile-last-name"
                   type="text"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    setIsManuallyDirty(true);
+                  }}
                   className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold text-sm"
                 />
               </div>
@@ -674,7 +722,10 @@ const ProfilePage = () => {
               <input
                 type="text"
                 value={phoneNumber || ""}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
                 placeholder="e.g. +92 300 1234567"
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold text-sm"
               />
@@ -1658,7 +1709,7 @@ const ProfilePage = () => {
 
       {/* ── Sticky Save Footer ── */}
       {isDirty && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-action/20 p-4 z-50 animate-in fade-in slide-in-from-bottom-10 duration-300 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-action/20 p-4 z-[100] animate-in fade-in slide-in-from-bottom-10 duration-300 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-action/10 rounded-xl flex items-center justify-center text-xl animate-pulse">
@@ -1676,7 +1727,10 @@ const ProfilePage = () => {
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 type="button"
-                onClick={() => setHasInitialized(false)}
+                onClick={() => {
+                  setHasInitialized(false);
+                  setIsManuallyDirty(false);
+                }}
                 className="flex-1 sm:flex-none px-6 py-2.5 bg-foreground dark:bg-slate-800 text-text-primary font-black text-xs rounded-xl hover:bg-foreground/80 transition-all border border-border-subtle"
               >
                 Reset

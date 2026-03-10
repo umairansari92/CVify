@@ -475,6 +475,7 @@ const ElegantPDF = ({ data }) => {
             </View>
           </View>
         ))}
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

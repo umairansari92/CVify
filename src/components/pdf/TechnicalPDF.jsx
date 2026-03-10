@@ -476,6 +476,7 @@ const TechnicalPDF = ({ data }) => {
             </Text>
           </View>
         ))}
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

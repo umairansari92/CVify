@@ -174,6 +174,8 @@ const styles = StyleSheet.create({
   },
 });
 
+import BrandingFooter from "./BrandingFooter";
+
 const ElitePDF = ({ data }) => {
   const {
     personalInfo,
@@ -185,8 +187,8 @@ const ElitePDF = ({ data }) => {
     softwareProficiency,
     interests,
     customSections,
-    themeColor,
-    fontFamily,
+    themeColor = "#2c3e50",
+    fontFamily = "Inter",
   } = data || {};
 
   const getPDFFont = (font) => {
@@ -198,7 +200,7 @@ const ElitePDF = ({ data }) => {
       case "Playfair Display":
         return "Times-Roman";
       default:
-        return "Times-Roman";
+        return "Helvetica";
     }
   };
 
@@ -206,33 +208,22 @@ const ElitePDF = ({ data }) => {
 
   const dynamicStyles = {
     page: { ...styles.page, fontFamily: pdfFont },
-    sectionTitle: { ...styles.sectionTitle, backgroundColor: themeColor },
+    header: { ...styles.header, borderBottomColor: themeColor },
+    sectionTitle: { ...styles.sectionTitle, color: "#fff", backgroundColor: themeColor },
+    subtitle: { ...styles.subtitle, color: themeColor },
     accentText: { color: themeColor },
-    borderAccent: {
-      borderBottomColor: themeColor,
-      borderLeftColor: themeColor,
-    },
+    badgeText: { ...styles.badgeText, color: themeColor },
   };
 
   return (
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
         {/* Header */}
-        <View style={[styles.header, { borderBottomColor: themeColor }]}>
-          <View
-            style={{ width: "100%", alignItems: "center", marginBottom: 4 }}
-          >
-            <Text style={styles.name}>
-              {personalInfo?.fullName || "Your Name"}
-            </Text>
-          </View>
-          <View
-            style={{ width: "100%", alignItems: "center", marginBottom: 10 }}
-          >
-            <Text style={styles.jobTitle}>
-              {personalInfo?.jobTitle || "Job Title"}
-            </Text>
-          </View>
+        <View style={dynamicStyles.header}>
+          <Text style={styles.name}>{personalInfo?.fullName || "Your Name"}</Text>
+          <Text style={styles.jobTitle}>
+            {personalInfo?.jobTitle || "Job Title"}
+          </Text>
 
           <View style={styles.contactLine}>
             {personalInfo?.email && (
@@ -259,7 +250,7 @@ const ElitePDF = ({ data }) => {
             {personalInfo?.linkedin && (
               <View style={styles.badge} wrap={false}>
                 <IconLinkedIn />
-                <Link src={personalInfo.linkedin} style={styles.badgeText}>
+                <Link src={personalInfo.linkedin} style={dynamicStyles.badgeText}>
                   {personalInfo.linkedin.replace(/^https?:\/\//, "")}
                 </Link>
               </View>
@@ -267,7 +258,7 @@ const ElitePDF = ({ data }) => {
             {personalInfo?.github && (
               <View style={styles.badge} wrap={false}>
                 <IconGitHub />
-                <Link src={personalInfo.github} style={styles.badgeText}>
+                <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
                   {personalInfo.github.replace(/^https?:\/\//, "")}
                 </Link>
               </View>
@@ -275,7 +266,7 @@ const ElitePDF = ({ data }) => {
             {personalInfo?.portfolio && (
               <View style={styles.badge} wrap={false}>
                 <IconPortfolio />
-                <Link src={personalInfo.portfolio} style={styles.badgeText}>
+                <Link src={personalInfo.portfolio} style={dynamicStyles.badgeText}>
                   {personalInfo.portfolio.replace(/^https?:\/\//, "")}
                 </Link>
               </View>
@@ -285,8 +276,8 @@ const ElitePDF = ({ data }) => {
 
         {/* Summary */}
         {personalInfo?.profileSummary && (
-          <View style={styles.section} wrap={false}>
-            <Text style={dynamicStyles.sectionTitle}>Summary</Text>
+          <View style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>Executive Summary</Text>
             <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
           </View>
         )}
@@ -294,16 +285,16 @@ const ElitePDF = ({ data }) => {
         {/* Experience */}
         {experience?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
+            <Text style={dynamicStyles.sectionTitle}>Professional Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry}>
+              <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate.toUpperCase()} — {exp.endDate.toUpperCase()}
+                    {exp.startDate} — {exp.endDate}
                   </Text>
                 </View>
-                <Text style={styles.subtitle}>{exp.company}</Text>
+                <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
                     <View key={j} style={styles.bullet}>
@@ -317,92 +308,16 @@ const ElitePDF = ({ data }) => {
           </View>
         )}
 
-        {/* Education */}
-        {education?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Education</Text>
-            {education.map((edu, i) => (
-              <View key={i} style={styles.entry}>
-                <View style={styles.entryHeader}>
-                  <Text style={styles.title}>{edu.degree}</Text>
-                  <Text style={styles.date}>
-                    {edu.startDate} — {edu.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.subtitle}>{edu.institution}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Skills */}
-        {(technicalSkills ||
-          competencies?.length > 0 ||
-          softwareProficiency?.length > 0 ||
-          interests?.length > 0) && (
-          <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>
-              Skills & Competencies
-            </Text>
-            <View style={styles.skillsTable}>
-              {technicalSkills &&
-                Object.entries(technicalSkills).map(
-                  ([cat, list], i) =>
-                    list?.length > 0 && (
-                      <View key={i} style={styles.skillRow}>
-                        <Text style={styles.skillLabel}>{cat}</Text>
-                        <Text style={styles.skillValue}>{list.join(", ")}</Text>
-                      </View>
-                    ),
-                )}
-              {competencies?.length > 0 && (
-                <View
-                  style={[
-                    styles.skillRow,
-                    { flexDirection: "column", borderBottom: 0 },
-                  ]}
-                >
-                  <Text style={[styles.skillLabel, { marginBottom: 8 }]}>
-                    Core Strengths
-                  </Text>
-                  <View style={styles.bulletList}>
-                    {competencies.map((c, i) => (
-                      <View key={i} style={styles.bullet}>
-                        <Text style={styles.bulletDot}>•</Text>
-                        <Text style={styles.bulletText}>{c}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-              {softwareProficiency?.length > 0 && (
-                <View style={styles.skillRow}>
-                  <Text style={styles.skillLabel}>Technologies</Text>
-                  <Text style={styles.skillValue}>
-                    {softwareProficiency.join(", ")}
-                  </Text>
-                </View>
-              )}
-              {interests?.length > 0 && (
-                <View style={styles.skillRow}>
-                  <Text style={styles.skillLabel}>Interests</Text>
-                  <Text style={styles.skillValue}>{interests.join(", ")}</Text>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
-
         {/* Projects */}
         {projects?.length > 0 && (
           <View style={styles.section}>
-            <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+            <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={styles.entry}>
+              <View key={i} style={styles.entry} wrap={false}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (
-                    <Link src={proj.link} style={[styles.date, styles.link]}>
+                    <Link src={proj.link} style={styles.date}>
                       {proj.link.replace(/^https?:\/\//, "")}
                     </Link>
                   )}
@@ -410,7 +325,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.bulletList}>
                   {proj.description?.map((desc, j) => (
                     <View key={j} style={styles.bullet}>
-                      <Text style={styles.bulletDot}>-</Text>
+                      <Text style={styles.bulletDot}>•</Text>
                       <Text style={styles.bulletText}>{desc}</Text>
                     </View>
                   ))}
@@ -420,22 +335,65 @@ const ElitePDF = ({ data }) => {
           </View>
         )}
 
+        {/* Education */}
+        {education?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>Education</Text>
+            {education.map((edu, i) => (
+              <View key={i} style={styles.entry} wrap={false}>
+                <View style={styles.entryHeader}>
+                  <Text style={styles.title}>{edu.degree}</Text>
+                  <Text style={styles.date}>
+                    {edu.startDate} — {edu.endDate}
+                  </Text>
+                </View>
+                <Text style={dynamicStyles.subtitle}>{edu.institution}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Skills */}
+        {(technicalSkills || competencies?.length > 0 || softwareProficiency?.length > 0) && (
+          <View style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>Technical Expertise</Text>
+            <View style={styles.skillsTable}>
+              {technicalSkills &&
+                Object.entries(technicalSkills).map(
+                  ([cat, list], i) =>
+                    list?.length > 0 && (
+                      <View key={i} style={styles.skillRow} wrap={false}>
+                        <Text style={styles.skillLabel}>{cat}:</Text>
+                        <Text style={styles.skillValue}>{list.join(", ")}</Text>
+                      </View>
+                    ),
+                )}
+              {competencies?.length > 0 && (
+                <View style={styles.skillRow} wrap={false}>
+                  <Text style={styles.skillLabel}>Key Strengths:</Text>
+                  <Text style={styles.skillValue}>{competencies.join(", ")}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+
         {/* Custom Sections */}
-        {customSections?.map((section, i) => (
-          <View key={i} style={styles.section}>
+        {customSections?.map((section, idx) => (
+          <View key={idx} style={styles.section} wrap={false}>
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             <View style={styles.bulletList}>
               {section.items?.map((item, j) => (
                 <View key={j} style={styles.bullet}>
-                  <Text style={[styles.bulletDot, dynamicStyles.accentText]}>
-                    •
-                  </Text>
+                  <Text style={styles.bulletDot}>•</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}
             </View>
           </View>
         ))}
+
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

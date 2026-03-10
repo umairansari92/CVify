@@ -211,6 +211,8 @@ const PublicProfile = () => {
             : [],
         })),
         languages: user.languages || [],
+        themeColor: theme.accentColor,
+        fontFamily: theme.fontPrimary,
       };
 
       await handleDownloadPDF(resumeData, user.selectedTemplate || "modern");
@@ -1308,6 +1310,21 @@ const PublicProfile = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Global Branding Footer */}
+      <footer className="w-full py-6 mt-12 border-t border-white/10 text-center text-[10px] md:text-xs text-[var(--text-secondary)]">
+        <p>
+          Designed and developed by{" "}
+          <a
+            href="https://cvifypro.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-black hover:text-[var(--action)] transition-colors uppercase tracking-widest"
+          >
+            CVify
+          </a>
+        </p>
+      </footer>
     </div>
   );
 };

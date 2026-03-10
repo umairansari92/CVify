@@ -177,6 +177,8 @@ const styles = StyleSheet.create({
   },
 });
 
+import BrandingFooter from "./BrandingFooter";
+
 const ProfessionalPDF = ({ data }) => {
   const {
     personalInfo,
@@ -458,6 +460,7 @@ const ProfessionalPDF = ({ data }) => {
             </View>
           ))}
         </View>
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

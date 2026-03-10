@@ -49,40 +49,42 @@ const styles = StyleSheet.create({
   },
 });
 
-const CoverLetterPDF = ({ letter, user }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.header}>
-        <Text style={styles.name}>
-          {user?.firstName && user?.lastName
-            ? `${user.firstName} ${user.lastName}`
-            : user?.firstName || "Applicant"}
+import BrandingFooter from "./BrandingFooter";
+
+const CoverLetterPDF = ({ letter, user }) => {
+  const themeColor = letter.themeColor || "#2563eb";
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.name}>
+            {user?.firstName && user?.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : user?.firstName || "Applicant"}
+          </Text>
+          <Text style={styles.contact}>
+            {user?.email ? `${user.email} | ` : ""}
+            {letter.jobTitle || "Cover Letter"} Application
+          </Text>
+        </View>
+
+        <Text style={styles.date}>
+          {new Date(letter.createdAt || Date.now()).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </Text>
-        <Text style={styles.contact}>
-          {user?.email ? `${user.email} | ` : ""}
-          {letter.jobTitle || "Cover Letter"} Application
-        </Text>
-      </View>
 
-      <Text style={styles.date}>
-        {new Date(letter.createdAt || Date.now()).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </Text>
+        <View style={styles.content}>
+          <Text>{letter.content || ""}</Text>
+        </View>
 
-      <View style={styles.content}>
-        <Text>{letter.content || ""}</Text>
-      </View>
-
-      <View style={styles.footer}>
-        <Link src="https://app-cvifypro.vercel.app/" style={styles.footerLink}>
-          <Text>Generated via CVify - Your Professional Identity Partner</Text>
-        </Link>
-      </View>
-    </Page>
-  </Document>
-);
+        <BrandingFooter themeColor={themeColor} />
+      </Page>
+    </Document>
+  );
+};
 
 export default CoverLetterPDF;

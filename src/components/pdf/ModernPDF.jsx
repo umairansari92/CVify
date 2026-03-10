@@ -166,6 +166,8 @@ const styles = StyleSheet.create({
   },
 });
 
+import BrandingFooter from "./BrandingFooter";
+
 const ModernPDF = ({ data }) => {
   const {
     personalInfo,
@@ -198,26 +200,19 @@ const ModernPDF = ({ data }) => {
 
   const dynamicStyles = {
     page: { ...styles.page, fontFamily: pdfFont },
+    jobTitle: { ...styles.jobTitle, color: themeColor },
+    sectionTitle: { ...styles.sectionTitle, color: themeColor },
+    entrySubtitle: { ...styles.entrySubtitle, color: themeColor },
     accentText: { color: themeColor },
-    borderAccent: {
-      borderLeftColor: themeColor,
-      borderBottomColor: themeColor,
-    },
-    sectionTitle: {
-      ...styles.sectionTitle,
-      color: themeColor,
-      borderBottomColor: `${themeColor}33`,
-    },
   };
 
   return (
     <Document>
       <Page size="A4" style={dynamicStyles.page}>
+        {/* Header */}
         <View style={styles.headerContainer}>
-          <Text style={styles.name}>
-            {personalInfo?.fullName || "Your Name"}
-          </Text>
-          <Text style={[styles.jobTitle, dynamicStyles.accentText]}>
+          <Text style={styles.name}>{personalInfo?.fullName || "Your Name"}</Text>
+          <Text style={dynamicStyles.jobTitle}>
             {personalInfo?.jobTitle || "Job Title"}
           </Text>
 
@@ -270,135 +265,139 @@ const ModernPDF = ({ data }) => {
           </View>
         </View>
 
+        {/* Summary */}
         {personalInfo?.profileSummary && (
-          <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
+          <View style={styles.section}>
+            <Text style={dynamicStyles.sectionTitle}>Summary</Text>
+            <Text style={styles.summary}>{personalInfo.profileSummary}</Text>
+          </View>
         )}
 
-        <View style={styles.columns} wrap={false}>
-          <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Skills</Text>
-            {technicalSkills &&
-              Object.entries(technicalSkills).map(
-                ([key, val], i) =>
-                  val?.length > 0 &&
-                  i < 3 && ( // Only first 3 categories in left col
-                    <View key={i} style={styles.skillGroup} wrap={false}>
-                      <Text style={styles.skillLabel}>{key.toUpperCase()}</Text>
-                      <Text style={styles.skillText}>{val.join(", ")}</Text>
+        {/* Two Columns for Experience and Skills */}
+        <View style={styles.columns}>
+          {/* Main Column */}
+          <View style={{ width: "65%" }}>
+            {/* Experience */}
+            {experience?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Experience</Text>
+                {experience.map((exp, i) => (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={styles.entryHeader}>
+                      <Text style={styles.entryTitle}>{exp.position}</Text>
+                      <Text style={styles.date}>
+                        {exp.startDate} — {exp.endDate}
+                      </Text>
                     </View>
-                  ),
-              )}
-          </View>
-
-          <View style={styles.column}>
-            <Text style={styles.sectionTitle}>Core Strengths</Text>
-            {competencies?.length > 0 && (
-              <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>Core Strengths</Text>
-                {competencies.map((c, i) => (
-                  <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 6, color: themeColor }}>•</Text>
-                    <Text style={styles.bulletText}>{c}</Text>
+                    <Text style={dynamicStyles.entrySubtitle}>{exp.company}</Text>
+                    <View style={{ marginTop: 4 }}>
+                      {exp.responsibilities?.map((res, j) => (
+                        <View key={j} style={styles.bulletPoint}>
+                          <Text style={[styles.bulletText, { width: 8 }]}>•</Text>
+                          <Text style={styles.bulletText}>{res}</Text>
+                        </View>
+                      ))}
+                    </View>
                   </View>
                 ))}
               </View>
             )}
-            {softwareProficiency?.length > 0 && (
-              <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>Software & Systems</Text>
-                <Text style={styles.skillText}>
-                  {softwareProficiency.join(", ")}
-                </Text>
+
+            {/* Projects */}
+            {projects?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Projects</Text>
+                {projects.map((proj, i) => (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <View style={styles.entryHeader}>
+                      <Text style={styles.entryTitle}>{proj.name}</Text>
+                      {proj.link && (
+                        <Link src={proj.link} style={styles.date}>
+                          {proj.link.replace(/^https?:\/\//, "")}
+                        </Link>
+                      )}
+                    </View>
+                    <View style={{ marginTop: 4 }}>
+                      {proj.description?.map((desc, j) => (
+                        <View key={j} style={styles.bulletPoint}>
+                          <Text style={[styles.bulletText, { width: 8 }]}>•</Text>
+                          <Text style={styles.bulletText}>{desc}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                ))}
               </View>
             )}
+          </View>
+
+          {/* Side Column */}
+          <View style={{ width: "30%" }}>
+            {/* Skills */}
+            <View style={styles.section}>
+              <Text style={dynamicStyles.sectionTitle}>Skills</Text>
+              {technicalSkills &&
+                Object.entries(technicalSkills).map(
+                  ([cat, list], i) =>
+                    list?.length > 0 && (
+                      <View key={i} style={styles.skillGroup}>
+                        <Text style={styles.skillLabel}>{cat}</Text>
+                        <Text style={styles.skillText}>{list.join(", ")}</Text>
+                      </View>
+                    ),
+                )}
+              {competencies?.length > 0 && (
+                <View style={styles.skillGroup}>
+                  <Text style={styles.skillLabel}>Key Strengths</Text>
+                  <Text style={styles.skillText}>{competencies.join(", ")}</Text>
+                </View>
+              )}
+            </View>
+
+            {/* Education */}
+            {education?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Education</Text>
+                {education.map((edu, i) => (
+                  <View key={i} style={styles.entry} wrap={false}>
+                    <Text style={styles.entryTitle}>{edu.degree}</Text>
+                    <Text style={dynamicStyles.entrySubtitle}>
+                      {edu.institution}
+                    </Text>
+                    <Text style={styles.date}>
+                      {edu.startDate} — {edu.endDate}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Interests */}
             {interests?.length > 0 && (
-              <View style={styles.skillGroup} wrap={false}>
-                <Text style={styles.skillLabel}>Interests</Text>
+              <View style={styles.section}>
+                <Text style={dynamicStyles.sectionTitle}>Interests</Text>
                 <Text style={styles.skillText}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>
         </View>
 
-        {experience?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Work Experience</Text>
-            {experience.map((exp, index) => (
-              <View key={index} style={styles.entry} wrap={false}>
-                <View style={styles.entryHeader}>
-                  <Text style={styles.entryTitle}>{exp.position}</Text>
-                  <Text style={styles.date}>
-                    {exp.startDate} — {exp.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.entrySubtitle}>{exp.company}</Text>
-                {exp.responsibilities?.map((res, i) => (
-                  <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 8, color: themeColor }}>•</Text>
-                    <Text style={styles.bulletText}>{res}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {projects?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
-            {projects.map((proj, index) => (
-              <View key={index} style={styles.entry}>
-                <View style={styles.entryHeader} wrap={false}>
-                  <Text style={styles.entryTitle}>{proj.name}</Text>
-                  {proj.link && (
-                    <Link
-                      style={[styles.date, { color: "#2563eb" }]}
-                      src={proj.link}
-                    >
-                      {proj.link.replace(/^https?:\/\//, "")}
-                    </Link>
-                  )}
-                </View>
-                {proj.description?.map((desc, i) => (
-                  <View key={i} style={styles.bulletPoint}>
-                    <Text style={{ width: 8, color: themeColor }}>-</Text>
-                    <Text style={styles.bulletText}>{desc}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {education?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
-            {education.map((edu, index) => (
-              <View key={index} style={styles.entry} wrap={false}>
-                <View style={styles.entryHeader}>
-                  <Text style={styles.entryTitle}>{edu.institution}</Text>
-                  <Text style={styles.date}>
-                    {edu.startDate} — {edu.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.skillText}>{edu.degree}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-
         {/* Custom Sections */}
-        {customSections?.map((section, j) => (
-          <View key={j} style={styles.section}>
+        {customSections?.map((section, idx) => (
+          <View key={idx} style={styles.section} wrap={false}>
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
-            {section.items?.map((item, k) => (
-              <View key={k} style={styles.bulletPoint}>
-                <Text style={{ width: 8, color: themeColor }}>•</Text>
-                <Text style={styles.bulletText}>{item}</Text>
-              </View>
-            ))}
+            <View style={{ marginTop: 4 }}>
+              {section.items?.map((item, j) => (
+                <View key={j} style={styles.bulletPoint}>
+                  <Text style={[styles.bulletText, { width: 8 }]}>•</Text>
+                  <Text style={styles.bulletText}>{item}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         ))}
+
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

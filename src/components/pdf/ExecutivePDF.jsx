@@ -452,6 +452,7 @@ const ExecutivePDF = ({ data }) => {
             )}
           </View>
         </View>
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

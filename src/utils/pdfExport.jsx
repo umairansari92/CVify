@@ -75,6 +75,11 @@ export const handleDownloadPDF = async (data, templateId) => {
         break;
     }
 
+    // 1.1 Inject theme settings if available
+    if (data.themeColor || data.fontFamily) {
+      console.log("Applying theme to PDF:", { color: data.themeColor, font: data.fontFamily });
+    }
+
     // 2. Generate the PDF blob using the native renderer
     const blob = await pdf(MyDocument).toBlob();
 
@@ -118,7 +123,14 @@ export const handleDownloadLetter = async (letter, user) => {
   console.log("Exporting Cover Letter PDF for:", letter.jobTitle);
 
   try {
-    const MyDocument = <CoverLetterPDF letter={letter} user={user} />;
+    // Inject theme from user settings if available
+    const pdfData = {
+      ...letter,
+      themeColor: user?.themeSettings?.accentColor || "#2563eb",
+      fontFamily: user?.themeSettings?.fontPrimary || "Inter",
+    };
+
+    const MyDocument = <CoverLetterPDF letter={pdfData} user={user} />;
 
     // Using the same flow as handleDownloadPDF for consistency
     const blob = await pdf(MyDocument).toBlob();

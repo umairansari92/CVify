@@ -485,6 +485,7 @@ const BoldPDF = ({ data }) => {
             </View>
           </View>
         </View>
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );

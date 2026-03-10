@@ -416,6 +416,7 @@ const ClassicPDF = ({ data }) => {
             ))}
           </View>
         ))}
+        <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
   );
