@@ -37,11 +37,10 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
   const handleChange = (field, value) => {
     const updated = { ...localSettings, [field]: value };
     setLocalSettings(updated);
+    onUpdate(updated, bannerFile);
   };
 
-  const handleApply = () => {
-    onUpdate(localSettings, bannerFile);
-  };
+  // Removed manual apply for global sync flow
 
   const handleBannerFileChange = (e) => {
     const file = e.target.files[0];
@@ -138,6 +137,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       accentColor: preset.accentColor || "#2563eb",
     };
     setLocalSettings(updated);
+    onUpdate(updated, bannerFile);
     toast.success(`Theme Applied: ${preset.name}`);
   };
 
@@ -479,15 +479,8 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         </div>
       </div>
 
-      <div className="flex justify-end pt-8">
-        <button
-          onClick={handleApply}
-          disabled={saving}
-          className="px-10 py-4 bg-action hover:bg-blue-600 text-white font-black text-sm uppercase tracking-widest rounded-3xl transition-all shadow-[0_20px_40px_-10px_rgba(37,99,235,0.3)] active:scale-[0.98] disabled:opacity-50"
-        >
-          {saving ? "Applying..." : "Apply Transformations"}
-        </button>
-      </div>
+      {/* Removed Apply button for unified save flow */}
+
     </div>
   );
 };

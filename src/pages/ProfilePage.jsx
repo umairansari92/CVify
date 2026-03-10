@@ -60,6 +60,19 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((s) => s.auth);
 
+  // Date helpers: DB (MM/YYYY) <-> Input (YYYY-MM)
+  const toInputDate = (dateStr) => {
+    if (!dateStr || !dateStr.includes("/")) return "";
+    const [m, y] = dateStr.split("/");
+    return `${y}-${m.padStart(2, "0")}`;
+  };
+
+  const toDBDate = (dateStr) => {
+    if (!dateStr) return "";
+    const [y, m] = dateStr.split("-");
+    return `${m}/${y}`;
+  };
+
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [headline, setHeadline] = useState(user?.headline || "");
@@ -387,6 +400,26 @@ const ProfilePage = () => {
   ];
   const pwdLabel = ["", "Weak", "Good", "Strong"][pwdStrength];
 
+  const isDirty =
+    firstName !== (user?.firstName || "") ||
+    lastName !== (user?.lastName || "") ||
+    headline !== (user?.headline || "") ||
+    bio !== (user?.bio || "") ||
+    username !== (user?.username || "") ||
+    phoneNumber !== (user?.phoneNumber || "") ||
+    isPublic !== (user?.isPublic || false) ||
+    location !== (user?.location || "") ||
+    JSON.stringify(socialLinks) !== JSON.stringify(user?.socialLinks) ||
+    JSON.stringify(experience) !== JSON.stringify(user?.experience) ||
+    JSON.stringify(education) !== JSON.stringify(user?.education) ||
+    JSON.stringify(skills) !== JSON.stringify(user?.skills) ||
+    JSON.stringify(services) !== JSON.stringify(user?.services) ||
+    JSON.stringify(languages) !== JSON.stringify(user?.languages) ||
+    JSON.stringify(sectionNames) !== JSON.stringify(user?.sectionNames) ||
+    JSON.stringify(themeSettings) !== JSON.stringify(user?.themeSettings) ||
+    !!imageFile ||
+    !!bannerFile;
+
   return (
     <div className="min-h-screen bg-foreground dark:bg-midnight p-6 md:p-8 transition-colors duration-300">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -559,6 +592,8 @@ const ProfilePage = () => {
           </div>
         </Card>
 
+        <hr className="border-border-subtle/50 my-2" />
+
         {/* ── Theme Editor ── */}
         <Card>
           <SectionTitle icon={<FaPalette />} title="Portfolio Theme Editor" />
@@ -568,9 +603,6 @@ const ProfilePage = () => {
             onUpdate={(updated, file) => {
               setThemeSettings(updated);
               if (file) setBannerFile(file);
-              toast.success(
-                "Theme settings staged. Don't forget to Save Profile!",
-              );
             }}
           />
         </Card>
@@ -600,6 +632,8 @@ const ProfilePage = () => {
             ))}
           </div>
         </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Personal Info ── */}
         <Card>
@@ -693,16 +727,10 @@ const ProfilePage = () => {
                 </button>
               </div>
             )}
-
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full sm:w-auto px-8 py-3 bg-action hover:bg-blue-600 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all duration-200 shadow-sm hover:shadow-action/30 active:scale-[0.98] disabled:opacity-50"
-            >
-              {saving ? "Saving..." : "Save Profile"}
-            </button>
           </form>
         </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Diamond Ledger ── */}
         <Card>
@@ -1060,6 +1088,8 @@ const ProfilePage = () => {
           )}
         </Card>
 
+        <hr className="border-border-subtle/50 my-2" />
+
         {/* ── Experience Timeline ── */}
         <Card>
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -1146,15 +1176,14 @@ const ProfilePage = () => {
                       Start Date
                     </label>
                     <input
-                      type="text"
-                      placeholder="Jan 2022"
-                      value={exp.startDate}
+                      type="month"
+                      value={toInputDate(exp.startDate)}
                       onChange={(e) => {
                         const newExp = [...experience];
-                        newExp[idx].startDate = e.target.value;
+                        newExp[idx].startDate = toDBDate(e.target.value);
                         setExperience(newExp);
                       }}
-                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm focus:border-action outline-none transition-all"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1162,16 +1191,15 @@ const ProfilePage = () => {
                       End Date
                     </label>
                     <input
-                      type="text"
-                      placeholder="End Date"
+                      type="month"
                       disabled={exp.isCurrent}
-                      value={exp.isCurrent ? "Present" : exp.endDate}
+                      value={exp.isCurrent ? "" : toInputDate(exp.endDate)}
                       onChange={(e) => {
                         const newExp = [...experience];
-                        newExp[idx].endDate = e.target.value;
+                        newExp[idx].endDate = toDBDate(e.target.value);
                         setExperience(newExp);
                       }}
-                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm focus:border-action outline-none transition-all disabled:opacity-50"
                     />
                   </div>
                   <div className="flex items-end pb-2 gap-2">
@@ -1245,6 +1273,8 @@ const ProfilePage = () => {
             )}
           </div>
         </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Education ── */}
         <Card>
@@ -1324,15 +1354,14 @@ const ProfilePage = () => {
                     className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
                   />
                   <input
-                    type="text"
-                    placeholder="Graduation Date"
-                    value={edu.graduationDate}
+                    type="month"
+                    value={toInputDate(edu.graduationDate)}
                     onChange={(e) => {
                       const newEdu = [...education];
-                      newEdu[idx].graduationDate = e.target.value;
+                      newEdu[idx].graduationDate = toDBDate(e.target.value);
                       setEducation(newEdu);
                     }}
-                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm focus:border-action outline-none transition-all"
                   />
                 </div>
                 <button
@@ -1352,6 +1381,8 @@ const ProfilePage = () => {
             )}
           </div>
         </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Skills & Services ── */}
         <Card>
@@ -1388,24 +1419,70 @@ const ProfilePage = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Professional Services / Offerings (Comma separated)
-              </label>
-              <input
-                type="text"
-                value={skills.professional?.join(", ")}
-                onChange={(e) =>
-                  setSkills({
-                    ...skills,
-                    professional: e.target.value
-                      .split(",")
-                      .map((s) => s.trim()),
-                  })
-                }
-                placeholder="E.g., Home Tutoring, Financial Consulting..."
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
-              />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <span className="text-action">💎</span> {sectionNames.services}
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setServices([...services, { title: "", description: "" }])
+                  }
+                  className="text-[10px] font-black bg-action/10 text-action px-3 py-1 rounded-full hover:bg-action hover:text-white transition-all transition-all"
+                >
+                  + Add Service
+                </button>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                {services.map((s, idx) => (
+                  <div
+                    key={idx}
+                    className="flex gap-4 p-5 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle group hover:border-action/30 transition-all"
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-action/10 flex items-center justify-center text-action">
+                      •
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="text"
+                        placeholder="Service Title (e.g. Lead Generation)"
+                        value={s.title}
+                        onChange={(e) => {
+                          const newS = [...services];
+                          newS[idx].title = e.target.value;
+                          setServices(newS);
+                        }}
+                        className="w-full bg-transparent font-black text-sm text-text-primary outline-none focus:border-b border-action/30"
+                      />
+                      <textarea
+                        placeholder="Brief description of the service..."
+                        value={s.description}
+                        onChange={(e) => {
+                          const newS = [...services];
+                          newS[idx].description = e.target.value;
+                          setServices(newS);
+                        }}
+                        className="w-full bg-transparent text-[10px] font-bold text-text-muted outline-none resize-none h-12"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setServices(services.filter((_, i) => i !== idx))
+                      }
+                      className="self-start text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                ))}
+                {services.length === 0 && (
+                  <p className="text-center py-6 text-[10px] font-bold text-text-muted italic bg-foreground/10 rounded-2xl">
+                    Add specific services or offerings to show your value.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </Card>
@@ -1519,6 +1596,43 @@ const ProfilePage = () => {
           </Card>
         )}
       </div>
+
+      {/* ── Sticky Save Footer ── */}
+      {isDirty && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-action/20 p-4 z-50 animate-in fade-in slide-in-from-bottom-10 duration-300 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+          <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-action/10 rounded-xl flex items-center justify-center text-xl animate-pulse">
+                ✨
+              </div>
+              <div>
+                <p className="text-xs font-black text-text-primary uppercase tracking-widest">
+                  Unsaved Changes
+                </p>
+                <p className="text-[10px] text-text-muted font-bold">
+                  Your profile has pending transformations.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => setHasInitialized(false)}
+                className="flex-1 sm:flex-none px-6 py-2.5 bg-foreground dark:bg-slate-800 text-text-primary font-black text-xs rounded-xl hover:bg-foreground/80 transition-all border border-border-subtle"
+              >
+                Reset
+              </button>
+              <button
+                onClick={handleSaveProfile}
+                disabled={saving}
+                className="flex-[2] sm:flex-none px-10 py-2.5 bg-action text-white font-black text-xs rounded-xl hover:bg-blue-600 transition-all shadow-lg shadow-action/25 active:scale-95 disabled:opacity-50"
+              >
+                {saving ? "Saving Changes..." : "Save Profile Now"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
