@@ -244,13 +244,13 @@ const ATSPage = () => {
               </div>
 
               {/* Missing Keywords */}
-              {result.feedback.missingKeywords?.length > 0 && (
+              {(result.feedback.keywordGaps || result.feedback.missingKeywords)?.length > 0 && (
                 <div className="glass p-8 rounded-[2.5rem] border border-white/5 space-y-5">
                   <h3 className="flex items-center gap-3 text-blue-400 font-black uppercase tracking-widest text-xs text-center">
                     <FaChartLine /> Missing Keywords (Target these)
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {result.feedback.missingKeywords.map((k, i) => (
+                    {(result.feedback.keywordGaps || result.feedback.missingKeywords).map((k, i) => (
                       <span
                         key={i}
                         className="py-2 px-4 rounded-xl bg-blue-500/10 text-blue-400 text-[10px] font-black border border-blue-500/20"
