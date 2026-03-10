@@ -35,18 +35,17 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
-    fontFamily: "Times-Roman",
+    padding: "12mm",
+    fontFamily: "Helvetica",
     fontSize: 10,
     color: "#1e293b",
-    backgroundColor: "#fff",
-    lineHeight: 1.4,
+    lineHeight: 1.5,
   },
   header: {
-    paddingBottom: 20,
-    marginBottom: 25,
-    borderBottomWidth: 2,
+    marginBottom: 15,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#0f172a",
+    paddingBottom: 12,
   },
   name: {
     fontSize: 26,
@@ -70,8 +69,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -84,8 +84,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -167,12 +168,19 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     lineHeight: 1.4,
   },
+  summary: {
+    fontSize: 10,
+    textAlign: "justify",
+    marginBottom: 8,
+    lineHeight: 1.6,
+  },
   sidebarBox: {
     backgroundColor: "#f8fafc",
-    padding: 12,
+    padding: "4 10",
+    marginBottom: 8,
     borderLeftWidth: 3,
     borderLeftColor: "#0f172a",
-    marginBottom: 15,
+    letterSpacing: 1,
   },
   sidebarItem: {
     fontSize: 9,
@@ -328,7 +336,7 @@ const ExecutivePDF = ({ data }) => {
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
                 {experience.map((exp, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
+                  <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>

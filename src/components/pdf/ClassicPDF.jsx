@@ -35,11 +35,10 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
-    fontFamily: "Helvetica",
+    padding: "12mm",
+    fontFamily: "Times-Roman",
     fontSize: 10,
-    color: "#333",
-    backgroundColor: "#fff",
+    color: "#1a1a1a",
     lineHeight: 1.5,
   },
   header: {
@@ -71,8 +70,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -85,8 +85,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -106,21 +107,20 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   summary: {
-    fontSize: 9.5,
-    color: "#4b5563",
-    marginBottom: 20,
+    fontSize: 10,
     textAlign: "justify",
-    lineHeight: 1.6,
+    marginBottom: 8,
   },
   sectionTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "bold",
     textTransform: "uppercase",
+    letterSpacing: 1,
     borderBottomWidth: 1,
-    borderBottomColor: "#d1d5db",
-    paddingBottom: 4,
-    marginBottom: 12,
-    color: "#111",
+    borderBottomColor: "#111",
+    paddingBottom: 2,
+    marginBottom: 8,
+    marginTop: 12,
   },
   entry: {
     marginBottom: 15,
@@ -288,7 +288,7 @@ const ClassicPDF = ({ data }) => {
           <View>
             <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>

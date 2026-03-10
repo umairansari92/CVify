@@ -35,7 +35,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: "15mm",
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 9.5,
     color: "#1a1a1a",
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
   },
   header: {
-    marginBottom: 18,
+    marginBottom: 15,
     borderBottom: "1pt solid #eeeeee",
-    paddingBottom: 12,
+    paddingBottom: 10,
   },
   name: {
     fontSize: 24,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   contactLine: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 20,
+    gap: 15,
     marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
   linkLine: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
-    marginTop: 8,
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -112,14 +112,14 @@ const styles = StyleSheet.create({
     // textTransform: "uppercase",
     letterSpacing: 1.5,
     color: "#000",
-    marginBottom: 10,
+    marginBottom: 8,
     borderBottom: "0.5pt solid #000",
     paddingBottom: 2,
     width: "100%",
   },
   summary: {
     textAlign: "justify",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   entry: {
     marginBottom: 12,
@@ -310,7 +310,7 @@ const GlobalPDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={[styles.title, dynamicStyles.accentText]}>
                     {exp.position}
@@ -338,7 +338,7 @@ const GlobalPDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (

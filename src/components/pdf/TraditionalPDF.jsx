@@ -35,7 +35,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    padding: "12mm",
     fontFamily: "Times-Roman",
     fontSize: 10,
     color: "#000",
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
   header: {
-    paddingBottom: 20,
-    marginBottom: 20,
-    borderBottomWidth: 2,
+    paddingBottom: 12,
+    marginBottom: 15,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#000",
   },
   name: {
@@ -62,15 +62,13 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#666",
     letterSpacing: 1.5,
-    marginBottom: 12,
-    fontWeight: "bold",
-    textAlign: "center",
     lineHeight: 1.2,
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -84,8 +82,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 10,
-    marginTop: 10,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -113,13 +112,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#666",
     paddingBottom: 2,
-    marginBottom: 10,
-    marginTop: 15,
+    marginBottom: 8,
+    marginTop: 12,
   },
   summary: {
     fontSize: 10,
     textAlign: "justify",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   entry: {
     marginBottom: 15,
@@ -281,7 +280,7 @@ const TraditionalPDF = ({ data }) => {
           <View>
             <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.company}</Text>
                   <Text style={styles.date}>
@@ -304,7 +303,7 @@ const TraditionalPDF = ({ data }) => {
           <View>
             <Text style={dynamicStyles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>

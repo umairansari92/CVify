@@ -35,11 +35,12 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 0,
+    padding: "12mm",
     fontFamily: "Helvetica",
-    fontSize: 9,
-    color: "#1f2937",
+    fontSize: 10,
+    color: "#1e293b",
     backgroundColor: "#fff",
+    lineHeight: 1.5,
   },
   header: {
     padding: 30,
@@ -51,11 +52,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 2,
     marginBottom: 8,
-    color: "#111827",
+    color: "#fff",
     textAlign: "center",
     lineHeight: 1.2,
+    width: "100%",
   },
   jobTitle: {
     fontSize: 12,
@@ -68,8 +70,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -82,8 +85,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -198,6 +202,14 @@ const styles = StyleSheet.create({
     marginRight: 6,
     marginBottom: 6,
     color: "#374151",
+    paddingHorizontal: 20,
+  },
+  summary: {
+    fontSize: 10,
+    textAlign: "justify",
+    marginBottom: 8,
+    color: "#475569",
+    lineHeight: 1.6,
   },
 });
 
@@ -330,7 +342,7 @@ const BoldPDF = ({ data }) => {
                     Work Experience
                   </Text>
                   {experience.map((exp, i) => (
-                    <View key={i} style={styles.entry} wrap={false}>
+                    <View key={i} style={styles.entry}>
                       <View style={styles.entryHeader}>
                         <Text style={styles.title}>{exp.position}</Text>
                         <Text style={styles.subtitle}>

@@ -35,12 +35,11 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 9,
     color: "#333",
-    backgroundColor: "#fff",
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   header: {
     paddingBottom: 20,
@@ -69,8 +68,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -83,8 +83,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -108,10 +109,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   summary: {
-    textAlign: "center",
-    fontSize: 9.5,
-    color: "#475569",
-    lineHeight: 1.6,
+    fontSize: 9,
+    textAlign: "justify",
+    marginBottom: 8,
+    color: "#555",
   },
   section: {
     marginBottom: 20,
@@ -120,12 +121,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "bold",
     // textTransform: "uppercase",
+    color: "#1a1a1a",
     letterSpacing: 1.5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
-    paddingBottom: 4,
-    marginBottom: 12,
-    color: "#334155",
+    borderBottom: "1pt solid #eee",
+    paddingBottom: 2,
+    marginBottom: 8,
+    marginTop: 10,
   },
   entry: {
     marginBottom: 15,
@@ -327,7 +328,7 @@ const MinimalPDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
@@ -354,7 +355,7 @@ const MinimalPDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>Projects</Text>
             <View style={{ flexDirection: "column", gap: 10 }}>
               {projects.map((proj, i) => (
-                <View key={i} style={styles.entry} wrap={false}>
+                <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader}>
                     {proj.link ? (
                       <Link

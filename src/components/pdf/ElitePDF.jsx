@@ -35,7 +35,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: "20mm",
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 10,
     color: "#2c3e50",
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
   header: {
-    marginBottom: 20,
-    borderBottom: "2pt solid #2c3e50",
-    paddingBottom: 12,
+    marginBottom: 15,
+    borderBottom: "1.5pt solid #2c3e50",
+    paddingBottom: 10,
   },
   name: {
     fontSize: 24,
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
   linkLine: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
-    marginTop: 8,
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#2c3e50",
     backgroundColor: "#ecf0f1",
-    padding: "5 10",
-    marginBottom: 10,
+    padding: "4 10",
+    marginBottom: 8,
     letterSpacing: 1,
   },
   summary: {
     fontSize: 10,
     textAlign: "justify",
-    marginBottom: 10,
+    marginBottom: 8,
     lineHeight: 1.6,
   },
   entry: {
@@ -306,7 +306,7 @@ const ElitePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Professional Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
@@ -332,7 +332,7 @@ const ElitePDF = ({ data }) => {
           <View style={styles.section}>
             <Text style={dynamicStyles.sectionTitle}>Key Projects</Text>
             {projects.map((proj, i) => (
-              <View key={i} style={styles.entry} wrap={false}>
+              <View key={i} style={styles.entry}>
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{proj.name}</Text>
                   {proj.link && (

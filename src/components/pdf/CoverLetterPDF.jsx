@@ -17,16 +17,16 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 60,
+    padding: "15mm",
     fontSize: 11,
     fontFamily: "Helvetica",
     lineHeight: 1.6,
     color: "#333",
   },
   header: {
-    marginBottom: 40,
+    marginBottom: 30,
     borderBottom: "1pt solid #eee",
-    paddingBottom: 20,
+    paddingBottom: 15,
   },
   name: {
     fontSize: 22,

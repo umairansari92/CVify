@@ -35,17 +35,17 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 10,
     color: "#333",
     lineHeight: 1.5,
   },
   header: {
-    marginBottom: 30,
+    marginBottom: 15,
     borderBottomWidth: 1.5,
     borderBottomColor: "#111",
-    paddingBottom: 20,
+    paddingBottom: 12,
   },
   name: {
     fontSize: 28,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   jobTitle: {
     fontSize: 11,
     color: "#444",
-    marginBottom: 12,
+    marginBottom: 10,
     textTransform: "uppercase",
     letterSpacing: 1.5,
     lineHeight: 1.2,
@@ -66,8 +66,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -80,8 +81,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },

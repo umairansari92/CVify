@@ -35,7 +35,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: "20mm",
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 10,
     color: "#334155",
@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   header: {
-    marginBottom: 15,
-    borderBottomWidth: 2,
+    marginBottom: 12,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#2563eb",
-    paddingBottom: 15,
+    paddingBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -56,12 +56,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   nameContainer: {
-    marginBottom: 10,
+    marginBottom: 8,
   },
   jobTitleContainer: {
     marginTop: 2,
     paddingTop: 4,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   headerRight: {
     width: "35%",
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     color: "#475569",
     textAlign: "justify",
     lineHeight: 1.6,
+    marginBottom: 8,
   },
   entry: {
     marginBottom: 12,
@@ -268,54 +269,58 @@ const ProfessionalPDF = ({ data }) => {
           </View>
 
           <View style={styles.headerRight}>
-            {personalInfo?.email && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconEmail />
-                <Text>{personalInfo.email}</Text>
-              </View>
-            )}
-            {personalInfo?.phone && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconPhone />
-                <Text>{personalInfo.phone}</Text>
-              </View>
-            )}
-            {personalInfo?.location && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconLocation />
-                <Text>{personalInfo.location}</Text>
-              </View>
-            )}
-            {personalInfo?.linkedin && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconLinkedIn />
-                <Link
-                  src={personalInfo.linkedin}
-                  style={dynamicStyles.badgeText}
-                >
-                  {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-                </Link>
-              </View>
-            )}
-            {personalInfo?.github && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconGitHub />
-                <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
-                  {personalInfo.github.replace(/^https?:\/\//, "")}
-                </Link>
-              </View>
-            )}
-            {personalInfo?.portfolio && (
-              <View style={styles.contactItem} wrap={false}>
-                <IconPortfolio />
-                <Link
-                  src={personalInfo.portfolio}
-                  style={dynamicStyles.badgeText}
-                >
-                  {personalInfo.portfolio.replace(/^https?:\/\//, "")}
-                </Link>
-              </View>
-            )}
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, justifyContent: "flex-end", marginBottom: 4 }}>
+              {personalInfo?.email && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconEmail />
+                  <Text>{personalInfo.email}</Text>
+                </View>
+              )}
+              {personalInfo?.phone && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconPhone />
+                  <Text>{personalInfo.phone}</Text>
+                </View>
+              )}
+              {personalInfo?.location && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconLocation />
+                  <Text>{personalInfo.location}</Text>
+                </View>
+              )}
+            </View>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, justifyContent: "flex-end" }}>
+              {personalInfo?.linkedin && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconLinkedIn />
+                  <Link
+                    src={personalInfo.linkedin}
+                    style={dynamicStyles.badgeText}
+                  >
+                    {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
+              )}
+              {personalInfo?.github && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconGitHub />
+                  <Link src={personalInfo.github} style={dynamicStyles.badgeText}>
+                    {personalInfo.github.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
+              )}
+              {personalInfo?.portfolio && (
+                <View style={styles.contactItem} wrap={false}>
+                  <IconPortfolio />
+                  <Link
+                    src={personalInfo.portfolio}
+                    style={dynamicStyles.badgeText}
+                  >
+                    {personalInfo.portfolio.replace(/^https?:\/\//, "")}
+                  </Link>
+                </View>
+              )}
+            </View>
           </View>
         </View>
 
@@ -339,7 +344,7 @@ const ProfessionalPDF = ({ data }) => {
                 <Text style={styles.sectionTitle}>Experience</Text>
               </View>
               {experience.map((exp, i) => (
-                <View key={i} style={styles.entry} wrap={false}>
+                <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader}>
                     <Text style={styles.title}>{exp.position}</Text>
                     <Text style={styles.date}>
@@ -368,7 +373,7 @@ const ProfessionalPDF = ({ data }) => {
                 <Text style={styles.sectionTitle}>Key Projects</Text>
               </View>
               {projects.map((proj, i) => (
-                <View key={i} style={styles.entry} wrap={false}>
+                <View key={i} style={styles.entry}>
                   <View style={styles.entryHeader}>
                     <Text style={styles.title}>{proj.name}</Text>
                     {proj.link && (

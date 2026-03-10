@@ -35,7 +35,7 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: "12mm",
     fontFamily: "Courier",
     fontSize: 9,
     color: "#e2e8f0",
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
   },
   terminalHeader: {
     backgroundColor: "#0f172a",
-    padding: "20 30",
+    padding: "15 25",
     borderRadius: 6,
-    marginBottom: 20,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#334155",
   },
@@ -98,8 +98,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -112,8 +113,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -419,7 +421,7 @@ const TechnicalPDF = ({ data }) => {
                   <Text style={styles.sectionTitle}>Work Experience</Text>
                 </View>
                 {experience.map((exp, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
+                  <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>

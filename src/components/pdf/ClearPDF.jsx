@@ -36,14 +36,15 @@ Font.register({
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
-    backgroundColor: "#fff",
+    padding: "12mm",
     fontFamily: "Helvetica",
-    fontSize: 9,
-    color: "#1e293b",
+    fontSize: 10,
+    color: "#333",
+    lineHeight: 1.4,
   },
   header: {
-    padding: "15 30",
-    paddingBottom: 20,
+    padding: "10 25",
+    paddingBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
     backgroundColor: "#fff",
@@ -89,8 +90,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -103,8 +105,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -125,6 +128,12 @@ const styles = StyleSheet.create({
   },
   sideContact: {
     marginBottom: 25,
+  },
+  summary: {
+    fontSize: 10,
+    textAlign: "justify",
+    marginBottom: 8,
+    lineHeight: 1.5,
   },
   sideContactItem: {
     fontSize: 8,
@@ -417,7 +426,7 @@ const ClearPDF = ({ data }) => {
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Work Experience</Text>
                 {experience.map((exp, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
+                  <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>

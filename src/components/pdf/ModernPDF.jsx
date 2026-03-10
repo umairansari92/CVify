@@ -35,11 +35,10 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    padding: "12mm",
     fontFamily: "Helvetica",
     fontSize: 10,
     color: "#333",
-    backgroundColor: "#fff",
     lineHeight: 1.5,
   },
   headerContainer: {
@@ -67,8 +66,9 @@ const styles = StyleSheet.create({
   },
   contactLine: {
     flexDirection: "row",
-    gap: 20,
-    marginTop: 8,
+    flexWrap: "wrap",
+    gap: 15,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -81,8 +81,9 @@ const styles = StyleSheet.create({
   },
   linkLine: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 6,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -102,9 +103,10 @@ const styles = StyleSheet.create({
     textDecoration: "none",
   },
   summary: {
-    marginBottom: 20,
+    fontSize: 10,
     textAlign: "justify",
-    color: "#334155",
+    marginBottom: 8,
+    color: "#4a5568",
     lineHeight: 1.6,
   },
   section: {
@@ -113,12 +115,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 11,
     fontWeight: "bold",
-    color: "#2563eb",
     textTransform: "uppercase",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
-    paddingBottom: 4,
-    marginBottom: 12,
+    letterSpacing: 2,
+    color: "#111",
+    marginBottom: 8,
+    marginTop: 12,
   },
   columns: {
     flexDirection: "row",
@@ -307,7 +308,7 @@ const ModernPDF = ({ data }) => {
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Experience</Text>
                 {experience.map((exp, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
+                  <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.entryTitle}>{exp.position}</Text>
                       <Text style={styles.date}>
@@ -333,7 +334,7 @@ const ModernPDF = ({ data }) => {
               <View style={styles.section}>
                 <Text style={dynamicStyles.sectionTitle}>Projects</Text>
                 {projects.map((proj, i) => (
-                  <View key={i} style={styles.entry} wrap={false}>
+                  <View key={i} style={styles.entry}>
                     <View style={styles.entryHeader}>
                       <Text style={styles.entryTitle}>{proj.name}</Text>
                       {proj.link && (
