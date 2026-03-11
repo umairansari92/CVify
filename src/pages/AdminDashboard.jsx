@@ -691,14 +691,20 @@ const AdminDashboard = () => {
 
                             {/* Diamond Adjust */}
                             <button
-                              onClick={() =>
-                                handleDiamonds(
-                                  u._id,
-                                  u.firstName
-                                )
-                              }
-                              title="Adjust Diamonds"
-                              className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-400/20 flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all hover:scale-110 active:scale-95"
+                              onClick={() => {
+                                if (u.role !== "user" && currentUser.role !== "superadmin") {
+                                  Swal.fire("Access Denied", "Only SuperAdmins can adjust diamonds for other admins.", "warning");
+                                  return;
+                                }
+                                handleDiamonds(u._id, u.firstName);
+                              }}
+                              disabled={u.role !== "user" && currentUser.role !== "superadmin"}
+                              title={u.role !== "user" && currentUser.role !== "superadmin" ? "SuperAdmin required" : "Adjust Diamonds"}
+                              className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
+                                u.role !== "user" && currentUser.role !== "superadmin"
+                                  ? "bg-slate-500/5 text-slate-500 border-slate-500/10 cursor-not-allowed opacity-50"
+                                  : "bg-purple-500/10 text-purple-400 border-purple-400/20 hover:bg-purple-500 hover:text-white"
+                              }`}
                             >
                               <FaGem className="text-[10px]" />
                             </button>
@@ -706,14 +712,21 @@ const AdminDashboard = () => {
                             {/* Freeze/Unfreeze */}
                             {!isSelf && (
                               <button
-                                onClick={() =>
-                                  handleFreeze(u._id, u.firstName, u.isFrozen)
-                                }
-                                title={u.isFrozen ? "Unfreeze" : "Freeze"}
+                                onClick={() => {
+                                  if (u.role !== "user" && currentUser.role !== "superadmin") {
+                                    Swal.fire("Access Denied", "Only SuperAdmins can freeze other admins.", "warning");
+                                    return;
+                                  }
+                                  handleFreeze(u._id, u.firstName, u.isFrozen);
+                                }}
+                                disabled={u.role !== "user" && currentUser.role !== "superadmin"}
+                                title={u.role !== "user" && currentUser.role !== "superadmin" ? "SuperAdmin required" : (u.isFrozen ? "Unfreeze" : "Freeze")}
                                 className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
-                                  u.isFrozen
-                                    ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
-                                    : "bg-blue-500/10 text-blue-400 border-blue-400/20 hover:bg-blue-500 hover:text-white"
+                                  u.role !== "user" && currentUser.role !== "superadmin"
+                                    ? "bg-slate-500/5 text-slate-500 border-slate-500/10 cursor-not-allowed opacity-50"
+                                    : u.isFrozen
+                                      ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
+                                      : "bg-blue-500/10 text-blue-400 border-blue-400/20 hover:bg-blue-500 hover:text-white"
                                 }`}
                               >
                                 <FaSnowflake className="text-[10px]" />
@@ -723,20 +736,21 @@ const AdminDashboard = () => {
                             {/* Ban/Unban */}
                             {!isSelf && (
                               <button
-                                onClick={() =>
-                                  handleBan(
-                                    u._id,
-                                    u.firstName,
-                                    u.isBlocked
-                                  )
-                                }
-                                title={
-                                  u.isBlocked ? "Unsuspend" : "Suspend"
-                                }
+                                onClick={() => {
+                                  if (u.role !== "user" && currentUser.role !== "superadmin") {
+                                    Swal.fire("Access Denied", "Only SuperAdmins can suspend other admins.", "warning");
+                                    return;
+                                  }
+                                  handleBan(u._id, u.firstName, u.isBlocked);
+                                }}
+                                disabled={u.role !== "user" && currentUser.role !== "superadmin"}
+                                title={u.role !== "user" && currentUser.role !== "superadmin" ? "SuperAdmin required" : (u.isBlocked ? "Unsuspend" : "Suspend")}
                                 className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
-                                  u.isBlocked
-                                    ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
-                                    : "bg-red-500/10 text-red-400 border-red-400/20 hover:bg-red-500 hover:text-white"
+                                  u.role !== "user" && currentUser.role !== "superadmin"
+                                    ? "bg-slate-500/5 text-slate-500 border-slate-500/10 cursor-not-allowed opacity-50"
+                                    : u.isBlocked
+                                      ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
+                                      : "bg-red-500/10 text-red-400 border-red-400/20 hover:bg-red-500 hover:text-white"
                                 }`}
                               >
                                 {u.isBlocked ? (
@@ -748,7 +762,7 @@ const AdminDashboard = () => {
                             )}
 
                             {/* Role Change */}
-                            {!isSelf && (
+                            {!isSelf && currentUser.role === "superadmin" && (
                               <button
                                 onClick={() =>
                                   handleRoleChange(
@@ -765,7 +779,7 @@ const AdminDashboard = () => {
                             )}
 
                             {/* Delete */}
-                            {!isSelf && (
+                            {!isSelf && currentUser.role === "superadmin" && (
                               <button
                                 onClick={() => handleDelete(u._id, u.firstName, u.email)}
                                 title="Permanently Delete"

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import api from "../api/axios";
 import Swal from "sweetalert2";
 import {
@@ -26,6 +27,12 @@ import {
 const AdminUserDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  // Permission Checks
+  const isSuperAdmin = currentUser?.role === "superadmin";
+  const targetIsAdmin = user?.role === "admin" || user?.role === "superadmin";
+  const canModify = isSuperAdmin || !targetIsAdmin;
 
   // ─── State ──────────────────────────────────────────────────────────────
   const [user, setUser] = useState(null);
@@ -265,12 +272,14 @@ const AdminUserDetail = () => {
                 <div className="space-y-8">
                   <div className="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
                     <h3 className="text-lg font-black uppercase tracking-widest text-primary">Core Identity</h3>
-                    <button
-                      onClick={() => setEditMode(!editMode)}
-                      className="text-xs font-black uppercase tracking-widest text-secondary hover:underline"
-                    >
-                      {editMode ? "Cancel Edit" : "Modify Record"}
-                    </button>
+                    {canModify && (
+                      <button
+                        onClick={() => setEditMode(!editMode)}
+                        className="text-xs font-black uppercase tracking-widest text-secondary hover:underline"
+                      >
+                        {editMode ? "Cancel Edit" : "Modify Record"}
+                      </button>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
@@ -327,8 +336,20 @@ const AdminUserDetail = () => {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => navigate('/admin')} className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-text-muted"><FaPlus /></button>
-                        <button onClick={() => navigate('/admin')} className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-text-muted"><FaMinus /></button>
+                        <button 
+                          disabled={!canModify}
+                          onClick={() => navigate('/admin')} 
+                          className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-text-muted disabled:opacity-20 disabled:cursor-not-allowed"
+                        >
+                          <FaPlus />
+                        </button>
+                        <button 
+                          disabled={!canModify}
+                          onClick={() => navigate('/admin')} 
+                          className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 transition-all text-text-muted disabled:opacity-20 disabled:cursor-not-allowed"
+                        >
+                          <FaMinus />
+                        </button>
                       </div>
                     </div>
 
@@ -342,7 +363,9 @@ const AdminUserDetail = () => {
                           <p className="text-lg font-black text-white uppercase">{user?.role}</p>
                         </div>
                       </div>
-                      <button onClick={() => navigate('/admin')} className="text-xs font-black uppercase tracking-widest text-blue-400 hover:underline">Change</button>
+                      {isSuperAdmin && (
+                        <button onClick={() => navigate('/admin')} className="text-xs font-black uppercase tracking-widest text-blue-400 hover:underline">Change</button>
+                      )}
                     </div>
                   </div>
                 </div>
