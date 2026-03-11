@@ -16,7 +16,6 @@ import {
   FaUsers,
   FaFileInvoice,
   FaSearchPlus,
-  FaEnvelopeOpenText,
   FaGem,
   FaHistory,
   FaCog,
