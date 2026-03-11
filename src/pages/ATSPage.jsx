@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import api from "../api/axios";
+import { updateDiamonds } from "../features/auth/authSlice";
 import {
   FaUpload,
   FaCheckCircle,
@@ -16,6 +17,7 @@ import ATSGauge from "../components/common/ATSGauge";
 
 const ATSPage = () => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
@@ -52,10 +54,21 @@ const ATSPage = () => {
       });
       setResult(res.data.scan);
       toast.success("Analysis Complete!");
+      // Sync diamond balance
+      if (res.data.newDiamondBalance !== undefined) {
+        dispatch(updateDiamonds(res.data.newDiamondBalance));
+      }
       fetchHistory();
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Analysis failed");
+      if (err.response?.status === 403) {
+        toast.error(
+          err.response?.data?.message ||
+            "Not enough diamonds! You need 50 diamonds for ATS analysis.",
+        );
+      } else {
+        toast.error(err.response?.data?.message || "Analysis failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -172,7 +185,7 @@ const ATSPage = () => {
                 <FaSearch className="group-hover:rotate-12 transition-transform" />
               )}
               <span className="tracking-[0.2em] font-black uppercase">
-                Start ATS Scan
+                Start ATS Scan (50 💎)
               </span>
             </button>
           </div>
