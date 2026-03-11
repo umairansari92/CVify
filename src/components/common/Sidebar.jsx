@@ -12,8 +12,9 @@ import {
   FaTimes,
   FaEnvelopeOpenText,
   FaChartLine,
+  FaShieldAlt,
 } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +23,8 @@ import logo from "../../assets/logo.png";
 const Sidebar = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.role === "admin" || user?.role === "superadmin";
 
   const handleLogout = () => {
     dispatch(logout());
@@ -71,7 +74,18 @@ const Sidebar = ({ onClose }) => {
       icon: <FaUser />,
       color: "from-violet-500 to-purple-600",
     },
+    // Admin item is conditionally added below
   ];
+
+  // Conditionally add Admin Panel nav item
+  if (isAdmin) {
+    navItems.push({
+      path: "/admin/dashboard",
+      label: "Admin Panel",
+      icon: <FaShieldAlt />,
+      color: "from-amber-500 to-orange-600",
+    });
+  }
 
   return (
     <div className="w-72 lg:w-72 bg-midground glass border-r border-border-subtle h-screen flex flex-col relative z-20 transition-all duration-300 overflow-hidden">

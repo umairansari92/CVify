@@ -15,6 +15,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import ProfilePage from "../pages/ProfilePage";
 import PublicProfile from "../pages/PublicProfile";
+import AdminDashboard from "../pages/AdminDashboard";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -41,6 +42,30 @@ const ProtectedRoute = ({ children }) => {
   }, [navigate]);
 
   return null;
+};
+
+const AdminRoute = ({ children }) => {
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.role !== "admin" && user.role !== "superadmin") {
+      Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "You do not have admin privileges.",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/dashboard", { replace: true });
+      });
+    }
+  }, [user, navigate]);
+
+  if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
+    return null;
+  }
+
+  return children;
 };
 
 const AppRoutes = () => {
@@ -76,6 +101,14 @@ const AppRoutes = () => {
         <Route path="/ats" element={<ATSPage />} />
         <Route path="/referral" element={<ReferralPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
       </Route>
 
       <Route path="/p/:username" element={<PublicProfile />} />
