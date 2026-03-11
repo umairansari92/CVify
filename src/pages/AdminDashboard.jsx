@@ -25,6 +25,20 @@ import {
   FaEye,
   FaIdCard,
 } from "react-icons/fa";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  Legend,
+} from "recharts";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -387,8 +401,8 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Unified Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-12 animate-fadeIn">
           <StatCard
             icon={FaUsers}
             label="Total Users"
@@ -398,14 +412,14 @@ const AdminDashboard = () => {
           />
           <StatCard
             icon={FaGem}
-            label="Diamonds in Circulation"
+            label="Diamonds"
             value={stats?.totalDiamonds}
             gradient="from-purple-500/10 to-pink-500/10"
             iconColor="text-purple-400"
           />
           <StatCard
             icon={FaFileAlt}
-            label="Resumes Generated"
+            label="Resumes"
             value={stats?.totalResumes}
             gradient="from-green-500/10 to-emerald-500/10"
             iconColor="text-green-400"
@@ -417,50 +431,117 @@ const AdminDashboard = () => {
             gradient="from-orange-500/10 to-amber-500/10"
             iconColor="text-orange-400"
           />
-        </div>
-
-        {/* Secondary Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
           <StatCard
-            icon={FaCheckCircle}
-            label="Active Users"
-            value={stats?.activeUsers}
-            gradient="from-emerald-500/10 to-teal-500/10"
-            iconColor="text-emerald-400"
+            icon={FaSnowflake}
+            label="Frozen"
+            value={stats?.frozenUsers}
+            gradient="from-slate-500/10 to-gray-500/10"
+            iconColor="text-slate-400"
           />
           <StatCard
-            icon={FaBan}
-            label="Blocked Users"
-            value={stats?.blockedUsers}
-            gradient="from-red-500/10 to-rose-500/10"
-            iconColor="text-red-400"
-          />
-          <StatCard
-            icon={FaEnvelopeOpenText}
-            label="Cover Letters"
-            value={stats?.totalCoverLetters}
-            gradient="from-indigo-500/10 to-violet-500/10"
+            icon={FaShieldAlt}
+            label="Admins"
+            value={stats?.adminCount}
+            gradient="from-indigo-500/10 to-blue-500/10"
             iconColor="text-indigo-400"
           />
         </div>
 
-        {/* Tertiary Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-          <StatCard
-            icon={FaSnowflake}
-            label="Frozen Accounts"
-            value={stats?.frozenUsers}
-            gradient="from-blue-200/10 to-blue-400/10"
-            iconColor="text-blue-200"
-          />
-          <StatCard
-            icon={FaUserShield}
-            label="Total Admins"
-            value={stats?.adminCount}
-            gradient="from-amber-200/10 to-amber-400/10"
-            iconColor="text-amber-300"
-          />
-        </div>
+        {/* Analytics Charts */}
+        {stats?.charts && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            {/* User Growth Chart */}
+            <div className="premium-card p-6 min-h-[400px] animate-fadeIn">
+              <div className="flex justify-between items-center mb-10">
+                <div>
+                  <h3 className="text-xl font-black text-white">User Acquisition</h3>
+                  <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Growth over last 6 months</p>
+                </div>
+                <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
+              </div>
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats.charts.userGrowth}>
+                    <defs>
+                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                    <XAxis 
+                      dataKey="_id" 
+                      stroke="#64748b" 
+                      fontSize={10} 
+                      tickLine={false} 
+                      axisLine={false}
+                      tickFormatter={(val) => {
+                        const date = new Date(val + "-01");
+                        return date.toLocaleString('default', { month: 'short' });
+                      }}
+                    />
+                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                      itemStyle={{ color: "#fff", fontWeight: "bold" }}
+                      cursor={{ stroke: '#3b82f6', strokeWidth: 2 }}
+                    />
+                    <Area type="monotone" dataKey="count" name="New Users" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Feature Usage Chart */}
+            <div className="premium-card p-6 min-h-[400px] animate-fadeIn" style={{ animationDelay: "0.2s" }}>
+              <div className="flex justify-between items-center mb-10">
+                <div>
+                  <h3 className="text-xl font-black text-white">Platform Activity</h3>
+                  <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Resumes vs AI Scans</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-[10px] text-text-muted font-black uppercase tracking-tighter">Resumes</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                    <span className="text-[10px] text-text-muted font-black uppercase tracking-tighter">Scans</span>
+                  </div>
+                </div>
+              </div>
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.charts.resumeGrowth.map((val, idx) => ({
+                    month: val._id,
+                    resumes: val.count,
+                    scans: stats.charts.atsGrowth.find(a => a._id === val._id)?.count || 0
+                  }))}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="#64748b" 
+                      fontSize={10} 
+                      tickLine={false} 
+                      axisLine={false}
+                      tickFormatter={(val) => {
+                        const date = new Date(val + "-01");
+                        return date.toLocaleString('default', { month: 'short' });
+                      }}
+                    />
+                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                      cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                    />
+                    <Bar dataKey="resumes" name="Resumes" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} />
+                    <Bar dataKey="scans" name="Scans" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={12} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Users Table Section */}
         <div className="premium-card p-0 overflow-hidden">

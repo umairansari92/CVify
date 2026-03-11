@@ -13,6 +13,13 @@ import {
   FaEnvelopeOpenText,
   FaChartLine,
   FaShieldAlt,
+  FaUsers,
+  FaFileInvoice,
+  FaSearchPlus,
+  FaEnvelopeOpenText,
+  FaGem,
+  FaHistory,
+  FaCog,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -77,15 +84,50 @@ const Sidebar = ({ onClose }) => {
     // Admin item is conditionally added below
   ];
 
-  // Conditionally add Admin Panel nav item
-  if (isAdmin) {
-    navItems.push({
+  const adminItems = isAdmin ? [
+    {
       path: "/admin/dashboard",
-      label: "Admin Panel",
+      label: "Dashboard",
       icon: <FaShieldAlt />,
-      color: "from-amber-500 to-orange-600",
-    });
-  }
+      color: "from-amber-400 to-orange-500",
+    },
+    {
+      path: "/admin/resumes",
+      label: "Resumes",
+      icon: <FaFileInvoice />,
+      color: "from-teal-400 to-emerald-500",
+    },
+    {
+      path: "/admin/ats-scans",
+      label: "ATS Scans",
+      icon: <FaSearchPlus />,
+      color: "from-blue-400 to-indigo-500",
+    },
+    {
+      path: "/admin/cover-letters",
+      label: "Cover Letters",
+      icon: <FaEnvelopeOpenText />,
+      color: "from-pink-400 to-rose-500",
+    },
+    {
+      path: "/admin/economy",
+      label: "Economy",
+      icon: <FaGem />,
+      color: "from-purple-400 to-violet-500",
+    },
+    {
+      path: "/admin/logs",
+      label: "Activity Logs",
+      icon: <FaHistory />,
+      color: "from-slate-400 to-gray-500",
+    },
+    {
+      path: "/admin/settings",
+      label: "Settings",
+      icon: <FaCog />,
+      color: "from-cyan-400 to-blue-500",
+    },
+  ] : [];
 
   return (
     <div className="w-72 lg:w-72 bg-midground glass border-r border-border-subtle h-screen flex flex-col relative z-20 transition-all duration-300 overflow-hidden">
@@ -151,7 +193,7 @@ const Sidebar = ({ onClose }) => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `group flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+              `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-300 relative overflow-hidden ${
                 isActive
                   ? `bg-gradient-to-r ${item.color} text-white shadow-lg shadow-primary/20 scale-[1.02]`
                   : "text-text-secondary hover:bg-white/10 hover:text-primary hover:scale-[1.01]"
@@ -160,34 +202,53 @@ const Sidebar = ({ onClose }) => {
           >
             {({ isActive }) => (
               <>
-                {isActive && (
-                  <>
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full"></div>
-                    <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
-                  </>
-                )}
-                <span
-                  className={`text-xl transition-all duration-300 group-hover:scale-110 relative z-10 ${
-                    isActive
-                      ? "text-white animate-bounce"
-                      : "group-hover:text-primary"
-                  }`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
+                {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full"></div>}
+                <span className={`text-lg transition-all duration-300 group-hover:scale-110 relative z-10 ${isActive ? "text-white" : "group-hover:text-primary"}`}>
                   {item.icon}
                 </span>
-                <span className="font-bold tracking-tight relative z-10">
+                <span className="font-bold text-sm tracking-tight relative z-10">
                   {item.label}
                 </span>
-                {!isActive && (
-                  <div className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>
-                  </div>
-                )}
               </>
             )}
           </NavLink>
         ))}
+
+        {isAdmin && (
+          <>
+            <div className="flex items-center gap-2 px-5 mt-8 mb-4">
+              <FaShieldAlt className="text-amber-500 animate-pulse" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500/70">
+                Admin Control
+              </p>
+            </div>
+            {adminItems.map((item, index) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+                    isActive
+                      ? `bg-gradient-to-r ${item.color} text-white shadow-lg shadow-amber-500/20 scale-[1.02]`
+                      : "text-text-secondary hover:bg-white/10 hover:text-amber-500 hover:scale-[1.01]"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full"></div>}
+                    <span className={`text-lg transition-all duration-300 group-hover:scale-110 relative z-10 ${isActive ? "text-white" : "group-hover:text-amber-500"}`}>
+                      {item.icon}
+                    </span>
+                    <span className="font-bold text-sm tracking-tight relative z-10">
+                      {item.label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </>
+        )}
       </nav>
 
       <div className="p-6 relative z-10">

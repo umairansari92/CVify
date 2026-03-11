@@ -17,6 +17,12 @@ import ProfilePage from "../pages/ProfilePage";
 import PublicProfile from "../pages/PublicProfile";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminUserDetail from "../pages/AdminUserDetail";
+import AdminResumes from "../pages/AdminResumes";
+import AdminATSScans from "../pages/AdminATSScans";
+import AdminCoverLetters from "../pages/AdminCoverLetters";
+import AdminEconomy from "../pages/AdminEconomy";
+import AdminLogs from "../pages/AdminLogs";
+import AdminSettings from "../pages/AdminSettings";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -115,6 +121,54 @@ const AppRoutes = () => {
           element={
             <AdminRoute>
               <AdminUserDetail />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/resumes"
+          element={
+            <AdminRoute>
+              <AdminResumes />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/ats-scans"
+          element={
+            <AdminRoute>
+              <AdminATSScans />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <AdminRoute>
+              <AdminSettings />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/cover-letters"
+          element={
+            <AdminRoute>
+              <AdminCoverLetters />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/economy"
+          element={
+            <AdminRoute>
+              <AdminEconomy />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/logs"
+          element={
+            <AdminRoute>
+              <AdminLogs />
             </AdminRoute>
           }
         />
