@@ -16,6 +16,7 @@ import ResetPassword from "../pages/ResetPassword";
 import ProfilePage from "../pages/ProfilePage";
 import PublicProfile from "../pages/PublicProfile";
 import AdminDashboard from "../pages/AdminDashboard";
+import AdminUserDetail from "../pages/AdminUserDetail";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -106,6 +107,14 @@ const AppRoutes = () => {
           element={
             <AdminRoute>
               <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:id"
+          element={
+            <AdminRoute>
+              <AdminUserDetail />
             </AdminRoute>
           }
         />

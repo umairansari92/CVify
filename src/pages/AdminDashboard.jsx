@@ -19,6 +19,11 @@ import {
   FaEnvelopeOpenText,
   FaShieldAlt,
   FaSpinner,
+  FaSnowflake,
+  FaTrash,
+  FaEdit,
+  FaEye,
+  FaIdCard,
 } from "react-icons/fa";
 
 const AdminDashboard = () => {
@@ -117,7 +122,107 @@ const AdminDashboard = () => {
           timer: 3000,
         });
       } catch (err) {
-        /* axios interceptor handles error toast */
+        /* handled */
+      }
+    }
+  };
+
+  const handleFreeze = async (userId, userName, isCurrentlyFrozen) => {
+    const action = isCurrentlyFrozen ? "Unfreeze" : "Freeze";
+    const result = await Swal.fire({
+      title: `${action} ${userName}?`,
+      text: isCurrentlyFrozen
+        ? "User will be able to modify their data again."
+        : "User will be able to login but NOT modify or create any data.",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: isCurrentlyFrozen ? "#22c55e" : "#3b82f6",
+      confirmButtonText: `Yes, ${action}`,
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await api.put(`/admin/users/${userId}/freeze`);
+        setUsers((prev) =>
+          prev.map((u) =>
+            u._id === userId ? { ...u, isFrozen: res.data.isFrozen } : u
+          )
+        );
+        fetchStats();
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      } catch (err) {
+        /* handled */
+      }
+    }
+  };
+
+  const handleDelete = async (userId, userName, userEmail) => {
+    const result = await Swal.fire({
+      title: "EXTREME CAUTION",
+      html: `
+        <div class="text-left">
+          <p class="text-red-500 font-bold mb-4">You are about to PERMANENTLY DELETE <strong>${userName}</strong> (${userEmail}).</p>
+          <p class="text-sm opacity-80 mb-4">This will cascade delete all:</p>
+          <ul class="text-xs list-disc pl-5 opacity-70 mb-4">
+            <li>Resumes & Profiles</li>
+            <li>ATS Scans & History</li>
+            <li>Cover Letters</li>
+            <li>Diamond Transactions</li>
+            <li>Activity Logs</li>
+          </ul>
+          <p class="text-xs font-bold uppercase tracking-widest text-red-400">This action CANNOT be undone.</p>
+        </div>
+      `,
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      confirmButtonText: "YES, DELETE EVERYTHING",
+      cancelButtonText: "Cancel",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass border-2 border-red-500/50" },
+    });
+
+    if (result.isConfirmed) {
+      const { value: confirmEmail } = await Swal.fire({
+        title: "Final Confirmation",
+        text: `Type the user's email "${userEmail}" to confirm deletion:`,
+        input: "text",
+        inputPlaceholder: userEmail,
+        showCancelButton: true,
+        confirmButtonColor: "#ef4444",
+        confirmButtonText: "DELETE PERMANENTLY",
+        background: "var(--midground)",
+        color: "var(--text-main)",
+        customClass: { popup: "glass" },
+        preConfirm: (value) => {
+          if (value !== userEmail) {
+            Swal.showValidationMessage("Email does not match");
+            return false;
+          }
+          return value;
+        },
+      });
+
+      if (confirmEmail) {
+        try {
+          await api.delete(`/admin/users/${userId}`);
+          setUsers((prev) => prev.filter((u) => u._id !== userId));
+          fetchStats();
+          Swal.fire("Deleted!", "User and all associated data wiped.", "success");
+        } catch (err) {
+          /* handled */
+        }
       }
     }
   };
@@ -339,6 +444,24 @@ const AdminDashboard = () => {
           />
         </div>
 
+        {/* Tertiary Stats Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+          <StatCard
+            icon={FaSnowflake}
+            label="Frozen Accounts"
+            value={stats?.frozenUsers}
+            gradient="from-blue-200/10 to-blue-400/10"
+            iconColor="text-blue-200"
+          />
+          <StatCard
+            icon={FaUserShield}
+            label="Total Admins"
+            value={stats?.adminCount}
+            gradient="from-amber-200/10 to-amber-400/10"
+            iconColor="text-amber-300"
+          />
+        </div>
+
         {/* Users Table Section */}
         <div className="premium-card p-0 overflow-hidden">
           {/* Table Header */}
@@ -464,6 +587,10 @@ const AdminDashboard = () => {
                             <span className="px-3 py-1 bg-red-500/15 text-red-400 border border-red-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
                               Suspended
                             </span>
+                          ) : u.isFrozen ? (
+                            <span className="px-3 py-1 bg-blue-500/15 text-blue-400 border border-blue-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1">
+                              <FaSnowflake className="text-[8px]" /> Frozen
+                            </span>
                           ) : (
                             <span className="px-3 py-1 bg-green-500/15 text-green-400 border border-green-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
                               Active
@@ -471,7 +598,16 @@ const AdminDashboard = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center justify-center gap-1.5 flex-wrap max-w-[180px]">
+                            {/* View Detail */}
+                            <button
+                              onClick={() => navigate(`/admin/users/${u._id}`)}
+                              title="View Full Detail"
+                              className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 border border-teal-400/20 flex items-center justify-center hover:bg-teal-500 hover:text-white transition-all hover:scale-110 active:scale-95"
+                            >
+                              <FaEye className="text-[10px]" />
+                            </button>
+
                             {/* Diamond Adjust */}
                             <button
                               onClick={() =>
@@ -481,10 +617,27 @@ const AdminDashboard = () => {
                                 )
                               }
                               title="Adjust Diamonds"
-                              className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-400/20 flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all hover:scale-110 active:scale-95"
+                              className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-400/20 flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all hover:scale-110 active:scale-95"
                             >
-                              <FaGem className="text-xs" />
+                              <FaGem className="text-[10px]" />
                             </button>
+
+                            {/* Freeze/Unfreeze */}
+                            {!isSelf && (
+                              <button
+                                onClick={() =>
+                                  handleFreeze(u._id, u.firstName, u.isFrozen)
+                                }
+                                title={u.isFrozen ? "Unfreeze" : "Freeze"}
+                                className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
+                                  u.isFrozen
+                                    ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
+                                    : "bg-blue-500/10 text-blue-400 border-blue-400/20 hover:bg-blue-500 hover:text-white"
+                                }`}
+                              >
+                                <FaSnowflake className="text-[10px]" />
+                              </button>
+                            )}
 
                             {/* Ban/Unban */}
                             {!isSelf && (
@@ -499,16 +652,16 @@ const AdminDashboard = () => {
                                 title={
                                   u.isBlocked ? "Unsuspend" : "Suspend"
                                 }
-                                className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
+                                className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
                                   u.isBlocked
                                     ? "bg-green-500/10 text-green-400 border-green-400/20 hover:bg-green-500 hover:text-white"
                                     : "bg-red-500/10 text-red-400 border-red-400/20 hover:bg-red-500 hover:text-white"
                                 }`}
                               >
                                 {u.isBlocked ? (
-                                  <FaCheckCircle className="text-xs" />
+                                  <FaCheckCircle className="text-[10px]" />
                                 ) : (
-                                  <FaBan className="text-xs" />
+                                  <FaBan className="text-[10px]" />
                                 )}
                               </button>
                             )}
@@ -524,9 +677,20 @@ const AdminDashboard = () => {
                                   )
                                 }
                                 title="Change Role"
-                                className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-400/20 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all hover:scale-110 active:scale-95"
+                                className="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-400/20 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all hover:scale-110 active:scale-95"
                               >
-                                <FaUserShield className="text-xs" />
+                                <FaUserShield className="text-[10px]" />
+                              </button>
+                            )}
+
+                            {/* Delete */}
+                            {!isSelf && (
+                              <button
+                                onClick={() => handleDelete(u._id, u.firstName, u.email)}
+                                title="Permanently Delete"
+                                className="w-8 h-8 rounded-lg bg-red-600/10 text-red-600 border border-red-600/20 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all hover:scale-110 active:scale-95"
+                              >
+                                <FaTrash className="text-[10px]" />
                               </button>
                             )}
                           </div>
