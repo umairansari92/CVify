@@ -475,7 +475,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
               </div>
-              <div className="h-[280px]">
+              <div className="h-[300px] min-h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={stats.charts.userGrowth}>
                     <defs>
@@ -526,7 +526,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="h-[280px]">
+              <div className="h-[300px] min-h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={stats.charts.resumeGrowth.map((val, idx) => ({
                     month: val._id,

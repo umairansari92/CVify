@@ -143,9 +143,9 @@ const AdminATSScans = () => {
                   </div>
                   <div className="flex gap-2">
                     <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                      s.score >= 70 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-orange-500/10 text-orange-400'
+                      (s.score?.overall || 0) >= 70 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-orange-500/10 text-orange-400'
                     }`}>
-                      {s.score}% Match
+                      {s.score?.overall || 0}% Match
                     </div>
                     <button 
                       onClick={() => handleDeleteScan(s._id)}
