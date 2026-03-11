@@ -336,8 +336,11 @@ const AdminDashboard = () => {
   };
 
   // ─── Stat Card Component ────────────────────────────────────────────────
-  const StatCard = ({ icon: Icon, label, value, gradient, iconColor }) => (
-    <div className="group premium-card p-6 relative overflow-hidden hover:scale-[1.03] transition-all duration-300">
+  const StatCard = ({ icon: Icon, label, value, gradient, iconColor, onClick }) => (
+    <div 
+      onClick={onClick}
+      className={`group premium-card p-6 relative overflow-hidden transition-all duration-300 ${onClick ? 'cursor-pointer hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/20' : ''}`}
+    >
       <div
         className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
       />
@@ -409,6 +412,7 @@ const AdminDashboard = () => {
             value={stats?.totalUsers}
             gradient="from-blue-500/10 to-cyan-500/10"
             iconColor="text-blue-400"
+            onClick={() => window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' })}
           />
           <StatCard
             icon={FaGem}
@@ -416,6 +420,7 @@ const AdminDashboard = () => {
             value={stats?.totalDiamonds}
             gradient="from-purple-500/10 to-pink-500/10"
             iconColor="text-purple-400"
+            onClick={() => navigate("/admin/economy")}
           />
           <StatCard
             icon={FaFileAlt}
@@ -423,6 +428,7 @@ const AdminDashboard = () => {
             value={stats?.totalResumes}
             gradient="from-green-500/10 to-emerald-500/10"
             iconColor="text-green-400"
+            onClick={() => navigate("/admin/resumes")}
           />
           <StatCard
             icon={FaChartBar}
@@ -430,6 +436,7 @@ const AdminDashboard = () => {
             value={stats?.totalATSScans}
             gradient="from-orange-500/10 to-amber-500/10"
             iconColor="text-orange-400"
+            onClick={() => navigate("/admin/ats-scans")}
           />
           <StatCard
             icon={FaSnowflake}
@@ -437,6 +444,11 @@ const AdminDashboard = () => {
             value={stats?.frozenUsers}
             gradient="from-slate-500/10 to-gray-500/10"
             iconColor="text-slate-400"
+            onClick={() => {
+              setSearch("");
+              setStatusFilter("frozen");
+              window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' });
+            }}
           />
           <StatCard
             icon={FaShieldAlt}
@@ -444,6 +456,10 @@ const AdminDashboard = () => {
             value={stats?.adminCount}
             gradient="from-indigo-500/10 to-blue-500/10"
             iconColor="text-indigo-400"
+            onClick={() => {
+              setSearch("admin");
+              window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' });
+            }}
           />
         </div>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-import { FaSearchPlus, FaSearch, FaUser, FaChartLine, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import { FaSearchPlus, FaSearch, FaUser, FaChartLine, FaCheckCircle, FaTrash, FaBan, FaSnowflake } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const AdminATSScans = () => {
   const [scans, setScans] = useState([]);
@@ -19,6 +20,86 @@ const AdminATSScans = () => {
       console.error("Failed to fetch scans:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteScan = async (id) => {
+    const result = await Swal.fire({
+      title: "Delete ATS Scan?",
+      text: "This record will be removed permanently.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      confirmButtonText: "Yes, delete it",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/admin/ats-scans/${id}`);
+        setScans((prev) => prev.filter((s) => s._id !== id));
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: "Scan record deleted",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      } catch (err) {
+        /* handled */
+      }
+    }
+  };
+
+  const handleUserAction = async (userId, action, currentStatus) => {
+    const isBan = action === "ban";
+    const result = await Swal.fire({
+      title: `${isBan ? (currentStatus ? "Unban" : "Ban") : (currentStatus ? "Unfreeze" : "Freeze")} User?`,
+      text: `Are you sure you want to ${action} this user?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const endpoint = isBan ? `/admin/users/${userId}/ban` : `/admin/users/${userId}/freeze`;
+        const res = await api.put(endpoint);
+        
+        // Refresh scans to show updated user status if we were showing it
+        // Or just show success toast
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        
+        // Update local state if needed (though user status is nested in scan.user)
+        setScans(prev => prev.map(s => {
+          if (s.user?._id === userId) {
+            return {
+              ...s,
+              user: {
+                ...s.user,
+                isBlocked: isBan ? !currentStatus : s.user.isBlocked,
+                isFrozen: !isBan ? !currentStatus : s.user.isFrozen
+              }
+            };
+          }
+          return s;
+        }));
+      } catch (err) {
+        /* handled */
+      }
     }
   };
 
@@ -60,10 +141,18 @@ const AdminATSScans = () => {
                   <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 shadow-lg shadow-purple-500/5">
                     <FaSearchPlus className="text-2xl" />
                   </div>
-                  <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                    s.score >= 70 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-orange-500/10 text-orange-400'
-                  }`}>
-                    {s.score}% Match
+                  <div className="flex gap-2">
+                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                      s.score >= 70 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-orange-500/10 text-orange-400'
+                    }`}>
+                      {s.score}% Match
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteScan(s._id)}
+                      className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <FaTrash className="text-xs" />
+                    </button>
                   </div>
                 </div>
 
@@ -99,6 +188,22 @@ const AdminATSScans = () => {
                         <span className="text-[11px] font-black text-text-primary leading-none mb-1">@{s.user?.username}</span>
                         <span className="text-[9px] font-bold text-text-muted leading-none">User Analysis</span>
                     </div>
+                  </div>
+                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={() => handleUserAction(s.user?._id, "freeze", s.user?.isFrozen)}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${s.user?.isFrozen ? 'bg-blue-500 text-white' : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white'}`}
+                      title={s.user?.isFrozen ? "Unfreeze User" : "Freeze User"}
+                    >
+                      <FaSnowflake className="text-[10px]" />
+                    </button>
+                    <button 
+                      onClick={() => handleUserAction(s.user?._id, "ban", s.user?.isBlocked)}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${s.user?.isBlocked ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white'}`}
+                      title={s.user?.isBlocked ? "Unban User" : "Ban User"}
+                    >
+                      <FaBan className="text-[10px]" />
+                    </button>
                   </div>
                   <span className="text-[10px] font-black text-text-muted opacity-40 uppercase tracking-tighter">
                     {new Date(s.createdAt).toLocaleDateString()}

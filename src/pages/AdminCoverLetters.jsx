@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-import { FaEnvelopeOpenText, FaSearch, FaUser, FaRobot, FaCheckCircle, FaTrash } from "react-icons/fa";
+import { FaEnvelopeOpenText, FaSearch, FaUser, FaRobot, FaCheckCircle, FaTrash, FaBan, FaSnowflake } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const AdminCoverLetters = () => {
@@ -38,10 +38,56 @@ const AdminCoverLetters = () => {
 
     if (result.isConfirmed) {
       try {
-        await api.delete(`/admin/cover-letters/${id}`); // I should implement this too
+        await api.delete(`/admin/cover-letters/${id}`); // Path updated to admin endpoint
         setLetters(prev => prev.filter(l => l._id !== id));
         Swal.fire("Deleted!", "Cover letter removed.", "success");
       } catch (err) { /* handled */ }
+    }
+  };
+
+  const handleUserAction = async (userId, action, currentStatus) => {
+    const isBan = action === "ban";
+    const result = await Swal.fire({
+      title: `${isBan ? (currentStatus ? "Unban" : "Ban") : (currentStatus ? "Unfreeze" : "Freeze")} User?`,
+      text: `Are you sure you want to ${action} this user?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const endpoint = isBan ? `/admin/users/${userId}/ban` : `/admin/users/${userId}/freeze`;
+        const res = await api.put(endpoint);
+        
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        
+        setLetters(prev => prev.map(l => {
+          if (l.user?._id === userId) {
+            return {
+              ...l,
+              user: {
+                ...l.user,
+                isBlocked: isBan ? !currentStatus : l.user.isBlocked,
+                isFrozen: !isBan ? !currentStatus : l.user.isFrozen
+              }
+            };
+          }
+          return l;
+        }));
+      } catch (err) {
+        /* handled */
+      }
     }
   };
 
@@ -121,7 +167,25 @@ const AdminCoverLetters = () => {
                         <span className="text-[9px] font-bold text-text-muted leading-none">Applicant</span>
                     </div>
                   </div>
-                   <button onClick={() => handleDelete(l._id)} className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"><FaTrash className="text-xs" /></button>
+                  <div className="flex gap-2">
+                    <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity mr-2">
+                      <button 
+                        onClick={() => handleUserAction(l.user?._id, "freeze", l.user?.isFrozen)}
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${l.user?.isFrozen ? 'bg-blue-500 text-white' : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white'}`}
+                        title={l.user?.isFrozen ? "Unfreeze User" : "Freeze User"}
+                      >
+                        <FaSnowflake className="text-[10px]" />
+                      </button>
+                      <button 
+                        onClick={() => handleUserAction(l.user?._id, "ban", l.user?.isBlocked)}
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${l.user?.isBlocked ? 'bg-red-500 text-white' : 'bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white'}`}
+                        title={l.user?.isBlocked ? "Unban User" : "Ban User"}
+                      >
+                        <FaBan className="text-[10px]" />
+                      </button>
+                    </div>
+                    <button onClick={() => handleDelete(l._id)} className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"><FaTrash className="text-xs" /></button>
+                  </div>
                 </div>
               </div>
             ))}
