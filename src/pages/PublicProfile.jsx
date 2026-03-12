@@ -180,6 +180,7 @@ const PublicProfile = () => {
           phone: user.phoneNumber,
           location: user.location,
           jobTitle: user.headline,
+          industry: user.industry,
           linkedin: user.socialLinks?.linkedin,
           github: user.socialLinks?.github,
           portfolio: user.socialLinks?.portfolio,
@@ -200,9 +201,18 @@ const PublicProfile = () => {
           startDate: "",
           endDate: edu.graduationDate,
         })),
+        certifications: (user.certifications || []).map(cert => ({
+          name: cert.name,
+          issuer: cert.issuer,
+          date: cert.date
+        })),
+        achievements: (user.achievements || []).map(ach => ({
+          title: ach.title,
+          description: ach.description,
+          date: ach.date
+        })),
         technicalSkills: {
-          technical: user.skills?.technical || [],
-          professional: user.skills?.professional || [],
+          skills: user.skills || [], // New categorized structure
         },
         projects: (user.projects || []).map((proj) => ({
           name: proj.title,
@@ -269,8 +279,10 @@ const PublicProfile = () => {
     experience: "Professional Experience",
     education: "Education History",
     skills: "Expertise & Skills",
-    projects: "Key Accomplishments",
+    projects: "Work Portfolio",
     services: "Professional Services",
+    certifications: "Certifications",
+    achievements: "Honors & Awards",
   };
   const theme = localTheme || {
     headerBg: "#2563eb",
@@ -577,7 +589,7 @@ const PublicProfile = () => {
         )}
       </AnimatePresence>
       <Helmet>
-        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Unstoppable Professional"} | Portfolio on CVify`}</title>
+        <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Professional"} ${user.industry ? `| ${user.industry}` : ""} | CVify`}</title>
         {/* Dynamic Font Import */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -593,7 +605,7 @@ const PublicProfile = () => {
           name="description"
           content={
             user.bio ||
-            `Check out ${user.firstName}'s professional portfolio on CVify.`
+            `Check out ${user.firstName}'s professional portfolio on CVify. ${user.industry ? `Industry: ${user.industry}.` : ""}`
           }
         />
         <link rel="canonical" href={`https://cvify.pro/p/${username}`} />
@@ -602,9 +614,9 @@ const PublicProfile = () => {
         <meta property="og:type" content="profile" />
         <meta
           property="og:title"
-          content={`${user.firstName} ${user.lastName} | ${user.headline || "Professional Portfolio"} | ${user.availability}`}
+          content={`${user.firstName} ${user.lastName} | ${user.headline || "Professional Portfolio"} ${user.industry ? `| ${user.industry}` : ""}`}
         />
-        <meta property="og:description" content={`${user.availability}. ${user.bio?.substring(0, 120)}`} />
+        <meta property="og:description" content={`${user.availability || "Open to Work"}. ${user.bio?.substring(0, 120)}`} />
         <meta property="og:url" content={`https://cvify.pro/p/${username}`} />
         <meta
           property="og:image"
@@ -641,13 +653,11 @@ const PublicProfile = () => {
               "@type": "Language",
               name: lang.name,
             })),
-            skills: [
-              ...(user.skills?.expertise || []),
-              ...(user.skills?.professional || []),
-            ],
+            knowsAbout: (user.skills || []).map(s => s.name),
             hasOccupation: {
               "@type": "Occupation",
               name: user.headline,
+              occupationalCategory: user.industry
             },
             worksFor: {
               "@type": "Organization",
@@ -739,15 +749,22 @@ const PublicProfile = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="mt-3 max-w-3xl mx-auto lg:mx-0"
+                className="mt-3 max-w-3xl mx-auto lg:mx-0 flex flex-col gap-2"
               >
-                <InlineEdit
-                  value={user.headline}
-                  onSave={(val) => handleLiveUpdate({ headline: val })}
-                  isOwner={user.isOwner}
-                  label="Headline"
-                  className="text-xl md:text-2xl font-bold opacity-90"
-                />
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                  <InlineEdit
+                    value={user.headline}
+                    onSave={(val) => handleLiveUpdate({ headline: val })}
+                    isOwner={user.isOwner}
+                    label="Headline"
+                    className="text-xl md:text-2xl font-bold opacity-90"
+                  />
+                  {user.industry && (
+                    <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg text-[10px] font-black uppercase tracking-widest border border-white/20">
+                      {user.industry}
+                    </span>
+                  )}
+                </div>
               </motion.div>
 
               {user.phoneNumber && (
@@ -954,6 +971,93 @@ const PublicProfile = () => {
                 ))}
               </div>
             </section>
+
+            {/* Certifications Section */}
+            {(user.certifications || []).length > 0 && (
+              <section className="space-y-6">
+                <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
+                  {sectionNames.certifications || "Certifications"}{" "}
+                  <span className="flex-1 h-px bg-border-subtle"></span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {user.certifications.map((cert, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      className={`${cardClasses} p-6 rounded-[2rem] border shadow-lg group hover:border-emerald-500/30 transition-all`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 flex-shrink-0">
+                          <FaCheckCircle size={20} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-lg font-black text-[var(--text-primary)] truncate">
+                            {cert.name}
+                          </h4>
+                          <p className="text-sm font-bold text-emerald-500">
+                            {cert.issuer}
+                          </p>
+                          <p className="text-[10px] font-black uppercase text-[var(--text-secondary)] mt-2 opacity-60">
+                            Issued: {cert.date}
+                          </p>
+                          {cert.link && (
+                            <a
+                              href={ensureAbsoluteUrl(cert.link)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 mt-4 text-[10px] font-black text-[var(--action)] uppercase tracking-widest hover:underline"
+                            >
+                              Verify Credential ↗
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Achievements Section */}
+            {(user.achievements || []).length > 0 && (
+              <section className="space-y-6">
+                <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
+                  {sectionNames.achievements || "Honors & Awards"}{" "}
+                  <span className="flex-1 h-px bg-border-subtle"></span>
+                </h3>
+                <div className="space-y-6">
+                  {user.achievements.map((ach, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl relative overflow-hidden group`}
+                    >
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-amber-500/10 transition-colors"></div>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 relative z-10">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 shadow-inner">
+                            <span className="text-xl">🏆</span>
+                          </div>
+                          <div>
+                            <h4 className="text-xl font-black text-[var(--text-primary)]">
+                              {ach.title}
+                            </h4>
+                            <span className="text-[10px] font-black text-amber-600 bg-amber-500/5 px-2 py-0.5 rounded-lg border border-amber-500/10 uppercase tracking-tighter">
+                              {ach.date}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm font-medium text-[var(--text-secondary)] leading-relaxed relative z-10">
+                        {ach.description}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Right Column (Skills & Stats) */}
@@ -1019,7 +1123,7 @@ const PublicProfile = () => {
               </div>
             </section>
 
-            {/* Hybrid Skill Cloud */}
+            {/* Categorized Skills */}
             <section
               className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
             >
@@ -1028,64 +1132,39 @@ const PublicProfile = () => {
               </h3>
 
               <div className="space-y-8">
-                {user.skills?.technical?.length > 0 && (
-                  <div>
-                    <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block tracking-widest">
-                      Technical Skills
+                {/* Group skills by category */}
+                {Object.entries(
+                  (user.skills || []).reduce((acc, skill) => {
+                    if (!acc[skill.category]) acc[skill.category] = [];
+                    acc[skill.category].push(skill.name);
+                    return acc;
+                  }, {})
+                ).map(([category, names]) => (
+                  <div key={category}>
+                    <label className={`text-[9px] font-black uppercase mb-4 block tracking-widest ${
+                      category === 'Technical' ? 'text-[var(--action)]' : 
+                      category === 'Medical' ? 'text-emerald-500' :
+                      category === 'Soft Skills' ? 'text-amber-500' : 'text-violet-500'
+                    }`}>
+                      {category}
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {user.skills.technical.map((skill) => (
+                      {names.map((name, idx) => (
                         <span
-                          key={skill}
-                          className="px-4 py-2 bg-action/5 text-[var(--action)] rounded-xl text-xs font-black border border-action/10 hover:bg-action hover:text-white transition-all duration-300"
+                          key={idx}
+                          className="px-4 py-2 bg-foreground/5 text-[var(--text-primary)] rounded-xl text-xs font-black border border-border-subtle hover:border-action transition-all duration-300"
                         >
-                          {skill}
+                          {name}
                         </span>
                       ))}
                     </div>
                   </div>
-                )}
-
-                {user.skills?.tools?.length > 0 && (
-                  <div>
-                    <label className="text-[9px] font-black uppercase text-violet-500 mb-4 block tracking-widest">
-                      Tools & Technologies
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {user.skills.tools.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-4 py-2 bg-violet-500/5 text-violet-600 rounded-xl text-xs font-black border border-violet-500/10 hover:bg-violet-500 hover:text-white transition-all duration-300"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {user.skills?.other?.length > 0 && (
-                  <div>
-                    <label className="text-[9px] font-black uppercase text-amber-600 mb-4 block tracking-widest">
-                      Other Competencies
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {user.skills.other.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-4 py-2 bg-amber-500/5 text-amber-600 rounded-xl text-xs font-black border border-amber-500/10 hover:bg-amber-500 hover:text-white transition-all duration-300"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                ))}
 
                 {user.services?.length > 0 && (
                    <div className="pt-6 border-t border-border-subtle/30">
                      <label className="text-[9px] font-black uppercase text-[var(--text-secondary)] mb-4 block tracking-widest">
-                       Professional Services
+                       {sectionNames.services}
                      </label>
                      <div className="flex flex-wrap gap-2">
                        {user.services.map((service, idx) => (
