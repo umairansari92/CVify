@@ -57,7 +57,13 @@ const AdminUserDetail = () => {
         role: res.data.user.role || "user",
         diamonds: res.data.user.diamonds || 0,
       });
-      setTabData({ counts: res.data.counts });
+      // Store aggregated data
+      setTabData({ 
+        counts: res.data.counts,
+        activity: res.data.activity,
+        diamonds: res.data.diamonds,
+        assets: res.data.assets
+      });
     } catch (err) {
       console.error("Failed to fetch user:", err);
       Swal.fire("Error", "Could not load user details", "error");
@@ -234,8 +240,9 @@ const AdminUserDetail = () => {
                 {user?.firstName} {user?.lastName}
               </h1>
               <p className="text-text-muted font-bold mt-1">@{user?.username} • {user?.email}</p>
-              <p className="text-[11px] text-text-muted opacity-50 uppercase tracking-widest mt-2 font-black">
-                Joined: {new Date(user?.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+              <p className="text-[11px] text-text-muted font-black uppercase tracking-widest mt-2 flex items-center gap-4">
+                <span>Joined: {new Date(user?.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span className="text-purple-400 flex items-center gap-1"><FaGem /> {user?.diamonds || 0} Diamonds</span>
               </p>
             </div>
           </div>
@@ -253,11 +260,10 @@ const AdminUserDetail = () => {
         <div className="premium-card p-0 overflow-hidden min-h-[600px] flex flex-col">
           <div className="flex border-b border-white/5 overflow-x-auto no-scrollbar bg-white/[0.02]">
             <TabButton id="profile" label="Profile" icon={FaUser} />
-            <TabButton id="resumes" label="Resumes" icon={FaFileAlt} count={tabData.counts?.resumes} />
-            <TabButton id="ats-scans" label="ATS Scans" icon={FaSearch} count={tabData.counts?.atsScans} />
-            <TabButton id="cover-letters" label="Cover Letters" icon={FaEnvelopeOpenText} count={tabData.counts?.coverLetters} />
-            <TabButton id="diamonds" label="Diamond Ledger" icon={FaGem} count={tabData.counts?.diamondTransactions} />
+            <TabButton id="location" label="Location & Device" icon={FaGlobe} />
+            <TabButton id="assets" label="Assets" icon={FaFileAlt} />
             <TabButton id="activity" label="Activity Log" icon={FaHistory} count={tabData.counts?.activityLogs} />
+            <TabButton id="diamonds" label="Diamond Ledger" icon={FaGem} count={tabData.counts?.diamondTransactions} />
           </div>
 
           <div className="p-6 md:p-10 flex-grow relative">
@@ -373,81 +379,105 @@ const AdminUserDetail = () => {
               </div>
             )}
 
-            {/* Resumes Tab */}
-            {activeTab === "resumes" && (
-              <div className="space-y-6 animate-fadeIn">
-                {!tabData.resumes?.length ? <EmptyState message="User hasn't created any resumes yet" /> : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {tabData.resumes.map(r => (
-                      <div key={r._id} className="p-6 bg-white/5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all group">
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary"><FaFileAlt /></div>
-                            <div>
-                              <p className="font-black text-sm">{r.personalInfo?.fullName || "Untitled Resume"}</p>
-                              <p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">{r.templateId}</p>
-                            </div>
-                          </div>
-                          <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a href={`/public/${user?.username}`} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center hover:bg-teal-500 hover:text-white transition-all"><FaExternalLinkAlt className="text-[10px]" /></a>
-                            <button onClick={() => handleDeleteResume(r._id)} className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"><FaTrash className="text-[10px]" /></button>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                          <p className="text-[10px] text-text-muted font-black uppercase tracking-widest"><FaClock className="inline mr-1" /> {new Date(r.updatedAt).toLocaleDateString()}</p>
-                          <span className="px-2 py-0.5 rounded bg-white/10 text-[9px] font-black text-text-muted uppercase tracking-tighter">ID: {r._id.slice(-6)}</span>
-                        </div>
+            {/* Location & Device Tab */}
+            {activeTab === "location" && (
+              <div className="animate-fadeIn space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="premium-card p-8 border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400">
+                        <FaGlobe className="text-xl" />
                       </div>
-                    ))}
+                      <div>
+                        <h3 className="text-lg font-black text-white">Geolocation</h3>
+                        <p className="text-xs text-text-muted font-bold uppercase tracking-widest">Kahan se join kiya</p>
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+                        <span className="text-xs font-black uppercase tracking-widest text-text-muted">IP Address</span>
+                        <span className="font-mono font-bold text-teal-400">{user?.lastIp || "Not Captured"}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+                        <span className="text-xs font-black uppercase tracking-widest text-text-muted">Location</span>
+                        <span className="font-bold text-white">{user?.lastLocation || "Unknown"}</span>
+                      </div>
+                    </div>
                   </div>
-                )}
+
+                  <div className="premium-card p-8 border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                        <FaUserShield className="text-xl" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-white">Browser & OS</h3>
+                        <p className="text-xs text-text-muted font-bold uppercase tracking-widest">Device Fingerprint</p>
+                      </div>
+                    </div>
+                    <div className="p-6 bg-white/5 rounded-xl border border-white/5">
+                      <p className="text-sm font-bold text-blue-400 mb-2">Detected Platform:</p>
+                      <p className="text-xl font-black text-white tracking-tight">{user?.lastDevice || "Unknown Device"}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* ATS Scans Tab */}
-            {activeTab === "ats-scans" && (
-              <div className="space-y-4 animate-fadeIn">
-                {!tabData["ats-scans"]?.length ? <EmptyState message="No ATS scans found for this user" /> : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="text-left border-b border-white/5">
-                          <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-text-muted">Resume / File</th>
-                          <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-text-muted">Target JD</th>
-                          <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-text-muted text-center">Score</th>
-                          <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-text-muted text-right">Date</th>
+            {/* Assets Tab (Unified view) */}
+            {activeTab === "assets" && (
+              <div className="animate-fadeIn space-y-12">
+                {/* Resumes */}
+                <section>
+                  <h3 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+                    <FaFileAlt /> Resumes <span className="opacity-30">({tabData.counts?.resumes})</span>
+                  </h3>
+                  {!tabData.assets?.resumes?.length ? <EmptyState message="No resumes found" /> : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {tabData.assets.resumes.map(r => (
+                        <div key={r._id} className="p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all group">
+                          <div className="flex justify-between items-start mb-3">
+                            <p className="font-black text-sm">{r.personalInfo?.fullName || "Untitled"}</p>
+                            <button onClick={() => handleDeleteResume(r._id)} className="w-7 h-7 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"><FaTrash className="text-[10px]" /></button>
+                          </div>
+                          <div className="flex justify-between items-center text-[10px] text-text-muted font-bold uppercase tracking-tight">
+                            <span>{r.templateId}</span>
+                            <span>{new Date(r.updatedAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
+                {/* Scans */}
+                <section>
+                  <h3 className="text-lg font-black uppercase tracking-widest text-orange-400 mb-6 flex items-center gap-2">
+                    <FaSearch /> ATS Scans <span className="opacity-30">({tabData.counts?.atsScans})</span>
+                  </h3>
+                  {!tabData.assets?.atsScans?.length ? <EmptyState message="No scans found" /> : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <tr className="text-left border-b border-white/5 text-[10px] uppercase font-black text-text-muted">
+                          <th className="pb-3 px-2">File</th>
+                          <th className="pb-3 px-2 text-center">Score</th>
+                          <th className="pb-3 px-2 text-right">Date</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {tabData["ats-scans"].map(s => (
-                          <tr key={s._id} className="border-b border-white/[0.03] hover:bg-white/[0.01]">
-                            <td className="px-4 py-4">
-                              <p className="text-sm font-bold truncate max-w-[200px]">{s.resumeName}</p>
-                              <p className="text-[10px] text-primary font-black uppercase tracking-tighter">{s.marketMode || "Standard"}</p>
+                        {tabData.assets.atsScans.map(s => (
+                          <tr key={s._id} className="border-b border-white/[0.02] text-xs font-bold">
+                            <td className="py-3 px-2">{s.resumeName}</td>
+                            <td className="py-3 px-2 text-center">
+                              <span className={`px-2 py-0.5 rounded ${s.score?.overall >= 70 ? 'bg-green-500/10 text-green-400' : 'bg-amber-500/10 text-amber-400'}`}>
+                                {s.score?.overall}%
+                              </span>
                             </td>
-                            <td className="px-4 py-4">
-                              <p className="text-xs text-text-muted italic line-clamp-2 max-w-[300px]">{s.jobDescription || "No description provided"}</p>
-                            </td>
-                            <td className="px-4 py-4">
-                              <div className="flex justify-center">
-                                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-xs font-black ${
-                                  s.score?.overall >= 80 ? "border-green-500/50 text-green-400" :
-                                  s.score?.overall >= 60 ? "border-amber-500/50 text-amber-400" :
-                                  "border-red-500/50 text-red-400"
-                                }`}>
-                                  {s.score?.overall}%
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-4 py-4 text-right">
-                              <p className="text-[10px] font-bold text-text-muted">{new Date(s.createdAt).toLocaleDateString()}</p>
-                            </td>
+                            <td className="py-3 px-2 text-right text-text-muted">{new Date(s.createdAt).toLocaleDateString()}</td>
                           </tr>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                      </table>
+                    </div>
+                  )}
+                </section>
               </div>
             )}
 
@@ -455,29 +485,25 @@ const AdminUserDetail = () => {
             {activeTab === "activity" && (
               <div className="space-y-4 animate-fadeIn">
                 {!tabData.activity?.length ? <EmptyState message="Audit trail is empty" /> : (
-                  <div className="space-y-3">
+                  <div className="relative border-l-2 border-white/5 ml-4 pl-8 space-y-8 py-4">
                     {tabData.activity.map(a => (
-                      <div key={a._id} className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5">
-                        <div className="mt-1 shrink-0">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${
-                            a.action.includes('delete') ? 'bg-red-500/10 text-red-400' :
-                            a.action.includes('create') ? 'bg-green-500/10 text-green-400' :
-                            a.action.includes('login') ? 'bg-blue-500/10 text-blue-400' :
-                            'bg-slate-500/10 text-slate-400'
-                          }`}>
-                            {a.action.includes('login') ? <FaClock /> : <FaGlobe />}
-                          </div>
+                      <div key={a._id} className="relative">
+                        <div className={`absolute -left-[41px] top-0 w-5 h-5 rounded-full border-4 border-midground shadow-lg ${
+                          a.action.includes('delete') ? 'bg-red-500' :
+                          a.action.includes('create') ? 'bg-green-500' :
+                          a.action.includes('login') ? 'bg-blue-500' :
+                          'bg-slate-500'
+                        }`} />
+                        <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 mb-1">
+                          <h4 className="font-black text-xs uppercase tracking-widest text-white">{a.action.replace(/_/g, ' ')}</h4>
+                          <span className="text-[10px] font-bold text-text-muted">{new Date(a.createdAt).toLocaleString()}</span>
                         </div>
-                        <div className="flex-grow min-w-0">
-                          <div className="flex justify-between items-start gap-4">
-                            <h4 className="font-black text-xs uppercase tracking-widest text-text-primary truncate">{a.action.replace(/_/g, ' ')}</h4>
-                            <span className="text-[9px] font-bold text-text-muted whitespace-nowrap">{new Date(a.createdAt).toLocaleString()}</span>
-                          </div>
-                          <p className="text-sm text-text-secondary mt-1">{a.details}</p>
-                          {a.performedBy && String(a.performedBy) !== String(user._id) && (
-                            <p className="text-[10px] font-black text-amber-400/70 mt-1 uppercase tracking-tighter">Performed by Admin</p>
-                          )}
-                        </div>
+                        <p className="text-sm text-text-secondary">{a.details}</p>
+                        {a.location && (
+                          <p className="text-[10px] text-teal-400/60 mt-1 font-bold flex items-center gap-1">
+                            <FaGlobe className="text-[8px]" /> {a.location}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>

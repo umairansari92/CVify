@@ -635,7 +635,12 @@ const AdminDashboard = () => {
                     return (
                       <tr
                         key={u._id}
-                        className={`border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors ${
+                        onClick={(e) => {
+                          // Prevent navigation if clicking on action buttons
+                          if (e.target.closest('button') || e.target.closest('a')) return;
+                          navigate(`/admin/users/${u._id}`);
+                        }}
+                        className={`border-b border-white/[0.03] hover:bg-white/[0.04] transition-all cursor-pointer group/row ${
                           isSelf ? "bg-primary/[0.03]" : ""
                         }`}
                       >
