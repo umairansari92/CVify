@@ -214,7 +214,7 @@ const PublicProfile = () => {
         technicalSkills: {
           skills: user.skills || [], // New categorized structure
         },
-        projects: (user.projects || []).map((proj) => ({
+        projects: (user.portfolio || user.projects || []).map((proj) => ({
           name: proj.title,
           link: proj.liveLink,
           description: proj.description
@@ -273,8 +273,9 @@ const PublicProfile = () => {
       </div>
     );
 
-  const featuredProject = user.projects?.find((p) => p.isFeatured);
-  const otherProjects = user.projects?.filter((p) => !p.isFeatured) || [];
+  const portfolio = user.portfolio || user.projects || [];
+  const featuredProject = portfolio.find((p) => p.isFeatured);
+  const otherProjects = portfolio.filter((p) => !p.isFeatured);
   const sectionNames = user.sectionNames || {
     experience: "Professional Experience",
     education: "Education History",
@@ -1291,7 +1292,7 @@ const PublicProfile = () => {
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {user.projects?.map((proj, i) => (
+            {portfolio.map((proj, i) => (
               <motion.div
                 key={i}
                 whileHover={{ y: -10 }}
@@ -1323,7 +1324,7 @@ const PublicProfile = () => {
                   <InlineEdit
                     value={proj.title}
                     onSave={(val) =>
-                      handleArrayUpdate("projects", i, { title: val })
+                      handleArrayUpdate(user.portfolio ? "portfolio" : "projects", i, { title: val })
                     }
                     isOwner={user.isOwner}
                     label="Project Title"
@@ -1332,7 +1333,7 @@ const PublicProfile = () => {
                   <InlineEdit
                     value={proj.description}
                     onSave={(val) =>
-                      handleArrayUpdate("projects", i, { description: val })
+                      handleArrayUpdate(user.portfolio ? "portfolio" : "projects", i, { description: val })
                     }
                     isOwner={user.isOwner}
                     multiline={true}

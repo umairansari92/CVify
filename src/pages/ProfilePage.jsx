@@ -172,7 +172,7 @@ const ProfilePage = () => {
           portfolio: "",
         },
       );
-      setProjects(user.projects || []);
+      setPortfolio(user.portfolio || user.projects || []);
       setExperience(user.experience || []);
       setEducation(user.education || []);
       setSkills(user.skills || []);
@@ -320,8 +320,8 @@ const ProfilePage = () => {
       if (isEditingProject) {
         res = await api.patch(`/auth/projects/${editingProjectId}`, fd);
         if (res.data.project) {
-          setProjects(
-            projects.map((p) =>
+          setPortfolio(
+            portfolio.map((p) =>
               p._id === editingProjectId ? res.data.project : p,
             ),
           );
@@ -330,7 +330,7 @@ const ProfilePage = () => {
       } else {
         res = await api.post("/auth/projects", fd);
         if (res.data.project) {
-          setProjects([...projects, res.data.project]);
+          setPortfolio([...portfolio, res.data.project]);
           toast.success("Project added!");
         }
       }
@@ -370,7 +370,7 @@ const ProfilePage = () => {
   const handleDeleteProject = async (pid) => {
     try {
       await api.delete(`/auth/projects/${pid}`);
-      setProjects(projects.filter((p) => p._id !== pid));
+      setPortfolio(portfolio.filter((p) => p._id !== pid));
       toast.success("Project removed.");
     } catch (err) {
       toast.error(err.message);
@@ -1268,7 +1268,7 @@ const ProfilePage = () => {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {projects.map((proj) => (
+            {portfolio.map((proj) => (
               <div
                 key={proj._id}
                 className="group relative bg-foreground/30 dark:bg-midnight/20 rounded-2xl p-4 border border-border-subtle hover:border-action/30 transition-all"
@@ -1339,7 +1339,7 @@ const ProfilePage = () => {
               </div>
             ))}
           </div>
-          {projects.length === 0 && !showPForm && (
+          {portfolio.length === 0 && !showPForm && (
             <p className="text-center py-10 text-xs font-bold text-text-muted italic">
               No projects added yet.
             </p>
