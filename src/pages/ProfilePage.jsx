@@ -96,12 +96,14 @@ const ProfilePage = () => {
   const [location, setLocation] = useState(user?.location || "");
   const [experience, setExperience] = useState(user?.experience || []);
   const [education, setEducation] = useState(user?.education || []);
-  const [skills, setSkills] = useState(
-    user?.skills || { technical: [], professional: [] },
-  );
+  const [skills, setSkills] = useState(user?.skills || []);
+  const [certifications, setCertifications] = useState(user?.certifications || []);
+  const [achievements, setAchievements] = useState(user?.achievements || []);
   const [services, setServices] = useState(user?.services || []);
   const [languages, setLanguages] = useState(user?.languages || []);
   const [availability, setAvailability] = useState(user?.availability || "Open to Work");
+  const [industry, setIndustry] = useState(user?.industry || "Other");
+  const [privacy, setPrivacy] = useState(user?.privacy || { visibility: "Public", showPhone: false, showEmail: true });
   const [sectionNames, setSectionNames] = useState(
     user?.sectionNames || {
       experience: "Professional Experience",
@@ -124,8 +126,8 @@ const ProfilePage = () => {
   );
   const [bannerFile, setBannerFile] = useState(null);
 
-  // Project state
-  const [projects, setProjects] = useState(user?.projects || []);
+  // Portfolio state (Renamed from Projects)
+  const [portfolio, setPortfolio] = useState(user?.portfolio || user?.projects || []);
   const [pTitle, setPTitle] = useState("");
   const [pDesc, setPDesc] = useState("");
   const [pTech, setPTech] = useState("");
@@ -173,17 +175,24 @@ const ProfilePage = () => {
       setProjects(user.projects || []);
       setExperience(user.experience || []);
       setEducation(user.education || []);
-      setSkills(user.skills || { technical: [], tools: [], other: [], professional: [] });
+      setSkills(user.skills || []);
+      setCertifications(user.certifications || []);
+      setAchievements(user.achievements || []);
+      setPortfolio(user.portfolio || user.projects || []);
       setAvailability(user.availability || "Open to Work");
+      setIndustry(user.industry || "Other");
+      setPrivacy(user.privacy || { visibility: "Public", showPhone: false, showEmail: true });
       setServices(user.services || []);
       setSectionNames(
         user.sectionNames || {
           experience: "Professional Experience",
           education: "Education History",
           skills: "Expertise & Skills",
-          projects: "Key Accomplishments",
+          portfolio: "Work Portfolio",
           services: "Professional Services",
           languages: "Languages",
+          certifications: "Certifications",
+          achievements: "Honors & Awards",
         },
       );
       setLanguages(user.languages || []);
@@ -198,6 +207,9 @@ const ProfilePage = () => {
           fontPrimary: "Inter",
           bannerUrl: "",
           bannerOpacity: 95,
+          textPrimary: "#ffffff",
+          textSecondary: "#94a3b8",
+          accentColor: "#2563eb",
         },
       );
       setHasInitialized(true);
@@ -246,11 +258,16 @@ const ProfilePage = () => {
       fd.append("experience", JSON.stringify(experience));
       fd.append("education", JSON.stringify(education));
       fd.append("skills", JSON.stringify(skills));
+      fd.append("portfolio", JSON.stringify(portfolio));
+      fd.append("certifications", JSON.stringify(certifications));
+      fd.append("achievements", JSON.stringify(achievements));
       fd.append("services", JSON.stringify(services));
       fd.append("languages", JSON.stringify(languages));
       fd.append("sectionNames", JSON.stringify(sectionNames));
       fd.append("themeSettings", JSON.stringify(themeSettings));
       fd.append("availability", availability);
+      fd.append("industry", industry);
+      fd.append("privacy", JSON.stringify(privacy));
 
       if (imageFile) fd.append("profileImage", imageFile);
       if (bannerFile) fd.append("bannerImage", bannerFile);
@@ -418,19 +435,26 @@ const ProfilePage = () => {
       phoneNumber !== (user.phoneNumber || "") ||
       isPublic !== (user.isPublic || false) ||
       location !== (user.location || "") ||
+      industry !== (user.industry || "Other") ||
+      !isEqual(privacy, user.privacy || { visibility: "Public", showPhone: false, showEmail: true }) ||
       !isEqual(socialLinks, user.socialLinks || { linkedin: "", github: "", twitter: "", portfolio: "" }) ||
       !isEqual(experience, user.experience || []) ||
       !isEqual(education, user.education || []) ||
-      !isEqual(skills, user.skills || { technical: [], professional: [] }) ||
+      !isEqual(skills, user.skills || []) ||
+      !isEqual(portfolio, user.portfolio || user.projects || []) ||
+      !isEqual(certifications, user.certifications || []) ||
+      !isEqual(achievements, user.achievements || []) ||
       !isEqual(services, user.services || []) ||
       !isEqual(languages, user.languages || []) ||
       !isEqual(sectionNames, user.sectionNames || { 
         experience: "Professional Experience", 
         education: "Education History", 
         skills: "Expertise & Skills", 
-        projects: "Key Accomplishments", 
+        portfolio: "Work Portfolio", 
         services: "Professional Services",
-        languages: "Languages"
+        languages: "Languages",
+        certifications: "Certifications",
+        achievements: "Honors & Awards"
       }) ||
       !isEqual(themeSettings, user.themeSettings || {
         headerBg: "#2563eb",
@@ -440,17 +464,38 @@ const ProfilePage = () => {
         fontPrimary: "Inter",
         bannerUrl: "",
         bannerOpacity: 95,
+        textPrimary: "#ffffff",
+        textSecondary: "#94a3b8",
+        accentColor: "#2563eb",
       }) ||
       !!imageFile ||
       !!bannerFile
     );
   }, [
-    user, firstName, lastName, headline, bio, username, phoneNumber, isPublic, location,
-    socialLinks, experience, education, skills, services, languages, sectionNames,
-    themeSettings, imageFile, bannerFile
+    user, firstName, lastName, headline, bio, username, phoneNumber, isPublic, location, industry, privacy,
+    socialLinks, experience, education, skills, portfolio, certifications, achievements,
+    services, languages, sectionNames, themeSettings, imageFile, bannerFile
   ]);
 
   const isDirty = isManuallyDirty || isDeepDirty;
+
+  // ─── Profile Strength Logic ───
+  const profileStrength = useMemo(() => {
+    let score = 0;
+    if (user?.profileImage) score += 10;
+    if (headline) score += 10;
+    if (bio) score += 10;
+    if (industry !== "Other") score += 10;
+    if (skills.length > 0) score += 15;
+    if (experience.length > 0) score += 15;
+    if (education.length > 0) score += 10;
+    if (portfolio.length > 0) score += 10;
+    if (certifications.length > 0 || achievements.length > 0) score += 10;
+    return Math.min(score, 100);
+  }, [user, headline, bio, industry, skills, experience, education, portfolio, certifications, achievements]);
+
+  const strengthColor = profileStrength < 40 ? "bg-red-500" : profileStrength < 75 ? "bg-amber-500" : "bg-emerald-500";
+  const strengthLabel = profileStrength < 40 ? "Weak" : profileStrength < 75 ? "Good" : "Excellent";
 
   return (
     <div className="min-h-screen bg-foreground dark:bg-midnight p-6 md:p-8 pb-32 transition-colors duration-300">
@@ -525,6 +570,30 @@ const ProfilePage = () => {
              <p className="text-[10px] font-black uppercase text-text-muted mt-1">Credits</p>
           </div>
         </div>
+
+        {/* ── Profile Strength Indicator ── */}
+        <Card className="border-action/20 bg-action/5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Profile Strength: {strengthLabel}</h3>
+            <span className="text-sm font-black text-action">{profileStrength}%</span>
+          </div>
+          <div className="w-full h-3 bg-action/10 rounded-full overflow-hidden border border-action/10">
+            <div 
+              style={{ width: `${profileStrength}%` }}
+              className={`h-full ${strengthColor} transition-all duration-1000`}
+            />
+          </div>
+          <div className="mt-4">
+            {profileStrength < 100 && (
+              <p className="text-[10px] font-bold text-text-muted flex items-center gap-2">
+                <span className="text-action">💡 Tip:</span> 
+                {profileStrength < 40 ? "Add your professional experience and skills to get noticed." : 
+                 profileStrength < 75 ? "Adding certifications and a work portfolio boosts your credibility by 30%." :
+                 "Almost there! Add honors & awards to finalize your online identity."}
+              </p>
+            )}
+          </div>
+        </Card>
 
         {/* ── Share Profile ── */}
         {user?.username && (
@@ -621,9 +690,41 @@ const ProfilePage = () => {
                 }}
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               >
-                <option value="Open to Work">🟢 Open to Work (Active)</option>
-                <option value="Freelance Available">🟡 Freelance Available</option>
+                <option value="Open to Work">🟢 Open to Work</option>
+                <option value="Freelance Available">⚡ Freelance Available</option>
+                <option value="Available for Internship">🎓 Available for Internship</option>
+                <option value="Currently Employed">💼 Currently Employed</option>
                 <option value="Not Available">🔴 Not Available</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Your Industry
+              </label>
+              <select
+                value={industry}
+                onChange={(e) => {
+                  setIndustry(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              >
+                {[
+                  "Technology",
+                  "Healthcare",
+                  "Education",
+                  "Finance",
+                  "Administration",
+                  "Marketing",
+                  "Engineering",
+                  "Design",
+                  "Legal",
+                  "Retail",
+                  "Other",
+                ].map((ind) => (
+                  <option key={ind} value={ind}>{ind}</option>
+                ))}
               </select>
             </div>
 
@@ -950,18 +1051,22 @@ const ProfilePage = () => {
           </form>
         </Card>
 
-        {/* ── Project Gallery ── */}
-        <Card>
+        {/* ── Work Portfolio ── */}
+        <Card id="portfolio-section">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
-              <span className="text-xl">🏆</span>
+              <span className="text-xl">🚀</span>
               <input
                 type="text"
-                value={sectionNames.projects}
+                value={sectionNames.portfolio || "Work Portfolio"}
                 onChange={(e) =>
-                  setSectionNames({ ...sectionNames, projects: e.target.value })
+                  setSectionNames({
+                    ...sectionNames,
+                    portfolio: e.target.value,
+                  })
                 }
                 className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+                title="Click to rename section"
               />
             </div>
             <button
@@ -1569,58 +1674,76 @@ const ProfilePage = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Technical Skills (React, Node.js, MERN, AI...)
-              </label>
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
-                value={skills.technical?.join(", ")}
-                onChange={(e) =>
-                  setSkills({
-                    ...skills,
-                    technical: e.target.value.split(",").map((s) => s.trim()),
-                  })
-                }
-                placeholder="E.g., React, Node.js, Express, MongoDB..."
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+                id="newSkillName"
+                placeholder="Add a skill (e.g. Patient Care, React, Sales)"
+                className="flex-1 px-5 py-3 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const val = e.target.value.trim();
+                    const cat = document.getElementById("newSkillCat").value;
+                    if (val) {
+                      setSkills([...skills, { name: val, category: cat }]);
+                      e.target.value = "";
+                      setIsManuallyDirty(true);
+                    }
+                  }
+                }}
               />
+              <select
+                id="newSkillCat"
+                className="px-5 py-3 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              >
+                <option value="Technical">Technical</option>
+                <option value="Administrative">Administrative</option>
+                <option value="Medical">Medical</option>
+                <option value="Teaching">Teaching</option>
+                <option value="Soft Skills">Soft Skills</option>
+                <option value="Other">Other</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => {
+                  const name = document.getElementById("newSkillName").value.trim();
+                  const cat = document.getElementById("newSkillCat").value;
+                  if (name) {
+                    setSkills([...skills, { name, category: cat }]);
+                    document.getElementById("newSkillName").value = "";
+                    setIsManuallyDirty(true);
+                  }
+                }}
+                className="px-6 py-3 bg-action text-white font-black rounded-2xl hover:bg-blue-600 transition-all text-sm"
+              >
+                Add
+              </button>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Tools & Technologies (Git, Docker, VS Code...)
-              </label>
-              <input
-                type="text"
-                value={skills.tools?.join(", ")}
-                onChange={(e) =>
-                  setSkills({
-                    ...skills,
-                    tools: e.target.value.split(",").map((s) => s.trim()),
-                  })
-                }
-                placeholder="E.g., Git, Docker, Postman, Cloudinary..."
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Soft & Other Skills (Public Speaking, Teaching...)
-              </label>
-              <input
-                type="text"
-                value={skills.other?.join(", ")}
-                onChange={(e) =>
-                  setSkills({
-                    ...skills,
-                    other: e.target.value.split(",").map((s) => s.trim()),
-                  })
-                }
-                placeholder="E.g., Technical Writing, Leadership, Teamwork..."
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
-              />
+            <div className="flex flex-wrap gap-2 pt-2">
+              {skills.map((skill, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 px-4 py-2 bg-foreground/50 dark:bg-midnight/30 border border-border-subtle rounded-xl group"
+                >
+                  <span className="text-[10px] font-black uppercase text-text-muted opacity-50">{skill.category}</span>
+                  <span className="text-xs font-bold text-text-primary">{skill.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSkills(skills.filter((_, i) => i !== idx));
+                      setIsManuallyDirty(true);
+                    }}
+                    className="text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all font-black"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              {skills.length === 0 && (
+                <p className="text-[10px] font-bold text-text-muted italic opacity-60">No skills added yet. Add skills to increase profile strength.</p>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -1690,6 +1813,263 @@ const ProfilePage = () => {
             </div>
           </div>
         </Card>
+
+        {/* ── Certifications ── */}
+        <Card>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">📜</span>
+              <input
+                type="text"
+                value={sectionNames.certifications || "Certifications"}
+                onChange={(e) =>
+                  setSectionNames({ ...sectionNames, certifications: e.target.value })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setCertifications([
+                  ...certifications,
+                  { name: "", issuer: "", date: "", link: "", description: "" },
+                ]);
+                setIsManuallyDirty(true);
+              }}
+              className="text-xs font-black bg-emerald-500 text-white px-4 py-2 rounded-full hover:bg-emerald-600 transition-all w-fit"
+            >
+              + Add certificate
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {certifications.map((cert, idx) => (
+              <div key={idx} className="p-6 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle space-y-4 relative group">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Certificate Name</label>
+                    <input
+                      placeholder="e.g. AWS Solutions Architect"
+                      value={cert.name}
+                      onChange={(e) => {
+                        const newCerts = [...certifications];
+                        newCerts[idx].name = e.target.value;
+                        setCertifications(newCerts);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Issuing Org</label>
+                    <input
+                      placeholder="e.g. Amazon Web Services"
+                      value={cert.issuer}
+                      onChange={(e) => {
+                        const newCerts = [...certifications];
+                        newCerts[idx].issuer = e.target.value;
+                        setCertifications(newCerts);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Issue Date</label>
+                    <input
+                      type="month"
+                      value={toInputDate(cert.date)}
+                      onChange={(e) => {
+                        const newCerts = [...certifications];
+                        newCerts[idx].date = toDBDate(e.target.value);
+                        setCertifications(newCerts);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Link (Optional)</label>
+                    <input
+                      placeholder="Verify Link"
+                      value={cert.link}
+                      onChange={(e) => {
+                        const newCerts = [...certifications];
+                        newCerts[idx].link = e.target.value;
+                        setCertifications(newCerts);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCertifications(certifications.filter((_, i) => i !== idx));
+                    setIsManuallyDirty(true);
+                  }}
+                  className="absolute top-2 right-2 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 rounded-lg"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+            {certifications.length === 0 && (
+              <p className="text-center py-6 text-[10px] font-bold text-text-muted italic bg-foreground/10 rounded-2xl">Add professional certifications or training.</p>
+            )}
+          </div>
+        </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
+
+        {/* ── Achievements ── */}
+        <Card>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🏆</span>
+              <input
+                type="text"
+                value={sectionNames.achievements || "Honors & Awards"}
+                onChange={(e) =>
+                  setSectionNames({ ...sectionNames, achievements: e.target.value })
+                }
+                className="font-black text-sm text-text-muted uppercase tracking-[0.2em] bg-transparent border-b-2 border-dashed border-border-subtle focus:border-action outline-none w-full md:w-64"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setAchievements([...achievements, { title: "", date: "", description: "" }]);
+                setIsManuallyDirty(true);
+              }}
+              className="text-xs font-black bg-amber-500 text-white px-4 py-2 rounded-full hover:bg-amber-600 transition-all w-fit"
+            >
+              + Add achievement
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {achievements.map((ach, idx) => (
+              <div key={idx} className="p-6 bg-foreground/30 dark:bg-midnight/20 rounded-2xl border-2 border-border-subtle space-y-4 relative group">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Title</label>
+                    <input
+                      placeholder="e.g. Employee of the Month"
+                      value={ach.title}
+                      onChange={(e) => {
+                        const newAchs = [...achievements];
+                        newAchs[idx].title = e.target.value;
+                        setAchievements(newAchs);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm font-bold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-text-muted ml-1">Date</label>
+                    <input
+                      type="month"
+                      value={toInputDate(ach.date)}
+                      onChange={(e) => {
+                        const newAchs = [...achievements];
+                        newAchs[idx].date = toDBDate(e.target.value);
+                        setAchievements(newAchs);
+                        setIsManuallyDirty(true);
+                      }}
+                      className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-black uppercase text-text-muted ml-1">Description</label>
+                  <textarea
+                    placeholder="Briefly describe the significance..."
+                    value={ach.description}
+                    onChange={(e) => {
+                      const newAchs = [...achievements];
+                      newAchs[idx].description = e.target.value;
+                      setAchievements(newAchs);
+                      setIsManuallyDirty(true);
+                    }}
+                    className="w-full px-4 py-2 h-20 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm resize-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAchievements(achievements.filter((_, i) => i !== idx));
+                    setIsManuallyDirty(true);
+                  }}
+                  className="absolute top-2 right-2 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 rounded-lg"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
+
+        {/* ── Privacy & Visibility ── */}
+        <Card>
+          <SectionTitle icon="🔏" title="Privacy & Settings" />
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                  Profile Visibility
+                </label>
+                <select
+                  value={privacy.visibility}
+                  onChange={(e) => {
+                    setPrivacy({ ...privacy, visibility: e.target.value });
+                    setIsManuallyDirty(true);
+                  }}
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+                >
+                  <option value="Public">🌍 Public (Everyone)</option>
+                  <option value="Recruiter Only">💼 Recruiter Only</option>
+                  <option value="Private">🔒 Private (Me Only)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col justify-center space-y-4 pt-2">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={privacy.showEmail}
+                    onChange={(e) => {
+                      setPrivacy({ ...privacy, showEmail: e.target.checked });
+                      setIsManuallyDirty(true);
+                    }}
+                    className="w-5 h-5 rounded-lg border-2 border-border-subtle checked:bg-action checked:border-action transition-all cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-text-primary group-hover:text-action transition-colors">Show Email publicly</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={privacy.showPhone}
+                    onChange={(e) => {
+                      setPrivacy({ ...privacy, showPhone: e.target.checked });
+                      setIsManuallyDirty(true);
+                    }}
+                    className="w-5 h-5 rounded-lg border-2 border-border-subtle checked:bg-action checked:border-action transition-all cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-text-primary group-hover:text-action transition-colors">Show Phone Number publicly</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Languages ── */}
         <Card>
