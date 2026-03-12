@@ -3,9 +3,12 @@ import { Canvas } from "@react-three/fiber";
 import ParticleBackground from "./ParticleBackground";
 
 export default function ThreeBackground() {
+  const [retryKey, setRetryKey] = React.useState(0);
+
   return (
     <div className="three-canvas-container">
       <Canvas
+        key={retryKey}
         camera={{ position: [0, 0, 8], fov: 60 }}
         style={{
           background: "transparent",
@@ -25,6 +28,9 @@ export default function ThreeBackground() {
           gl.domElement.addEventListener("webglcontextlost", (event) => {
             event.preventDefault();
             console.warn("CVify: WebGL Context Lost. Attempting recovery...");
+            setTimeout(() => {
+              setRetryKey((prev) => prev + 1);
+            }, 1000);
           });
           gl.domElement.addEventListener("webglcontextrestored", () => {
             console.info("CVify: WebGL Context Restored.");

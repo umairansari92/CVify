@@ -29,13 +29,14 @@ const AdminUserDetail = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  // Permission Checks
+  // ─── State ──────────────────────────────────────────────────────────────
+  const [user, setUser] = useState(null);
+
+  // Permission Checks (Moved after state declaration)
   const isSuperAdmin = currentUser?.role === "superadmin";
   const targetIsAdmin = user?.role === "admin" || user?.role === "superadmin";
   const canModify = isSuperAdmin || !targetIsAdmin;
 
-  // ─── State ──────────────────────────────────────────────────────────────
-  const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
   const [loading, setLoading] = useState(true);
   const [subLoading, setSubLoading] = useState(false);

@@ -56,6 +56,7 @@ const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // ─── Data Fetching ──────────────────────────────────────────────────────
   const fetchStats = useCallback(async () => {
@@ -476,7 +477,7 @@ const AdminDashboard = () => {
                 <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
               </div>
               <div className="h-[300px] min-h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                   <AreaChart data={stats.charts.userGrowth}>
                     <defs>
                       <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
@@ -527,7 +528,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
               <div className="h-[300px] min-h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                   <BarChart data={stats.charts.resumeGrowth.map((val, idx) => ({
                     month: val._id,
                     resumes: val.count,
