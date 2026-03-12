@@ -24,6 +24,7 @@ import {
   FaPlus,
   FaFont,
   FaLayerGroup,
+  FaShareAlt,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
@@ -166,7 +167,7 @@ const PublicProfile = () => {
 
   const handleDownload = async () => {
     if (!user) return;
-    handleTrackInteraction("contact");
+    handleTrackInteraction("download");
 
     toast.loading("Preparing your professional resume...", { id: "pdf-gen" });
 
@@ -601,9 +602,9 @@ const PublicProfile = () => {
         <meta property="og:type" content="profile" />
         <meta
           property="og:title"
-          content={`${user.firstName} ${user.lastName} | ${user.headline}`}
+          content={`${user.firstName} ${user.lastName} | ${user.headline || "Professional Portfolio"} | ${user.availability}`}
         />
-        <meta property="og:description" content={user.bio?.substring(0, 160)} />
+        <meta property="og:description" content={`${user.availability}. ${user.bio?.substring(0, 120)}`} />
         <meta property="og:url" content={`https://cvify.pro/p/${username}`} />
         <meta
           property="og:image"
@@ -679,6 +680,32 @@ const PublicProfile = () => {
         </div>
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
+          {/* Availability Badge */}
+          <div className="flex justify-center lg:justify-start mb-6">
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md ${
+                user.availability === "Open to Work"
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                  : user.availability === "Freelance Available"
+                    ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                    : "bg-red-500/10 border-red-500/30 text-red-400"
+              }`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  user.availability === "Open to Work"
+                    ? "bg-emerald-400"
+                    : user.availability === "Freelance Available"
+                      ? "bg-amber-400"
+                      : "bg-red-400"
+                }`}
+              />
+              {user.availability || "Open to Work"}
+            </motion.div>
+          </div>
+
           <div className="flex flex-col items-center lg:items-start lg:flex-row gap-10">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -756,6 +783,7 @@ const PublicProfile = () => {
                     rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-600 rounded-2xl transition-all backdrop-blur-md border border-white/10"
                     onClick={() => handleTrackInteraction("contact")}
+                    title="LinkedIn"
                   >
                     <FaLinkedin size={22} />
                   </a>
@@ -767,6 +795,7 @@ const PublicProfile = () => {
                     rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-slate-900 rounded-2xl transition-all backdrop-blur-md border border-white/10"
                     onClick={() => handleTrackInteraction("contact")}
+                    title="GitHub"
                   >
                     <FaGithub size={22} />
                   </a>
@@ -778,6 +807,7 @@ const PublicProfile = () => {
                     rel="noopener noreferrer"
                     className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-400 rounded-2xl transition-all backdrop-blur-md border border-white/10"
                     onClick={() => handleTrackInteraction("contact")}
+                    title="Twitter"
                   >
                     <FaTwitter size={22} />
                   </a>
@@ -794,31 +824,32 @@ const PublicProfile = () => {
                     <FaGlobe size={22} />
                   </a>
                 )}
-                {user.email && (
-                  <a
-                    href={`mailto:${user.email}?subject=${encodeURIComponent("Professional Inquiry")}`}
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-red-500 rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="Email Me"
-                  >
-                    <FaEnvelope size={22} />
-                  </a>
-                )}
-                {user.phoneNumber && (
-                  <a
-                    href={`tel:${user.phoneNumber}`}
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-green-500 rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="Call Me"
-                  >
-                    <FaBriefcase size={22} />
-                  </a>
-                )}
+              </div>
+
+              {/* LinkedIn Style Action CTAs */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-10">
                 <button
                   onClick={handleDownload}
-                  className="px-8 py-4 bg-white text-[var(--action)] rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
+                  className="px-8 py-3.5 bg-white text-action font-black rounded-2xl flex items-center gap-3 hover:bg-white/90 transition-all shadow-xl shadow-black/10 text-sm"
+                  style={{ color: theme.accentColor }}
                 >
-                  <FaDownload /> Get Professional Resume
+                  <FaDownload /> Download Resume
+                </button>
+                <a
+                  href={`mailto:${user.email}?subject=Professional Collaboration Inquiry`}
+                  onClick={() => handleTrackInteraction("contact")}
+                  className="px-8 py-3.5 bg-action/20 hover:bg-action/30 border border-white/20 text-white font-black rounded-2xl flex items-center gap-3 transition-all text-sm"
+                >
+                  <FaEnvelope /> Contact Candidate
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("Profile link copied!");
+                  }}
+                  className="px-6 py-3.5 bg-black/20 hover:bg-black/40 border border-white/10 text-white font-black rounded-2xl flex items-center gap-3 transition-all text-xs"
+                >
+                  <FaShareAlt /> Share Profile
                 </button>
               </div>
             </div>
@@ -902,15 +933,20 @@ const PublicProfile = () => {
                       />
 
                       {exp.tools && exp.tools.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-6 relative z-10">
-                          {exp.tools.map((tool) => (
-                            <span
-                              key={tool}
-                              className="text-[10px] font-black bg-action/10 text-[var(--action)] px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10"
-                            >
-                              {tool}
-                            </span>
-                          ))}
+                        <div className="mt-6 relative z-10">
+                          <p className="text-[10px] font-black uppercase text-[var(--text-secondary)] mb-3 opacity-60 tracking-widest">
+                            Technologies Used
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.tools.map((tool) => (
+                              <span
+                                key={tool}
+                                className="text-[10px] font-black bg-action/10 text-[var(--action)] px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10 hover:bg-white dark:hover:bg-midnight transition-colors"
+                              >
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -992,37 +1028,78 @@ const PublicProfile = () => {
               </h3>
 
               <div className="space-y-8">
-                <div>
-                  <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block">
-                    Core Competencies
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {user.skills?.technical?.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-4 py-2 bg-action/5 text-[var(--action)] rounded-xl text-xs font-black border border-action/10"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                {user.skills?.technical?.length > 0 && (
+                  <div>
+                    <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block tracking-widest">
+                      Technical Skills
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {user.skills.technical.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-4 py-2 bg-action/5 text-[var(--action)] rounded-xl text-xs font-black border border-action/10 hover:bg-action hover:text-white transition-all duration-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div>
-                  <label className="text-[9px] font-black uppercase text-[var(--action)] mb-4 block">
-                    Professional Services
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {user.skills?.professional?.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-4 py-2 bg-violet-500/5 text-violet-600 rounded-xl text-xs font-black border border-violet-500/10"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                {user.skills?.tools?.length > 0 && (
+                  <div>
+                    <label className="text-[9px] font-black uppercase text-violet-500 mb-4 block tracking-widest">
+                      Tools & Technologies
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {user.skills.tools.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-4 py-2 bg-violet-500/5 text-violet-600 rounded-xl text-xs font-black border border-violet-500/10 hover:bg-violet-500 hover:text-white transition-all duration-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {user.skills?.other?.length > 0 && (
+                  <div>
+                    <label className="text-[9px] font-black uppercase text-amber-600 mb-4 block tracking-widest">
+                      Other Competencies
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {user.skills.other.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-4 py-2 bg-amber-500/5 text-amber-600 rounded-xl text-xs font-black border border-amber-500/10 hover:bg-amber-500 hover:text-white transition-all duration-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {user.services?.length > 0 && (
+                   <div className="pt-6 border-t border-border-subtle/30">
+                     <label className="text-[9px] font-black uppercase text-[var(--text-secondary)] mb-4 block tracking-widest">
+                       Professional Services
+                     </label>
+                     <div className="flex flex-wrap gap-2">
+                       {user.services.map((service, idx) => (
+                         <span
+                           key={idx}
+                           title={service.description}
+                           className="px-4 py-2 bg-foreground/5 text-[var(--text-primary)] rounded-xl text-xs font-black border border-border-subtle hover:border-action transition-all cursor-help"
+                         >
+                           {service.title}
+                         </span>
+                       ))}
+                     </div>
+                   </div>
+                )}
               </div>
             </section>
 
@@ -1066,6 +1143,11 @@ const PublicProfile = () => {
                           {edu.graduationDate}
                         </span>
                       </div>
+                      {edu.description && (
+                        <p className="text-xs font-medium text-[var(--text-secondary)] mt-4 leading-relaxed group-hover:text-[var(--text-primary)] transition-colors italic">
+                          "{edu.description}"
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}

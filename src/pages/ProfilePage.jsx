@@ -101,6 +101,7 @@ const ProfilePage = () => {
   );
   const [services, setServices] = useState(user?.services || []);
   const [languages, setLanguages] = useState(user?.languages || []);
+  const [availability, setAvailability] = useState(user?.availability || "Open to Work");
   const [sectionNames, setSectionNames] = useState(
     user?.sectionNames || {
       experience: "Professional Experience",
@@ -172,7 +173,8 @@ const ProfilePage = () => {
       setProjects(user.projects || []);
       setExperience(user.experience || []);
       setEducation(user.education || []);
-      setSkills(user.skills || { technical: [], professional: [] });
+      setSkills(user.skills || { technical: [], tools: [], other: [], professional: [] });
+      setAvailability(user.availability || "Open to Work");
       setServices(user.services || []);
       setSectionNames(
         user.sectionNames || {
@@ -248,6 +250,7 @@ const ProfilePage = () => {
       fd.append("languages", JSON.stringify(languages));
       fd.append("sectionNames", JSON.stringify(sectionNames));
       fd.append("themeSettings", JSON.stringify(themeSettings));
+      fd.append("availability", availability);
 
       if (imageFile) fd.append("profileImage", imageFile);
       if (bannerFile) fd.append("bannerImage", bannerFile);
@@ -501,6 +504,28 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {/* ── Profile Analytics (Private to Owner) ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fadeIn">
+          <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm text-center">
+            <p className="text-2xl font-black text-action">{user?.stats?.profileViews ?? 0}</p>
+            <p className="text-[10px] font-black uppercase text-text-muted mt-1">Profile Views</p>
+          </div>
+          <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm text-center">
+            <p className="text-2xl font-black text-emerald-500">{user?.stats?.resumeDownloads ?? 0}</p>
+            <p className="text-[10px] font-black uppercase text-text-muted mt-1">Downloads</p>
+          </div>
+          <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm text-center">
+            <p className="text-2xl font-black text-violet-500">{user?.stats?.contactClicks ?? 0}</p>
+            <p className="text-[10px] font-black uppercase text-text-muted mt-1">Contacts</p>
+          </div>
+          <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm text-center flex flex-col justify-center">
+             <div className="flex items-center justify-center gap-1 text-amber-500 font-black text-lg">
+               <span>💎</span> {user?.diamonds ?? 0}
+             </div>
+             <p className="text-[10px] font-black uppercase text-text-muted mt-1">Credits</p>
+          </div>
+        </div>
+
         {/* ── Share Profile ── */}
         {user?.username && (
           <Card className="bg-gradient-to-br from-action/10 to-violet-500/10 border-action/20">
@@ -582,6 +607,24 @@ const ProfilePage = () => {
                   className="w-full pl-28 pr-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Availability Status
+              </label>
+              <select
+                value={availability}
+                onChange={(e) => {
+                  setAvailability(e.target.value);
+                  setIsManuallyDirty(true);
+                }}
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              >
+                <option value="Open to Work">🟢 Open to Work (Active)</option>
+                <option value="Freelance Available">🟡 Freelance Available</option>
+                <option value="Not Available">🔴 Not Available</option>
+              </select>
             </div>
 
             <div className="space-y-2">
@@ -1474,6 +1517,21 @@ const ProfilePage = () => {
                     className="w-full px-4 py-2 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm focus:border-action outline-none transition-all"
                   />
                 </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-black uppercase text-text-muted ml-1">
+                    Description / Key Studies
+                  </label>
+                  <textarea
+                    placeholder="E.g., Focused on distributed systems and cloud architecture..."
+                    value={edu.description}
+                    onChange={(e) => {
+                      const newEdu = [...education];
+                      newEdu[idx].description = e.target.value;
+                      setEducation(newEdu);
+                    }}
+                    className="w-full px-4 py-2 h-20 rounded-xl border border-border-subtle bg-white dark:bg-black/20 text-sm resize-none"
+                  />
+                </div>
                 <button
                   onClick={() =>
                     setEducation(education.filter((_, i) => i !== idx))
@@ -1513,7 +1571,7 @@ const ProfilePage = () => {
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
-                Core Competencies & Tools (Comma separated)
+                Technical Skills (React, Node.js, MERN, AI...)
               </label>
               <input
                 type="text"
@@ -1524,7 +1582,43 @@ const ProfilePage = () => {
                     technical: e.target.value.split(",").map((s) => s.trim()),
                   })
                 }
-                placeholder="E.g., Retail Management, CRM, Office 365..."
+                placeholder="E.g., React, Node.js, Express, MongoDB..."
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Tools & Technologies (Git, Docker, VS Code...)
+              </label>
+              <input
+                type="text"
+                value={skills.tools?.join(", ")}
+                onChange={(e) =>
+                  setSkills({
+                    ...skills,
+                    tools: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+                placeholder="E.g., Git, Docker, Postman, Cloudinary..."
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Soft & Other Skills (Public Speaking, Teaching...)
+              </label>
+              <input
+                type="text"
+                value={skills.other?.join(", ")}
+                onChange={(e) =>
+                  setSkills({
+                    ...skills,
+                    other: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+                placeholder="E.g., Technical Writing, Leadership, Teamwork..."
                 className="w-full px-5 py-3.5 rounded-2xl border-2 border-border-subtle bg-foreground/50 dark:bg-midnight/30 text-text-primary focus:border-action outline-none transition-all font-semibold text-sm"
               />
             </div>
