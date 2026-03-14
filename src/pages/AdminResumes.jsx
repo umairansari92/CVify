@@ -104,7 +104,7 @@ const AdminResumes = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-white tracking-tight">Resume Monitoring</h1>
+            <h1 className="text-4xl font-black text-text-primary tracking-tight">Resume Monitoring</h1>
             <p className="text-text-muted font-bold mt-1">Audit and moderate user-generated resumes</p>
           </div>
           <div className="relative w-full md:w-80">
@@ -137,7 +137,7 @@ const AdminResumes = () => {
                   </div>
                 </div>
 
-                <h3 className="font-black text-gray-300 text-lg line-clamp-1">{r.personalInfo?.fullName || "Untitled Resume"}</h3>
+                <h3 className="font-black text-text-primary text-lg line-clamp-1">{r.personalInfo?.fullName || "Untitled Resume"}</h3>
                 <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1 mb-6">{r.templateId}</p>
 
                 <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">

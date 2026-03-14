@@ -471,7 +471,7 @@ const AdminDashboard = () => {
             <div className="premium-card p-6 min-h-[400px] animate-fadeIn">
               <div className="flex justify-between items-center mb-10">
                 <div>
-                  <h3 className="text-xl font-black text-white">User Acquisition</h3>
+                  <h3 className="text-xl font-black text-text-primary">User Acquisition</h3>
                   <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Growth over last 6 months</p>
                 </div>
                 <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
@@ -513,7 +513,7 @@ const AdminDashboard = () => {
             <div className="premium-card p-6 min-h-[400px] animate-fadeIn" style={{ animationDelay: "0.2s" }}>
               <div className="flex justify-between items-center mb-10">
                 <div>
-                  <h3 className="text-xl font-black text-white">Platform Activity</h3>
+                  <h3 className="text-xl font-black text-text-primary">Platform Activity</h3>
                   <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Resumes vs AI Scans</p>
                 </div>
                 <div className="flex gap-4">

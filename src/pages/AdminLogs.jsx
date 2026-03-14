@@ -35,7 +35,7 @@ const AdminLogs = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-white tracking-tight">Activity Logs</h1>
+            <h1 className="text-4xl font-black text-text-primary tracking-tight">Activity Logs</h1>
             <p className="text-text-muted font-bold mt-1">Platform-wide audit trail for users and administrators</p>
           </div>
           <div className="flex items-center gap-3 px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
@@ -73,7 +73,7 @@ const AdminLogs = () => {
                          </div>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-black text-white uppercase tracking-widest">
+                        <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-black text-text-primary uppercase tracking-widest">
                             {log.action.replace(/_/g, ' ')}
                         </span>
                       </td>
@@ -81,7 +81,7 @@ const AdminLogs = () => {
                          {log.user ? (
                             <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[9px] text-primary"><FaUser /></div>
-                                <span className="text-xs font-black text-white truncate max-w-[150px]">@{log.user.username}</span>
+                                <span className="text-xs font-black text-text-primary truncate max-w-[150px]">@{log.user.username}</span>
                             </div>
                          ) : <span className="text-xs text-text-muted">System</span>}
                       </td>

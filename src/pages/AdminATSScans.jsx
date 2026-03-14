@@ -114,7 +114,7 @@ const AdminATSScans = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black text-white tracking-tight">ATS Scan Monitoring</h1>
+            <h1 className="text-4xl font-black text-text-primary tracking-tight">ATS Scan Monitoring</h1>
             <p className="text-text-muted font-bold mt-1">Review AI analysis and job matching activities</p>
           </div>
           <div className="relative w-full md:w-80">
