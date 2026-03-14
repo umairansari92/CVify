@@ -137,7 +137,7 @@ const AdminResumes = () => {
                   </div>
                 </div>
 
-                <h3 className="font-black text-text-primary text-lg line-clamp-1">{r.personalInfo?.fullName || "Untitled Resume"}</h3>
+                <h3 className="font-black text-text-secondary text-lg line-clamp-1">{r.personalInfo?.fullName || "Untitled Resume"}</h3>
                 <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1 mb-6">{r.templateId}</p>
 
                 <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">

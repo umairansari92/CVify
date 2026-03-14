@@ -105,7 +105,12 @@ const PublicProfile = () => {
 
   const handleThemeUpdate = async (newTheme) => {
     setLocalTheme(newTheme);
-    handleLiveUpdate({ themeSettings: newTheme });
+    
+    // Debounce the API call to prevent 500 errors from spamming on color drag
+    if (window.themeUpdateTimeout) clearTimeout(window.themeUpdateTimeout);
+    window.themeUpdateTimeout = setTimeout(() => {
+      handleLiveUpdate({ themeSettings: newTheme });
+    }, 500);
   };
 
   const themePresets = [
