@@ -157,7 +157,7 @@ const AdminATSScans = () => {
                 </div>
 
                 <div className="mb-8">
-                   <h3 className="font-black text-white text-xl line-clamp-1 mb-1">{s.jobTitle || "Custom Scan"}</h3>
+                   <h3 className="font-black text-xl line-clamp-1 mb-1">{s.jobTitle || "Custom Scan"}</h3>
                    <div className="flex items-center gap-2 text-text-muted">
                       <FaChartLine className="text-[10px]" />
                       <span className="text-[10px] font-bold uppercase tracking-widest">Analysis Performed</span>
