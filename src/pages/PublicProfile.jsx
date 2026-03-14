@@ -122,6 +122,9 @@ const PublicProfile = () => {
       fontPrimary: "Inter",
       cardStyle: "glass",
       icon: "⚡",
+      textPrimary: "#0f172a",
+      textSecondary: "#64748b",
+      accentColor: "#2563eb",
     },
     {
       name: "Midnight Dev",
@@ -131,6 +134,9 @@ const PublicProfile = () => {
       fontPrimary: "JetBrains Mono",
       cardStyle: "minimal",
       icon: "🌙",
+      textPrimary: "#f8fafc",
+      textSecondary: "#94a3b8",
+      accentColor: "#38bdf8",
     },
     {
       name: "Corporate Gold",
@@ -140,6 +146,9 @@ const PublicProfile = () => {
       fontPrimary: "Outfit",
       cardStyle: "classic",
       icon: "🏢",
+      textPrimary: "#1e293b",
+      textSecondary: "#475569",
+      accentColor: "#d97706",
     },
     {
       name: "Creative Sunset",
@@ -149,6 +158,9 @@ const PublicProfile = () => {
       fontPrimary: "Poppins",
       cardStyle: "glass",
       icon: "🌅",
+      textPrimary: "#431407",
+      textSecondary: "#9a3412",
+      accentColor: "#e11d48",
     },
     {
       name: "Slate Minimalist",
@@ -158,6 +170,9 @@ const PublicProfile = () => {
       fontPrimary: "Roboto",
       cardStyle: "minimal",
       icon: "🎨",
+      textPrimary: "#334155",
+      textSecondary: "#64748b",
+      accentColor: "#0f172a",
     },
     {
       name: "Emerald Leader",
@@ -167,6 +182,9 @@ const PublicProfile = () => {
       fontPrimary: "Montserrat",
       cardStyle: "classic",
       icon: "🌿",
+      textPrimary: "#064e3b",
+      textSecondary: "#065f46",
+      accentColor: "#059669",
     },
   ];
 
@@ -304,10 +322,9 @@ const PublicProfile = () => {
   };
 
   const cardClasses = {
-    glass:
-      "bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/50 dark:border-white/10",
-    minimal: "bg-white dark:bg-slate-900 border-border-subtle",
-    classic: "bg-white dark:bg-slate-800 shadow-2xl border-none",
+    glass: "bg-[var(--bg-glass)] border-[var(--border-glass)] border backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] rounded-[2.5rem]",
+    minimal: "bg-transparent border-[var(--border-minimal)] border-2 rounded-[2.5rem]",
+    classic: "bg-[var(--bg-classic)] shadow-[0_15px_50px_-12px_rgba(0,0,0,0.25)] border-none rounded-[2.5rem]",
   }[theme.cardStyle || "glass"];
 
   return (
@@ -319,6 +336,11 @@ const PublicProfile = () => {
         "--action": theme.accentColor || "#2563eb",
         "--text-primary": theme.textPrimary || "#ffffff",
         "--text-secondary": theme.textSecondary || "#94a3b8",
+        "--body-bg": theme.bodyBg || "#0f172a",
+        "--bg-glass": "color-mix(in srgb, var(--text-primary) 5%, transparent)",
+        "--border-glass": "color-mix(in srgb, var(--text-primary) 10%, transparent)",
+        "--border-minimal": "color-mix(in srgb, var(--text-primary) 15%, transparent)",
+        "--bg-classic": "color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))",
         color: "var(--text-primary)",
       }}
     >
@@ -765,7 +787,7 @@ const PublicProfile = () => {
                     label="Headline"
                     className="text-xl md:text-2xl font-bold opacity-90"
                   />
-                  {user.industry && (
+                  {user.industry && user.industry !== "Other" && (
                     <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg text-[10px] font-black uppercase tracking-widest border border-white/20">
                       {user.industry}
                     </span>
@@ -922,7 +944,7 @@ const PublicProfile = () => {
                       <FaBriefcase className="text-[var(--action)] text-xs" />
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800/40 p-8 rounded-[2rem] border border-border-subtle shadow-xl hover:shadow-action/5 transition-all group overflow-hidden relative">
+                    <div className={`${cardClasses} p-8 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
                       <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
 
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 relative z-10">
@@ -1202,7 +1224,7 @@ const PublicProfile = () => {
                     <div className="absolute left-0 top-0 w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20 z-10">
                       <FaGraduationCap size={18} />
                     </div>
-                    <div>
+                    <div className={`${cardClasses} p-6 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
                       <InlineEdit
                         value={edu.degree}
                         onSave={(val) =>
@@ -1225,7 +1247,7 @@ const PublicProfile = () => {
                       />
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
-                          {edu.graduationDate}
+                          {edu.graduationDate || "Graduated"}
                         </span>
                       </div>
                       {edu.description && (
@@ -1251,7 +1273,7 @@ const PublicProfile = () => {
                   {user.languages.map((lang, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between p-4 bg-foreground/5 dark:bg-midnight/30 rounded-2xl border border-border-subtle group hover:border-action/30 transition-all"
+                      className={`flex items-center justify-between p-4 ${theme.cardStyle === 'classic' ? 'bg-foreground/5 dark:bg-slate-800' : 'bg-foreground/5 dark:bg-midnight/30'} rounded-2xl border border-border-subtle group hover:border-action/30 transition-all`}
                     >
                       <div>
                         <h4 className="text-sm font-black text-[var(--text-primary)]">
@@ -1301,7 +1323,7 @@ const PublicProfile = () => {
               <motion.div
                 key={i}
                 whileHover={{ y: -10 }}
-                className="group bg-white dark:bg-slate-800/50 rounded-[2rem] overflow-hidden border border-border-subtle shadow-xl"
+                className={`group ${cardClasses} rounded-[2rem] overflow-hidden border border-border-subtle shadow-xl`}
               >
                 <div className="h-52 relative overflow-hidden">
                   <img

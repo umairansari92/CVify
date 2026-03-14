@@ -73,6 +73,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Inter",
       cardStyle: "glass",
       icon: "⚡",
+      textPrimary: "#0f172a",
+      textSecondary: "#64748b",
+      accentColor: "#2563eb",
     },
     {
       name: "Midnight Dev",
@@ -82,6 +85,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "JetBrains Mono",
       cardStyle: "minimal",
       icon: "🌙",
+      textPrimary: "#f8fafc",
+      textSecondary: "#94a3b8",
+      accentColor: "#38bdf8",
     },
     {
       name: "Corporate Gold",
@@ -91,6 +97,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Outfit",
       cardStyle: "classic",
       icon: "🏢",
+      textPrimary: "#1e293b",
+      textSecondary: "#475569",
+      accentColor: "#d97706",
     },
     {
       name: "Creative Sunset",
@@ -100,6 +109,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Poppins",
       cardStyle: "glass",
       icon: "🌅",
+      textPrimary: "#431407",
+      textSecondary: "#9a3412",
+      accentColor: "#e11d48",
     },
     {
       name: "Slate Minimalist",
@@ -109,6 +121,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       fontPrimary: "Roboto",
       cardStyle: "minimal",
       icon: "🎨",
+      textPrimary: "#334155",
+      textSecondary: "#64748b",
+      accentColor: "#0f172a",
     },
     {
       name: "Emerald Leader",
