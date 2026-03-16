@@ -70,11 +70,28 @@ const PublicProfile = () => {
 
   const handleTrackInteraction = async (type) => {
     try {
-      await api.post("/auth/track-interaction", { username, type });
+      if (!user || user.isOwner) return; // Don't track owner actions on their own profile
+
+      const userId = user._id;
+      if (type === "view") {
+        await api.post(`/profile-analytics/${userId}/view`);
+      } else if (type === "download") {
+        await api.post(`/profile-analytics/${userId}/download`);
+      } else if (type === "contact") {
+        await api.post(`/profile-analytics/${userId}/contact-click`);
+      }
     } catch (err) {
       console.error("Interaction failed:", err);
     }
   };
+
+  // Track view once on load
+  useEffect(() => {
+    if (user && !user.isOwner && !window.hasTrackedView) {
+      window.hasTrackedView = true;
+      handleTrackInteraction("view");
+    }
+  }, [user]);
 
   const handleLiveUpdate = async (updates) => {
     if (!user.isOwner) return;
