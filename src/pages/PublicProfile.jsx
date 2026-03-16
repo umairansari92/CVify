@@ -786,12 +786,11 @@ const PublicProfile = () => {
                 style={{
                   backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 5%, ${theme.bodyBg})` : theme.bodyBg,
                   backdropFilter: theme.cardStyle === 'glass' ? 'blur(12px)' : 'none',
-                  color: theme.textPrimary,
                   borderColor: `color-mix(in srgb, ${theme.textPrimary} 15%, transparent)`
                 }}
               >
                 <FaMapMarkerAlt style={{ color: theme.accentColor }} />
-                <span className="text-xs font-black">
+                <span className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
                   {user.location || "Available Remote"}
                 </span>
               </div>
@@ -1032,6 +1031,59 @@ const PublicProfile = () => {
               </div>
             </section>
 
+            {/* Services Section */}
+            {user.services?.length > 0 && (
+              <section
+                className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
+              >
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
+                  {sectionNames.services}
+                  <span className="flex-1 h-px bg-border-subtle"></span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {user.services.map((service, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col gap-3 p-6 rounded-3xl border transition-all hover:-translate-y-1 shadow-sm hover:shadow-xl"
+                      style={{
+                        backgroundColor: theme.cardStyle === 'glass' ? 'color-mix(in srgb, var(--text-primary) 5%, transparent)' : 'color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))',
+                        borderColor: theme.accentColor + '40',
+                        color: theme.textPrimary
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = theme.accentColor;
+                        e.currentTarget.style.boxShadow = `0 10px 30px -10px ${theme.accentColor}30`;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = theme.accentColor + '40';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span 
+                          className="flex items-center justify-center w-12 h-12 rounded-2xl text-xl shadow-inner flex-shrink-0"
+                          style={{
+                            backgroundColor: theme.accentColor + '15',
+                            color: theme.accentColor
+                          }}
+                        >
+                          💼
+                        </span>
+                        <h4 className="font-black text-base leading-tight">
+                          {service.title}
+                        </h4>
+                      </div>
+                      <p className="text-sm leading-relaxed opacity-80 mt-1 font-medium">
+                        {service.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+
+
 
 
             {/* Certifications Section */}
@@ -1223,50 +1275,7 @@ const PublicProfile = () => {
                   </div>
                 ))}
 
-                {user.services?.length > 0 && (
-                   <div className="pt-6 border-t border-border-subtle/30">
-                     <label className="text-[9px] font-black uppercase text-[var(--text-secondary)] mb-4 block tracking-widest">
-                       {sectionNames.services}
-                     </label>
-                     <div className="flex flex-col gap-3">
-                       {user.services.map((service, idx) => (
-                         <div
-                           key={idx}
-                           className="flex flex-col gap-2 p-4 rounded-xl border transition-all"
-                           style={{
-                             backgroundColor: theme.cardStyle === 'glass' ? 'color-mix(in srgb, var(--text-primary) 5%, transparent)' : 'color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))',
-                             borderColor: theme.accentColor + '40',
-                             color: theme.textPrimary
-                           }}
-                           onMouseEnter={(e) => {
-                             e.currentTarget.style.borderColor = theme.accentColor;
-                           }}
-                           onMouseLeave={(e) => {
-                             e.currentTarget.style.borderColor = theme.accentColor + '40';
-                           }}
-                         >
-                           <div className="flex items-center gap-2.5">
-                             <span 
-                               className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-black shadow-inner"
-                               style={{
-                                 backgroundColor: theme.accentColor + '20',
-                                 color: theme.accentColor
-                               }}
-                             >
-                               💼
-                             </span>
-                             <h4 className="font-semibold text-sm">
-                               {service.title}
-                             </h4>
-                           </div>
-                           <p className="text-xs leading-relaxed opacity-80 pl-10">
-                             {service.description}
-                           </p>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                )}
+
               </div>
             </section>
 
