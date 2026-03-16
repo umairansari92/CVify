@@ -1031,6 +1031,57 @@ const PublicProfile = () => {
               </div>
             </section>
 
+            {/* Education Timeline */}
+            <section
+              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
+            >
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
+                {sectionNames.education}
+                <span className="flex-1 h-px bg-border-subtle"></span>
+              </h3>
+              <div className="space-y-8 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-0.5 before:bg-orange-500/20">
+                {(user.education || []).map((edu, i) => (
+                  <div key={i} className="relative pl-12">
+                    <div className="absolute left-0 top-0 w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20 z-10">
+                      <FaGraduationCap size={18} />
+                    </div>
+                    <div className={`${cardClasses} p-6 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
+                      <InlineEdit
+                        value={edu.degree}
+                        onSave={(val) =>
+                          handleArrayUpdate("education", i, { degree: val })
+                        }
+                        isOwner={user.isOwner}
+                        label="Degree"
+                        className="text-base font-black text-[var(--text-primary)] leading-tight block"
+                      />
+                      <InlineEdit
+                        value={edu.institution}
+                        onSave={(val) =>
+                          handleArrayUpdate("education", i, {
+                            institution: val,
+                          })
+                        }
+                        isOwner={user.isOwner}
+                        label="Institution"
+                        className="text-sm font-bold text-[var(--text-secondary)] mt-1 block"
+                      />
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
+                          {edu.graduationDate || "Graduated"}
+                        </span>
+                      </div>
+                      {edu.description && (
+                        <p className="text-xs font-medium text-[var(--text-secondary)] mt-4 leading-relaxed group-hover:text-[var(--text-primary)] transition-colors italic">
+                          "{edu.description}"
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             {/* Services Section */}
             {user.services?.length > 0 && (
               <section
