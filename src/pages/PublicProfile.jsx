@@ -1211,15 +1211,24 @@ const PublicProfile = () => {
                      <label className="text-[9px] font-black uppercase text-[var(--text-secondary)] mb-4 block tracking-widest">
                        {sectionNames.services}
                      </label>
-                     <div className="flex flex-wrap gap-2">
+                     <div className="flex flex-col gap-3">
                        {user.services.map((service, idx) => (
-                         <span
+                         <div
                            key={idx}
-                           title={service.description}
-                           className="px-4 py-2 bg-foreground/5 text-[var(--text-primary)] rounded-xl text-xs font-black border border-border-subtle hover:border-action transition-all cursor-help"
+                           className="flex flex-col gap-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 transition-all hover:border-blue-300 dark:hover:border-blue-700"
                          >
-                           {service.title}
-                         </span>
+                           <div className="flex items-center gap-2.5">
+                             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-sm">
+                               💼
+                             </span>
+                             <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-100">
+                               {service.title}
+                             </h4>
+                           </div>
+                           <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400 pl-10">
+                             {service.description}
+                           </p>
+                         </div>
                        ))}
                      </div>
                    </div>
