@@ -418,10 +418,17 @@ const PublicProfile = () => {
                       Presets
                     </label>
                     <div className="grid grid-cols-3 gap-3">
-                      {themePresets.map((p) => (
+                      {themePresets.map((p) => {
+                         const handlePresetSelect = () => {
+                           handleThemeUpdate({
+                             ...theme,
+                             ...p // Spreading p completely overwrites custom colors, fonts, and aesthetics with the preset's defaults
+                           });
+                         };
+                         return (
                         <button
                           key={p.name}
-                          onClick={() => handleThemeUpdate({ ...theme, ...p })}
+                          onClick={handlePresetSelect}
                           className={`flex flex-col items-center gap-2 p-5 rounded-[2.5rem] border-2 transition-all ${
                             theme.headerBg === p.headerBg
                               ? "bg-action/5 border-action ring-4 ring-action/5"
@@ -435,7 +442,7 @@ const PublicProfile = () => {
                             {p.name.split(" ")[0]}
                           </span>
                         </button>
-                      ))}
+                      )})}
                     </div>
                   </div>
 
@@ -774,9 +781,17 @@ const PublicProfile = () => {
                   className="w-full h-full object-cover object-top"
                 />
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-white dark:bg-midnight p-3 rounded-2xl shadow-xl flex items-center gap-2 border border-border-subtle z-20">
+              <div 
+                className="absolute -bottom-4 -right-4 p-3 rounded-2xl shadow-xl flex items-center gap-2 border border-border-subtle z-20"
+                style={{
+                  backgroundColor: theme.cardStyle === 'glass' ? `${theme.bodyBg}80` : theme.bodyBg,
+                  backdropFilter: theme.cardStyle === 'glass' ? 'blur(12px)' : 'none',
+                  color: theme.textPrimary,
+                  borderColor: theme.accentColor
+                }}
+              >
                 <FaMapMarkerAlt className="text-[var(--action)]" />
-                <span className="text-xs font-black text-[var(--text-primary)]">
+                <span className="text-xs font-black">
                   {user.location || "Available Remote"}
                 </span>
               </div>
@@ -1017,6 +1032,8 @@ const PublicProfile = () => {
               </div>
             </section>
 
+
+
             {/* Certifications Section */}
             {(user.certifications || []).length > 0 && (
               <section className="space-y-6">
@@ -1215,17 +1232,34 @@ const PublicProfile = () => {
                        {user.services.map((service, idx) => (
                          <div
                            key={idx}
-                           className="flex flex-col gap-2 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 transition-all hover:border-blue-300 dark:hover:border-blue-700"
+                           className="flex flex-col gap-2 p-4 rounded-xl border transition-all"
+                           style={{
+                             backgroundColor: theme.cardStyle === 'glass' ? 'color-mix(in srgb, var(--text-primary) 5%, transparent)' : 'color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))',
+                             borderColor: theme.accentColor + '40',
+                             color: theme.textPrimary
+                           }}
+                           onMouseEnter={(e) => {
+                             e.currentTarget.style.borderColor = theme.accentColor;
+                           }}
+                           onMouseLeave={(e) => {
+                             e.currentTarget.style.borderColor = theme.accentColor + '40';
+                           }}
                          >
                            <div className="flex items-center gap-2.5">
-                             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-sm">
+                             <span 
+                               className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-black shadow-inner"
+                               style={{
+                                 backgroundColor: theme.accentColor + '20',
+                                 color: theme.accentColor
+                               }}
+                             >
                                💼
                              </span>
-                             <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-100">
+                             <h4 className="font-semibold text-sm">
                                {service.title}
                              </h4>
                            </div>
-                           <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400 pl-10">
+                           <p className="text-xs leading-relaxed opacity-80 pl-10">
                              {service.description}
                            </p>
                          </div>
@@ -1233,57 +1267,6 @@ const PublicProfile = () => {
                      </div>
                    </div>
                 )}
-              </div>
-            </section>
-
-            {/* Education Timeline */}
-            <section
-              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
-            >
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
-                {sectionNames.education}
-                <span className="flex-1 h-px bg-border-subtle"></span>
-              </h3>
-              <div className="space-y-8 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-0.5 before:bg-orange-500/20">
-                {(user.education || []).map((edu, i) => (
-                  <div key={i} className="relative pl-12">
-                    <div className="absolute left-0 top-0 w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20 z-10">
-                      <FaGraduationCap size={18} />
-                    </div>
-                    <div className={`${cardClasses} p-6 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
-                      <InlineEdit
-                        value={edu.degree}
-                        onSave={(val) =>
-                          handleArrayUpdate("education", i, { degree: val })
-                        }
-                        isOwner={user.isOwner}
-                        label="Degree"
-                        className="text-base font-black text-[var(--text-primary)] leading-tight block"
-                      />
-                      <InlineEdit
-                        value={edu.institution}
-                        onSave={(val) =>
-                          handleArrayUpdate("education", i, {
-                            institution: val,
-                          })
-                        }
-                        isOwner={user.isOwner}
-                        label="Institution"
-                        className="text-sm font-bold text-[var(--text-secondary)] mt-1 block"
-                      />
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
-                          {edu.graduationDate || "Graduated"}
-                        </span>
-                      </div>
-                      {edu.description && (
-                        <p className="text-xs font-medium text-[var(--text-secondary)] mt-4 leading-relaxed group-hover:text-[var(--text-primary)] transition-colors italic">
-                          "{edu.description}"
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
               </div>
             </section>
 
