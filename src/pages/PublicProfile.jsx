@@ -782,15 +782,15 @@ const PublicProfile = () => {
                 />
               </div>
               <div 
-                className="absolute -bottom-4 -right-4 p-3 rounded-2xl shadow-xl flex items-center gap-2 border border-border-subtle z-20"
+                className="absolute -bottom-4 -right-4 p-3 rounded-2xl shadow-xl flex items-center gap-2 border z-20"
                 style={{
-                  backgroundColor: theme.cardStyle === 'glass' ? `${theme.bodyBg}80` : theme.bodyBg,
+                  backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 5%, ${theme.bodyBg})` : theme.bodyBg,
                   backdropFilter: theme.cardStyle === 'glass' ? 'blur(12px)' : 'none',
                   color: theme.textPrimary,
-                  borderColor: theme.accentColor
+                  borderColor: `color-mix(in srgb, ${theme.textPrimary} 15%, transparent)`
                 }}
               >
-                <FaMapMarkerAlt className="text-[var(--action)]" />
+                <FaMapMarkerAlt style={{ color: theme.accentColor }} />
                 <span className="text-xs font-black">
                   {user.location || "Available Remote"}
                 </span>
