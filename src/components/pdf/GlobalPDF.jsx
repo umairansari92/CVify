@@ -1,4 +1,5 @@
 import React from "react";
+import BrandingFooter from "./BrandingFooter";
 import {
   Document,
   Page,
