@@ -1,5 +1,6 @@
 import React from "react";
 import BrandingFooter from "./BrandingFooter";
+import BrandingWatermark from "./BrandingWatermark";
 import {
   Document,
   Page,
@@ -393,6 +394,7 @@ const TraditionalPDF = ({ data }) => {
             ))}
           </View>
         ))}
+        <BrandingWatermark />
         <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>

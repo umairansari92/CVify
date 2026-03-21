@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
 });
 
 import BrandingFooter from "./BrandingFooter";
+import BrandingWatermark from "./BrandingWatermark";
 
 const CoverLetterPDF = ({ letter, user }) => {
   const themeColor = letter.themeColor || "#2563eb";
@@ -96,6 +97,7 @@ const CoverLetterPDF = ({ letter, user }) => {
           <Text>{letter.content || ""}</Text>
         </View>
 
+        <BrandingWatermark />
         <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>

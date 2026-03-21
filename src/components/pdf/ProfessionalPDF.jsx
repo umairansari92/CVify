@@ -196,6 +196,7 @@ const styles = StyleSheet.create({
 });
 
 import BrandingFooter from "./BrandingFooter";
+import BrandingWatermark from "./BrandingWatermark";
 
 const ProfessionalPDF = ({ data }) => {
   const {
@@ -484,6 +485,7 @@ const ProfessionalPDF = ({ data }) => {
             </View>
           ))}
         </View>
+        <BrandingWatermark />
         <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>

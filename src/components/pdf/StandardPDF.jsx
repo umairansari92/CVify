@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
 });
 
 import BrandingFooter from "./BrandingFooter";
+import BrandingWatermark from "./BrandingWatermark";
 
 const StandardPDF = ({ data }) => {
   const {
@@ -173,6 +174,7 @@ const StandardPDF = ({ data }) => {
       <Page size="A4" style={styles.page}>
         {/* ... existing content ... */}
         {/* Page content ends */}
+        <BrandingWatermark />
         <BrandingFooter themeColor={themeColor} />
       </Page>
     </Document>
