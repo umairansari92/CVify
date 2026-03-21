@@ -58,11 +58,14 @@ const ResumePreview = ({ resume, templateId }) => {
     >
       {/* Background Watermark Overlay */}
       <div 
-        className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none z-[100] flex items-center justify-center"
         style={{
+          opacity: 0.05, // slightly more visible out of caution
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Ctext x='50%25' y='50%25' font-size='50' fill='black' font-weight='bold' font-family='Arial' text-anchor='middle' alignment-baseline='middle' transform='rotate(-45, 250, 250)'%3ECVify.pro%3C/text%3E%3C/svg%3E")`,
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
+          WebkitPrintColorAdjust: 'exact',
+          printColorAdjust: 'exact'
         }}
       ></div>
 
