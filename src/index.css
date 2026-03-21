@@ -226,3 +226,19 @@ select.input-premium:focus {
   padding: 0.75rem 2rem !important;
   color: var(--text-main) !important;
 }
+
+@media print {
+  .print-page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    overflow: hidden !important; /* Forces extra content to hide instead of making a new page */
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  /* Prevent an empty extra page at the very end */
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+}
