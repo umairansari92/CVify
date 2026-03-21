@@ -74,8 +74,8 @@ const ResumePreview = ({ resume, templateId }) => {
         {renderTemplate()}
       </div>
 
-      <footer className="absolute bottom-4 left-0 right-0 text-center text-[10px] text-gray-400 z-10">
-        Designed and developed by CVify | https://cvifypro.vercel.app
+      <footer className="absolute bottom-4 left-0 right-0 text-center text-[10px] text-gray-400 z-10 whitespace-nowrap">
+        {"Designed and developed by CVify | https://cvifypro.vercel.app"}
       </footer>
     </div>
   );
