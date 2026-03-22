@@ -26,7 +26,7 @@ const Logo = ({ className = "w-40" }) => {
           <img
             src={logoSrc}
             alt="CVify Pro"
-            className="w-full h-auto object-contain"
+            className="w-full h-auto object-contain rounded-xl shadow-sm"
           />
         </motion.div>
       </AnimatePresence>
