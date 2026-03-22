@@ -8,22 +8,16 @@
   "theme_color": "#020617",
   "icons": [
     {
-      "src": "/pwa-192.svg",
+      "src": "/CVify Favicon.jpg",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "/pwa-512.svg",
+      "src": "/CVify Favicon.jpg",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any"
-    },
-    {
-      "src": "/pwa-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ]
 }
