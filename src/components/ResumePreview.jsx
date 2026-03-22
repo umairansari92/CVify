@@ -17,19 +17,21 @@ const ResumePreview = ({ resume, templateId }) => {
   const containerRef = React.useRef(null);
 
   React.useEffect(() => {
-    const updateScale = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const containerWidth = entry.contentRect.width;
         // A4 width is 210mm. At 96 DPI, that's ~794px.
-        const targetWidth = 794; 
+        // We use a slightly smaller target (794) to ensure no border clipping.
+        const targetWidth = 794;
         const newScale = Math.min(1, containerWidth / targetWidth);
         setScale(newScale);
       }
-    };
+    });
 
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
   }, []);
 
   if (!resume) return <div className="text-gray-500">No resume data</div>;

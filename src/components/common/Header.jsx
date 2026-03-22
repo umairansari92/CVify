@@ -13,13 +13,13 @@ const Header = ({ onMenuClick }) => {
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none"></div>
 
       <div className="flex items-center gap-2 lg:gap-4 relative z-10">
-        {/* Mobile Hamburger Menu */}
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors pointer-events-auto"
+          className="lg:hidden p-3 -ml-3 rounded-xl hover:bg-white/10 active:bg-white/20 transition-all pointer-events-auto flex items-center justify-center"
           type="button"
+          aria-label="Open Menu"
         >
-          <FaBars className="text-xl text-text-primary" />
+          <FaBars className="text-2xl text-text-primary" />
         </button>
         <Logo className="w-24 lg:w-40" />
       </div>

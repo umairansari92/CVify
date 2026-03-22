@@ -17,23 +17,23 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024 // 10 MB
       },
       manifest: {
-        name: 'CVify',
-        short_name: 'CVify',
+        name: 'CVify Pro',
+        short_name: 'CVify Pro',
         start_url: '.',
         scope: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#0ea5e9',
+        background_color: '#020617',
+        theme_color: '#020617',
         icons: [
           {
-            src: '/pwa-192.svg',
+            src: '/CVify Favicon.jpg',
             sizes: '192x192',
-            type: 'image/svg+xml'
+            type: 'image/jpeg'
           },
           {
-            src: '/pwa-512.svg',
+            src: '/CVify Favicon.jpg',
             sizes: '512x512',
-            type: 'image/svg+xml'
+            type: 'image/jpeg'
           }
         ]
       }
