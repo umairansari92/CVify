@@ -383,11 +383,12 @@ const blockedDomains = new Set([
   "emailisvalid.com",
   "meinspamschutz.de",
   "meltmail.com",
+  
+  // ─── Recently Observed Abuser Domains (2026) ─────────────────────────────
   "paylaar.com",
   "moakt.com",
   "moakt.co",
   "moakt.org",
-  // ─── EmailOnDeck Rotating Domains (Observed 2026) ────────────────────────
   "feelingion.com",
   "competirer.com",
   "gfbysaints.com",
@@ -401,21 +402,64 @@ const blockedDomains = new Set([
   "flowersth.com",
   "snakement.com",
   "knowond.com",
+  "temporarymail.com",
+  "mail.tm",
+  "smailpro.com",
+  "tempinbox.xyz",
+  "mailporary.com",
+  "maildax.com",
+  "tmailor.com",
+  "evapmail.com",
+  "mailticking.com",
+  "emailnator.com",
+  "inboxes.com",
+  "mailwave.dev",
+  "boomlify.com",
+  "tempmailo.com",
+  "throwawaymail.com",
+  "disposable-mail.com",
+  "dropmail.me",
+  "1secmail.com",
+  "cybertemp.xyz",
+  "tmail.delivery",
+  "m.kuku.lu",
+  "priyo.email",
+  "mainnetmail.com",
+  "mail-temp.site",
+  "trashmailr.com",
+  "muellmail.com",
+  "tempmail.id.vn",
+  "mailscr.us",
+  "edumailfree.com",
+  "vsmailpro.com",
+  "noopmail.org",
+  "tempmail.tel",
+  "tempm.com",
+  "generator.email",
+  "mail-temp.com",
+  "mail-fake.com",
+  "plingest.com",
+  "mail7.io",
 ]);
 
 /**
  * Returns true if the email's domain is a known disposable service.
  * Also checks subdomains (e.g. user@subdomain.mailinator.com)
+ * @param {string} email
+ * @returns {boolean}
  */
 export const isDisposableEmail = (email) => {
   if (!email || !email.includes("@")) return false;
+
   const domain = email.split("@")[1].toLowerCase().trim();
+
   // Direct match or subdomain match
-    for (const blocked of blockedDomains) {
-      if (domain === blocked || domain.endsWith("." + blocked)) {
-        return true;
-      }
+  for (const blocked of blockedDomains) {
+    if (domain === blocked || domain.endsWith("." + blocked)) {
+      return true;
     }
+  }
+
   return false;
 };
 
