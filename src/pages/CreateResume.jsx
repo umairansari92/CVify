@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaEye, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { initNewResume, setResumeField } from "../features/resume/resumeSlice";
 import PersonalInfoForm from "../components/forms/PersonalInfoForm";
@@ -25,6 +26,18 @@ const CreateResume = () => {
   const navigate = useNavigate();
   const { currentResume, loading } = useSelector((state) => state.resume);
   const [activeTab, setActiveTab] = useState("personal");
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+
+  useEffect(() => {
+    if (mobilePreviewOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [mobilePreviewOpen]);
 
   useEffect(() => {
     if (id) {
@@ -93,6 +106,12 @@ const CreateResume = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full xl:w-auto">
+            <button
+              onClick={() => setMobilePreviewOpen(true)}
+              className="lg:hidden btn-secondary !bg-primary/10 !text-primary border-primary/20 hover:!bg-primary hover:!text-white flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base flex items-center justify-center font-bold"
+            >
+              <FaEye className="mr-2" /> Preview
+            </button>
             <button
               onClick={() => handleSave()}
               disabled={loading}
@@ -193,23 +212,45 @@ const CreateResume = () => {
       </div>
 
       {/* Right Panel - Live PDF Preview */}
-      <div className="w-full lg:w-1/2 bg-slate-200 dark:bg-midnight flex flex-col border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10 order-first lg:order-last">
-        {/* Header */}
-        <div className="flex-shrink-0 px-4 lg:px-6 py-3 flex items-center gap-2 border-b border-slate-300 dark:border-slate-800/50 bg-white/60 dark:bg-midnight/80 backdrop-blur-sm">
-          <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <h2 className="text-[9px] lg:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
-            Live PDF Preview
-          </h2>
-          <span className="ml-auto text-[9px] text-slate-400 font-medium">
-            Exactly what you'll download
-          </span>
-        </div>
-        {/* PDF Viewer */}
-        <div className="flex-1 overflow-hidden">
-          <PDFPreviewPanel
-            resume={currentResume}
-            templateId={currentResume?.templateId || "classic"}
-          />
+      <div
+        className={`
+          ${
+            mobilePreviewOpen
+              ? "fixed inset-0 z-[110] bg-slate-900/95 flex flex-col items-center justify-start overflow-y-auto p-4"
+              : "hidden lg:flex w-full lg:w-1/2 bg-slate-200 dark:bg-midnight flex-col border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10"
+          }
+        `}
+      >
+        {/* Mobile Close Button */}
+        {mobilePreviewOpen && (
+          <div className="w-full max-w-4xl flex justify-end mb-4 lg:hidden shrink-0 mt-4">
+            <button
+              onClick={() => setMobilePreviewOpen(false)}
+              className="p-3 bg-red-500/10 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all shadow-lg backdrop-blur-sm flex items-center gap-2 font-bold"
+            >
+              <FaTimes className="text-xl" /> Close Preview
+            </button>
+          </div>
+        )}
+
+        <div className={`w-full ${mobilePreviewOpen ? "max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col min-h-[80vh]" : "flex-1 flex flex-col h-full overflow-hidden"}`}>
+          {/* Header */}
+          <div className="flex-shrink-0 px-4 lg:px-6 py-3 flex items-center gap-2 border-b border-slate-300 dark:border-slate-800/50 bg-white/90 dark:bg-midnight/90 backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+            <h2 className="text-[9px] lg:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">
+              Live PDF Preview
+            </h2>
+            <span className="ml-auto text-[9px] text-slate-400 font-medium hidden sm:inline">
+              Exactly what you'll download
+            </span>
+          </div>
+          {/* PDF Viewer */}
+          <div className="flex-1 overflow-hidden relative">
+            <PDFPreviewPanel
+              resume={currentResume}
+              templateId={currentResume?.templateId || "classic"}
+            />
+          </div>
         </div>
       </div>
     </div>
