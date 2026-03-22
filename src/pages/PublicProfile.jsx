@@ -660,6 +660,14 @@ const PublicProfile = () => {
             `Check out ${user.firstName}'s professional portfolio on CVify. ${user.industry ? `Industry: ${user.industry}.` : ""}`
           }
         />
+        
+        {/* Developer Credit */}
+        <meta name="author" content="Umair Ahmed | DataVerse Technologies" />
+        <meta name="designer" content="Umair Ahmed" />
+        <meta name="publisher" content="CVify" />
+        <meta name="reply-to" content="umair.ansari.92@gmail.com" />
+        <link rel="author" href="https://dataversetechnologies.vercel.app/" />
+
         <link rel="canonical" href={`https://cvify.pro/p/${username}`} />
 
         {/* OpenGraph */}
