@@ -21,7 +21,7 @@ const Layout = () => {
       {/* Sidebar */}
       <div
         className={`
-        fixed lg:static inset-y-0 left-0 z-[100] transform transition-transform duration-300 ease-in-out
+        w-72 fixed lg:static inset-y-0 left-0 z-[100] transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
       >
@@ -31,10 +31,11 @@ const Layout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         {/* Mobile Header with Hamburger */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-midground glass border-b border-white/10">
+        <div className="lg:hidden flex items-center justify-between p-4 bg-midground glass border-b border-white/10 relative z-[60]">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors pointer-events-auto"
+            type="button"
           >
             <FaBars className="text-xl text-text-primary" />
           </button>
