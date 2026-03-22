@@ -99,6 +99,7 @@ const PDFLoadingSkeleton = () => (
  */
 const MobilePDFViewer = ({ pdfComponent }) => {
   const [blobUrl, setBlobUrl] = useState(null);
+  const [numPages, setNumPages] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -128,16 +129,28 @@ const MobilePDFViewer = ({ pdfComponent }) => {
 
   const containerWidth = window.innerWidth > 100 ? window.innerWidth - 64 : 320;
 
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
   return (
-    <div className="w-full flex justify-center bg-slate-200 dark:bg-midnight overflow-x-hidden min-h-[500px]">
-      <ReactPdfDocument file={blobUrl} loading={<PDFLoadingSkeleton />}>
-        <ReactPdfPage 
-           pageNumber={1} 
-           width={containerWidth} 
-           renderTextLayer={false}
-           renderAnnotationLayer={false}
-           className="shadow-xl"
-        />
+    <div className="w-full flex flex-col items-center bg-slate-200 dark:bg-midnight overflow-x-hidden min-h-[500px]">
+      <ReactPdfDocument 
+         file={blobUrl} 
+         loading={<PDFLoadingSkeleton />}
+         onLoadSuccess={onDocumentLoadSuccess}
+         className="flex flex-col gap-6 py-6"
+      >
+        {Array.from(new Array(numPages || 1), (el, index) => (
+          <ReactPdfPage 
+             key={`page_${index + 1}`}
+             pageNumber={index + 1} 
+             width={containerWidth} 
+             renderTextLayer={false}
+             renderAnnotationLayer={false}
+             className="shadow-xl mx-auto"
+          />
+        ))}
       </ReactPdfDocument>
     </div>
   );
