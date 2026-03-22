@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     height: 1200, 
   },
   watermarkText1: {
-    fontSize: 45,
+    fontSize: 35,
     color: "#000000",
     opacity: 0.08,
     fontFamily: "Helvetica",
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.2,
   },
   watermarkText2: {
-    fontSize: 40,
+    fontSize: 30,
     color: "#000000",
     opacity: 0.08,
     fontFamily: "Helvetica",
