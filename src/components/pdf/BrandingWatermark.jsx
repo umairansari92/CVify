@@ -13,15 +13,15 @@ const styles = StyleSheet.create({
     zIndex: -10, // Places watermark behind all content
   },
   watermarkText: {
-    fontSize: 24,
+    fontSize: 34,
     color: "#000000",
-    opacity: 0.04,
+    opacity: 0.06,
     transform: "rotate(-45deg)",
     fontFamily: "Helvetica",
     fontWeight: "bold",
     textAlign: "center",
-    letterSpacing: 2,
-    width: "120%", // Give it more width just in case
+    letterSpacing: 0,
+    width: 1200, // Explicit large fixed width to ensure it occupies one line
   },
 });
 
