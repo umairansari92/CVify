@@ -168,15 +168,18 @@ const Sidebar = ({ onClose }) => {
       <div className="p-4 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 blur-3xl rounded-full transform -translate-y-1/2 scale-150 animate-pulse"></div>
         <div className="relative z-10 flex items-center justify-center">
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+          <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce z-20">
             <FaStar className="text-white text-xs" />
           </div>
-          <img
-            src={logo}
-            alt="CVify Logo"
-            className="w-48 h-auto dark:brightness-125 contrast-125 mix-blend-multiply animate-float hover:scale-105 transition-transform duration-300"
-            style={{ mixBlendMode: "multiply" }}
-          />
+          <div className="flex items-end justify-center">
+            <img
+              src={logo}
+              alt="CVify Pro Logo"
+              className="w-48 h-auto dark:brightness-125 contrast-125 mix-blend-multiply animate-float hover:scale-105 transition-transform duration-300"
+              style={{ mixBlendMode: "multiply" }}
+            />
+            <span className="text-primary font-black text-3xl italic tracking-tighter mb-2 -ml-3 filter drop-shadow-md">Pro</span>
+          </div>
         </div>
       </div>
 

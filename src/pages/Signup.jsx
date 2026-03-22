@@ -135,11 +135,14 @@ const Signup = () => {
 
       <div className="max-w-xl w-full relative z-10 animate-fadeIn my-12">
         <div className="text-center mb-10 flex flex-col items-center">
-          <img
-            src={logo}
-            alt="CVify"
-            className="w-64 h-auto mb-4 dark:brightness-110"
-          />
+          <div className="flex items-end mb-4">
+            <img
+              src={logo}
+              alt="CVify Pro"
+              className="w-64 h-auto dark:brightness-110"
+            />
+            <span className="text-action dark:text-accent font-black text-4xl italic tracking-tighter mb-2 -ml-3 filter drop-shadow-md">Pro</span>
+          </div>
           <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">
             Join the Professional Ecosystem
           </p>
