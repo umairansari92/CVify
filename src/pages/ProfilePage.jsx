@@ -275,11 +275,21 @@ const ProfilePage = () => {
       const res = await api.patch("/auth/profile", fd);
       const data = res.data;
 
-      // Ensure data.user exists before dispatching
       if (data.user) {
         dispatch(updateUser(data.user));
         setImgFile(null);
         toast.success("✅ Profile updated successfully!", { duration: 3000 });
+        
+        // --- IndexNow Automation ---
+        if (data.user.isPublic && data.user.username) {
+          try {
+            api.post("/index-now", { 
+              newUrl: `https://cvifypro.vercel.app/p/${data.user.username}` 
+            }).catch(e => console.error("IndexNow ping failed:", e));
+          } catch (err) {
+            // Silently fail if Bing ping errors out so user experience is not affected
+          }
+        }
       } else {
         throw new Error("No user data returned from server.");
       }
