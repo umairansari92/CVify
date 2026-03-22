@@ -46,7 +46,7 @@ const ProjectsForm = () => {
       {fields.map((item, index) => (
         <div
           key={item.id}
-          className="relative group p-10 rounded-[2.5rem] bg-foreground/10 border-2 border-border-subtle space-y-10 transition-all duration-500 hover:border-primary/20"
+          className="relative group p-10 rounded-[2.5rem] bg-midground/50 border-2 border-border-subtle space-y-10 transition-all duration-500 hover:border-primary/20"
         >
           <div className="flex justify-between items-center">
             <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">

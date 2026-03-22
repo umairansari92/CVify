@@ -31,7 +31,7 @@ const Layout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         {/* Mobile Header with Hamburger */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-midground glass border-b border-white/10 relative z-[60]">
+        <div className="lg:hidden flex items-center justify-between p-4 glass border-b border-border-subtle relative z-[60]">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg hover:bg-white/10 transition-colors pointer-events-auto"

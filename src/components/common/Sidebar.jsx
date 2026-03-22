@@ -129,88 +129,67 @@ const Sidebar = ({ onClose }) => {
   ] : [];
 
   return (
-    <div className="w-72 lg:w-72 bg-midground glass border-r border-border-subtle h-screen flex flex-col relative z-20 transition-all duration-300 overflow-hidden">
+    <div className="w-72 lg:w-72 glass border-r border-border-subtle h-screen flex flex-col relative z-20 transition-all duration-500 overflow-hidden">
       {/* Mobile Close Button */}
       <div className="lg:hidden flex justify-end p-4">
         <button
           onClick={onClose}
           className="p-2 rounded-lg hover:bg-white/10 transition-colors"
         >
-          <FaTimes className="text-xl text-text-primary" />
+          <FaTimes className="text-xl text-text-main" />
         </button>
       </div>
-      {/* Animated background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-primary rounded-full blur-xl animate-pulse"></div>
-        <div
-          className="absolute bottom-20 right-10 w-16 h-16 bg-secondary rounded-full blur-xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/4 w-12 h-12 bg-accent rounded-full blur-xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
+      
+      {/* Decorative Background Glows */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div className="absolute top-0 -left-10 w-40 h-40 bg-primary/20 blur-[80px] animate-pulse"></div>
+        <div className="absolute bottom-0 -right-10 w-40 h-40 bg-accent/20 blur-[80px] animate-pulse" style={{ animationDelay: "2s" }}></div>
       </div>
 
-      {/* Floating geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-8 w-3 h-3 bg-primary/20 rotate-45 animate-float"></div>
-        <div
-          className="absolute top-40 left-6 w-2 h-2 bg-secondary/30 rounded-full animate-float"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute bottom-40 right-12 w-4 h-4 bg-accent/20 rounded-full animate-float"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
-
-      <div className="p-4 flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 blur-3xl rounded-full transform -translate-y-1/2 scale-150 animate-pulse"></div>
-        <div className="relative z-10 flex items-center justify-center">
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce z-20">
-            <FaStar className="text-white text-xs" />
-          </div>
-          <div className="flex items-end justify-center">
+      <div className="p-8 flex flex-col items-center justify-center relative">
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="flex items-end justify-center group cursor-pointer">
             <img
               src={logo}
               alt="CVify Pro Logo"
-              className="w-48 h-auto dark:brightness-125 contrast-125 mix-blend-multiply animate-float hover:scale-105 transition-transform duration-300"
-              style={{ mixBlendMode: "multiply" }}
+              className="w-40 h-auto brightness-110 contrast-125 transition-transform duration-500 group-hover:scale-105"
             />
-            <span className="text-primary font-black text-3xl italic tracking-tighter mb-2 -ml-3 filter drop-shadow-md">Pro</span>
+            <span className="text-primary font-black text-2xl italic tracking-tighter mb-1.5 -ml-2 drop-shadow-sm group-hover:text-accent transition-colors">Pro</span>
           </div>
+          <div className="h-0.5 w-12 bg-gradient-to-r from-transparent via-primary/50 to-transparent mt-2"></div>
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-3 relative z-10 overflow-y-auto custom-scrollbar pr-2">
-        <div className="flex items-center gap-2 px-5 mb-4">
-          <FaRocket className="text-primary animate-pulse" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary opacity-50">
+      <nav className="flex-1 px-4 py-4 space-y-2 relative z-10 overflow-y-auto custom-scrollbar pr-2">
+        <div className="flex items-center gap-2 px-5 mb-4 mt-2">
+          <FaRocket className="text-primary/60 text-xs" />
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted opacity-60">
             Main Menu
           </p>
         </div>
-        {navItems.map((item, index) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+              `group flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden ${
                 isActive
-                  ? `bg-gradient-to-r ${item.color} text-white shadow-lg shadow-primary/20 scale-[1.02]`
-                  : "text-text-secondary hover:bg-white/10 hover:text-primary hover:scale-[1.01]"
+                  ? `bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]`
+                  : "text-text-muted hover:bg-foreground/20 hover:text-text-main hover:translate-x-1"
               }`
             }
           >
             {({ isActive }) => (
               <>
-                {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full"></div>}
-                <span className={`text-lg transition-all duration-300 group-hover:scale-110 relative z-10 ${isActive ? "text-white" : "group-hover:text-primary"}`}>
+                <span className={`text-lg transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "group-hover:text-primary text-text-muted"}`}>
                   {item.icon}
                 </span>
-                <span className="font-bold text-sm tracking-tight relative z-10">
+                <span className={`font-bold text-sm tracking-tight ${isActive ? "text-white" : "group-hover:text-text-main"}`}>
                   {item.label}
                 </span>
+                {isActive && (
+                  <div className="absolute right-3 w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_8px_white]"></div>
+                )}
               </>
             )}
           </NavLink>
@@ -218,31 +197,30 @@ const Sidebar = ({ onClose }) => {
 
         {isAdmin && (
           <>
-            <div className="flex items-center gap-2 px-5 mt-8 mb-4">
-              <FaShieldAlt className="text-amber-500 animate-pulse" />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500/70">
-                Admin Control
+            <div className="flex items-center gap-2 px-5 mt-10 mb-4">
+              <FaShieldAlt className="text-amber-500/60 text-xs" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500/60">
+                Admin Center
               </p>
             </div>
-            {adminItems.map((item, index) => (
+            {adminItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+                  `group flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden ${
                     isActive
-                      ? `bg-gradient-to-r ${item.color} text-white shadow-lg shadow-amber-500/20 scale-[1.02]`
-                      : "text-text-secondary hover:bg-white/10 hover:text-amber-500 hover:scale-[1.01]"
+                      ? `bg-amber-500 text-white shadow-xl shadow-amber-500/20 scale-[1.02]`
+                      : "text-text-muted hover:bg-amber-500/5 hover:text-amber-500 hover:translate-x-1"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full"></div>}
-                    <span className={`text-lg transition-all duration-300 group-hover:scale-110 relative z-10 ${isActive ? "text-white" : "group-hover:text-amber-500"}`}>
+                    <span className={`text-lg transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "group-hover:text-amber-500 text-text-muted"}`}>
                       {item.icon}
                     </span>
-                    <span className="font-bold text-sm tracking-tight relative z-10">
+                    <span className={`font-bold text-sm tracking-tight ${isActive ? "text-white" : "group-hover:text-text-main"}`}>
                       {item.label}
                     </span>
                   </>
@@ -254,48 +232,31 @@ const Sidebar = ({ onClose }) => {
       </nav>
 
       <div className="p-6 relative z-10">
-        <div className="premium-card p-6 bg-linear-to-br from-primary/5 to-secondary/5 border border-primary/10 mb-6 group cursor-pointer relative overflow-hidden rounded-2xl">
-          <div className="absolute inset-0 bg-linear-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="absolute top-2 right-2">
-            <FaCrown
-              className="text-primary animate-spin"
-              style={{ animationDuration: "4s" }}
-            />
-          </div>
-          <p className="text-xs font-black text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
-            <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-            Status
-            <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-          </p>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-success animate-pulse shadow-lg shadow-success/50"></span>
-            <p className="text-sm font-bold text-text-primary group-hover:text-primary transition-colors">
-              Premium Active
+        <div className="premium-card p-5 bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 mb-6 group cursor-pointer relative overflow-hidden rounded-2xl">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5">
+              <span className="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+              Account Status
             </p>
+            <FaCrown className="text-amber-500 text-xs animate-bounce" />
           </div>
-          <div className="mt-2 flex justify-between items-center">
-            <span className="text-xs text-text-secondary">Expires: Never</span>
-            <div className="flex gap-1">
-              <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
-              <div
-                className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"
-                style={{ animationDelay: "0.2s" }}
-              ></div>
-              <div
-                className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"
-                style={{ animationDelay: "0.4s" }}
-              ></div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <FaStar size={14} className="animate-spin" style={{ animationDuration: '4s' }} />
+            </div>
+            <div>
+              <p className="text-xs font-black text-text-main group-hover:text-primary transition-colors">Elite Member</p>
+              <p className="text-[9px] text-text-muted font-bold mt-0.5">Lifetime Access</p>
             </div>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="flex w-full items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r from-red-500/10 to-red-600/10 text-red-500 hover:from-red-500 hover:to-red-600 hover:text-white transition-all duration-300 font-bold shadow-sm hover:shadow-lg hover:shadow-red-500/20 relative overflow-hidden group"
+          className="flex w-full items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold transition-all duration-300 bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white shadow-sm hover:shadow-red-500/20 group"
         >
-          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <FaSignOutAlt className="text-lg relative z-10 group-hover:animate-bounce" />
-          <span className="relative z-10">Sign Out</span>
+          <FaSignOutAlt className="text-lg group-hover:translate-x-1 transition-transform" />
+          <span>Sign Out</span>
         </button>
       </div>
     </div>

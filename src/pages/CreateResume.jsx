@@ -107,24 +107,20 @@ const CreateResume = () => {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full xl:w-auto">
             <button
-              onClick={() => setMobilePreviewOpen(true)}
-              className="lg:hidden btn-secondary !bg-primary/10 !text-primary border-primary/20 hover:!bg-primary hover:!text-white flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base flex items-center justify-center font-bold"
-            >
-              <FaEye className="mr-2" /> Preview
-            </button>
-            <button
               onClick={() => handleSave()}
               disabled={loading}
-              className="btn-primary flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base"
-              style={{ color: "white" }}
+              className="btn-primary flex-1 xl:flex-none whitespace-nowrap text-sm lg:text-base font-black shadow-lg shadow-primary/20"
             >
-              {loading ? "Syncing..." : "Save & Finish"}
+              <div className="flex items-center justify-center gap-2">
+                {loading && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>}
+                <span>{loading ? "Syncing..." : "Save & Finish"}</span>
+              </div>
             </button>
             <button
               onClick={() =>
                 handleDownloadPDF(currentResume, currentResume?.templateId)
               }
-              className="btn-secondary flex-1 xl:flex-none !bg-success/10! !text-success! border-success/20 hover:!bg-success! hover:!text-white! shadow-lg shadow-success/10 text-sm lg:text-base"
+              className="px-6 py-4 rounded-xl bg-success/10 text-success border border-success/20 hover:bg-success hover:text-white transition-all shadow-lg shadow-success/5 font-black text-sm lg:text-base flex-1 xl:flex-none whitespace-nowrap"
             >
               Get PDF
             </button>
@@ -218,9 +214,9 @@ const CreateResume = () => {
         </div>
 
         {/* Form Content - Card Style */}
-        <div className="bg-midground p-4 lg:p-10 rounded-3xl lg:rounded-3xl shadow-premium border border-border-subtle animate-fadeIn transition-all duration-500 overflow-hidden relative">
+        <div className="bg-midground p-4 lg:p-10 rounded-3xl lg:rounded-3xl shadow-premium border border-border-subtle animate-fadeIn transition-all duration-500 overflow-hidden relative mb-20 lg:mb-0">
           <div className="absolute top-0 left-0 w-2 h-full bg-primary/10"></div>
-          <div className="relative z-10">
+          <div className="relative z-10 pb-10 lg:pb-0">
             {activeTab === "personal" && <PersonalInfoForm />}
             {activeTab === "education" && <EducationForm />}
             {activeTab === "experience" && <ExperienceForm />}
@@ -230,6 +226,19 @@ const CreateResume = () => {
             {activeTab === "style" && <StyleSettings />}
           </div>
         </div>
+
+        {/* Mobile Sticky Preview Button */}
+        <div className="lg:hidden fixed bottom-6 left-6 right-6 z-[90] animate-bounceIn">
+          <button
+            onClick={() => setMobilePreviewOpen(true)}
+            className="w-full py-4 px-6 bg-slate-900/70 backdrop-blur-xl border border-white/10 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-all group"
+          >
+            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <FaEye size={14} />
+            </div>
+            <span>Preview Resume</span>
+          </button>
+        </div>
       </div>
 
       {/* Right Panel - Live PDF Preview */}
@@ -237,8 +246,8 @@ const CreateResume = () => {
         className={`
           ${
             mobilePreviewOpen
-              ? "fixed inset-0 z-[110] bg-slate-900/95 flex flex-col items-center justify-start overflow-y-auto p-4"
-              : "hidden lg:flex w-full lg:w-1/2 bg-slate-200 dark:bg-midnight flex-col border-l border-slate-300 dark:border-slate-800/50 shadow-inner relative z-10"
+              ? "fixed inset-0 z-[110] bg-background flex flex-col items-center justify-start overflow-y-auto p-4"
+              : "hidden lg:flex w-full lg:w-1/2 bg-foreground/5 flex-col border-l border-border-subtle shadow-inner relative z-10"
           }
         `}
       >

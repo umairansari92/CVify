@@ -463,7 +463,7 @@ const SkillsForm = () => {
       {/* ── Section 1: Technical & Professional Skills ── */}
       <section className="space-y-5">
         <div className="flex items-center gap-3">
-          <h3 className="text-xs font-black text-action dark:text-accent uppercase tracking-[0.2em] whitespace-nowrap">
+          <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] whitespace-nowrap">
             Technical &amp; Professional Skills
           </h3>
           <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
@@ -498,7 +498,7 @@ const SkillsForm = () => {
                   key={s}
                   type="button"
                   onClick={() => addSkill(s)}
-                  className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-action hover:text-action hover:bg-action/5 transition-all duration-200"
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200"
                 >
                   + {s}
                 </button>

@@ -168,7 +168,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-mesh p-6 md:p-12 transition-colors duration-300">
+    <div className="min-h-screen relative bg-background p-6 md:p-12 transition-colors duration-500 overflow-y-auto custom-scrollbar">
       <ThreeBackground />
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
@@ -243,7 +243,7 @@ const Dashboard = () => {
             {resumes.map((resume) => (
               <div
                 key={resume._id}
-                className="premium-card group h-full flex flex-col p-8 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5"
+                className="premium-card group h-full flex flex-col p-8"
               >
                 {/* Visual Header */}
                 <div className="relative mb-8 aspect-[16/6] bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
@@ -258,10 +258,10 @@ const Dashboard = () => {
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <h3 className="text-2xl font-black text-text-primary leading-tight mb-2 truncate max-w-[220px]">
+                      <h3 className="text-2xl font-black text-text-main leading-tight mb-2 truncate max-w-[220px]">
                         {resume.personalInfo?.fullName || "Untitled Resume"}
                       </h3>
-                      <p className="text-xs font-black text-primary uppercase tracking-[0.15em] opacity-80 mb-4">
+                      <p className="text-xs font-black text-primary uppercase tracking-[0.15em] opacity-80 mb-4 ml-0.5">
                         {resume.personalInfo?.jobTitle || "Resume Builder"}
                       </p>
                     </div>
@@ -288,7 +288,7 @@ const Dashboard = () => {
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => handleEdit(resume._id)}
-                      className="btn-primary px-0! bg-primary/10 text-black! border border-primary/20 hover:bg-primary hover:text-white! flex items-center justify-center group/btn"
+                      className="btn-primary !px-0 bg-primary/10 !text-primary border border-primary/20 hover:!bg-primary hover:!text-white flex items-center justify-center group/btn"
                     >
                       <FiEdit2 className="group-hover/btn:rotate-12 transition-transform" />
                       <span className="ml-2 hidden lg:block">Edit</span>
@@ -297,21 +297,21 @@ const Dashboard = () => {
                       onClick={() =>
                         handleDownloadPDF(resume, resume.templateId)
                       }
-                      className="btn-primary px-0! bg-success/10 text-success! border border-success/20 hover:bg-success hover:text-white! flex items-center justify-center group/btn"
+                      className="btn-primary !px-0 !bg-success/10 !text-success border border-success/20 hover:!bg-success hover:!text-white flex items-center justify-center group/btn"
                     >
                       <FiDownload className="group-hover/btn:translate-y-1 transition-transform" />
                     </button>
                     <div className="flex gap-2">
                       <button
                         onClick={(e) => handleClone(resume._id, e)}
-                        className="flex-1 btn-glass px-0! flex items-center justify-center hover:scale-110 active:scale-95"
+                        className="flex-1 bg-foreground/10 text-text-muted hover:text-primary hover:bg-primary/10 rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Duplicate"
                       >
                         <FiCopy />
                       </button>
                       <button
                         onClick={(e) => handleDelete(resume._id, e)}
-                        className="flex-1 btn-glass px-0! bg-red-500/10! text-red-500! border border-red-500/20! hover:bg-red-500! hover:text-white! flex items-center justify-center hover:scale-110 active:scale-95"
+                        className="flex-1 bg-red-500/10 text-red-500 border border-red-500/10 hover:bg-red-500 hover:text-white rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Delete"
                       >
                         <FiTrash2 />
@@ -368,7 +368,7 @@ const Dashboard = () => {
               {coverLetters.map((letter) => (
                 <div
                   key={letter._id}
-                  className="premium-card group p-6 bg-white/40 dark:bg-surface border-white/40 dark:border-white/5 space-y-4"
+                  className="premium-card group p-6 space-y-4"
                 >
                   <div className="flex justify-between items-start">
                     <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-secondary shadow-sm">

@@ -49,6 +49,10 @@ const resumeSlice = createSlice({
         customSections: [], // Array of { id, title, content: [] }
         themeColor: "#0f172a", // Default slate-900
         fontFamily: "Inter", // Default sans-serif
+        nameSize: 24,
+        headingSize: 16,
+        bodySize: 10,
+        margin: 15,
         templateId: "classic",
       };
     },
@@ -56,6 +60,10 @@ const resumeSlice = createSlice({
       state.currentResume = {
         themeColor: "#0f172a",
         fontFamily: "Inter",
+        nameSize: 24,
+        headingSize: 16,
+        bodySize: 10,
+        margin: 15,
         customSections: [],
         ...action.payload.data,
         templateId: action.payload.templateId,

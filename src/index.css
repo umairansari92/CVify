@@ -1,55 +1,57 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @variant dark (&:where(.dark, .dark *));
 
 /* 
-  CVify Premium Design System v2
-  Theme: Deep Orbital
+  CVify Premium Design System v2.0 - Dhammakay Dar (Phase 2)
+  Themes: Daylight Executive & Midnight Pro
 */
 
 :root {
-  /* Colors */
-  --primary: #2563eb;
+  /* Daylight Executive (Light Mode) */
+  --primary: #2563eb; /* Pro Blue */
   --accent: #8b5cf6;
   --success: #10b981;
 
-  /* Hierarchy (Light Mode) - Proper Dark/Medium/Light */
-  --background: #f1f5f9; /* LIGHT: Lightest background */
-  --midground: #ffffff; /* MEDIUM: Cards and surfaces */
-  --foreground: #e2e8f0; /* DARK: Darker elements, borders */
+  --background: #f8fafc; /* Slate-50: Halka grey/blue tint */
+  --midground: #ffffff;  /* Pure white for cards */
+  --foreground: #e2e8f0; /* Slate-200 for borders/nested elements */
 
-  /* Text */
-  --text-main: #0f172a; /* Dark text for light mode */
-  --text-muted: #64748b; /* Muted text */
+  /* Text Pallette */
+  --text-main: #0f172a;   /* Slate-900 (Ghera grey/black) */
+  --text-muted: #64748b;  /* Slate-500 for subtext */
 
-  /* Borders & Shadows */
+  /* Borders & Spacing */
   --border-subtle: #e2e8f0;
-  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.2);
+  --shadow-premium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .dark {
-  /* Colors - Shifted for depth */
-  --primary: #60a5fa; /* Brighter blue for visibility */
-  --accent: #c084fc; /* Brighter violet */
+  /* Midnight Pro (Dark Mode) */
+  --primary: #10b981; /* Emerald for Pro feel */
+  --accent: #14b8a6;  /* Teal */
   --success: #34d399;
 
-  /* Hierarchy (Dark Mode) - Proper Dark/Medium/Light */
-  --background: #030712; /* DARK: Darkest background */
-  --midground: #0f172a; /* MEDIUM: Medium dark for cards/surfaces */
-  --foreground: #1e293b; /* LIGHT: Lighter for nested elements, borders */
+  --background: #020617; /* Slate-950: Very deep midnight blue */
+  --midground: #0f172a;  /* Slate-900: Light shadow cards */
+  --foreground: #1e293b; /* Slate-800: Subtle borders */
 
-  /* Text */
-  --text-main: #f8fafc; /* Light text for dark mode */
-  --text-muted: #94a3b8; /* Muted light text */
+  /* Text Pallette */
+  --text-main: #ffffff;   /* Pure white headings */
+  --text-muted: #94a3b8;  /* Slate-400 subtext */
 
-  /* Borders & Shadows */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.15);
+  /* Shadows & Glows */
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --shadow-premium: 0 4px 20px -4px rgba(0, 0, 0, 0.5); /* Subtle glow for dark theme */
+  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.8);
 }
 
 @theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+
   --color-primary: var(--primary);
   --color-accent: var(--accent);
   --color-success: var(--success);
@@ -58,7 +60,6 @@
   --color-midground: var(--midground);
   --color-foreground: var(--foreground);
 
-  /* Mapping for backwards compatibility */
   --color-surface: var(--midground);
   --color-action: var(--primary);
 
@@ -66,87 +67,67 @@
   --color-text-muted: var(--text-muted);
   --color-border-subtle: var(--border-subtle);
 
-  /* Shadows */
   --shadow-premium: var(--shadow-premium);
-  --shadow-glow: var(--shadow-glow);
+  --shadow-hover: var(--shadow-hover);
 }
 
 @layer base {
   body {
-    @apply bg-background text-text-main font-sans transition-all duration-300;
+    @apply bg-background text-text-main font-sans transition-all duration-500 leading-relaxed;
     min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-black tracking-tight;
   }
 }
 
-/* Premium Utilities */
+/* Premium Utilities (Dhammakay Dar v2) */
 
 .glass {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  @apply backdrop-blur-lg;
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  @apply backdrop-blur-xl;
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .premium-card {
-  @apply bg-midground rounded-[2.5rem] border border-border-subtle shadow-premium transition-all duration-500 hover:-translate-y-1;
+  @apply bg-midground rounded-2xl border border-border-subtle shadow-premium 
+         transition-all duration-300 hover:shadow-hover hover:-translate-y-1;
 }
 
-/* Form Styling - FIXING FOCUS ISSUES */
 .input-premium {
-  @apply w-full px-5 py-4 rounded-2xl bg-foreground/30 border-2 border-border-subtle 
-         text-text-main placeholder:text-text-muted/50 outline-none transition-all font-bold;
-  color: var(--text-main) !important;
+  @apply w-full px-5 py-4 rounded-2xl bg-foreground/20 border-2 border-border-subtle 
+         text-text-main placeholder:text-text-muted/40 outline-none transition-all font-bold;
 }
 
 .input-premium:focus {
-  @apply border-primary ring-4 ring-primary/10;
-  background: var(--midground) !important;
-  color: var(--text-main) !important;
+  @apply border-primary ring-4 ring-primary/20 bg-midground;
 }
 
-.input-premium::placeholder {
-  color: var(--text-muted);
-  opacity: 0.5;
-}
-
-/* Ensure textarea and select maintain text visibility */
-textarea.input-premium,
-select.input-premium {
-  color: var(--text-main) !important;
-}
-
-textarea.input-premium:focus,
-select.input-premium:focus {
-  color: var(--text-main) !important;
-  background: var(--midground) !important;
-}
-
-/* Buttons */
+/* Buttons (Premium Gradient for Dark Mode) */
 .btn-primary {
-  @apply px-8 py-4 rounded-2xl font-black shadow-lg shadow-primary/20 
-         hover:shadow-primary/40 hover:-translate-y-0.5 active:scale-95 transition-all;
-  background: var(--primary) !important;
-  color: white !important;
+  @apply px-8 py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95 duration-300;
+  background: var(--primary);
+  color: white;
 }
 
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.dark .btn-primary {
+  @apply bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border-none shadow-emerald-500/20;
 }
 
 .btn-secondary {
-  @apply bg-midground text-text-main px-8 py-4 rounded-2xl font-black border border-border-subtle 
-         hover:bg-foreground/20 transition-all;
-  color: var(--text-main) !important;
+  @apply px-8 py-4 rounded-xl font-bold border-2 border-border-subtle 
+         hover:bg-foreground/30 transition-all duration-300;
+  background: var(--midground);
+  color: var(--text-main);
 }
 
 /* Three.js Canvas Container */
