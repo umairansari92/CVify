@@ -183,7 +183,7 @@ const Sidebar = ({ onClose }) => {
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-3 relative z-10">
+      <nav className="flex-1 px-4 py-6 space-y-3 relative z-10 overflow-y-auto custom-scrollbar pr-2">
         <div className="flex items-center gap-2 px-5 mb-4">
           <FaRocket className="text-primary animate-pulse" />
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary opacity-50">
