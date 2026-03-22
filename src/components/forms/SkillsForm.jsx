@@ -532,7 +532,7 @@ const SkillsForm = () => {
           skills={competencies}
           onAdd={addCompetency}
           onRemove={removeCompetency}
-          color="#6366f1"
+          color="#2563eb"
           hint="Soft skills, leadership qualities, work style attributes."
         />
         {/* Strength suggestions */}
@@ -550,7 +550,7 @@ const SkillsForm = () => {
                 key={s}
                 type="button"
                 onClick={() => addCompetency(s)}
-                className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-indigo-400 hover:text-indigo-500 hover:bg-indigo-50/50 transition-all duration-200"
+                className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-primary/40 hover:text-primary hover:bg-primary/5 transition-all duration-200"
               >
                 + {s}
               </button>

@@ -14,18 +14,18 @@
   --accent: #8b5cf6;
   --success: #10b981;
 
-  --background: #f8fafc; /* Slate-50: Halka grey/blue tint */
-  --midground: #ffffff;  /* Pure white for cards */
-  --foreground: #e2e8f0; /* Slate-200 for borders/nested elements */
+  --background: #f8fafc; /* Slate-50 */
+  --midground: #ffffff;  /* White Cards */
+  --foreground: #f1f5f9; /* Slate-100 */
 
   /* Text Pallette */
-  --text-main: #0f172a;   /* Slate-900 (Ghera grey/black) */
-  --text-muted: #64748b;  /* Slate-500 for subtext */
+  --text-main: #0f172a;   /* Slate-900 */
+  --text-muted: #64748b;  /* Slate-500 */
 
   /* Borders & Spacing */
   --border-subtle: #e2e8f0;
-  --shadow-premium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-premium: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .dark {
@@ -34,18 +34,18 @@
   --accent: #14b8a6;  /* Teal */
   --success: #34d399;
 
-  --background: #020617; /* Slate-950: Very deep midnight blue */
-  --midground: #0f172a;  /* Slate-900: Light shadow cards */
-  --foreground: #1e293b; /* Slate-800: Subtle borders */
+  --background: #020617; /* Slate-950 */
+  --midground: #0f172a;  /* Slate-900 */
+  --foreground: #1e293b; /* Slate-800 */
 
   /* Text Pallette */
-  --text-main: #ffffff;   /* Pure white headings */
-  --text-muted: #94a3b8;  /* Slate-400 subtext */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
 
   /* Shadows & Glows */
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --shadow-premium: 0 4px 20px -4px rgba(0, 0, 0, 0.5); /* Subtle glow for dark theme */
-  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.8);
+  --border-subtle: #1e293b; /* Slate-800 */
+  --shadow-premium: 0 4px 20px -4px rgba(0, 0, 0, 0.7);
+  --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
 }
 
 @theme {

@@ -174,10 +174,10 @@ const Dashboard = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-16 gap-8 animate-fadeIn">
           <div className="w-full md:w-auto">
-            <h1 className="text-5xl text-gradient font-extrabold tracking-tight flex items-center gap-4">
-              Welcome to Your Dashboard
-              <span className="text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20 shadow-sm animate-float">
-                {resumes.length} {resumes.length === 1 ? "Resume" : "Resumes"}
+            <h1 className="text-4xl lg:text-5xl text-gradient font-black tracking-tighter flex flex-wrap items-center gap-4">
+              Welcome Back
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-[10px] px-3 py-1.5 rounded-full italic tracking-tight shadow-sm shadow-emerald-500/20">
+                PRO PLAN
               </span>
             </h1>
 
@@ -246,12 +246,17 @@ const Dashboard = () => {
                 className="premium-card group h-full flex flex-col p-8"
               >
                 {/* Visual Header */}
-                <div className="relative mb-8 aspect-[16/6] bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+                <div className="relative mb-8 aspect-[16/7] bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
                   <div className="absolute inset-0 bg-mesh opacity-30"></div>
-                  <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-xl border border-white/20 shadow-sm">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">
-                      {resume.templateId || "Modern"}
-                    </p>
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <div className="bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/20 shadow-sm">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-primary">
+                        {resume.templateId || "Modern"}
+                      </p>
+                    </div>
+                    <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-[9px] px-2.5 py-1 rounded-full italic tracking-tight shadow-lg shadow-emerald-500/20">
+                      Pro
+                    </span>
                   </div>
                 </div>
 
@@ -336,7 +341,7 @@ const Dashboard = () => {
             </p>
             <button
               onClick={handleCreateNew}
-              className="btn-primary px-16 py-5 text-xl font-black rounded-3xl"
+              className="btn-primary px-16 py-5 text-xl font-black rounded-2xl"
             >
               Start Building Now
             </button>
