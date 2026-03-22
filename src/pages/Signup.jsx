@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../features/auth/authThunk";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
+import Logo from "../components/common/Logo";
 import ThemeToggle from "../components/common/ThemeToggle";
 import { isDisposableEmail } from "../utils/blockedDomains";
 import { toast } from "react-hot-toast";
@@ -124,32 +124,27 @@ const Signup = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-soft dark:bg-Midnight p-6 transition-colors duration-500 overflow-hidden relative">
+    <div className="min-h-screen flex items-center justify-center bg-background p-6 transition-colors duration-500 overflow-hidden relative">
       {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-action/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-success/5 dark:bg-success/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
 
-      <div className="absolute top-6 right-6 z-20">
+      <div className="absolute top-6 right-6 z-20 text-text-primary">
         <ThemeToggle />
       </div>
 
       <div className="max-w-xl w-full relative z-10 animate-fadeIn my-12">
         <div className="text-center mb-10 flex flex-col items-center">
-          <div className="flex items-end mb-4">
-            <img
-              src={logo}
-              alt="CVify Pro"
-              className="w-64 h-auto dark:brightness-110"
-            />
-            <span className="text-action dark:text-accent font-black text-4xl italic tracking-tighter mb-2 -ml-3 filter drop-shadow-md">Pro</span>
+          <div className="flex items-center mb-4">
+            <Logo className="w-64" />
           </div>
-          <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">
+          <p className="text-text-muted font-black uppercase tracking-[0.3em] text-[10px] opacity-60">
             Join the Professional Ecosystem
           </p>
         </div>
 
-        <div className="bg-white/80 dark:bg-slate-blue/40 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-premium border border-white/20 dark:border-white/5 transition-all duration-300">
-          <h2 className="text-3xl font-bold text-primary dark:text-slate-50 mb-8 text-center dark:font-jakarta">
+        <div className="bg-midground/80 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-premium border border-border-subtle transition-all duration-300">
+          <h2 className="text-3xl font-black text-text-main mb-8 text-center italic tracking-tight">
             Create Space
           </h2>
 
@@ -162,45 +157,45 @@ const Signup = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                   First Name
                 </label>
                 <input
                   {...register("firstName", { required: true })}
                   placeholder="e.g. John"
-                  className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
                 />
                 <HelperTip text="Use your legal first name for resumes" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                   Last Name
                 </label>
                 <input
                   {...register("lastName", { required: true })}
                   placeholder="e.g. Doe"
-                  className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
                 />
                 <HelperTip text="Professional last name as per ID" />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              <label className="flex items-center justify-between text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                 <span>Custom Username (URL SLUG)</span>
                 {!isEditingUsername && (
                   <button
                     type="button"
                     onClick={() => setIsEditingUsername(true)}
-                    className="flex items-center gap-1 text-action dark:text-accent hover:underline lowercase"
+                    className="flex items-center gap-1 text-primary hover:underline lowercase"
                   >
                     <Edit3 className="w-3 h-3" /> edit
                   </button>
                 )}
               </label>
               <div className="relative group">
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-slate-400 pointer-events-none">
-                  <AtSign className="w-4 h-4 text-action/50" />
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-text-muted/50 pointer-events-none">
+                  <AtSign className="w-4 h-4 text-primary/50" />
                   <span className="text-sm font-bold opacity-30">
                     cvify.pro/p/
                   </span>
@@ -215,7 +210,7 @@ const Signup = () => {
                   })}
                   readOnly={!isEditingUsername}
                   placeholder="your-handle"
-                  className={`w-full pl-36 pr-6 py-4 rounded-2xl border-2 ${isEditingUsername ? "border-action dark:border-accent" : "border-slate-100 dark:border-slate-800"} bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold lowercase`}
+                  className={`w-full pl-36 pr-6 py-4 rounded-2xl border-2 ${isEditingUsername ? "border-primary" : "border-border-subtle"} bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold lowercase`}
                 />
               </div>
               {errors.username && (
@@ -227,20 +222,20 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                 Professional Email
               </label>
               <input
                 {...register("email", { required: true })}
                 placeholder="name@company.com"
-                className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
               />
               <HelperTip text="We will send a verification code to this email" />
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                   Secure Password
                 </label>
                 <input
@@ -255,7 +250,7 @@ const Signup = () => {
                     },
                   })}
                   placeholder="••••••••"
-                  className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
                 />
                 <HelperTip text="Must be strong to protect your professional data" />
               </div>
@@ -298,9 +293,9 @@ const Signup = () => {
                   type="radio"
                   value="Male"
                   {...register("gender")}
-                  className="w-5 h-5 text-action border-slate-200 dark:border-slate-800 focus:ring-action dark:focus:ring-accent bg-slate-50 dark:bg-midnight transition-all cursor-pointer"
+                  className="w-5 h-5 text-primary border-border-subtle focus:ring-primary bg-foreground/5 transition-all cursor-pointer"
                 />
-                <span className="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-action transition-colors">
+                <span className="text-sm font-bold text-text-muted group-hover:text-primary transition-colors">
                   Male
                 </span>
               </label>
@@ -309,50 +304,50 @@ const Signup = () => {
                   type="radio"
                   value="Female"
                   {...register("gender")}
-                  className="w-5 h-5 text-action border-slate-200 dark:border-slate-800 focus:ring-action dark:focus:ring-accent bg-slate-50 dark:bg-midnight transition-all cursor-pointer"
+                  className="w-5 h-5 text-primary border-border-subtle focus:ring-primary bg-foreground/5 transition-all cursor-pointer"
                 />
-                <span className="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-action transition-colors">
+                <span className="text-sm font-bold text-text-muted group-hover:text-primary transition-colors">
                   Female
                 </span>
               </label>
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                 Identity Profile (Optional)
               </label>
               <div className="relative group">
                 <input
                   type="file"
                   {...register("profileImage")}
-                  className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-6 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-action/10 file:text-action hover:file:bg-action/20 dark:file:bg-accent/10 dark:file:text-accent transition-all cursor-pointer border-2 border-dashed border-slate-100 dark:border-slate-800 p-3 rounded-2xl"
+                  className="w-full text-xs text-text-muted file:mr-6 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer border-2 border-dashed border-border-subtle p-3 rounded-2xl"
                 />
                 <HelperTip text="A professional photo increases your selection chances by 40%" />
               </div>
             </div>
 
             <button
-              className="w-full bg-action hover:bg-blue-600 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-action/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-primary/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
               disabled={loading}
             >
               {loading ? "Constructing Account..." : "Confirm Registration"}
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-100 dark:border-white/5 text-center space-y-3">
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+          <div className="mt-10 pt-8 border-t border-border-subtle text-center space-y-3">
+            <p className="text-sm text-text-muted font-medium">
               Existing member?{" "}
               <Link
                 to="/login"
-                className="text-action dark:text-accent font-bold hover:underline transition-all"
+                className="text-primary font-bold hover:underline transition-all"
               >
                 Access Account
               </Link>
             </p>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-sm text-text-muted font-medium">
               <Link
                 to="/verify-otp"
-                className="text-action dark:text-accent font-bold hover:underline transition-all"
+                className="text-primary font-bold hover:underline transition-all"
               >
                 Verify your email →
               </Link>
