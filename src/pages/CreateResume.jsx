@@ -132,9 +132,11 @@ const CreateResume = () => {
         </div>
 
         {/* Tabs & Template Select */}
-        <div className="flex flex-col gap-8 mb-12">
-          <div className="flex items-center justify-between gap-4 lg:gap-6">
-            <div className="flex gap-1 lg:gap-2 p-1 lg:p-2 bg-foreground/10 rounded-2xl lg:rounded-3xl border border-border-subtle overflow-x-auto no-scrollbar w-full lg:w-auto">
+        <div className="flex flex-col gap-6 lg:gap-8 mb-8 lg:mb-12">
+          <div className="flex flex-col sm:flex-row items-stretch lg:items-center justify-between gap-4 lg:gap-6 w-full">
+            
+            {/* Desktop Tabs */}
+            <div className="hidden lg:flex gap-1 lg:gap-2 p-1 lg:p-2 bg-foreground/10 rounded-2xl lg:rounded-3xl border border-border-subtle overflow-x-auto no-scrollbar w-full lg:w-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
@@ -151,9 +153,28 @@ const CreateResume = () => {
               ))}
             </div>
 
-            <div className="relative group">
+            {/* Mobile Tabs Dropdown */}
+            <div className="relative group w-full sm:flex-1 lg:hidden">
               <select
-                className="appearance-none pl-6 pr-12 py-3.5 bg-midground text-text-primary font-black text-sm border-2 border-border-subtle rounded-2xl shadow-sm focus:border-primary transition-all cursor-pointer outline-none"
+                className="w-full appearance-none pl-6 pr-12 py-3.5 bg-primary/10 text-primary font-black text-sm border-2 border-primary/20 rounded-2xl shadow-sm focus:border-primary transition-all cursor-pointer outline-none"
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value)}
+              >
+                {tabs.map((tab) => (
+                  <option key={tab.id} value={tab.id}>{tab.label} Section</option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+
+            {/* Template Select */}
+            <div className="relative group w-full sm:flex-1 lg:w-auto">
+              <select
+                className="w-full appearance-none pl-6 pr-12 py-3.5 bg-midground text-text-primary font-black text-sm border-2 border-border-subtle rounded-2xl shadow-sm focus:border-primary transition-all cursor-pointer outline-none"
                 value={currentResume?.templateId || "classic"}
                 onChange={(e) =>
                   dispatch(
