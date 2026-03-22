@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     transform: "rotate(-45deg)",
     alignItems: "center",
     justifyContent: "center",
+    width: 1200,   // Explicit large sizes so text can spread without wrapping
+    height: 1200, 
   },
   watermarkText1: {
     fontSize: 45,
