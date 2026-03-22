@@ -23,6 +23,7 @@ import AdminCoverLetters from "../pages/AdminCoverLetters";
 import AdminEconomy from "../pages/AdminEconomy";
 import AdminLogs from "../pages/AdminLogs";
 import AdminSettings from "../pages/AdminSettings";
+import NotFound from "../pages/NotFound";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -175,7 +176,7 @@ const AppRoutes = () => {
       </Route>
 
       <Route path="/p/:username" element={<PublicProfile />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
