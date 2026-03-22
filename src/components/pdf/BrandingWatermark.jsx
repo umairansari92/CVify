@@ -12,25 +12,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: -10, // Places watermark behind all content
   },
-  watermarkText: {
-    fontSize: 34,
-    color: "#000000",
-    opacity: 0.06,
+  watermarkWrapper: {
     transform: "rotate(-45deg)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  watermarkText1: {
+    fontSize: 45,
+    color: "#000000",
+    opacity: 0.08,
     fontFamily: "Helvetica",
     fontWeight: "bold",
     textAlign: "center",
-    letterSpacing: 0,
-    width: 1200, // Explicit large fixed width to ensure it occupies one line
+    marginBottom: 5,
+  },
+  watermarkText2: {
+    fontSize: 40,
+    color: "#000000",
+    opacity: 0.08,
+    fontFamily: "Helvetica",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 
 const BrandingWatermark = () => {
   return (
     <View style={styles.container} fixed>
-      <Text style={styles.watermarkText}>
-        {"Designed and developed by CVify | https://cvifypro.vercel.app"}
-      </Text>
+      <View style={styles.watermarkWrapper}>
+        <Text style={styles.watermarkText1}>
+          {"Designed and developed by CVify |"}
+        </Text>
+        <Text style={styles.watermarkText2}>
+          {"https://cvifypro.vercel.app"}
+        </Text>
+      </View>
     </View>
   );
 };
