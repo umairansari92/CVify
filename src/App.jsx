@@ -4,6 +4,8 @@ import { Toaster } from "react-hot-toast";
 import AppRoutes from "./routes/AppRoutes";
 import { getMe } from "./features/auth/authThunk";
 
+import PWAInstall from "./components/common/PWAInstall";
+
 const App = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
@@ -16,6 +18,7 @@ const App = () => {
 
   return (
     <>
+      <PWAInstall />
       <AppRoutes />
       <Toaster position="top-center" reverseOrder={false} />
     </>

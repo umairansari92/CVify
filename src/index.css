@@ -216,6 +216,8 @@
     overflow: hidden !important; /* Forces extra content to hide instead of making a new page */
     page-break-after: always;
     page-break-inside: avoid;
+    transform: none !important; /* Ensure 1:1 scale when printing */
+    margin-bottom: 0 !important; /* Reset the offset margin */
   }
 
   /* Prevent an empty extra page at the very end */

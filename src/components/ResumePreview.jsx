@@ -12,12 +12,15 @@ import ExecutiveTemplate from "./templates/ExecutiveTemplate";
 import GlobalTemplate from "./templates/GlobalTemplate";
 import EliteTemplate from "./templates/EliteTemplate";
 
-const ResumePreview = ({ resume, templateId }) => {
+const ResumePreview = ({ resume, templateId, isExporting = false }) => {
   const [scale, setScale] = React.useState(1);
   const containerRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isExporting) {
+      if (isExporting) setScale(1);
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -32,7 +35,7 @@ const ResumePreview = ({ resume, templateId }) => {
 
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [isExporting]);
 
   if (!resume) return <div className="text-gray-500">No resume data</div>;
 
@@ -56,7 +59,7 @@ const ResumePreview = ({ resume, templateId }) => {
       case "elegant":
         return <ElegantTemplate data={resume} />;
       case "technical":
-        return <TechnicalTemplate data={resume} />;
+        return <TechnicalPDF data={resume} />;
       case "executive":
         return <ExecutiveTemplate data={resume} />;
       case "global":
@@ -77,8 +80,8 @@ const ResumePreview = ({ resume, templateId }) => {
           width: "210mm",
           height: "297mm",
           borderRadius: "2px",
-          transform: `scale(${scale})`,
-          marginBottom: `calc(297mm * ${scale - 1})`, // Offset the height change from scaling
+          transform: isExporting ? 'none' : `scale(${scale})`,
+          marginBottom: isExporting ? '0' : `calc(297mm * ${scale - 1})`, // Offset the height change from scaling
         }}
       >
         {/* Background Watermark Overlay */}

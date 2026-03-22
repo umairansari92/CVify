@@ -12,6 +12,11 @@ const PDFExport = ({ targetRef }) => {
 
       // Create a clone to avoid DOM manipulation issues
       const clonedElement = targetRef.current.cloneNode(true);
+      
+      // Reset transform and margin for high-quality PDF capture
+      clonedElement.style.transform = 'none';
+      clonedElement.style.marginBottom = '0';
+      
       const container = document.createElement('div');
       container.style.position = 'absolute';
       container.style.left = '-9999px';
