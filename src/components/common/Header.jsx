@@ -1,11 +1,16 @@
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
-import { FaUserCircle, FaCrown, FaStar, FaGem, FaBars } from "react-icons/fa";
+import { FaUserCircle, FaCrown, FaStar, FaGem, FaBars, FaDownload } from "react-icons/fa";
 import Logo from "./Logo";
 
 const Header = ({ onMenuClick }) => {
   const { user } = useSelector((state) => state.auth);
+
+  const handleInstallClick = () => {
+    const event = new Event("trigger-pwa-install");
+    window.dispatchEvent(event);
+  };
 
   return (
     <header className="h-16 lg:h-20 glass border-b border-border-subtle flex items-center justify-between px-4 lg:px-10 transition-all duration-500 sticky top-0 z-50 overflow-hidden">
