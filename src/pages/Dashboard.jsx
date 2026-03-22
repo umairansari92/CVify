@@ -293,7 +293,7 @@ const Dashboard = () => {
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => handleEdit(resume._id)}
-                      className="btn-primary px-4 bg-primary/10 !text-primary border border-primary/20 hover:!bg-primary hover:!text-white flex items-center justify-center group/btn"
+                      className="btn-primary px-4 bg-primary/10 !text-text-main border border-primary/20 hover:!bg-primary hover:!text-white flex items-center justify-center group/btn"
                     >
                       <FiEdit2 className="group-hover/btn:rotate-12 transition-transform" />
                       <span className="ml-2 text-xs font-black uppercase tracking-wider">Edit</span>
