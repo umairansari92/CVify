@@ -440,6 +440,14 @@ const blockedDomains = new Set([
   "mail-fake.com",
   "plingest.com",
   "mail7.io",
+  "1secmail.net",
+  "1secmail.org",
+  "tempemail.cc",
+  "bulc.club",
+  "addy.io",
+  "10minutenmail.xyz",
+  "24hinbox.com",
+  "10mail.org",
 ]);
 
 /**
