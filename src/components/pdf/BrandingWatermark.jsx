@@ -45,7 +45,7 @@ const BrandingWatermark = () => {
     <View style={styles.container} fixed>
       <View style={styles.watermarkWrapper}>
         <Text style={styles.watermarkText1}>
-          {"Designed and developed by CVify |"}
+          {"Designed and developed by CVify"}
         </Text>
         <Text style={styles.watermarkText2}>
           {"https://cvifypro.vercel.app"}
