@@ -387,6 +387,20 @@ const blockedDomains = new Set([
   "moakt.com",
   "moakt.co",
   "moakt.org",
+  // ─── EmailOnDeck Rotating Domains (Observed 2026) ────────────────────────
+  "feelingion.com",
+  "competirer.com",
+  "gfbysaints.com",
+  "broothi.com",
+  "cablegateast.com",
+  "tachnuqia.com",
+  "btintinternet.com",
+  "mailstore.keyworddo.com",
+  "ruincuit.com",
+  "tmarapten.com",
+  "flowersth.com",
+  "snakement.com",
+  "knowond.com",
 ]);
 
 /**
