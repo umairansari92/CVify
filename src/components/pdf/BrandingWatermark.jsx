@@ -13,21 +13,24 @@ const styles = StyleSheet.create({
     zIndex: -10, // Places watermark behind all content
   },
   watermarkText: {
-    fontSize: 65,
+    fontSize: 24,
     color: "#000000",
     opacity: 0.04,
     transform: "rotate(-45deg)",
-    fontFamily: "Helvetica", // Using standard built-in PDF font
+    fontFamily: "Helvetica",
     fontWeight: "bold",
     textAlign: "center",
     letterSpacing: 2,
+    width: "120%", // Give it more width just in case
   },
 });
 
 const BrandingWatermark = () => {
   return (
     <View style={styles.container} fixed>
-      <Text style={styles.watermarkText}>Designed and developed by CVify | https://cvifypro.vercel.app</Text>
+      <Text style={styles.watermarkText}>
+        {"Designed and developed by CVify | https://cvifypro.vercel.app"}
+      </Text>
     </View>
   );
 };
