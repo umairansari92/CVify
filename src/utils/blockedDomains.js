@@ -7,7 +7,7 @@
  * - https://github.com/ivolo/disposable-email-domains
  * - Manual additions based on observed abuse patterns
  *
- * Last updated: 2026-03-05
+ * Last updated: 2026-03-22
  */
 const blockedDomains = new Set([
   // ─── Mailinator Family ───────────────────────────────────────────────────
@@ -32,13 +32,12 @@ const blockedDomains = new Set([
   "grr.la",
   "spam.la",
   "sharklasers.com",
+  "guerrillamailblock.com",
   "spam4.me",
 
   // ─── YopMail Family ──────────────────────────────────────────────────────
   "yopmail.com",
   "yopmail.fr",
-  "yopmail.net",
-  "yopmail.org",
   "cool.fr.nf",
   "jetable.fr.nf",
   "nospam.ze.tc",
@@ -63,24 +62,17 @@ const blockedDomains = new Set([
   "tempmail.us",
   "tempmail.co",
   "tempmail.plus",
-  "tempmail.email",
-  "tempmail.lol",
-  "tempmail.ninja",
   "tempr.email",
   "tempemail.net",
   "tempymail.com",
   "tempalias.com",
   "tempinbox.com",
   "tempinbox.co.uk",
-  "tmpmail.net",
-  "tmpmail.org",
-  "tmpmail.io",
-  // Observed abuser domains (netoiu.com etc. are temp-mail.org service domains)
+  // netoiu.com and temp-mail.org subdomains
   "netoiu.com",
   "vomoto.com",
   "rfcdrive.com",
   "merepost.com",
-  "oosnd.com",
 
   // ─── 10MinuteMail / QuickEmail ───────────────────────────────────────────
   "10minutemail.com",
@@ -93,9 +85,11 @@ const blockedDomains = new Set([
   "10minutemail.info",
   "10minutemail.be",
   "10minutemail.nl",
+  "10minutemail.pl",
   "10minutemail.pro",
   "10minutemail.ru",
-  "10mindmail.de",
+  "10minutemail.ga",
+  "10mails.net",
   "10minmail.de",
   "minutemailbox.com",
 
@@ -108,11 +102,6 @@ const blockedDomains = new Set([
   "trashmail.org",
   "trashmail.de",
   "trashmail.xyz",
-  "trashmail.ws",
-  "trashmail.win",
-  "trash-mail.at",
-  "trash-me.com",
-  "mail4trash.com",
 
   // ─── Dispostable / Discard ───────────────────────────────────────────────
   "dispostable.com",
@@ -120,21 +109,20 @@ const blockedDomains = new Set([
   "discardmail.com",
   "discardmail.de",
   "disposablemail.com",
+  "disposable.com",
 
   // ─── Throwaway ───────────────────────────────────────────────────────────
   "throwam.com",
   "throwtempmail.com",
   "throwme.com",
   "throwaway.email",
-  "throwam.io",
-  "throwam.net",
+  "throwam.com",
 
   // ─── Fake / Spam Oriented ────────────────────────────────────────────────
   "fakemail.net",
   "fakeinbox.com",
   "fake-email.com",
   "fakemailgenerator.com",
-  "fakeinbox.cf",
   "mailnull.com",
   "mailnesia.com",
   "maildrop.cc",
@@ -161,10 +149,11 @@ const blockedDomains = new Set([
   "spamspot.com",
   "spamthis.co.uk",
   "spamtroll.net",
-  "spamoff.de",
 
   // ─── Mailmoat / Mailnull ─────────────────────────────────────────────────
   "mailmoat.com",
+  "mailnull.com",
+  "mailnesia.com",
 
   // ─── GetNada / Nada ──────────────────────────────────────────────────────
   "getnada.com",
@@ -185,13 +174,15 @@ const blockedDomains = new Set([
   "mail-temporaire.fr",
   "emailtemporar.ro",
 
-  // ─── Emailondeck ─────────────────────────────────────────────────────────
-  "emailondeck.com",
-  "emailondeck.net",
+  // ─── Crazymailing / Yournewid ────────────────────────────────────────────
+  "crazymailing.com",
+  "yournewid.com",
 
-  // ─── Mytemp / TempmailGen ────────────────────────────────────────────────
-  "mytemp.email",
-  "tempmailgen.com",
+  // ─── Mailbox.in.ua / throwam ─────────────────────────────────────────────
+  "mailbox.in.ua",
+  "getairmail.com",
+  "filzmail.com",
+  "owlpic.com",
 
   // ─── Wegwerfmail ─────────────────────────────────────────────────────────
   "wegwerfmail.de",
@@ -204,13 +195,21 @@ const blockedDomains = new Set([
   "jetable.net",
   "jetable.org",
   "jetable.fr.nf",
-  "email-jetable.fr",
+
+  // ─── E4Ward / Nwldx ──────────────────────────────────────────────────────
+  "e4ward.com",
+  "nwldx.com",
+  "nowmymail.com",
+
+  // ─── Emailondeck ─────────────────────────────────────────────────────────
+  "emailondeck.com",
+  "emailondeck.net",
+
+  // ─── Mytemp / TempmailGen ────────────────────────────────────────────────
+  "mytemp.email",
+  "tempmailgen.com",
 
   // ─── Various Single-Use Services ─────────────────────────────────────────
-  "getairmail.com",
-  "getairmail.net",
-  "filzmail.com",
-  "owlpic.com",
   "emkei.cz",
   "einrot.com",
   "einrot.de",
@@ -248,11 +247,14 @@ const blockedDomains = new Set([
   "zoaxe.com",
   "zoemail.net",
   "zomg.info",
+
+  // ─── Nospam / Spamgourmet ────────────────────────────────────────────────
   "nospam4.us",
   "nobulk.com",
   "nodispo.com",
 
-  // ─── Popular burner services 2024-2026 ───────────────────────────────────
+  // ─── Popular burner services 2024-2025 ───────────────────────────────────
+  "tempmail.lol",
   "burnermail.io",
   "easymail.top",
   "minute.email",
@@ -261,18 +263,55 @@ const blockedDomains = new Set([
   "tmail.ws",
   "inboxkitten.com",
   "mailsac.com",
-  "meltmail.com",
+  "mailslurp.com",
+  "guerrillamail.org",
+  "getairmail.net",
+  "anonaddy.com",
+  "simplelogin.io",
   "33mail.com",
+  "spamgourmet.com",
+  "meltmail.com",
+  "yopmail.net",
+  "yopmail.org",
+  "mailnull.net",
+  "mailnull.org",
   "maillinator.com",
+  "throwam.io",
+  "throwam.net",
+  "mailparser.io",
+  "tempmail.email",
+  "tmpmail.net",
+  "tmpmail.org",
+  "tmpmail.io",
+  "email-jetable.fr",
 
-  // ─── Additional recent domains ───────────────────────────────────────────
+  // ─── Pakistani/Regional Disposable Domains ───────────────────────────────
+  "vipemail.net",
+  "emeil.in",
+  "emeil.ir",
+
+  // ─── Recently seen abuser domains ────────────────────────────────────────
+  "netoiu.com", // observed in DB abuse
+  "vomoto.com", // temp-mail.org subdomain service
+  "rfcdrive.com", // temp-mail.org subdomain service
+  "merepost.com", // temp-mail.org subdomain service
+  "oosnd.com",
   "inboxstore.me",
   "amilegit.com",
   "amiri.net",
+  "spamoff.de",
+  "mail4trash.com",
+  "trash-mail.at",
+  "trashmail.ws",
+  "trashmail.xyz",
+  "trashmail.win",
+  "tempmail.ninja",
+  "trash-me.com",
   "rmqkr.net",
   "pjjkp.com",
   "killmail.com",
   "killmail.net",
+  "fakeinbox.cf",
   "mt2014.com",
   "mt2015.com",
   "nospamfor.us",
@@ -280,6 +319,7 @@ const blockedDomains = new Set([
   "dayrep.com",
   "eintagsmail.de",
   "fleckens.hu",
+  "guam.net",
   "iroid.com",
   "krovatka.su",
   "lroid.com",
@@ -290,34 +330,63 @@ const blockedDomains = new Set([
   "mailscrap.com",
   "mailshell.com",
   "mailsiphon.com",
+  "mailslapping.com",
+  "mailslite.com",
+  "nospamforus.com",
   "punkass.com",
+  "putthisinyourgps.com",
+  "qisdo.com",
+  "qisoa.com",
   "rejectmail.com",
+  "rklips.com",
+  "rppkn.com",
+  "runobjrfs.com",
   "scatmail.com",
+  "servermaps.net",
+  "shitaway.com",
+  "sinaite.net",
   "skeefmail.com",
+  "slapsfromlastnight.com",
+  "slopsbox.com",
+  "slutty.com",
+  "smellfear.com",
   "snakemail.com",
   "sneakemail.com",
   "sneakmail.de",
   "sofort-mail.de",
   "spam-be-gone.com",
+  "tempr.email",
   "testudine.com",
+  "thankyou2010.com",
   "tittbit.in",
   "turual.com",
   "umail.net",
+  "super-auswahl.de",
   "vpn.st",
   "wazabi.club",
   "winemaven.info",
   "yep.it",
+  "za.com",
+  "zippymail.info",
   "zain.site",
+  "tinyurl.com",
   "tempalias.org",
   "tempemail.biz",
   "tempemail.co.za",
   "tempemail.com",
+  "emailisvalid.com",
   "emaildrop.io",
   "emailfake.com",
   "emailfake.ml",
   "emailinfive.com",
   "emailigo.de",
+  "emailisvalid.com",
   "meinspamschutz.de",
+  "meltmail.com",
+  "paylaar.com",
+  "moakt.com",
+  "moakt.co",
+  "moakt.org",
 ]);
 
 /**
@@ -328,11 +397,11 @@ export const isDisposableEmail = (email) => {
   if (!email || !email.includes("@")) return false;
   const domain = email.split("@")[1].toLowerCase().trim();
   // Direct match or subdomain match
-  for (const blocked of blockedDomains) {
-    if (domain === blocked || domain.endsWith("." + blocked)) {
-      return true;
+    for (const blocked of blockedDomains) {
+      if (domain === blocked || domain.endsWith("." + blocked)) {
+        return true;
+      }
     }
-  }
   return false;
 };
 
