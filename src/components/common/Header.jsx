@@ -1,10 +1,10 @@
 import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
-import { FaUserCircle, FaCrown, FaStar, FaGem } from "react-icons/fa";
+import { FaUserCircle, FaCrown, FaStar, FaGem, FaBars } from "react-icons/fa";
 import Logo from "./Logo";
 
-const Header = () => {
+const Header = ({ onMenuClick }) => {
   const { user } = useSelector((state) => state.auth);
 
   return (
@@ -13,7 +13,15 @@ const Header = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none"></div>
 
       <div className="flex items-center gap-2 lg:gap-4 relative z-10">
-        <Logo className="w-32 lg:w-40" />
+        {/* Mobile Hamburger Menu */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors pointer-events-auto"
+          type="button"
+        >
+          <FaBars className="text-xl text-text-primary" />
+        </button>
+        <Logo className="w-24 lg:w-40" />
       </div>
 
       <div className="flex items-center gap-4 lg:gap-8 relative z-10">

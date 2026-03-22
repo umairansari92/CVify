@@ -31,20 +31,7 @@ const Layout = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        {/* Mobile Header with Hamburger */}
-        <div className="lg:hidden flex items-center justify-between p-4 glass border-b border-border-subtle relative z-[60]">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors pointer-events-auto"
-            type="button"
-          >
-            <FaBars className="text-xl text-text-primary" />
-          </button>
-          <Logo className="w-24" />
-          <div className="w-10" /> {/* Spacer for centering */}
-        </div>
-
-        <Header />
+        <Header onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">
           <Outlet />
         </main>

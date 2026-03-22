@@ -141,7 +141,7 @@ const CoverLetterPage = () => {
       {/* Two-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Form */}
-        <div className="lg:col-span-5 space-y-6 glass p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group sticky top-20">
+        <div className="lg:col-span-5 space-y-6 glass p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20">
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
           <div className="space-y-4 relative z-10">
