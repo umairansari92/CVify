@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
-import logo from "../../assets/logo.png";
+import Logo from "./Logo";
 
 const Sidebar = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -148,13 +148,8 @@ const Sidebar = ({ onClose }) => {
 
       <div className="p-8 flex flex-col items-center justify-center relative">
         <div className="relative z-10 flex flex-col items-center">
-          <div className="flex items-end justify-center group cursor-pointer">
-            <img
-              src={logo}
-              alt="CVify Pro Logo"
-              className="w-40 h-auto brightness-110 contrast-125 transition-transform duration-500 group-hover:scale-105"
-            />
-            <span className="text-primary font-black text-2xl italic tracking-tighter mb-1.5 -ml-2 drop-shadow-sm group-hover:text-accent transition-colors">Pro</span>
+          <div className="flex items-center justify-center group cursor-pointer">
+            <Logo className="w-48" />
           </div>
           <div className="h-0.5 w-12 bg-gradient-to-r from-transparent via-primary/50 to-transparent mt-2"></div>
         </div>

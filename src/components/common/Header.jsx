@@ -2,7 +2,7 @@ import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
 import { FaUserCircle, FaCrown, FaStar, FaGem } from "react-icons/fa";
-import logo from "../../assets/logo.png";
+import Logo from "./Logo";
 
 const Header = () => {
   const { user } = useSelector((state) => state.auth);
@@ -13,17 +13,7 @@ const Header = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none"></div>
 
       <div className="flex items-center gap-2 lg:gap-4 relative z-10">
-        <div className="flex flex-col group cursor-pointer">
-          <div className="flex items-center gap-1.5 lg:gap-2">
-            <div className="w-1.5 h-6 bg-primary rounded-full group-hover:h-8 transition-all"></div>
-            <h2 className="text-lg lg:text-xl font-black text-text-main tracking-tight group-hover:text-primary transition-colors">
-              Dashboard
-            </h2>
-          </div>
-          <p className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-60 ml-3">
-            {user?.role === 'admin' ? 'Admin Gateway' : 'User Station'}
-          </p>
-        </div>
+        <Logo className="w-32 lg:w-40" />
       </div>
 
       <div className="flex items-center gap-4 lg:gap-8 relative z-10">

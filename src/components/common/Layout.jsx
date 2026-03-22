@@ -4,6 +4,7 @@ import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Toaster } from "react-hot-toast";
+import Logo from "./Logo";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,7 +40,7 @@ const Layout = () => {
           >
             <FaBars className="text-xl text-text-primary" />
           </button>
-          <h1 className="text-lg font-bold text-text-primary">CVify</h1>
+          <Logo className="w-24" />
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
 
