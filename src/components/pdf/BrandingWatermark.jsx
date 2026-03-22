@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 5,
+    marginBottom: 25,
+    lineHeight: 1.2,
   },
   watermarkText2: {
     fontSize: 40,
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontWeight: "bold",
     textAlign: "center",
+    lineHeight: 1.2,
   },
 });
 
