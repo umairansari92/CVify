@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
 import api from "../api/axios";
 import {
@@ -29,6 +28,13 @@ import {
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { 
+  fetchPublicProfile, 
+  fetchProfileAnalytics,
+  updateActiveProfileLocally,
+  clearActiveProfile 
+} from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
 
