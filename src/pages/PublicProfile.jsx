@@ -813,206 +813,176 @@ const PublicProfile = () => {
           )}
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-          {/* Availability Badge */}
-          <div className="flex justify-center mb-8">
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md ${
-                user.availability === "Open to Work"
-                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                  : user.availability === "Freelance Available"
-                    ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
-                    : "bg-red-500/10 border-red-500/30 text-red-400"
-              }`}
-            >
-              <div
-                className={`w-2 h-2 rounded-full animate-pulse ${
-                  user.availability === "Open to Work"
-                    ? "bg-emerald-400"
-                    : user.availability === "Freelance Available"
-                      ? "bg-amber-400"
-                      : "bg-red-400"
-                }`}
-              />
-              {user.availability || "Open to Work"}
-            </motion.div>
-          </div>
-
-          <div className="flex flex-col items-center gap-10">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="relative"
-            >
-              <div className="w-48 h-48 md:w-60 md:h-60 rounded-[3.5rem] overflow-hidden border-8 border-white/10 shadow-3xl relative z-10 transition-transform hover:scale-105 duration-500">
-                <img
-                  src={user.profileImage}
-                  alt={user.firstName}
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              
-              {/* ATS Badge [V3.1 Dynamic] */}
-              {atsScore && (
-                <div className="absolute -top-4 -right-4 px-4 py-2 bg-gradient-to-br from-action to-violet-600 rounded-2xl shadow-2xl border border-white/20 z-20 animate-bounce-subtle">
-                  <div className="text-[9px] font-black text-white uppercase tracking-widest leading-none mb-1 text-center">ATS Match</div>
-                  <div className="text-lg font-black text-white leading-none text-center">{atsScore}%</div>
-                </div>
-              )}
-
-              <div 
-                className="absolute -bottom-6 -left-4 p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-3 border z-20 group"
-                style={{
-                  backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 8%, ${theme.bodyBg})` : theme.bodyBg,
-                  backdropFilter: theme.cardStyle === 'glass' ? 'blur(20px)' : 'none',
-                  borderColor: `color-mix(in srgb, ${theme.textPrimary} 20%, transparent)`
-                }}
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
+            {/* Left Column: Image & Quick Info */}
+            <div className="flex-shrink-0 relative group">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="relative"
               >
-                <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center">
-                  <FaMapMarkerAlt style={{ color: theme.accentColor }} className="animate-pulse" />
+                <div className="w-48 h-48 md:w-64 md:h-64 rounded-[3.5rem] overflow-hidden border-8 border-white/10 shadow-3xl relative z-10 transition-transform hover:scale-105 duration-500">
+                  <img
+                    src={user.profileImage}
+                    alt={user.firstName}
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
-                <div className="text-left">
-                  <div className="text-[8px] font-bold uppercase tracking-widest opacity-60">Location</div>
-                  <div className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
-                    {user.location || "Available Remote"}
+                
+                {/* ATS Badge [V3.1 Dynamic] */}
+                {atsScore && (
+                  <div className="absolute -top-4 -right-4 px-4 py-2 bg-gradient-to-br from-action to-violet-600 rounded-2xl shadow-2xl border border-white/20 z-20 animate-bounce-subtle">
+                    <div className="text-[9px] font-black text-white uppercase tracking-widest leading-none mb-1 text-center">ATS Match</div>
+                    <div className="text-lg font-black text-white leading-none text-center">{atsScore}%</div>
+                  </div>
+                )}
+
+                <div 
+                  className="absolute -bottom-6 -right-4 p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-3 border z-20 group"
+                  style={{
+                    backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 8%, ${theme.bodyBg})` : theme.bodyBg,
+                    backdropFilter: theme.cardStyle === 'glass' ? 'blur(20px)' : 'none',
+                    borderColor: `color-mix(in srgb, ${theme.textPrimary} 20%, transparent)`
+                  }}
+                >
+                  <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center">
+                    <FaMapMarkerAlt style={{ color: theme.accentColor }} className="animate-pulse" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-[8px] font-bold uppercase tracking-widest opacity-60">Location</div>
+                    <div className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
+                      {user.location || "Available Remote"}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
-            <div className="text-center text-white flex-1 flex flex-col items-center">
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="text-4xl md:text-6xl font-black tracking-tight"
-              >
-                {user.firstName} {user.lastName}
-              </motion.h1>
+            {/* Right Column: Bio & Actions */}
+            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
+              {/* Availability Badge */}
               <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="mt-4 max-w-3xl mx-auto flex flex-col items-center gap-2"
+                className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md ${
+                  user.availability === "Open to Work"
+                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                    : user.availability === "Freelance Available"
+                      ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                      : "bg-red-500/10 border-red-500/30 text-red-400"
+                }`}
               >
-                <div className="flex flex-wrap items-center justify-center gap-4">
+                <div className={`w-2 h-2 rounded-full animate-pulse shadow-glow ${
+                  user.availability === "Open to Work" ? "bg-emerald-400" :
+                  user.availability === "Freelance Available" ? "bg-amber-400" : "bg-red-400"
+                }`} />
+                {user.availability || "Open to Work"}
+              </motion.div>
+
+              <div className="space-y-4">
+                <motion.h1
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  className="text-4xl md:text-7xl font-black tracking-tight text-white leading-tight"
+                >
+                  <InlineEdit
+                    value={`${user.firstName} ${user.lastName}`}
+                    onSave={(val) => {
+                      const [first, ...rest] = val.split(" ");
+                      handleLiveUpdate({ firstName: first, lastName: rest.join(" ") });
+                    }}
+                    isOwner={user.isOwner}
+                    label="Full Name"
+                    className="block"
+                  />
+                </motion.h1>
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="flex flex-wrap items-center justify-center lg:justify-start gap-4"
+                >
                   <InlineEdit
                     value={user.headline}
                     onSave={(val) => handleLiveUpdate({ headline: val })}
                     isOwner={user.isOwner}
                     label="Headline"
-                    className="text-2xl md:text-3xl font-black opacity-100"
+                    className="text-xl md:text-3xl font-bold text-white/90 leading-tight block"
                   />
                   {user.industry && user.industry !== "Other" && (
-                    <span className="px-4 py-1.5 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20 shadow-lg">
+                    <span className="px-4 py-1 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20 shadow-lg text-white/70">
                       {user.industry}
                     </span>
                   )}
-                </div>
-              </motion.div>
+                </motion.div>
+              </div>
 
-              {user.phoneNumber && (
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="flex items-center justify-center gap-4 mt-8"
-                >
-                  <a
+              {/* Contact Row */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6">
+                {user.phoneNumber && (
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
                     href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleTrackInteraction("contact")}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded-xl transition-all group"
+                    className="flex items-center gap-3 px-6 py-3 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-2xl transition-all group"
                   >
-                    <FaWhatsapp className="text-green-500 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-black text-white">
-                      {user.phoneNumber}
-                    </span>
-                  </a>
-                  <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">
-                    Available on WhatsApp
-                  </span>
-                </motion.div>
-              )}
-
-              <div className="flex flex-wrap justify-center gap-5 mt-10">
-                {user.socialLinks?.linkedin && (
-                  <a
-                    href={ensureAbsoluteUrl(user.socialLinks.linkedin)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-600 rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="LinkedIn"
-                  >
-                    <FaLinkedin size={22} />
-                  </a>
+                    <FaWhatsapp className="text-green-500 text-xl group-hover:scale-110 transition-transform" />
+                    <div className="text-left">
+                      <div className="text-[10px] font-black text-white/50 uppercase tracking-widest leading-none mb-1">WhatsApp</div>
+                      <div className="text-xs font-black text-white">{user.phoneNumber}</div>
+                    </div>
+                  </motion.a>
                 )}
-                {user.socialLinks?.github && (
-                  <a
-                    href={ensureAbsoluteUrl(user.socialLinks.github)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-slate-900 rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="GitHub"
-                  >
-                    <FaGithub size={22} />
-                  </a>
-                )}
-                {user.socialLinks?.twitter && (
-                  <a
-                    href={ensureAbsoluteUrl(user.socialLinks.twitter)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-blue-400 rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="Twitter"
-                  >
-                    <FaTwitter size={22} />
-                  </a>
-                )}
-                {user.socialLinks?.portfolio && (
-                  <a
-                    href={ensureAbsoluteUrl(user.socialLinks.portfolio)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/10 hover:bg-white text-white hover:text-[var(--action)] rounded-2xl transition-all backdrop-blur-md border border-white/10"
-                    onClick={() => handleTrackInteraction("contact")}
-                    title="Portfolio"
-                  >
-                    <FaGlobe size={22} />
-                  </a>
-                )}
+                
+                <div className="flex items-center gap-3">
+                  {[
+                    { icon: <FaLinkedin />, link: user.socialLinks?.linkedin, title: "LinkedIn", color: "hover:text-blue-500" },
+                    { icon: <FaGithub />, link: user.socialLinks?.github, title: "GitHub", color: "hover:text-slate-400" },
+                    { icon: <FaTwitter />, link: user.socialLinks?.twitter, title: "Twitter", color: "hover:text-blue-400" },
+                    { icon: <FaGlobe />, link: user.socialLinks?.portfolio, title: "Portfolio", color: "hover:text-action" }
+                  ].map((social, idx) => social.link && (
+                    <a
+                      key={idx}
+                      href={ensureAbsoluteUrl(social.link)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white transition-all hover:-translate-y-1 ${social.color}`}
+                      title={social.title}
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
+                </div>
               </div>
 
-              {/* Premium Action CTAs [V3.1] */}
-              <div className="flex flex-wrap justify-center gap-6 mt-12 bg-white/5 p-4 rounded-[2.5rem] border border-white/10 backdrop-blur-md">
+              {/* Premium Action CTAs */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-6">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={handleDownload}
-                  className="px-10 py-5 bg-white text-action font-black rounded-3xl flex items-center gap-4 hover:shadow-glow-action transition-all shadow-2xl text-base group"
-                  style={{ color: theme.accentColor }}
+                  className="px-10 py-5 bg-white text-midnight font-black rounded-3xl flex items-center gap-4 hover:shadow-glow-white transition-all shadow-2xl text-base group"
+                  style={{ color: '#0f172a' }}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center group-hover:bg-action group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 rounded-xl bg-midnight/5 flex items-center justify-center group-hover:bg-midnight group-hover:text-white transition-colors">
                     <FaDownload />
                   </div>
-                  Download Resume
+                  <span className="uppercase tracking-widest text-sm">Download Resume</span>
                 </motion.button>
                 <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   href={`mailto:${user.email}?subject=Professional Collaboration Inquiry`}
                   onClick={() => handleTrackInteraction("contact")}
-                  className="px-10 py-5 bg-action text-white font-black rounded-3xl flex items-center gap-4 hover:bg-action/90 shadow-2xl transition-all text-base"
+                  className="px-10 py-5 bg-action text-white font-black rounded-3xl flex items-center gap-4 hover:bg-action/90 shadow-2xl transition-all shadow-action/20 text-base"
                 >
                   <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
                     <FaEnvelope />
                   </div>
-                  Hire Candidate
+                  <span className="uppercase tracking-widest text-sm">Hire Candidate</span>
                 </motion.a>
               </div>
             </div>
