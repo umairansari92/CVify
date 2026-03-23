@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import api from "../api/axios";
+import { 
+  analyzeResumeV3Async, 
+  fetchLatestAnalysis, 
+  clearAtsResult 
+} from "../features/ats/atsSlice";
 import { updateDiamonds } from "../features/auth/authSlice";
+import api from "../api/axios";
 import {
   FaUpload,
   FaCheckCircle,
@@ -18,13 +23,17 @@ import ATSResult from "../components/ats/ATSResult"; // [V3]
 
 const ATSPage = () => {
   const { user } = useSelector((state) => state.auth);
+  const { 
+    latestResult: result, 
+    loading, 
+    history, 
+    error: atsError 
+  } = useSelector((state) => state.ats);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+
   const [file, setFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [marketMode, setMarketMode] = useState("Standard");
-  const [result, setResult] = useState(null);
-  const [history, setHistory] = useState([]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -43,46 +52,29 @@ const ATSPage = () => {
       return;
     }
 
-    setLoading(true);
     const formData = new FormData();
     formData.append("resume", file);
     formData.append("jobDescription", jobDescription);
     formData.append("marketMode", marketMode);
 
-    try {
-      const res = await api.post("/ats/analyze", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setResult(res.data.scan);
+    const action = await dispatch(analyzeResumeV3Async(formData));
+    
+    if (analyzeResumeV3Async.fulfilled.match(action)) {
       toast.success("Analysis Complete!");
-      // Sync diamond balance
-      if (res.data.newDiamondBalance !== undefined) {
-        dispatch(updateDiamonds(res.data.newDiamondBalance));
+      if (action.payload.newDiamondBalance !== undefined) {
+        dispatch(updateDiamonds(action.payload.newDiamondBalance));
       }
-      fetchHistory();
-    } catch (err) {
-      console.error(err);
-      if (err.response?.status === 403) {
-        toast.error(
-          err.response?.data?.message ||
-            "Not enough diamonds! You need 50 diamonds for ATS analysis.",
-        );
-      } else {
-        toast.error(err.response?.data?.message || "Analysis failed");
-      }
-    } finally {
-      setLoading(false);
+      dispatch(fetchLatestAnalysis());
+    } else {
+      const errorMsg = action.payload || "Analysis failed";
+      toast.error(errorMsg);
     }
   };
 
-  const fetchHistory = async () => {
-    try {
-      const res = await api.get("/ats/history");
-      setHistory(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchLatestAnalysis());
+    return () => dispatch(clearAtsResult());
+  }, [dispatch]);
 
   return (
     <div className="p-4 lg:p-10 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">

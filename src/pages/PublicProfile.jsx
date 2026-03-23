@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
 import api from "../api/axios";
 import {
@@ -33,57 +34,60 @@ import InlineEdit from "../components/profile/InlineEdit";
 
 const PublicProfile = () => {
   const { username } = useParams();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [analytics, setAnalytics] = useState({ views: 0, resumeDownloads: 0, contactClicks: 0 }); // [V3.1]
-  const [atsScore, setAtsScore] = useState(null); // [V3.1]
-
-  const fetchProfile = useCallback(async () => {
-    try {
-      const res = await api.get(`/auth/public/${username}`);
-      setUser(res.data);
-      // Initialize local theme settings for live preview
-      setLocalTheme(
-        res.data.themeSettings || {
-          headerBg: "#2563eb",
-          headerBgSecondary: "#9333ea",
-          bodyBg: "#0f172a",
-          cardStyle: "glass",
-          fontPrimary: "Inter",
-          bannerUrl: "",
-          bannerOpacity: 95,
-        },
-      );
-      if (res.data.isOwner) {
-        // Fetch private analytics if user is the owner
-        const analyticsRes = await api.get("/profile-analytics/");
-        if (analyticsRes.data.analytics) setAnalytics(analyticsRes.data.analytics);
-      }
-
-      // Fetch Public ATS Score [V3.1]
-      try {
-        const atsResponse = await api.get(`/ats/public-score/${username}`);
-        if (atsResponse.data && atsResponse.data.score) {
-          setAtsScore(atsResponse.data.score);
-        }
-      } catch (err) {
-        console.warn("Could not fetch ATS score for profile badge");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Profile not found.");
-    } finally {
-      setLoading(false);
-    }
-  }, [username]);
+  const dispatch = useDispatch();
+  const { 
+    activeProfile: user, 
+    loading, 
+    error: profileError, 
+    analytics 
+  } = useSelector((state) => state.profile);
 
   const [localTheme, setLocalTheme] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showThemePanel, setShowThemePanel] = useState(false);
+  const [atsScore, setAtsScore] = useState(null);
 
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+    if (user?.themeSettings) {
+      setLocalTheme(user.themeSettings);
+    } else if (user) {
+      setLocalTheme({
+        headerBg: "#2563eb",
+        headerBgSecondary: "#9333ea",
+        bodyBg: "#0f172a",
+        cardStyle: "glass",
+        fontPrimary: "Inter",
+        bannerUrl: "",
+        bannerOpacity: 95,
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    dispatch(fetchPublicProfile(username));
+    return () => dispatch(clearActiveProfile());
+  }, [dispatch, username]);
+
+  useEffect(() => {
+    if (user?.isOwner) {
+      dispatch(fetchProfileAnalytics());
+    }
+  }, [dispatch, user?.isOwner]);
+
+  // Fetch Public ATS Score [V3.1]
+  useEffect(() => {
+    if (user) {
+      const fetchAts = async () => {
+        try {
+          const atsResponse = await api.get(`/ats/public-score/${username}`);
+          if (atsResponse.data?.score) setAtsScore(atsResponse.data.score);
+        } catch (err) {
+          console.warn("ATS score fetch failed");
+        }
+      };
+      fetchAts();
+    }
+  }, [user, username]);
 
   const handleTrackInteraction = async (type) => {
     try {
@@ -115,7 +119,7 @@ const PublicProfile = () => {
     setIsUpdating(true);
     try {
       // Optimistic Update
-      setUser((prev) => ({ ...prev, ...updates }));
+      dispatch(updateActiveProfileLocally(updates));
 
       const res = await api.patch("/auth/profile", updates);
       if (res.data.user) {
