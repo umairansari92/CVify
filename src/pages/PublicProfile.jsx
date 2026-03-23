@@ -36,6 +36,8 @@ const PublicProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [analytics, setAnalytics] = useState({ views: 0, resumeDownloads: 0, contactClicks: 0 }); // [V3.1]
+  const [atsScore, setAtsScore] = useState(null); // [V3.1]
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -53,6 +55,21 @@ const PublicProfile = () => {
           bannerOpacity: 95,
         },
       );
+      if (res.data.isOwner) {
+        // Fetch private analytics if user is the owner
+        const analyticsRes = await api.get("/profile-analytics/");
+        if (analyticsRes.data.analytics) setAnalytics(analyticsRes.data.analytics);
+      }
+
+      // Fetch Public ATS Score [V3.1]
+      try {
+        const atsResponse = await api.get(`/ats/public-score/${username}`);
+        if (atsResponse.data && atsResponse.data.score) {
+          setAtsScore(atsResponse.data.score);
+        }
+      } catch (err) {
+        console.warn("Could not fetch ATS score for profile badge");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Profile not found.");
     } finally {
@@ -640,6 +657,43 @@ const PublicProfile = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* ── Owner Analytics Bar [V3.1] ── */}
+      {user.isOwner && (
+        <motion.div
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="fixed top-0 left-0 right-0 z-[101] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-action/20 px-6 py-2 shadow-xl flex items-center justify-between"
+        >
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase text-[var(--text-secondary)] tracking-widest">Analytics Dashboard</span>
+              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+            </div>
+            <div className="h-6 w-px bg-border-subtle/50 mx-2" />
+            <div className="flex items-center gap-8">
+              {[
+                { label: "Views", val: analytics.views, icon: "👁️" },
+                { label: "Downloads", val: analytics.resumeDownloads, icon: "📄" },
+                { label: "Contact", val: analytics.contactClicks, icon: "📞" },
+              ].map((stat) => (
+                <div key={stat.label} className="flex items-center gap-2">
+                  <span className="text-lg">{stat.icon}</span>
+                  <div>
+                    <div className="text-[10px] font-black uppercase tracking-tighter text-[var(--text-secondary)] leading-none mb-1">{stat.label}</div>
+                    <div className="text-sm font-black text-[var(--text-primary)] leading-none">{stat.val}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              Profile Performance: Optimal
+            </span>
+          </div>
+        </motion.div>
+      )}
       <Helmet>
         <title>{`${user.firstName} ${user.lastName} | ${user.headline || "Professional"} ${user.industry ? `| ${user.industry}` : ""} | CVify`}</title>
         {/* Dynamic Font Import */}
@@ -749,9 +803,9 @@ const PublicProfile = () => {
           )}
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           {/* Availability Badge */}
-          <div className="flex justify-center lg:justify-start mb-6">
+          <div className="flex justify-center mb-8">
             <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -776,35 +830,49 @@ const PublicProfile = () => {
             </motion.div>
           </div>
 
-          <div className="flex flex-col items-center lg:items-start lg:flex-row gap-10">
+          <div className="flex flex-col items-center gap-10">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className="relative"
             >
-              <div className="w-40 h-40 md:w-52 md:h-52 rounded-[2.5rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10">
+              <div className="w-48 h-48 md:w-60 md:h-60 rounded-[3.5rem] overflow-hidden border-8 border-white/10 shadow-3xl relative z-10 transition-transform hover:scale-105 duration-500">
                 <img
                   src={user.profileImage}
                   alt={user.firstName}
                   className="w-full h-full object-cover object-top"
                 />
               </div>
+              
+              {/* ATS Badge [V3.1 Dynamic] */}
+              {atsScore && (
+                <div className="absolute -top-4 -right-4 px-4 py-2 bg-gradient-to-br from-action to-violet-600 rounded-2xl shadow-2xl border border-white/20 z-20 animate-bounce-subtle">
+                  <div className="text-[9px] font-black text-white uppercase tracking-widest leading-none mb-1 text-center">ATS Match</div>
+                  <div className="text-lg font-black text-white leading-none text-center">{atsScore}%</div>
+                </div>
+              )}
+
               <div 
-                className="absolute -bottom-4 -right-4 p-3 rounded-2xl shadow-xl flex items-center gap-2 border z-20"
+                className="absolute -bottom-6 -left-4 p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-3 border z-20 group"
                 style={{
-                  backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 5%, ${theme.bodyBg})` : theme.bodyBg,
-                  backdropFilter: theme.cardStyle === 'glass' ? 'blur(12px)' : 'none',
-                  borderColor: `color-mix(in srgb, ${theme.textPrimary} 15%, transparent)`
+                  backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 8%, ${theme.bodyBg})` : theme.bodyBg,
+                  backdropFilter: theme.cardStyle === 'glass' ? 'blur(20px)' : 'none',
+                  borderColor: `color-mix(in srgb, ${theme.textPrimary} 20%, transparent)`
                 }}
               >
-                <FaMapMarkerAlt style={{ color: theme.accentColor }} />
-                <span className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
-                  {user.location || "Available Remote"}
-                </span>
+                <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center">
+                  <FaMapMarkerAlt style={{ color: theme.accentColor }} className="animate-pulse" />
+                </div>
+                <div className="text-left">
+                  <div className="text-[8px] font-bold uppercase tracking-widest opacity-60">Location</div>
+                  <div className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
+                    {user.location || "Available Remote"}
+                  </div>
+                </div>
               </div>
             </motion.div>
 
-            <div className="text-center lg:text-left text-white flex-1">
+            <div className="text-center text-white flex-1 flex flex-col items-center">
               <motion.h1
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -816,18 +884,18 @@ const PublicProfile = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="mt-3 max-w-3xl mx-auto lg:mx-0 flex flex-col gap-2"
+                className="mt-4 max-w-3xl mx-auto flex flex-col items-center gap-2"
               >
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                <div className="flex flex-wrap items-center justify-center gap-4">
                   <InlineEdit
                     value={user.headline}
                     onSave={(val) => handleLiveUpdate({ headline: val })}
                     isOwner={user.isOwner}
                     label="Headline"
-                    className="text-xl md:text-2xl font-bold opacity-90"
+                    className="text-2xl md:text-3xl font-black opacity-100"
                   />
                   {user.industry && user.industry !== "Other" && (
-                    <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg text-[10px] font-black uppercase tracking-widest border border-white/20">
+                    <span className="px-4 py-1.5 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20 shadow-lg">
                       {user.industry}
                     </span>
                   )}
@@ -839,7 +907,7 @@ const PublicProfile = () => {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center justify-center lg:justify-start gap-4 mt-6"
+                  className="flex items-center justify-center gap-4 mt-8"
                 >
                   <a
                     href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
@@ -859,7 +927,7 @@ const PublicProfile = () => {
                 </motion.div>
               )}
 
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
+              <div className="flex flex-wrap justify-center gap-5 mt-10">
                 {user.socialLinks?.linkedin && (
                   <a
                     href={ensureAbsoluteUrl(user.socialLinks.linkedin)}
@@ -910,31 +978,32 @@ const PublicProfile = () => {
                 )}
               </div>
 
-              {/* LinkedIn Style Action CTAs */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-10">
-                <button
+              {/* Premium Action CTAs [V3.1] */}
+              <div className="flex flex-wrap justify-center gap-6 mt-12 bg-white/5 p-4 rounded-[2.5rem] border border-white/10 backdrop-blur-md">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleDownload}
-                  className="px-8 py-3.5 bg-white text-action font-black rounded-2xl flex items-center gap-3 hover:bg-white/90 transition-all shadow-xl shadow-black/10 text-sm"
+                  className="px-10 py-5 bg-white text-action font-black rounded-3xl flex items-center gap-4 hover:shadow-glow-action transition-all shadow-2xl text-base group"
                   style={{ color: theme.accentColor }}
                 >
-                  <FaDownload /> Download Resume
-                </button>
-                <a
+                  <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center group-hover:bg-action group-hover:text-white transition-colors">
+                    <FaDownload />
+                  </div>
+                  Download Resume
+                </motion.button>
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   href={`mailto:${user.email}?subject=Professional Collaboration Inquiry`}
                   onClick={() => handleTrackInteraction("contact")}
-                  className="px-8 py-3.5 bg-action/20 hover:bg-action/30 border border-white/20 text-white font-black rounded-2xl flex items-center gap-3 transition-all text-sm"
+                  className="px-10 py-5 bg-action text-white font-black rounded-3xl flex items-center gap-4 hover:bg-action/90 shadow-2xl transition-all text-base"
                 >
-                  <FaEnvelope /> Contact Candidate
-                </a>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success("Profile link copied!");
-                  }}
-                  className="px-6 py-3.5 bg-black/20 hover:bg-black/40 border border-white/10 text-white font-black rounded-2xl flex items-center gap-3 transition-all text-xs"
-                >
-                  <FaShareAlt /> Share Profile
-                </button>
+                  <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                    <FaEnvelope />
+                  </div>
+                  Hire Candidate
+                </motion.a>
               </div>
             </div>
           </div>
@@ -945,6 +1014,78 @@ const PublicProfile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column (Bio & Experience) */}
           <div className="lg:col-span-8 space-y-10">
+            {/* Skills & Expertise [V3.1] */}
+            <section className={`${cardClasses} p-8 md:p-12 rounded-[2.5rem] shadow-xl border overflow-hidden relative`}>
+              <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20"></div>
+              
+              <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] mb-10 flex items-center gap-4 relative z-10">
+                {sectionNames.skills}{" "}
+                <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                {/* Technical Skills (Progress Bars) */}
+                <div className="space-y-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center text-action">
+                      <FaCog size={14} />
+                    </div>
+                    <h4 className="text-xs font-black uppercase tracking-widest text-[var(--text-primary)]">Technical Expertise</h4>
+                  </div>
+                  <div className="space-y-6">
+                    {(user.skills || [])
+                      .filter(s => s.category === "Technical" || !s.category)
+                      .map((skill, idx) => (
+                        <div key={idx} className="space-y-3 group">
+                          <div className="flex justify-between items-end">
+                            <span className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors">{skill.name}</span>
+                            <span className="text-[10px] font-black text-action bg-action/10 px-2 py-0.5 rounded-md">80%</span>
+                          </div>
+                          <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: "80%" }}
+                              transition={{ duration: 1, delay: idx * 0.1 }}
+                              className="h-full bg-gradient-to-r from-action to-violet-500 rounded-full shadow-glow-action"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Other Skills (Badges) */}
+                <div className="space-y-8">
+                   <div className="flex items-center gap-3 mb-6">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                      <FaCheckCircle size={14} />
+                    </div>
+                    <h4 className="text-xs font-black uppercase tracking-widest text-[var(--text-primary)]">Core Competencies</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {(user.skills || [])
+                      .filter(s => s.category && s.category !== "Technical")
+                      .map((skill, idx) => (
+                        <motion.span
+                          key={idx}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-sm font-bold text-[var(--text-secondary)] transition-all cursor-default"
+                        >
+                          {skill.name}
+                        </motion.span>
+                      ))}
+                    {/* Fallback to legacy skills if empty */}
+                    {(!user.skills || user.skills.length === 0) && (user.legacySkills?.other || []).map((s, i) => (
+                       <span key={i} className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-sm font-bold text-[var(--text-secondary)]">
+                         {s}
+                       </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
             {/* About Section */}
             <motion.section
               initial={{ y: 20, opacity: 0 }}
@@ -965,72 +1106,71 @@ const PublicProfile = () => {
               />
             </motion.section>
 
-            {/* Experience Timeline */}
-            <section className="space-y-6">
-              <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
-                {sectionNames.experience}{" "}
-                <span className="flex-1 h-px bg-border-subtle"></span>
-              </h3>
-              <div className="space-y-12 relative before:absolute before:left-0 md:before:left-0 before:top-4 before:bottom-4 before:w-1 before:bg-gradient-to-b before:from-action before:via-violet-500 before:to-indigo-500 before:rounded-full ml-4">
+            {/* Experience Timeline [V3.1] */}
+            <section className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4 flex-1">
+                  {sectionNames.experience}{" "}
+                  <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
+                </h3>
+              </div>
+              
+              <div className="space-y-12 relative before:absolute before:left-0 md:before:left-5 before:top-4 before:bottom-4 before:w-1 before:bg-gradient-to-b before:from-action before:via-violet-500 before:to-transparent before:rounded-full ml-2 md:ml-0">
                 {(user.experience || []).map((exp, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ x: -20, opacity: 0 }}
+                    initial={{ x: -30, opacity: 0 }}
                     whileInView={{ x: 0, opacity: 1 }}
-                    className="relative pl-10"
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="relative pl-12 md:pl-20"
                   >
-                    <div className="absolute left-[-22px] top-1 w-10 h-10 rounded-2xl bg-white dark:bg-midnight border-4 border-action z-10 flex items-center justify-center shadow-lg shadow-action/20">
-                      <FaBriefcase className="text-[var(--action)] text-xs" />
+                    <div className="absolute left-[-18px] md:left-[2px] top-1 w-10 h-10 rounded-2xl bg-white dark:bg-slate-900 border-4 border-action z-10 flex items-center justify-center shadow-glow-action">
+                      <FaBriefcase className="text-[var(--action)] text-sm" />
                     </div>
 
-                    <div className={`${cardClasses} p-8 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
+                    <div className={`${cardClasses} p-8 md:p-10 rounded-[2.5rem] hover:border-[var(--action)] transition-all group relative overflow-hidden`}>
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-action/10 transition-colors"></div>
 
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 relative z-10">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
                         <div>
-                          <h4 className="text-2xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors">
+                          <h4 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors leading-tight">
                             {exp.role}
                           </h4>
-                          <p className="text-[var(--action)] font-black text-lg">
-                            {exp.company}
-                          </p>
-                        </div>
-                        <div className="text-left md:text-right">
-                          <span className="px-4 py-1.5 bg-foreground/5 rounded-full text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-border-subtle">
-                            {exp.startDate} —{" "}
-                            {exp.isCurrent ? "Present" : exp.endDate}
-                          </span>
+                          <div className="flex flex-wrap items-center gap-3 mt-2">
+                             <span className="text-[var(--action)] font-black text-lg">{exp.company}</span>
+                             <span className="w-1.5 h-1.5 rounded-full bg-border-subtle opacity-40"></span>
+                             <span className="text-[var(--text-secondary)] font-bold text-sm tracking-wide bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                               {exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate}
+                             </span>
+                          </div>
                         </div>
                       </div>
 
-                      <InlineEdit
-                        value={exp.achievements}
-                        onSave={(val) =>
-                          handleArrayUpdate("experience", idx, {
-                            achievements: val,
-                          })
-                        }
-                        isOwner={user.isOwner}
-                        multiline={true}
-                        label="Experience Achievements"
-                        className="text-base font-medium text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap relative z-10"
-                      />
-
-                      {exp.tools && exp.tools.length > 0 && (
-                        <div className="mt-6 relative z-10">
-                          <p className="text-[10px] font-black uppercase text-[var(--text-secondary)] mb-3 opacity-60 tracking-widest">
-                            Technologies Used
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.tools.map((tool) => (
-                              <span
-                                key={tool}
-                                className="text-[10px] font-black bg-action/10 text-[var(--action)] px-3 py-1.5 rounded-xl uppercase tracking-wider border border-action/10 hover:bg-white dark:hover:bg-midnight transition-colors"
-                              >
-                                {tool}
-                              </span>
+                      <div className="space-y-4 relative z-10">
+                        {exp.responsibilities ? (
+                          <ul className="space-y-3">
+                            {exp.responsibilities.map((resp, ridx) => (
+                              <li key={ridx} className="flex gap-4 text-[var(--text-secondary)] text-base leading-relaxed group/item">
+                                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-action/40 group-hover/item:bg-action transition-colors flex-shrink-0" />
+                                {resp}
+                              </li>
                             ))}
-                          </div>
+                          </ul>
+                        ) : (
+                          <p className="text-[var(--text-secondary)] text-base leading-relaxed whitespace-pre-wrap">
+                            {exp.achievements}
+                          </p>
+                        )}
+                      </div>
+                      
+                      {exp.tools?.length > 0 && (
+                        <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-2">
+                          {exp.tools.map((tool, tidx) => (
+                            <span key={tidx} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-white/5">
+                              {tool}
+                            </span>
+                          ))}
                         </div>
                       )}
                     </div>
@@ -1141,8 +1281,96 @@ const PublicProfile = () => {
               </section>
             )}
 
+            {/* Projects Portfolio [V3.1] */}
+            {portfolio.length > 0 && (
+              <section className="space-y-8">
+                 <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
+                  {sectionNames.projects || sectionNames.portfolio}{" "}
+                  <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {portfolio.map((proj, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 }}
+                      className={`${cardClasses} p-8 rounded-[2.5rem] flex flex-col h-full group hover:shadow-glow-action transition-all border relative overflow-hidden`}
+                    >
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-[60px] -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
 
+                      {/* Project Thumbnail Placeholder/Generated */}
+                      <div className="aspect-video rounded-3xl overflow-hidden mb-6 bg-white/5 border border-white/10 relative group">
+                        {proj.thumbnail ? (
+                          <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-action/20 to-violet-600/20">
+                            <FaLayerGroup className="text-4xl text-action/40 animate-pulse" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-sm">
+                          {proj.githubLink && (
+                            <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-white/10 hover:bg-white text-white hover:text-slate-900 rounded-2xl transition-all border border-white/20">
+                              <FaGithub size={20} />
+                            </a>
+                          )}
+                          {proj.liveLink && (
+                            <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-white/10 hover:bg-white text-white hover:text-action rounded-2xl transition-all border border-white/20">
+                              <FaGlobe size={20} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
 
+                      <div className="flex-1 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors">
+                            {proj.title}
+                          </h4>
+                          {proj.isFeatured && (
+                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase tracking-widest border border-amber-500/20">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        
+                        <p className="text-[var(--text-secondary)] text-sm leading-relaxed line-clamp-3">
+                          {proj.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {(proj.techStack || []).map((tech, tidx) => (
+                            <span key={tidx} className="px-3 py-1 rounded-lg bg-action/5 text-[9px] font-black uppercase tracking-tighter text-[var(--action)] border border-action/10">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                         <div className="flex items-center gap-4">
+                            {proj.githubLink && (
+                              <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--action)] transition-colors flex items-center gap-2">
+                                <FaGithub /> GitHub
+                              </a>
+                            )}
+                            {proj.liveLink && (
+                              <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--action)] transition-colors flex items-center gap-2">
+                                <FaGlobe /> Live Demo
+                              </a>
+                            )}
+                         </div>
+                         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[var(--text-secondary)] opacity-40">
+                           <FaCheckCircle size={14} />
+                         </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            )}
 
 
             {/* Certifications Section */}
@@ -1296,47 +1524,6 @@ const PublicProfile = () => {
               </div>
             </section>
 
-            {/* Categorized Skills */}
-            <section
-              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
-            >
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6 text-[var(--text-secondary)]">
-                {sectionNames.skills}
-              </h3>
-
-              <div className="space-y-8">
-                {/* Group skills by category */}
-                {Object.entries(
-                  (user.skills || []).reduce((acc, skill) => {
-                    if (!acc[skill.category]) acc[skill.category] = [];
-                    acc[skill.category].push(skill.name);
-                    return acc;
-                  }, {})
-                ).map(([category, names]) => (
-                  <div key={category}>
-                    <label className={`text-[9px] font-black uppercase mb-4 block tracking-widest ${
-                      category === 'Technical' ? 'text-[var(--action)]' : 
-                      category === 'Medical' ? 'text-emerald-500' :
-                      category === 'Soft Skills' ? 'text-amber-500' : 'text-violet-500'
-                    }`}>
-                      {category}
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {names.map((name, idx) => (
-                        <span
-                          key={idx}
-                          className="px-4 py-2 bg-foreground/5 text-[var(--text-primary)] rounded-xl text-xs font-black border border-border-subtle hover:border-action transition-all duration-300"
-                        >
-                          {name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-
-
-              </div>
-            </section>
 
             {/* Languages Card */}
             {user.languages && user.languages.length > 0 && (
@@ -1388,96 +1575,6 @@ const PublicProfile = () => {
           </div>
         </div>
 
-        {/* Projects Section 2.0 */}
-        <div className="mt-20 space-y-10">
-          <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] flex items-center gap-4">
-            {sectionNames.projects}{" "}
-            <span className="flex-1 h-px bg-border-subtle"></span>
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {portfolio.map((proj, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ y: -10 }}
-                className={`group ${cardClasses} rounded-[2rem] overflow-hidden border border-border-subtle shadow-xl`}
-              >
-                <div className="h-52 relative overflow-hidden">
-                  <img
-                    src={
-                      proj.thumbnail ||
-                      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800"
-                    }
-                    alt={proj.title || "Project Snapshot"}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-midnight/80 to-transparent p-6 flex flex-col justify-end">
-                    <div className="flex flex-wrap gap-2">
-                      {proj.techStack?.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[8px] font-black bg-white/20 backdrop-blur-md text-white px-2 py-0.5 rounded-lg border border-white/10 uppercase"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="p-8">
-                  <InlineEdit
-                    value={proj.title}
-                    onSave={(val) =>
-                      handleArrayUpdate(user.portfolio ? "portfolio" : "projects", i, { title: val })
-                    }
-                    isOwner={user.isOwner}
-                    label="Project Title"
-                    className="text-xl font-black text-[var(--text-primary)] mb-2 line-clamp-1 block"
-                  />
-                  <InlineEdit
-                    value={proj.description}
-                    onSave={(val) =>
-                      handleArrayUpdate(user.portfolio ? "portfolio" : "projects", i, { description: val })
-                    }
-                    isOwner={user.isOwner}
-                    multiline={true}
-                    label="Project Description"
-                    className="text-xs text-[var(--text-secondary)] font-medium line-clamp-2 leading-relaxed mb-6 block"
-                  />
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-4">
-                      {proj.liveLink && (
-                        <a
-                          href={ensureAbsoluteUrl(proj.liveLink)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[var(--action)] hover:scale-110 transition-transform"
-                        >
-                          <FaGlobe size={18} />
-                        </a>
-                      )}
-                      {proj.githubLink && (
-                        <a
-                          href={ensureAbsoluteUrl(proj.githubLink)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[var(--text-primary)] hover:scale-110 transition-transform"
-                        >
-                          <FaGithub size={18} />
-                        </a>
-                      )}
-                    </div>
-                    {proj.isFeatured && (
-                      <span className="text-[8px] bg-amber-500 text-white px-3 py-1 rounded-full font-black uppercase">
-                        Starred
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </main>
 
       {/* Recruiter Sticky Action Footer */}
