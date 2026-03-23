@@ -851,9 +851,14 @@ const PublicProfile = () => {
                   </div>
                   <div className="text-left">
                     <div className="text-[8px] font-bold uppercase tracking-widest opacity-60">Location</div>
-                    <div className="text-xs font-black transition-colors" style={{ color: theme.textPrimary }}>
-                      {user.location || "Available Remote"}
-                    </div>
+                    <InlineEdit
+                      value={user.location || "Available Remote"}
+                      onSave={(val) => handleLiveUpdate({ location: val })}
+                      isOwner={user.isOwner}
+                      label="Location"
+                      className="text-xs font-black transition-colors block"
+                      style={{ color: theme.textPrimary }}
+                    />
                   </div>
                 </div>
               </motion.div>
@@ -865,19 +870,20 @@ const PublicProfile = () => {
               <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md ${
-                  user.availability === "Open to Work"
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                    : user.availability === "Freelance Available"
-                      ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
-                      : "bg-red-500/10 border-red-500/30 text-red-400"
-                }`}
               >
-                <div className={`w-2 h-2 rounded-full animate-pulse shadow-glow ${
-                  user.availability === "Open to Work" ? "bg-emerald-400" :
-                  user.availability === "Freelance Available" ? "bg-amber-400" : "bg-red-400"
-                }`} />
-                {user.availability || "Open to Work"}
+                <InlineEdit
+                  value={user.availability || "Open to Work"}
+                  onSave={(val) => handleLiveUpdate({ availability: val })}
+                  isOwner={user.isOwner}
+                  label="Availability Status"
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md cursor-pointer ${
+                    user.availability === "Open to Work"
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                      : user.availability === "Freelance Available"
+                        ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                        : "bg-red-500/10 border-red-500/30 text-red-400"
+                  }`}
+                />
               </motion.div>
 
               <div className="space-y-4">
@@ -932,28 +938,53 @@ const PublicProfile = () => {
                     <FaWhatsapp className="text-green-500 text-xl group-hover:scale-110 transition-transform" />
                     <div className="text-left">
                       <div className="text-[10px] font-black text-white/50 uppercase tracking-widest leading-none mb-1">WhatsApp</div>
-                      <div className="text-xs font-black text-white">{user.phoneNumber}</div>
+                      <InlineEdit
+                        value={user.phoneNumber}
+                        onSave={(val) => handleLiveUpdate({ phoneNumber: val })}
+                        isOwner={user.isOwner}
+                        label="Phone Number"
+                        className="text-xs font-black text-white block"
+                      />
                     </div>
                   </motion.a>
                 )}
                 
                 <div className="flex items-center gap-3">
                   {[
-                    { icon: <FaLinkedin />, link: user.socialLinks?.linkedin, title: "LinkedIn", color: "hover:text-blue-500" },
-                    { icon: <FaGithub />, link: user.socialLinks?.github, title: "GitHub", color: "hover:text-slate-400" },
-                    { icon: <FaTwitter />, link: user.socialLinks?.twitter, title: "Twitter", color: "hover:text-blue-400" },
-                    { icon: <FaGlobe />, link: user.socialLinks?.portfolio, title: "Portfolio", color: "hover:text-action" }
-                  ].map((social, idx) => social.link && (
-                    <a
-                      key={idx}
-                      href={ensureAbsoluteUrl(social.link)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white transition-all hover:-translate-y-1 ${social.color}`}
-                      title={social.title}
-                    >
-                      {social.icon}
-                    </a>
+                    { icon: <FaLinkedin />, key: "linkedin", title: "LinkedIn", color: "hover:text-blue-500" },
+                    { icon: <FaGithub />, key: "github", title: "GitHub", color: "hover:text-slate-400" },
+                    { icon: <FaTwitter />, key: "twitter", title: "Twitter", color: "hover:text-blue-400" },
+                    { icon: <FaGlobe />, key: "portfolio", title: "Portfolio", color: "hover:text-action" }
+                  ].map((social, idx) => (user.socialLinks?.[social.key] || user.isOwner) && (
+                    <div key={idx} className="relative group/social">
+                      <a
+                        href={user.socialLinks?.[social.key] ? ensureAbsoluteUrl(user.socialLinks[social.key]) : "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          if (!user.socialLinks?.[social.key]) e.preventDefault();
+                          handleTrackInteraction("contact");
+                        }}
+                        className={`w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white transition-all hover:-translate-y-1 ${social.color} ${!user.socialLinks?.[social.key] ? 'opacity-30 grayscale' : ''}`}
+                        title={social.title}
+                      >
+                        {social.icon}
+                      </a>
+                      {user.isOwner && (
+                        <button
+                          onClick={() => {
+                            const newUrl = prompt(`Enter ${social.title} URL:`, user.socialLinks?.[social.key] || "");
+                            if (newUrl !== null) {
+                              const newSocials = { ...(user.socialLinks || {}), [social.key]: newUrl };
+                              handleLiveUpdate({ socialLinks: newSocials });
+                            }
+                          }}
+                          className="absolute -top-2 -right-2 p-1 bg-action text-white rounded-full opacity-0 group-hover/social:opacity-100 transition-all shadow-lg z-20"
+                        >
+                          <FaCog size={10} />
+                        </button>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -1037,8 +1068,20 @@ const PublicProfile = () => {
                       <FaBriefcase className="text-[var(--action)] text-sm" />
                     </div>
 
-                    <div className={`${cardClasses} p-8 md:p-10 rounded-[2.5rem] hover:border-[var(--action)] transition-all group relative overflow-hidden`}>
-                      <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-action/10 transition-colors"></div>
+                        <div className={`${cardClasses} p-8 md:p-10 rounded-[2.5rem] hover:border-[var(--action)] transition-all group relative overflow-hidden`}>
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-action/10 transition-colors"></div>
+                          {user.isOwner && (
+                            <button
+                               onClick={() => {
+                                 const confirmDelete = window.confirm("Delete this experience?");
+                                 if(confirmDelete) handleLiveUpdate({ experience: user.experience.filter((_, i) => i !== idx) });
+                               }}
+                               className="absolute top-6 right-6 p-3 bg-red-500/10 text-red-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white z-20 shadow-xl"
+                               title="Delete Experience"
+                            >
+                               <FaTrashAlt size={14} />
+                            </button>
+                          )}
 
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
                         <div className="flex-1">
@@ -1147,6 +1190,15 @@ const PublicProfile = () => {
                     </div>
                   </motion.div>
                 ))}
+                {user.isOwner && (
+                   <button 
+                     onClick={() => handleLiveUpdate({ experience: [...(user.experience || []), { role: "New Role", company: "New Company", startDate: "Start", endDate: "Present", isCurrent: true, achievements: "", responsibilities: [], tools: [] }] })}
+                     className="w-full p-10 rounded-[2.5rem] border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100 flex flex-col items-center justify-center gap-4 bg-white/5"
+                   >
+                     <FaPlus className="text-3xl text-action" />
+                     <span className="text-sm font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">Add Work Experience</span>
+                   </button>
+                )}
               </div>
             </section>
 
@@ -1165,6 +1217,18 @@ const PublicProfile = () => {
                       <FaGraduationCap size={18} />
                     </div>
                     <div className={`${cardClasses} p-6 rounded-[2rem] hover:border-[var(--action)] transition-all group overflow-hidden relative`}>
+                      {user.isOwner && (
+                        <button
+                           onClick={() => {
+                             const confirmDelete = window.confirm("Delete this education record?");
+                             if(confirmDelete) handleLiveUpdate({ education: user.education.filter((_, idx) => idx !== i) });
+                           }}
+                           className="absolute top-4 right-4 p-2 bg-red-500/10 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white z-20"
+                           title="Delete Education"
+                        >
+                           <FaTrashAlt size={12} />
+                        </button>
+                      )}
                       <InlineEdit
                         value={edu.degree}
                         onSave={(val) =>
@@ -1186,18 +1250,43 @@ const PublicProfile = () => {
                         className="text-sm font-bold text-[var(--text-secondary)] mt-1 block"
                       />
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
-                          {edu.graduationDate || "Graduated"}
-                        </span>
+                        <div className="flex items-center gap-1 text-[10px] font-black text-orange-600 bg-orange-500/5 px-2 py-0.5 rounded-lg border border-orange-500/10 uppercase tracking-tighter">
+                          <InlineEdit
+                             value={edu.startYear}
+                             onSave={(val) => handleArrayUpdate("education", i, { startYear: val })}
+                             isOwner={user.isOwner}
+                             label="Start"
+                          />
+                          <span>-</span>
+                          <InlineEdit
+                             value={edu.endYear || edu.graduationDate}
+                             onSave={(val) => handleArrayUpdate("education", i, { endYear: val, graduationDate: val })}
+                             isOwner={user.isOwner}
+                             label="End"
+                          />
+                        </div>
                       </div>
-                      {edu.description && (
-                        <p className="text-xs font-medium text-[var(--text-secondary)] mt-4 leading-relaxed group-hover:text-[var(--text-primary)] transition-colors italic">
-                          "{edu.description}"
-                        </p>
-                      )}
+                      <InlineEdit
+                        value={edu.description}
+                        onSave={(val) => handleArrayUpdate("education", i, { description: val })}
+                        isOwner={user.isOwner}
+                        multiline={true}
+                        label="Details"
+                        placeholder="Describe your achievements..."
+                        className="text-xs font-medium text-[var(--text-secondary)] mt-4 leading-relaxed group-hover:text-[var(--text-primary)] transition-colors italic block"
+                      />
                     </div>
                   </div>
                 ))}
+                {user.isOwner && (
+                  <button 
+                    onClick={() => handleLiveUpdate({ education: [...(user.education || []), { institution: "University/School", degree: "Degree Name", startYear: "YYYY", endYear: "YYYY", graduationDate: "YYYY", description: "" }] })}
+                    className="w-full p-8 rounded-[2rem] border-2 border-dashed border-white/10 hover:border-orange-500/40 transition-all group opacity-60 hover:opacity-100 flex flex-col items-center justify-center gap-3 bg-white/5"
+                  >
+                    <FaPlus className="text-2xl text-orange-500" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Education Record</span>
+                  </button>
+                )}
               </div>
             </section>
 
@@ -1214,7 +1303,7 @@ const PublicProfile = () => {
                   {user.services.map((service, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col gap-3 p-6 rounded-3xl border transition-all hover:-translate-y-1 shadow-sm hover:shadow-xl"
+                      className="flex flex-col gap-3 p-6 rounded-3xl border transition-all hover:-translate-y-1 shadow-sm hover:shadow-xl group/service relative"
                       style={{
                         backgroundColor: theme.cardStyle === 'glass' ? 'color-mix(in srgb, var(--text-primary) 5%, transparent)' : 'color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))',
                         borderColor: theme.accentColor + '40',
@@ -1239,15 +1328,37 @@ const PublicProfile = () => {
                         >
                           💼
                         </span>
-                        <h4 className="font-black text-base leading-tight">
-                          {service.title}
-                        </h4>
+                        <InlineEdit
+                          value={service.title}
+                          onSave={(val) => handleArrayUpdate("services", idx, { title: val })}
+                          isOwner={user.isOwner}
+                          label="Service Title"
+                          className="font-black text-base leading-tight block w-full"
+                        />
                       </div>
-                      <p className="text-sm leading-relaxed opacity-80 mt-1 font-medium">
-                        {service.description}
-                      </p>
+                      <InlineEdit
+                        value={service.description}
+                        onSave={(val) => handleArrayUpdate("services", idx, { description: val })}
+                        isOwner={user.isOwner}
+                        multiline={true}
+                        label="Description"
+                        className="text-sm leading-relaxed opacity-80 mt-1 font-medium block"
+                      />
                     </div>
                   ))}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => {
+                        handleLiveUpdate({ 
+                          services: [...(user.services || []), { title: "New Service", description: "Describe your service..." }] 
+                        });
+                      }}
+                      className="flex flex-col items-center justify-center gap-3 p-6 rounded-3xl border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100"
+                    >
+                      <FaPlus className="text-2xl text-action" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Service</span>
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1270,6 +1381,17 @@ const PublicProfile = () => {
                       transition={{ delay: idx * 0.1 }}
                       className={`${cardClasses} p-8 rounded-[2.5rem] flex flex-col h-full group hover:shadow-glow-action transition-all border relative overflow-hidden`}
                     >
+                      {user.isOwner && (
+                         <button
+                           onClick={() => {
+                             if(window.confirm("Delete this project?")) handleLiveUpdate({ portfolio: portfolio.filter((_, i) => i !== idx) });
+                           }}
+                           className="absolute top-4 left-4 p-2 bg-red-500/10 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white z-20"
+                           title="Delete Project"
+                         >
+                           <FaTrashAlt size={12} />
+                         </button>
+                      )}
                       <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-[60px] -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
 
                       {/* Project Thumbnail Placeholder/Generated */}
@@ -1297,19 +1419,28 @@ const PublicProfile = () => {
 
                       <div className="flex-1 space-y-4">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors">
-                            {proj.title}
-                          </h4>
+                          <InlineEdit
+                             value={proj.title}
+                             onSave={(val) => handleArrayUpdate("portfolio", idx, { title: val })}
+                             isOwner={user.isOwner}
+                             label="Project Name"
+                             className="text-xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors block w-full"
+                          />
                           {proj.isFeatured && (
-                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase tracking-widest border border-amber-500/20">
+                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase tracking-widest border border-amber-500/20 flex-shrink-0">
                               Featured
                             </span>
                           )}
                         </div>
                         
-                        <p className="text-[var(--text-secondary)] text-sm leading-relaxed line-clamp-3">
-                          {proj.description}
-                        </p>
+                        <InlineEdit
+                          value={proj.description}
+                          onSave={(val) => handleArrayUpdate("portfolio", idx, { description: val })}
+                          isOwner={user.isOwner}
+                          multiline={true}
+                          label="Project Description"
+                          className="text-[var(--text-secondary)] text-sm leading-relaxed block"
+                        />
 
                         <div className="flex flex-wrap gap-2 pt-2">
                           {(proj.techStack || []).map((tech, tidx) => (
@@ -1339,6 +1470,15 @@ const PublicProfile = () => {
                       </div>
                     </motion.div>
                   ))}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => handleLiveUpdate({ portfolio: [...(portfolio || []), { title: "New Project", description: "Describe your project...", techStack: [], githubLink: "", liveLink: "", isFeatured: false }] })}
+                      className="w-full p-12 rounded-[2.5rem] border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100 flex flex-col items-center justify-center gap-4 bg-white/5 min-h-[400px]"
+                    >
+                      <FaPlus className="text-4xl text-action" />
+                      <span className="text-sm font-black uppercase tracking-[0.3em] text-[var(--text-secondary)]">Add Project to Portfolio</span>
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1364,15 +1504,30 @@ const PublicProfile = () => {
                           <FaCheckCircle size={20} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-lg font-black text-[var(--text-primary)] truncate">
-                            {cert.name}
-                          </h4>
-                          <p className="text-sm font-bold text-emerald-500">
-                            {cert.issuer}
-                          </p>
-                          <p className="text-[10px] font-black uppercase text-[var(--text-secondary)] mt-2 opacity-60">
-                            Issued: {cert.date}
-                          </p>
+                          <InlineEdit
+                            value={cert.name}
+                            onSave={(val) => handleArrayUpdate("certifications", idx, { name: val })}
+                            isOwner={user.isOwner}
+                            label="Certification Name"
+                            className="text-lg font-black text-[var(--text-primary)] truncate block w-full"
+                          />
+                          <InlineEdit
+                            value={cert.issuer}
+                            onSave={(val) => handleArrayUpdate("certifications", idx, { issuer: val })}
+                            isOwner={user.isOwner}
+                            label="Issuer"
+                            className="text-sm font-bold text-emerald-500 block w-full"
+                          />
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-[10px] font-black uppercase text-[var(--text-secondary)] opacity-60">Issued:</span>
+                            <InlineEdit
+                              value={cert.date}
+                              onSave={(val) => handleArrayUpdate("certifications", idx, { date: val })}
+                              isOwner={user.isOwner}
+                              label="Date"
+                              className="text-[10px] font-black uppercase text-[var(--text-secondary)]"
+                            />
+                          </div>
                           {cert.link && (
                             <a
                               href={ensureAbsoluteUrl(cert.link)}
@@ -1387,6 +1542,21 @@ const PublicProfile = () => {
                       </div>
                     </motion.div>
                   ))}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => {
+                        handleLiveUpdate({ 
+                          certifications: [...(user.certifications || []), { name: "New Certification", issuer: "Issuer Name", date: "MM/YYYY" }] 
+                        });
+                      }}
+                      className="flex items-center justify-center p-6 rounded-[2rem] border-2 border-dashed border-white/10 hover:border-emerald-500/40 transition-all group opacity-60 hover:opacity-100 min-h-[140px]"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <FaPlus className="text-xl text-emerald-500" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Cert</span>
+                      </div>
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1413,20 +1583,48 @@ const PublicProfile = () => {
                             <span className="text-xl">🏆</span>
                           </div>
                           <div>
-                            <h4 className="text-xl font-black text-[var(--text-primary)]">
-                              {ach.title}
-                            </h4>
-                            <span className="text-[10px] font-black text-amber-600 bg-amber-500/5 px-2 py-0.5 rounded-lg border border-amber-500/10 uppercase tracking-tighter">
-                              {ach.date}
-                            </span>
+                            <InlineEdit
+                              value={ach.title}
+                              onSave={(val) => handleArrayUpdate("achievements", idx, { title: val })}
+                              isOwner={user.isOwner}
+                              label="Award Title"
+                              className="text-xl font-black text-[var(--text-primary)] block w-full"
+                            />
+                            <div className="flex items-center gap-2 mt-1">
+                               <InlineEdit
+                                 value={ach.date}
+                                 onSave={(val) => handleArrayUpdate("achievements", idx, { date: val })}
+                                 isOwner={user.isOwner}
+                                 label="Date"
+                                 className="text-[10px] font-black text-amber-600 bg-amber-500/5 px-2 py-0.5 rounded-lg border border-amber-500/10 uppercase tracking-tighter"
+                               />
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <p className="text-sm font-medium text-[var(--text-secondary)] leading-relaxed relative z-10">
-                        {ach.description}
-                      </p>
+                      <InlineEdit
+                        value={ach.description}
+                        onSave={(val) => handleArrayUpdate("achievements", idx, { description: val })}
+                        isOwner={user.isOwner}
+                        multiline={true}
+                        label="Description"
+                        className="text-sm font-medium text-[var(--text-secondary)] leading-relaxed relative z-10 block"
+                      />
                     </motion.div>
                   ))}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => {
+                        handleLiveUpdate({ 
+                          achievements: [...(user.achievements || []), { title: "New Award", date: "YYYY", description: "Describe your achievement..." }] 
+                        });
+                      }}
+                      className={`${cardClasses} w-full p-8 rounded-[2.5rem] border-2 border-dashed border-white/10 hover:border-amber-500/40 transition-all flex flex-col items-center justify-center gap-3 group opacity-60 hover:opacity-100`}
+                    >
+                       <FaPlus className="text-2xl text-amber-500" />
+                       <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Achievement</span>
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1511,25 +1709,24 @@ const PublicProfile = () => {
                       className={`flex items-center justify-between p-4 ${theme.cardStyle === 'classic' ? 'bg-foreground/5 dark:bg-slate-800' : 'bg-foreground/5 dark:bg-midnight/30'} rounded-2xl border border-border-subtle group hover:border-action/30 transition-all`}
                     >
                       <div>
-                        <h4 className="text-sm font-black text-[var(--text-primary)]">
-                          {lang.name}
-                        </h4>
+                        <InlineEdit
+                          value={lang.name}
+                          onSave={(val) => handleArrayUpdate("languages", i, { name: val })}
+                          isOwner={user.isOwner}
+                          label="Language"
+                          className="text-sm font-black text-[var(--text-primary)] block"
+                        />
                         <div className="flex gap-1 mt-1">
                           {[1, 2, 3, 4].map((step) => {
-                            const levels = [
-                              "Beginner",
-                              "Professional",
-                              "Advanced",
-                              "Native",
-                            ];
-                            const currentLevelIdx = levels.indexOf(
-                              lang.proficiency,
-                            );
+                            const levels = ["Beginner", "Professional", "Advanced", "Native"];
+                            const currentLevelIdx = levels.indexOf(lang.proficiency);
                             const isActive = step <= currentLevelIdx + 1;
                             return (
-                              <div
+                              <button
                                 key={step}
-                                className={`h-1 w-6 rounded-full transition-all duration-500 ${isActive ? "bg-action" : "bg-foreground/10"}`}
+                                onClick={() => user.isOwner && handleArrayUpdate("languages", i, { proficiency: levels[step-1] })}
+                                className={`h-1 w-6 rounded-full transition-all duration-500 ${isActive ? "bg-action" : "bg-foreground/10"} ${user.isOwner ? 'cursor-pointer hover:bg-action/50' : 'cursor-default'}`}
+                                title={levels[step-1]}
                               />
                             );
                           })}
@@ -1540,6 +1737,15 @@ const PublicProfile = () => {
                       </span>
                     </div>
                   ))}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => handleLiveUpdate({ languages: [...(user.languages || []), { name: "New Language", proficiency: "Professional" }] })}
+                      className="w-full p-4 rounded-2xl border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100 flex items-center justify-center gap-2"
+                    >
+                      <FaPlus className="text-xs text-action" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Language</span>
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1565,8 +1771,24 @@ const PublicProfile = () => {
                       return (
                         <div key={idx} className="space-y-3 group">
                           <div className="flex justify-between items-end">
-                            <span className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors">{skill.name}</span>
+                            <InlineEdit
+                              value={skill.name}
+                              onSave={(val) => handleArrayUpdate("skills", actualIdx, { name: val })}
+                              isOwner={user.isOwner}
+                              label="Skill Name"
+                              className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors block"
+                            />
                             <div className="flex items-center gap-1">
+                              {user.isOwner && (
+                                <button
+                                  onClick={() => {
+                                    if(window.confirm("Remove this skill?")) handleLiveUpdate({ skills: user.skills.filter((_, i) => i !== actualIdx) });
+                                  }}
+                                  className="p-1 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 rounded"
+                                >
+                                  <FaTrashAlt size={8} />
+                                </button>
+                              )}
                               <InlineEdit
                                 value={skill.percentage || 80}
                                 onSave={(val) => handleArrayUpdate("skills", actualIdx, { percentage: parseInt(val) || 80 })}
@@ -1588,6 +1810,15 @@ const PublicProfile = () => {
                         </div>
                       );
                     })}
+                  {user.isOwner && (
+                    <button
+                      onClick={() => handleLiveUpdate({ skills: [...(user.skills || []), { name: "New Skill", percentage: 80, category: "Technical" }] })}
+                      className="w-full p-4 rounded-2xl border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100 flex items-center justify-center gap-2"
+                    >
+                      <FaPlus className="text-xs text-action" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Skill</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Core Competencies (Badges) */}
@@ -1598,17 +1829,42 @@ const PublicProfile = () => {
                   <div className="flex flex-wrap gap-2">
                     {(user.skills || [])
                       .filter(s => s.category && s.category !== "Technical")
-                      .map((skill, idx) => (
+                      .map((skill, idx) => {
+                        const actualIdx = user.skills.findIndex(s => s.name === skill.name);
+                        return (
                         <motion.span
                           key={idx}
                           initial={{ scale: 0.8, opacity: 0 }}
                           whileInView={{ scale: 1, opacity: 1 }}
                           transition={{ delay: idx * 0.05 }}
-                          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-xs font-bold text-[var(--text-secondary)] transition-all cursor-default"
+                          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-xs font-bold text-[var(--text-secondary)] transition-all cursor-default group/skill relative"
                         >
-                          {skill.name}
+                          <InlineEdit
+                            value={skill.name}
+                            onSave={(val) => handleArrayUpdate("skills", actualIdx, { name: val })}
+                            isOwner={user.isOwner}
+                            label="Skill"
+                          />
+                          {user.isOwner && (
+                            <button
+                              onClick={() => {
+                                if(window.confirm("Remove this competency?")) handleLiveUpdate({ skills: user.skills.filter((_, i) => i !== actualIdx) });
+                              }}
+                              className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/skill:opacity-100 transition-all shadow-lg"
+                            >
+                              <FaTimes size={8} />
+                            </button>
+                          )}
                         </motion.span>
-                      ))}
+                      )})}
+                    {user.isOwner && (
+                      <button
+                        onClick={() => handleLiveUpdate({ skills: [...(user.skills || []), { name: "New Competency", category: "Soft Skills" }] })}
+                        className="px-4 py-2 rounded-xl bg-action/10 border-2 border-dashed border-action/20 hover:border-action/50 text-xs font-bold text-action transition-all"
+                      >
+                        + Add
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
