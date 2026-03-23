@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import ATSGauge from "../components/common/ATSGauge";
+import ATSResult from "../components/ats/ATSResult"; // [V3]
 
 const ATSPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -192,89 +193,9 @@ const ATSPage = () => {
         </div>
 
         {/* RIGHT: Results Section */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-12 xl:col-span-7">
           {result ? (
-            <div className="space-y-6 animate-in slide-in-from-bottom duration-700">
-              {/* Score Dashboard */}
-              <div className="glass p-10 rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col md:flex-row items-center gap-10">
-                <ATSGauge score={result.score.overall} />
-
-                <div className="flex-1 grid grid-cols-2 gap-6 w-full">
-                  {[
-                    { label: "Keyword Match", val: result.score.keywordMatch },
-                    { label: "Structure", val: result.score.structure },
-                    { label: "Relevance", val: result.score.relevance },
-                    { label: "Formatting", val: result.score.formatting },
-                  ].map((item, i) => (
-                    <div key={i} className="space-y-2">
-                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                        <span>{item.label}</span>
-                        <span className="text-primary">{item.val}%</span>
-                      </div>
-                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-primary transition-all duration-1000 ease-out"
-                          style={{ width: `${item.val}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Feedback Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="glass p-8 rounded-[2.5rem] border border-white/5 space-y-5">
-                  <h3 className="flex items-center gap-3 text-emerald-400 font-black uppercase tracking-widest text-xs">
-                    <FaCheckCircle /> Strengths
-                  </h3>
-                  <ul className="space-y-3">
-                    {result.feedback.positives.map((p, i) => (
-                      <li
-                        key={i}
-                        className="text-xs font-bold text-text-secondary leading-relaxed flex gap-3"
-                      >
-                        <span className="text-emerald-500">•</span> {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="glass p-8 rounded-[2.5rem] border border-white/5 space-y-5">
-                  <h3 className="flex items-center gap-3 text-orange-400 font-black uppercase tracking-widest text-xs">
-                    <FaExclamationTriangle /> Areas to Improve
-                  </h3>
-                  <ul className="space-y-3">
-                    {result.feedback.improvements.map((p, i) => (
-                      <li
-                        key={i}
-                        className="text-xs font-bold text-text-secondary leading-relaxed flex gap-3"
-                      >
-                        <span className="text-orange-500">•</span> {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Missing Keywords */}
-              {(result.feedback.keywordGaps || result.feedback.missingKeywords)?.length > 0 && (
-                <div className="glass p-8 rounded-[2.5rem] border border-white/5 space-y-5">
-                  <h3 className="flex items-center gap-3 text-blue-400 font-black uppercase tracking-widest text-xs text-center">
-                    <FaChartLine /> Missing Keywords (Target these)
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(result.feedback.keywordGaps || result.feedback.missingKeywords).map((k, i) => (
-                      <span
-                        key={i}
-                        className="py-2 px-4 rounded-xl bg-blue-500/10 text-blue-400 text-[10px] font-black border border-blue-500/20"
-                      >
-                        {k}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <ATSResult data={result} />
           ) : (
             <div className="glass rounded-[3rem] border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]">
               <div className="w-32 h-32 bg-primary/10 text-primary rounded-[3rem] flex items-center justify-center mx-auto mb-10 shadow-glow animate-pulse">
