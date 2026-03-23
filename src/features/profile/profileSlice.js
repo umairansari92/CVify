@@ -14,6 +14,33 @@ export const fetchPublicProfile = createAsyncThunk(
   }
 );
 
+// Apply AI Suggestion Fix
+export const applyAtsFix = createAsyncThunk(
+  "profile/applyFix",
+  async ({ field, index, jobDescription, bulletPoints }, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.post("/ats/rewrite", {
+        bulletPoints,
+        jobDescription
+      });
+      
+      const { optimizedBullets } = response.data;
+      
+      // Update local profile state
+      if (index !== undefined) {
+        // It's an array field (like experience responsibilities)
+        // Note: The UI will handle the specific mapping, but we can pass the final updated array here if we wanted.
+        // For simplicity, let's just return the new bullets and let the component handle the local update via updateActiveProfileLocally if needed, 
+        // OR we can do the full patch here.
+      }
+      
+      return { field, index, optimizedBullets };
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Failed to apply fix");
+    }
+  }
+);
+
 // Fetch private analytics (Owner only)
 export const fetchProfileAnalytics = createAsyncThunk(
   "profile/fetchAnalytics",

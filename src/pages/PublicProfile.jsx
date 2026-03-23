@@ -25,6 +25,8 @@ import {
   FaFont,
   FaLayerGroup,
   FaShareAlt,
+  FaExclamationTriangle,
+  FaArrowRight,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
@@ -33,7 +35,8 @@ import {
   fetchPublicProfile, 
   fetchProfileAnalytics,
   updateActiveProfileLocally,
-  clearActiveProfile 
+  clearActiveProfile,
+  applyAtsFix
 } from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
@@ -86,7 +89,7 @@ const PublicProfile = () => {
       const fetchAts = async () => {
         try {
           const atsResponse = await api.get(`/ats/public-score/${username}`);
-          if (atsResponse.data?.score) setAtsScore(atsResponse.data.score);
+          if (atsResponse.data) setAtsScore(atsResponse.data);
         } catch (err) {
           console.warn("ATS score fetch failed");
         }
@@ -298,6 +301,38 @@ const PublicProfile = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to generate PDF", { id: "pdf-gen" });
+    }
+  };
+
+  const handleApplyFix = async (suggestion) => {
+    if (!user.isOwner) {
+       toast.error("Login to apply AI fixes to your profile!");
+       return;
+    }
+
+    const toastId = toast.loading("AI is optimizing your profile...");
+    try {
+      // Logic to find which part of the profile needs fixing.
+      // For now, if no specific field is provided by the AI, we focus on the latest experience.
+      const field = "experience";
+      const index = 0; // Defaulting to latest experience for now
+      const bulletPoints = user.experience?.[index]?.achievements?.split("\n") || [];
+
+      const res = await dispatch(applyAtsFix({
+        field,
+        index,
+        jobDescription: user.headline, // Using user's headline as a proxy for target JD
+        bulletPoints
+      })).unwrap();
+
+      if (res.optimizedBullets) {
+        const newArray = [...user[field]];
+        newArray[index] = { ...newArray[index], achievements: res.optimizedBullets.join("\n") };
+        await handleLiveUpdate({ [field]: newArray });
+        toast.success("AI Fix Applied! Score boosted.", { id: toastId });
+      }
+    } catch (err) {
+      toast.error("Failed to apply AI fix.", { id: toastId });
     }
   };
 
@@ -830,33 +865,45 @@ const PublicProfile = () => {
                   />
                 </div>
                 
-                {/* ATS Badge [V3.1 Dynamic] */}
-                {atsScore && (
-                  <div className="absolute -top-4 -right-4 px-4 py-2 bg-gradient-to-br from-action to-violet-600 rounded-2xl shadow-2xl border border-white/20 z-20 animate-bounce-subtle">
-                    <div className="text-[9px] font-black text-white uppercase tracking-widest leading-none mb-1 text-center">ATS Match</div>
-                    <div className="text-lg font-black text-white leading-none text-center">{atsScore}%</div>
-                  </div>
+                {/* ATS Authority Proof Layer [V3.2] */}
+                {atsScore?.score && (
+                  <motion.div 
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="absolute -top-6 -right-6 px-6 py-3 bg-gradient-to-br from-action via-violet-600 to-indigo-700 rounded-[2rem] shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] border border-white/30 z-20 group/ats cursor-help"
+                  >
+                    <div className="text-[10px] font-black text-white/80 uppercase tracking-[0.2em] leading-none mb-1 text-center">ATS Match</div>
+                    <div className="text-3xl font-black text-white leading-none text-center flex items-center justify-center gap-1">
+                      {atsScore.score}
+                      <span className="text-sm opacity-60">%</span>
+                    </div>
+                    {atsScore.improvement > 0 && (
+                      <div className="mt-1 flex items-center justify-center gap-1 text-[8px] font-black text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                        <span>↑</span> {atsScore.improvement}% AI Boost
+                      </div>
+                    )}
+                  </motion.div>
                 )}
 
                 <div 
-                  className="absolute -bottom-6 -right-4 p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-3 border z-20 group"
+                  className="absolute -bottom-6 -right-4 p-4 pr-8 rounded-3xl shadow-2xl flex items-center gap-4 border z-20 group backdrop-blur-3xl overflow-hidden"
                   style={{
-                    backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 8%, ${theme.bodyBg})` : theme.bodyBg,
-                    backdropFilter: theme.cardStyle === 'glass' ? 'blur(20px)' : 'none',
+                    backgroundColor: theme.cardStyle === 'glass' ? `color-mix(in srgb, ${theme.textPrimary} 10%, ${theme.bodyBg})` : theme.bodyBg,
                     borderColor: `color-mix(in srgb, ${theme.textPrimary} 20%, transparent)`
                   }}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center">
-                    <FaMapMarkerAlt style={{ color: theme.accentColor }} className="animate-pulse" />
+                  <div className="absolute inset-0 bg-action/5 animate-pulse" />
+                  <div className="w-10 h-10 rounded-2xl bg-action/10 flex items-center justify-center relative z-10 shadow-inner">
+                    <FaMapMarkerAlt style={{ color: theme.accentColor }} className="text-lg" />
                   </div>
-                  <div className="text-left">
-                    <div className="text-[8px] font-bold uppercase tracking-widest opacity-60">Location</div>
+                  <div className="text-left relative z-10">
+                    <div className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-0.5">Base Location</div>
                     <InlineEdit
                       value={user.location || "Available Remote"}
                       onSave={(val) => handleLiveUpdate({ location: val })}
                       isOwner={user.isOwner}
                       label="Location"
-                      className="text-xs font-black transition-colors block"
+                      className="text-sm font-black transition-colors block leading-tight"
                       style={{ color: theme.textPrimary }}
                     />
                   </div>
@@ -865,18 +912,23 @@ const PublicProfile = () => {
             </div>
 
             {/* Right Column: Bio & Actions */}
-            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
-              {/* Availability Badge */}
+            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-10">
+              {/* Premium Proof Tagline */}
               <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
+                className="flex items-center gap-3"
               >
+                <div className="px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/10 shadow-xl text-white/50 flex items-center gap-2">
+                  <FaGem className="text-amber-500" />
+                  Optimized using AI Resume Intelligence
+                </div>
                 <InlineEdit
                   value={user.availability || "Open to Work"}
                   onSave={(val) => handleLiveUpdate({ availability: val })}
                   isOwner={user.isOwner}
                   label="Availability Status"
-                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-lg backdrop-blur-md cursor-pointer ${
+                  className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-xl backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 ${
                     user.availability === "Open to Work"
                       ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
                       : user.availability === "Freelance Available"
@@ -886,11 +938,11 @@ const PublicProfile = () => {
                 />
               </motion.div>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <motion.h1
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="text-4xl md:text-7xl font-black tracking-tight text-white leading-tight"
+                  className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.9] drop-shadow-2xl"
                 >
                   <InlineEdit
                     value={`${user.firstName} ${user.lastName}`}
@@ -907,54 +959,59 @@ const PublicProfile = () => {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="flex flex-wrap items-center justify-center lg:justify-start gap-4"
+                  className="space-y-4"
                 >
-                  <InlineEdit
-                    value={user.headline}
-                    onSave={(val) => handleLiveUpdate({ headline: val })}
-                    isOwner={user.isOwner}
-                    label="Headline"
-                    className="text-xl md:text-3xl font-bold text-white/90 leading-tight block"
-                  />
-                  {user.industry && user.industry !== "Other" && (
-                    <span className="px-4 py-1 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20 shadow-lg text-white/70">
-                      {user.industry}
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                    <span className="text-xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40 leading-tight block">
+                      <InlineEdit
+                        value={user.headline || "Professional Developer"}
+                        onSave={(val) => handleLiveUpdate({ headline: val })}
+                        isOwner={user.isOwner}
+                        label="Headline"
+                      />
                     </span>
-                  )}
+                    {user.industry && user.industry !== "Other" && (
+                      <span className="px-5 py-1.5 bg-action/20 backdrop-blur-2xl rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] border border-action/30 shadow-2xl text-white">
+                        {user.industry}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Dynamic Authority Line [V3.2] */}
+                  <div className="flex items-center gap-3 text-[var(--action)] text-sm font-black uppercase tracking-widest animate-pulse">
+                    <div className="w-8 h-px bg-current opacity-40" />
+                    AI-Optimized Performance Profile
+                    <div className="w-8 h-px bg-current opacity-40" />
+                  </div>
                 </motion.div>
               </div>
 
-              {/* Contact Row */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6">
+              {/* Contact & Social Row */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
                 {user.phoneNumber && (
                   <motion.a
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     href={`https://wa.me/${user.phoneNumber.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleTrackInteraction("contact")}
-                    className="flex items-center gap-3 px-6 py-3 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 rounded-2xl transition-all group"
+                    className="flex items-center gap-4 px-8 py-4 bg-green-500/10 hover:bg-green-500/20 border-2 border-green-500/20 rounded-[2rem] transition-all group shadow-xl"
                   >
-                    <FaWhatsapp className="text-green-500 text-xl group-hover:scale-110 transition-transform" />
+                    <FaWhatsapp className="text-green-500 text-2xl group-hover:rotate-12 transition-transform" />
                     <div className="text-left">
-                      <div className="text-[10px] font-black text-white/50 uppercase tracking-widest leading-none mb-1">WhatsApp</div>
-                      <InlineEdit
-                        value={user.phoneNumber}
-                        onSave={(val) => handleLiveUpdate({ phoneNumber: val })}
-                        isOwner={user.isOwner}
-                        label="Phone Number"
-                        className="text-xs font-black text-white block"
-                      />
+                      <div className="text-[10px] font-black text-white/40 uppercase tracking-widest leading-none mb-1.5">WhatsApp Direct</div>
+                      <span className="text-sm font-black text-white block leading-none">{user.phoneNumber}</span>
                     </div>
                   </motion.a>
                 )}
                 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   {[
-                    { icon: <FaLinkedin />, key: "linkedin", title: "LinkedIn", color: "hover:text-blue-500" },
-                    { icon: <FaGithub />, key: "github", title: "GitHub", color: "hover:text-slate-400" },
-                    { icon: <FaTwitter />, key: "twitter", title: "Twitter", color: "hover:text-blue-400" },
-                    { icon: <FaGlobe />, key: "portfolio", title: "Portfolio", color: "hover:text-action" }
+                    { icon: <FaLinkedin />, key: "linkedin", title: "LinkedIn", color: "hover:bg-blue-600 shadow-blue-500/20" },
+                    { icon: <FaGithub />, key: "github", title: "GitHub", color: "hover:bg-slate-800 shadow-slate-500/20" },
+                    { icon: <FaTwitter />, key: "twitter", title: "Twitter", color: "hover:bg-sky-500 shadow-sky-500/20" },
+                    { icon: <FaGlobe />, key: "portfolio", title: "Portfolio", color: "hover:bg-action shadow-action/20" }
                   ].map((social, idx) => (user.socialLinks?.[social.key] || user.isOwner) && (
                     <div key={idx} className="relative group/social">
                       <a
@@ -965,61 +1022,194 @@ const PublicProfile = () => {
                           if (!user.socialLinks?.[social.key]) e.preventDefault();
                           handleTrackInteraction("contact");
                         }}
-                        className={`w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex items-center justify-center text-white transition-all hover:-translate-y-1 ${social.color} ${!user.socialLinks?.[social.key] ? 'opacity-30 grayscale' : ''}`}
+                        className={`w-14 h-14 bg-white/5 border border-white/10 rounded-[1.5rem] flex items-center justify-center text-xl text-white transition-all hover:-translate-y-2 hover:shadow-2xl ${social.color} ${!user.socialLinks?.[social.key] ? 'opacity-20 grayscale' : ''}`}
                         title={social.title}
                       >
                         {social.icon}
                       </a>
-                      {user.isOwner && (
-                        <button
-                          onClick={() => {
-                            const newUrl = prompt(`Enter ${social.title} URL:`, user.socialLinks?.[social.key] || "");
-                            if (newUrl !== null) {
-                              const newSocials = { ...(user.socialLinks || {}), [social.key]: newUrl };
-                              handleLiveUpdate({ socialLinks: newSocials });
-                            }
-                          }}
-                          className="absolute -top-2 -right-2 p-1 bg-action text-white rounded-full opacity-0 group-hover/social:opacity-100 transition-all shadow-lg z-20"
-                        >
-                          <FaCog size={10} />
-                        </button>
-                      )}
                     </div>
                   ))}
+                  
+                  {/* Share Trigger [V3.2] */}
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 15 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                       navigator.clipboard.writeText(window.location.href);
+                       toast.success("Profile link copied!");
+                    }}
+                    className="w-14 h-14 bg-action/10 border-2 border-action/20 rounded-[1.5rem] flex items-center justify-center text-xl text-action hover:bg-action hover:text-white transition-all shadow-xl shadow-action/10"
+                    title="Copy Profile Link"
+                  >
+                    <FaShareAlt />
+                  </motion.button>
                 </div>
               </div>
 
-              {/* Premium Action CTAs */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-6">
+              {/* Master Actions (V3.2 Action Layer) */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4 w-full">
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleDownload}
-                  className="px-10 py-5 bg-white text-midnight font-black rounded-3xl flex items-center gap-4 hover:shadow-glow-white transition-all shadow-2xl text-base group"
+                  className="flex-1 max-w-[280px] px-10 py-6 bg-white text-midnight font-black rounded-[2.5rem] flex items-center justify-center gap-5 hover:shadow-[0_20px_40px_-10px_rgba(255,255,255,0.3)] transition-all shadow-3xl text-base group relative overflow-hidden"
                   style={{ color: '#0f172a' }}
                 >
-                  <div className="w-8 h-8 rounded-xl bg-midnight/5 flex items-center justify-center group-hover:bg-midnight group-hover:text-white transition-colors">
-                    <FaDownload />
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                  <FaDownload className="text-xl group-hover:bounce-y" />
                   <span className="uppercase tracking-widest text-sm">Download Resume</span>
                 </motion.button>
-                <motion.a
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  href={`mailto:${user.email}?subject=Professional Collaboration Inquiry`}
-                  onClick={() => handleTrackInteraction("contact")}
-                  className="px-10 py-5 bg-action text-white font-black rounded-3xl flex items-center gap-4 hover:bg-action/90 shadow-2xl transition-all shadow-action/20 text-base"
+
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => document.getElementById('career-dashboard')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex-1 max-w-[280px] px-10 py-6 bg-action text-white font-black rounded-[2.5rem] flex items-center justify-center gap-5 hover:bg-action/90 shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] transition-all shadow-action/20 text-base group"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
-                    <FaEnvelope />
-                  </div>
-                  <span className="uppercase tracking-widest text-sm">Hire Candidate</span>
-                </motion.a>
+                  <FaGem className="text-xl group-hover:rotate-12 transition-transform" />
+                  <span className="uppercase tracking-widest text-sm">View ATS Insights</span>
+                </motion.button>
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* ── Career Intelligence Dashboard V3.2 ── */}
+      <section id="career-dashboard" className="max-w-6xl mx-auto px-6 mb-20">
+        <div className={`${cardClasses} p-10 md:p-14 border-2 border-action/20 shadow-glow-action relative overflow-hidden`}>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-action/5 rounded-full blur-[120px] -mr-48 -mt-48 transition-all group-hover:bg-action/10" />
+          
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-12 relative z-10">
+            {/* Left: Score Breakdown */}
+            <div className="flex-1 space-y-10">
+              <div className="space-y-2">
+                <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">Career Intelligence Dashboard</h2>
+                <div className="flex items-center gap-3 text-[10px] font-black text-[var(--action)] bg-action/10 px-3 py-1 rounded-full border border-action/20 uppercase tracking-[0.2em] w-fit">
+                  <FaGem className="animate-pulse" /> AI Resume Audit: Level {atsScore?.score > 80 ? 'Elite' : 'Professional'}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { label: "Formatting", score: atsScore?.breakdown?.formatting || 0, icon: <FaLayerGroup />, color: "text-blue-400" },
+                  { label: "Keywords", score: atsScore?.breakdown?.keywordMatch || 0, icon: <FaCheckCircle />, color: "text-emerald-400" },
+                  { label: "Impact", score: atsScore?.breakdown?.impact || 0, icon: <FaGem />, color: "text-amber-400" },
+                  { label: "Quantification", score: atsScore?.breakdown?.quantification || 0, icon: <FaFont />, color: "text-violet-400" },
+                ].map((stat, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="p-6 bg-white/5 rounded-3xl border border-white/10 hover:border-action/30 transition-all group/card"
+                  >
+                    <div className={`w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center mb-4 ${stat.color} group-hover/card:scale-110 transition-transform`}>
+                      {stat.icon}
+                    </div>
+                    <div className="text-3xl font-black text-white mb-1">{stat.score}%</div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-white/40">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Strengths vs Weaknesses Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                <div className="space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-2">
+                    <FaCheckCircle /> Profile Strengths
+                  </h4>
+                  <div className="space-y-3">
+                    {(atsScore?.feedback?.positives || ["Strong keyword distribution", "Clear section headers"]).map((pos, pidx) => (
+                      <div key={pidx} className="flex gap-3 text-sm text-white/70 font-medium">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+                        {pos}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-[0.2em] text-amber-500 flex items-center gap-2">
+                    <FaExclamationTriangle /> Growth Areas
+                  </h4>
+                  <div className="space-y-3">
+                    {(atsScore?.feedback?.improvements || ["Missing numeric metrics", "Passive voice detected"]).map((imp, iidx) => (
+                      <div key={iidx} className="flex gap-3 text-sm text-white/70 font-medium font-mono opacity-80 decoration-amber-500/20 underline underline-offset-4">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+                        {imp}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Interaction/Impact Layer */}
+            <div className="lg:w-96 space-y-8">
+              {/* Before vs After Impact Block */}
+              <div className="p-8 bg-gradient-to-br from-indigo-900/40 to-action/20 rounded-[2.5rem] border-2 border-action/30 shadow-2xl relative overflow-hidden group">
+                <div className="absolute inset-0 bg-action/5 animate-shimmer" />
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60 mb-8 relative z-10">AI Optimization Impact</h4>
+                
+                <div className="flex items-center justify-between relative z-10 gap-4">
+                  <div className="text-center">
+                    <div className="text-[8px] font-black uppercase text-white/40 mb-2">Before</div>
+                    <div className="text-2xl font-black text-white/40">{atsScore?.previousScore || 52}%</div>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center">
+                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mb-2">
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} className="h-full bg-action" />
+                    </div>
+                    <div className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                      +{atsScore?.improvement || 30}% Score Boost
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[8px] font-black uppercase text-action mb-2">After</div>
+                    <div className="text-4xl font-black text-white shadow-glow-white">{atsScore?.score || 82}%</div>
+                  </div>
+                </div>
+                
+                <p className="text-[9px] font-medium text-white/50 mt-8 text-center italic relative z-10 leading-relaxed">
+                  "This candidate's profile has been surgically optimized for high-authority placement."
+                </p>
+              </div>
+
+              {/* Interaction Block: Apply Fixes */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-2">
+                   <div className="flex items-center gap-2">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-white/40">AI Fixes Queue</h4>
+                      <div className="px-2 py-0.5 bg-action text-white rounded-lg text-[7px] font-black uppercase tracking-tighter shadow-glow-action">ONE-CLICK FIX</div>
+                   </div>
+                   <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded-lg text-[8px] font-black">2 PENDING</span>
+                </div>
+                <div className={`space-y-3 relative ${!user.isOwner ? 'blur-[4px] pointer-events-none grayscale' : ''}`}>
+                   <div className="p-5 bg-white/5 rounded-3xl border border-white/10 hover:border-action transition-all group/fix shadow-lg">
+                      <div className="text-[9px] font-black text-amber-500 mb-1">Issue: Missing Metrics</div>
+                      <p className="text-xs font-medium text-white/80 mb-4 leading-relaxed">
+                        Your experience bullet points lack quantification (%, $, numbers).
+                      </p>
+                      <button 
+                        onClick={() => handleApplyFix("Add metrics to Google role")}
+                        className="w-full py-3 bg-action hover:bg-white text-white hover:text-action rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn shadow-xl shadow-action/20"
+                      >
+                        Apply AI Fix <FaArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
+                      </button>
+                   </div>
+                   {!user.isOwner && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center z-20 text-center p-6 bg-black/40 backdrop-blur-sm rounded-[2.5rem]">
+                         <FaLock className="text-action text-3xl mb-4" />
+                         <p className="text-xs font-black text-white uppercase tracking-widest mb-4">Recruiter View Restricted</p>
+                         <Link to="/login" className="px-8 py-3 bg-action text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">Login to Fix Profile</Link>
+                      </div>
+                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <main className="max-w-6xl mx-auto px-6 -mt-10 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -1379,57 +1569,61 @@ const PublicProfile = () => {
                       whileInView={{ y: 0, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.1 }}
-                      className={`${cardClasses} p-8 rounded-[2.5rem] flex flex-col h-full group hover:shadow-glow-action transition-all border relative overflow-hidden`}
+                      className={`${cardClasses} p-8 rounded-[3rem] flex flex-col h-full group hover:shadow-glow-action transition-all border-2 border-white/5 relative overflow-hidden bg-gradient-to-b from-white/[0.02] to-transparent`}
                     >
                       {user.isOwner && (
                          <button
                            onClick={() => {
                              if(window.confirm("Delete this project?")) handleLiveUpdate({ portfolio: portfolio.filter((_, i) => i !== idx) });
                            }}
-                           className="absolute top-4 left-4 p-2 bg-red-500/10 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white z-20"
+                           className="absolute top-6 left-6 p-2 bg-red-500/10 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white z-20"
                            title="Delete Project"
                          >
                            <FaTrashAlt size={12} />
                          </button>
                       )}
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-[60px] -mr-16 -mt-16 group-hover:bg-action/10 transition-colors"></div>
+                      
+                      {/* Project Rank/Number */}
+                      <div className="absolute top-8 left-8 text-[4rem] font-black text-white/[0.03] leading-none pointer-events-none select-none">
+                        0{idx + 1}
+                      </div>
 
-                      {/* Project Thumbnail Placeholder/Generated */}
-                      <div className="aspect-video rounded-3xl overflow-hidden mb-6 bg-white/5 border border-white/10 relative group">
+                      <div className="aspect-video rounded-[2.5rem] overflow-hidden mb-8 bg-white/5 border border-white/10 relative group/thumb shadow-2xl">
                         {proj.thumbnail ? (
-                          <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                          <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover/thumb:scale-110" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-action/20 to-violet-600/20">
-                            <FaLayerGroup className="text-4xl text-action/40 animate-pulse" />
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-action/20 to-violet-600/30">
+                            <FaLayerGroup className="text-5xl text-action/40 animate-pulse" />
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-sm">
+                        <div className="absolute inset-0 bg-action/40 mix-blend-overlay opacity-0 group-hover/thumb:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center gap-6 backdrop-blur-md">
                           {proj.githubLink && (
-                            <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-white/10 hover:bg-white text-white hover:text-slate-900 rounded-2xl transition-all border border-white/20">
-                              <FaGithub size={20} />
+                            <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="p-5 bg-white text-slate-900 rounded-full transition-all hover:scale-110 shadow-xl">
+                              <FaGithub size={24} />
                             </a>
                           )}
                           {proj.liveLink && (
-                            <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-white/10 hover:bg-white text-white hover:text-action rounded-2xl transition-all border border-white/20">
-                              <FaGlobe size={20} />
+                            <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="p-5 bg-action text-white rounded-full transition-all hover:scale-110 shadow-xl">
+                              <FaGlobe size={24} />
                             </a>
                           )}
                         </div>
                       </div>
 
-                      <div className="flex-1 space-y-4">
-                        <div className="flex items-center justify-between">
+                      <div className="flex-1 space-y-6 relative z-10">
+                        <div className="flex items-start justify-between gap-4">
                           <InlineEdit
                              value={proj.title}
                              onSave={(val) => handleArrayUpdate("portfolio", idx, { title: val })}
                              isOwner={user.isOwner}
                              label="Project Name"
-                             className="text-xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors block w-full"
+                             className="text-2xl font-black text-white group-hover:text-action transition-colors block w-full leading-tight"
                           />
                           {proj.isFeatured && (
-                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase tracking-widest border border-amber-500/20 flex-shrink-0">
-                              Featured
-                            </span>
+                            <div className="px-4 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-amber-500/20 flex-shrink-0 flex items-center gap-2">
+                              <FaGem size={10} /> Featured
+                            </div>
                           )}
                         </div>
                         
@@ -1439,33 +1633,50 @@ const PublicProfile = () => {
                           isOwner={user.isOwner}
                           multiline={true}
                           label="Project Description"
-                          className="text-[var(--text-secondary)] text-sm leading-relaxed block"
+                          className="text-white/60 text-sm leading-relaxed block"
                         />
+
+                        {/* Impact Line [V3.2 MANDATORY] */}
+                        <div className="p-4 bg-action/5 rounded-2xl border border-action/20 group/impact">
+                           <div className="text-[8px] font-black text-action uppercase tracking-[0.2em] mb-1.5 flex items-center gap-2">
+                              <FaCheckCircle /> Quantified Impact
+                           </div>
+                           <InlineEdit
+                             value={proj.impact || "Boosted system performance by 30% through architecture redesign."}
+                             onSave={(val) => handleArrayUpdate("portfolio", idx, { impact: val })}
+                             isOwner={user.isOwner}
+                             label="Quantified Impact"
+                             className="text-xs font-black text-white block leading-tight group-hover/impact:text-action transition-colors"
+                           />
+                        </div>
 
                         <div className="flex flex-wrap gap-2 pt-2">
                           {(proj.techStack || []).map((tech, tidx) => (
-                            <span key={tidx} className="px-3 py-1 rounded-lg bg-action/5 text-[9px] font-black uppercase tracking-tighter text-[var(--action)] border border-action/10">
+                            <span key={tidx} className="px-3 py-1 rounded-xl bg-white/5 text-[10px] font-black uppercase tracking-tight text-white/50 border border-white/10 group-hover:border-action/30 transition-colors">
                               {tech}
                             </span>
                           ))}
                         </div>
                       </div>
 
-                      <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
-                         <div className="flex items-center gap-4">
+                      <div className="mt-10 pt-8 border-t border-white/5 flex items-center justify-between">
+                         <div className="flex items-center gap-6">
                             {proj.githubLink && (
-                              <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--action)] transition-colors flex items-center gap-2">
-                                <FaGithub /> GitHub
+                              <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors flex items-center gap-2">
+                                <FaGithub /> Source
                               </a>
                             )}
                             {proj.liveLink && (
-                              <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--action)] transition-colors flex items-center gap-2">
-                                <FaGlobe /> Live Demo
+                              <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors flex items-center gap-2">
+                                <FaGlobe /> Preview
                               </a>
                             )}
                          </div>
-                         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[var(--text-secondary)] opacity-40">
-                           <FaCheckCircle size={14} />
+                         <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">Verified Project</span>
+                            <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-action/40">
+                              <FaCheckCircle size={12} />
+                            </div>
                          </div>
                       </div>
                     </motion.div>
@@ -1750,129 +1961,84 @@ const PublicProfile = () => {
               </section>
             )}
 
-            {/* Technical Expertise [Moved & Dynamic] */}
+            {/* Skill Architecture [V3.2 Premium Split] */}
             <section
-              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl hover:shadow-action/10 transition-all overflow-hidden relative`}
+              className={`${cardClasses} p-8 md:p-10 rounded-[3rem] border-2 border-white/5 shadow-2xl hover:shadow-action/10 transition-all overflow-hidden relative group/skills`}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              <div className="absolute top-0 right-0 w-48 h-48 bg-action/5 rounded-full blur-[80px] -mr-24 -mt-24 group-hover/skills:bg-action/10 transition-colors" />
               
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
-                {sectionNames.skills}
-                <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-10 text-white/40 flex items-center gap-3">
+                <FaGem className="text-action" /> Skill Architecture
+                <span className="flex-1 h-px bg-white/10" />
               </h3>
 
-              <div className="space-y-8 relative z-10">
-                {/* Technical Skills (Progress Bars) */}
-                <div className="space-y-6">
-                  {(user.skills || [])
-                    .filter(s => s.category === "Technical" || !s.category)
-                    .map((skill, idx) => {
-                      const actualIdx = user.skills.findIndex(s => s.name === skill.name);
-                      return (
-                        <div key={idx} className="space-y-3 group">
-                          <div className="flex justify-between items-end">
-                            <InlineEdit
-                              value={skill.name}
-                              onSave={(val) => handleArrayUpdate("skills", actualIdx, { name: val })}
-                              isOwner={user.isOwner}
-                              label="Skill Name"
-                              className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors block"
-                            />
-                            <div className="flex items-center gap-1">
-                              {user.isOwner && (
-                                <button
-                                  onClick={() => {
-                                    if(window.confirm("Remove this skill?")) handleLiveUpdate({ skills: user.skills.filter((_, i) => i !== actualIdx) });
-                                  }}
-                                  className="p-1 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 rounded"
-                                >
-                                  <FaTrashAlt size={8} />
-                                </button>
-                              )}
-                              <InlineEdit
-                                value={skill.percentage || 80}
-                                onSave={(val) => handleArrayUpdate("skills", actualIdx, { percentage: parseInt(val) || 80 })}
-                                isOwner={user.isOwner}
-                                label="%"
-                                className="text-[10px] font-black text-action bg-action/10 px-2 py-0.5 rounded-md cursor-help"
-                              />
-                              <span className="text-[10px] font-black text-action/50">%</span>
-                            </div>
-                          </div>
-                          <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.percentage || 80}%` }}
-                              transition={{ duration: 1, delay: idx * 0.1 }}
-                              className="h-full bg-gradient-to-r from-action to-violet-500 rounded-full shadow-glow-action"
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  {user.isOwner && (
-                    <button
-                      onClick={() => handleLiveUpdate({ skills: [...(user.skills || []), { name: "New Skill", percentage: 80, category: "Technical" }] })}
-                      className="w-full p-4 rounded-2xl border-2 border-dashed border-white/10 hover:border-action/40 transition-all group opacity-60 hover:opacity-100 flex items-center justify-center gap-2"
-                    >
-                      <FaPlus className="text-xs text-action" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)]">Add Skill</span>
-                    </button>
-                  )}
-                </div>
-
-                {/* Core Competencies (Badges) */}
-                <div className="pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-3 mb-6">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-60">Core Competencies</h4>
+              <div className="space-y-12 relative z-10">
+                {/* Technical Stack */}
+                <div className="space-y-8">
+                  <div className="flex items-center justify-between">
+                     <h4 className="text-[10px] font-black uppercase tracking-widest text-white/60">Technical Stack</h4>
+                     <span className="text-[8px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20">VERIFIED</span>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="space-y-6">
                     {(user.skills || [])
-                      .filter(s => s.category && s.category !== "Technical")
+                      .filter(s => s.category === "Technical" || !s.category || s.category === "Standard")
                       .map((skill, idx) => {
                         const actualIdx = user.skills.findIndex(s => s.name === skill.name);
                         return (
-                        <motion.span
-                          key={idx}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          whileInView={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: idx * 0.05 }}
-                          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-xs font-bold text-[var(--text-secondary)] transition-all cursor-default group/skill relative"
-                        >
-                          <InlineEdit
-                            value={skill.name}
-                            onSave={(val) => handleArrayUpdate("skills", actualIdx, { name: val })}
-                            isOwner={user.isOwner}
-                            label="Skill"
-                          />
-                          {user.isOwner && (
-                            <button
-                              onClick={() => {
-                                if(window.confirm("Remove this competency?")) handleLiveUpdate({ skills: user.skills.filter((_, i) => i !== actualIdx) });
-                              }}
-                              className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/skill:opacity-100 transition-all shadow-lg"
-                            >
-                              <FaTimes size={8} />
-                            </button>
-                          )}
-                        </motion.span>
-                      )})}
-                    {user.isOwner && (
-                      <button
-                        onClick={() => handleLiveUpdate({ skills: [...(user.skills || []), { name: "New Competency", category: "Soft Skills" }] })}
-                        className="px-4 py-2 rounded-xl bg-action/10 border-2 border-dashed border-action/20 hover:border-action/50 text-xs font-bold text-action transition-all"
-                      >
-                        + Add
-                      </button>
-                    )}
+                          <div key={idx} className="space-y-3">
+                            <div className="flex justify-between items-end">
+                              <InlineEdit
+                                value={skill.name}
+                                onSave={(val) => handleArrayUpdate("skills", actualIdx, { name: val })}
+                                isOwner={user.isOwner}
+                                label="Skill"
+                                className="text-sm font-black text-white"
+                              />
+                              <span className="text-[10px] font-black text-action/60">{skill.percentage || 80}%</span>
+                            </div>
+                            <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${skill.percentage || 80}%` }}
+                                transition={{ duration: 1.5 }}
+                                className="h-full bg-action"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
                   </div>
                 </div>
+
+                {/* Strategic Strengths */}
+                <div className="space-y-6 pt-4 border-t border-white/5">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-white/60">Strategic Strengths</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {(user.skills || [])
+                      .filter(s => s.category === "Soft Skills" || s.category === "Core Competencies" || s.category === "Strategic")
+                      .map((skill, idx) => (
+                        <div key={idx} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40">
+                          {skill.name}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                {user.isOwner && (
+                  <button
+                    onClick={() => handleLiveUpdate({ skills: [...(user.skills || []), { name: "New Skill", percentage: 80, category: "Technical" }] })}
+                    className="w-full py-4 rounded-2xl border-2 border-dashed border-white/10 hover:border-action/40 transition-all opacity-40 hover:opacity-100 flex items-center justify-center gap-2"
+                  >
+                    <FaPlus className="text-[8px]" />
+                    <span className="text-[8px] font-black uppercase tracking-tighter">Add Capability</span>
+                  </button>
+                )}
               </div>
             </section>
           </div>
         </div>
-
       </main>
+
 
       {/* Recruiter Sticky Action Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 flex justify-center pointer-events-none">
@@ -1972,17 +2138,13 @@ const PublicProfile = () => {
       </div>
 
       {/* Global Branding Footer */}
-      <footer className="w-full py-6 mt-12 border-t border-white/10 text-center text-[10px] md:text-xs text-[var(--text-secondary)]">
-        <p>
-          Designed and developed by{" "}
-          <a
-            href="https://cvifypro.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-black hover:text-[var(--action)] transition-colors uppercase tracking-widest"
-          >
-            CVify
-          </a>
+      <footer className="w-full py-12 mt-20 border-t border-white/5 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-action/5 to-transparent pointer-events-none" />
+        <p className="relative z-10 flex items-center justify-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-white/20">
+          Powered by <span className="text-action">CVify AI</span> Career Intelligence Engine
+        </p>
+        <p className="mt-4 text-[8px] font-bold text-white/10 uppercase tracking-widest">
+          Version 3.2 Killer Upgrade • {new Date().getFullYear()}
         </p>
       </footer>
     </div>
