@@ -1121,11 +1121,12 @@ const PublicProfile = () => {
                         )}
                       </div>
                       
-                      {(exp.tools?.length > 0 || user.isOwner) && (
+                      {/* Technical Skills: Only show if they exist (Inclusive of non-tech roles) */}
+                      {exp.tools?.length > 0 && (
                         <div className="mt-8 pt-6 border-t border-white/5">
                           <div className="flex flex-wrap gap-2">
-                            {(exp.tools || []).map((tool, tidx) => (
-                              <span key={tidx} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-white/5">
+                            {exp.tools.map((tool, tidx) => (
+                              <span key={tidx} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-white/5 hover:border-action/30 transition-colors">
                                 {tool}
                               </span>
                             ))}
