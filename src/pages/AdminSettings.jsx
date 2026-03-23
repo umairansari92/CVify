@@ -17,7 +17,8 @@ const AdminSettings = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [customMinutes, setCustomMinutes] = useState("");
+  const [timerHours, setTimerHours] = useState("");
+  const [timerMinutes, setTimerMinutes] = useState("");
 
   useEffect(() => {
     fetchSettings();
@@ -178,67 +179,68 @@ const AdminSettings = () => {
               </div>
 
               {settings.maintenanceMode && (
-                <div className="space-y-3 pt-4 border-t border-white/5">
+                <div className="space-y-4 pt-4 border-t border-white/5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-text-muted">Estimated Duration</label>
-                  <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                    {[
-                      { label: "15m", value: 15 },
-                      { label: "30m", value: 30 },
-                      { label: "1h", value: 60 },
-                      { label: "2h", value: 120 },
-                      { label: "4h", value: 240 },
-                      { label: "Clear", value: 0 },
-                    ].map((opt) => (
-                      <button
-                        key={opt.label}
-                        type="button"
-                        onClick={() => {
-                          if (opt.value === 0) {
-                            setSettings({ ...settings, maintenanceUntil: null });
-                          } else {
-                            const date = new Date();
-                            date.setMinutes(date.getMinutes() + opt.value);
-                            setSettings({ ...settings, maintenanceUntil: date.toISOString() });
-                          }
-                        }}
-                        className={`py-2 rounded-lg text-xs font-bold border transition-all ${
-                          // Simple check: if maintenanceUntil is roughly now + value
-                          opt.value === 0 && !settings.maintenanceUntil 
-                            ? "bg-primary/20 border-primary text-primary"
-                            : "bg-white/5 border-white/10 hover:border-white/20 text-text-muted"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
+                  
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-1.5 flex-1">
+                      <span className="text-[10px] text-text-muted font-bold ml-1">HOURS</span>
+                      <input
+                        type="number"
+                        placeholder="0"
+                        value={timerHours}
+                        onChange={(e) => setTimerHours(e.target.value)}
+                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-bold focus:border-primary outline-none"
+                        min="0"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5 flex-1">
+                      <span className="text-[10px] text-text-muted font-bold ml-1">MINUTES</span>
+                      <input
+                        type="number"
+                        placeholder="0"
+                        value={timerMinutes}
+                        onChange={(e) => setTimerMinutes(e.target.value)}
+                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-bold focus:border-primary outline-none"
+                        min="0"
+                        max="59"
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="number"
-                      placeholder="Custom minutes..."
-                      value={customMinutes}
-                      onChange={(e) => setCustomMinutes(e.target.value)}
-                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold outline-none focus:border-primary w-32"
-                    />
+                  <div className="flex gap-3">
                     <button
                       type="button"
                       onClick={() => {
-                        const mins = parseInt(customMinutes);
-                        if (mins > 0) {
+                        const h = parseInt(timerHours) || 0;
+                        const m = parseInt(timerMinutes) || 0;
+                        const totalMins = (h * 60) + m;
+                        
+                        if (totalMins > 0) {
                           const date = new Date();
-                          date.setMinutes(date.getMinutes() + mins);
+                          date.setMinutes(date.getMinutes() + totalMins);
                           setSettings({ ...settings, maintenanceUntil: date.toISOString() });
                         }
                       }}
-                      className="bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary/20 transition-all"
+                      className="flex-1 bg-primary/10 border border-primary/20 text-primary py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
                     >
-                      Apply Custom
+                      Set Timer
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSettings({ ...settings, maintenanceUntil: null });
+                        setTimerHours("");
+                        setTimerMinutes("");
+                      }}
+                      className="px-6 bg-white/5 border border-white/10 text-text-muted py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all"
+                    >
+                      Clear
                     </button>
                   </div>
 
                   {settings.maintenanceUntil && (
-                    <p className="text-[10px] text-primary font-bold">
+                    <p className="text-[10px] text-primary font-bold bg-primary/5 p-3 rounded-lg border border-primary/10">
                       Active until: {new Date(settings.maintenanceUntil).toLocaleString()}
                     </p>
                   )}
