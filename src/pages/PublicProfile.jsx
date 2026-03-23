@@ -994,78 +994,6 @@ const PublicProfile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column (Bio & Experience) */}
           <div className="lg:col-span-8 space-y-10">
-            {/* Skills & Expertise [V3.1] */}
-            <section className={`${cardClasses} p-8 md:p-12 rounded-[2.5rem] shadow-xl border overflow-hidden relative`}>
-              <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20"></div>
-              
-              <h3 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] mb-10 flex items-center gap-4 relative z-10">
-                {sectionNames.skills}{" "}
-                <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
-                {/* Technical Skills (Progress Bars) */}
-                <div className="space-y-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-xl bg-action/10 flex items-center justify-center text-action">
-                      <FaCog size={14} />
-                    </div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-[var(--text-primary)]">Technical Expertise</h4>
-                  </div>
-                  <div className="space-y-6">
-                    {(user.skills || [])
-                      .filter(s => s.category === "Technical" || !s.category)
-                      .map((skill, idx) => (
-                        <div key={idx} className="space-y-3 group">
-                          <div className="flex justify-between items-end">
-                            <span className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors">{skill.name}</span>
-                            <span className="text-[10px] font-black text-action bg-action/10 px-2 py-0.5 rounded-md">80%</span>
-                          </div>
-                          <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: "80%" }}
-                              transition={{ duration: 1, delay: idx * 0.1 }}
-                              className="h-full bg-gradient-to-r from-action to-violet-500 rounded-full shadow-glow-action"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-
-                {/* Other Skills (Badges) */}
-                <div className="space-y-8">
-                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                      <FaCheckCircle size={14} />
-                    </div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-[var(--text-primary)]">Core Competencies</h4>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {(user.skills || [])
-                      .filter(s => s.category && s.category !== "Technical")
-                      .map((skill, idx) => (
-                        <motion.span
-                          key={idx}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          whileInView={{ scale: 1, opacity: 1 }}
-                          transition={{ delay: idx * 0.05 }}
-                          className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-sm font-bold text-[var(--text-secondary)] transition-all cursor-default"
-                        >
-                          {skill.name}
-                        </motion.span>
-                      ))}
-                    {/* Fallback to legacy skills if empty */}
-                    {(!user.skills || user.skills.length === 0) && (user.legacySkills?.other || []).map((s, i) => (
-                       <span key={i} className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-sm font-bold text-[var(--text-secondary)]">
-                         {s}
-                       </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
             {/* About Section */}
             <motion.section
               initial={{ y: 20, opacity: 0 }}
@@ -1552,6 +1480,76 @@ const PublicProfile = () => {
                 </div>
               </section>
             )}
+
+            {/* Technical Expertise [Moved & Dynamic] */}
+            <section
+              className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl hover:shadow-action/10 transition-all overflow-hidden relative`}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-action/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
+                {sectionNames.skills}
+                <span className="flex-1 h-px bg-border-subtle opacity-20"></span>
+              </h3>
+
+              <div className="space-y-8 relative z-10">
+                {/* Technical Skills (Progress Bars) */}
+                <div className="space-y-6">
+                  {(user.skills || [])
+                    .filter(s => s.category === "Technical" || !s.category)
+                    .map((skill, idx) => {
+                      const actualIdx = user.skills.findIndex(s => s.name === skill.name);
+                      return (
+                        <div key={idx} className="space-y-3 group">
+                          <div className="flex justify-between items-end">
+                            <span className="text-sm font-black text-[var(--text-primary)] group-hover:text-action transition-colors">{skill.name}</span>
+                            <div className="flex items-center gap-1">
+                              <InlineEdit
+                                value={skill.percentage || 80}
+                                onSave={(val) => handleArrayUpdate("skills", actualIdx, { percentage: parseInt(val) || 80 })}
+                                isOwner={user.isOwner}
+                                label="%"
+                                className="text-[10px] font-black text-action bg-action/10 px-2 py-0.5 rounded-md cursor-help"
+                              />
+                              <span className="text-[10px] font-black text-action/50">%</span>
+                            </div>
+                          </div>
+                          <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${skill.percentage || 80}%` }}
+                              transition={{ duration: 1, delay: idx * 0.1 }}
+                              className="h-full bg-gradient-to-r from-action to-violet-500 rounded-full shadow-glow-action"
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Core Competencies (Badges) */}
+                <div className="pt-4 border-t border-white/5">
+                  <div className="flex items-center gap-3 mb-6">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-60">Core Competencies</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(user.skills || [])
+                      .filter(s => s.category && s.category !== "Technical")
+                      .map((skill, idx) => (
+                        <motion.span
+                          key={idx}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-action/30 hover:bg-white/10 text-xs font-bold text-[var(--text-secondary)] transition-all cursor-default"
+                        >
+                          {skill.name}
+                        </motion.span>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
