@@ -26,7 +26,6 @@ const NotFound = () => {
               alt="CVify Pro"
               className="w-48 h-auto dark:brightness-110"
             />
-            <span className="text-action dark:text-accent font-black text-3xl italic tracking-tighter mb-1 -ml-2 filter drop-shadow-md">Pro</span>
           </div>
         </div>
 
