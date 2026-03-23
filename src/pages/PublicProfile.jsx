@@ -1041,44 +1041,106 @@ const PublicProfile = () => {
                       <div className="absolute top-0 right-0 w-40 h-40 bg-action/5 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-action/10 transition-colors"></div>
 
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
-                        <div>
-                          <h4 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors leading-tight">
-                            {exp.role}
-                          </h4>
+                        <div className="flex-1">
+                          <InlineEdit
+                            value={exp.role}
+                            onSave={(val) => handleArrayUpdate("experience", idx, { role: val })}
+                            isOwner={user.isOwner}
+                            label="Role"
+                            className="text-2xl md:text-3xl font-black text-[var(--text-primary)] group-hover:text-[var(--action)] transition-colors leading-tight block w-full"
+                          />
                           <div className="flex flex-wrap items-center gap-3 mt-2">
-                             <span className="text-[var(--action)] font-black text-lg">{exp.company}</span>
+                             <InlineEdit
+                                value={exp.company}
+                                onSave={(val) => handleArrayUpdate("experience", idx, { company: val })}
+                                isOwner={user.isOwner}
+                                label="Company"
+                                className="text-[var(--action)] font-black text-lg"
+                             />
                              <span className="w-1.5 h-1.5 rounded-full bg-border-subtle opacity-40"></span>
-                             <span className="text-[var(--text-secondary)] font-bold text-sm tracking-wide bg-white/5 px-3 py-1 rounded-full border border-white/5">
-                               {exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate}
-                             </span>
+                             <div className="flex items-center gap-2 text-[var(--text-secondary)] font-bold text-sm tracking-wide bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                                <InlineEdit
+                                  value={exp.startDate}
+                                  onSave={(val) => handleArrayUpdate("experience", idx, { startDate: val })}
+                                  isOwner={user.isOwner}
+                                  label="Start"
+                                />
+                                <span>—</span>
+                                <InlineEdit
+                                  value={exp.isCurrent ? "Present" : exp.endDate}
+                                  onSave={(val) => handleArrayUpdate("experience", idx, { endDate: val, isCurrent: val.toLowerCase().includes("present") })}
+                                  isOwner={user.isOwner}
+                                  label="End"
+                                />
+                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="space-y-4 relative z-10">
-                        {exp.responsibilities ? (
-                          <ul className="space-y-3">
+                      <div className="space-y-6 relative z-10">
+                        {/* Summary / Achievements */}
+                        {(exp.achievements || user.isOwner) && (
+                          <div className="space-y-2">
+                            {user.isOwner && <span className="text-[8px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40">Key Achievements</span>}
+                            <InlineEdit
+                              value={exp.achievements}
+                              onSave={(val) => handleArrayUpdate("experience", idx, { achievements: val })}
+                              isOwner={user.isOwner}
+                              multiline={true}
+                              label="Achievements"
+                              className="text-[var(--text-secondary)] text-base leading-relaxed whitespace-pre-wrap"
+                              placeholder="Describe your impact and results..."
+                            />
+                          </div>
+                        )}
+
+                        {/* Structured Responsibilities */}
+                        {(exp.responsibilities && exp.responsibilities.length > 0) ? (
+                          <ul className="space-y-3 pt-2">
                             {exp.responsibilities.map((resp, ridx) => (
                               <li key={ridx} className="flex gap-4 text-[var(--text-secondary)] text-base leading-relaxed group/item">
                                 <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-action/40 group-hover/item:bg-action transition-colors flex-shrink-0" />
-                                {resp}
+                                <InlineEdit
+                                  value={resp}
+                                  onSave={(val) => {
+                                    const newResp = [...exp.responsibilities];
+                                    newResp[ridx] = val;
+                                    handleArrayUpdate("experience", idx, { responsibilities: newResp });
+                                  }}
+                                  isOwner={user.isOwner}
+                                  label={`Detail ${ridx + 1}`}
+                                  className="w-full"
+                                />
                               </li>
                             ))}
                           </ul>
-                        ) : (
-                          <p className="text-[var(--text-secondary)] text-base leading-relaxed whitespace-pre-wrap">
-                            {exp.achievements}
-                          </p>
+                        ) : user.isOwner && !exp.achievements && (
+                           <div className="p-4 border-2 border-dashed border-white/5 rounded-2xl text-center">
+                              <p className="text-xs text-[var(--text-secondary)] opacity-50 font-bold uppercase tracking-widest">No details added yet</p>
+                           </div>
                         )}
                       </div>
                       
-                      {exp.tools?.length > 0 && (
-                        <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-2">
-                          {exp.tools.map((tool, tidx) => (
-                            <span key={tidx} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-white/5">
-                              {tool}
-                            </span>
-                          ))}
+                      {(exp.tools?.length > 0 || user.isOwner) && (
+                        <div className="mt-8 pt-6 border-t border-white/5">
+                          <div className="flex flex-wrap gap-2">
+                            {(exp.tools || []).map((tool, tidx) => (
+                              <span key={tidx} className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] border border-white/5">
+                                {tool}
+                              </span>
+                            ))}
+                            {user.isOwner && (
+                               <button 
+                                 onClick={() => {
+                                   const tool = prompt("Add tool/tech:");
+                                   if(tool) handleArrayUpdate("experience", idx, { tools: [...(exp.tools || []), tool] });
+                                 }}
+                                 className="px-3 py-1 rounded-lg bg-action/10 text-[10px] font-black uppercase tracking-widest text-action border border-action/20 hover:bg-action/20"
+                               >
+                                 + Add Tech
+                               </button>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
