@@ -14,9 +14,9 @@ import React from "react";
 const Card = ({ children, className = "", variant = "default" }) => {
   const baseStyles = {
     // default: Standard SaaS dashboard look
-    default: "bg-[var(--card-bg)] border border-[var(--card-border)] shadow-[var(--card-shadow)]",
+    default: "bg-[var(--card-bg,rgba(255,255,255,0.03))] border border-[var(--card-border,rgba(255,255,255,0.1))] shadow-[var(--card-shadow)]",
     // glass: Modern frosted depth for high-impact sections
-    glass: "backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl transition-all duration-500",
+    glass: "backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl transition-all duration-500",
   };
 
   const selectedStyle = baseStyles[variant] || baseStyles.default;
