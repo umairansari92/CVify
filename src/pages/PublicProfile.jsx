@@ -1057,7 +1057,7 @@ const PublicProfile = () => {
            <Card className="p-8 space-y-6">
               <h3 className="text-xs font-black uppercase tracking-widest text-emerald-500">Core Marketability</h3>
               <div className="space-y-4">
-                 {atsScore.feedback?.positives?.slice(0, 4).map((match, i) => (
+                 {atsScore?.feedback?.positives?.slice(0, 4).map((match, i) => (
                     <div key={i} className="flex items-center gap-4 group">
                        <div className="w-2 h-2 rounded-full bg-emerald-500 group-hover:scale-150 transition-transform" />
                        <span className="text-sm font-bold text-[var(--text-primary)] opacity-80 group-hover:opacity-100">{match}</span>
