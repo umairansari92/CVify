@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
 import { FaShareAlt, FaGlobe, FaPalette, FaCheckCircle, FaCloudUploadAlt, FaImage } from "react-icons/fa";
 import ThemeEditor from "../components/profile/ThemeEditor";
+import Card from "../components/ui/Card";
 
 import api from "../api/axios";
 
@@ -37,14 +38,7 @@ const Avatar = ({ src, name, size = "lg" }) => {
   );
 };
 
-// ─── Section Card ─────────────────────────────────────────────────────────────
-const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-6 border border-white/20 dark:border-white/5 shadow-sm ${className}`}
-  >
-    {children}
-  </div>
-);
+// Section Card is now imported from ../components/ui/Card
 
 const SectionTitle = ({ icon, title }) => (
   <div className="flex items-center gap-3 mb-5">
@@ -582,7 +576,7 @@ const ProfilePage = () => {
         </div>
 
         {/* ── Profile Strength Indicator ── */}
-        <Card className="border-action/20 bg-action/5">
+        <Card variant="standard" className="border-action/20 bg-action/5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Profile Strength: {strengthLabel}</h3>
             <span className="text-sm font-black text-action">{profileStrength}%</span>
@@ -607,7 +601,7 @@ const ProfilePage = () => {
 
         {/* ── Share Profile ── */}
         {user?.username && (
-          <Card className="bg-gradient-to-br from-action/10 to-violet-500/10 border-action/20">
+          <Card variant="standard" className="bg-gradient-to-br from-action/10 to-violet-500/10 border-action/20">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-white dark:bg-midnight rounded-2xl flex items-center justify-center text-action shadow-sm border border-action/10">
@@ -644,7 +638,7 @@ const ProfilePage = () => {
         )}
 
         {/* ── Portfolio Branding ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="🚀" title="Portfolio Branding" />
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-4 bg-action/5 p-4 rounded-2xl border border-action/10">
@@ -790,7 +784,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Theme Editor ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon={<FaPalette />} title="Portfolio Theme Editor" />
           <ThemeEditor
             settings={themeSettings}
@@ -804,7 +798,7 @@ const ProfilePage = () => {
         </Card>
 
         {/* ── Social Links ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="🔗" title="Social Presence" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Object.keys(socialLinks).map((platform) => (
@@ -833,7 +827,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Personal Info ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="👤" title="Personal Information" />
           <form onSubmit={handleSaveProfile} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -939,7 +933,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Diamond Ledger ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="💎" title="Diamond Balance" />
           <div className="flex items-center gap-6">
             <div className="flex-1 bg-gradient-to-br from-violet-50 to-blue-50 dark:from-violet-900/20 dark:to-blue-900/20 rounded-2xl p-5 border border-violet-100 dark:border-violet-800/30">
@@ -960,7 +954,7 @@ const ProfilePage = () => {
         </Card>
 
         {/* ── Change Password ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="🔐" title="Change Password" />
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div className="space-y-2">
@@ -1359,7 +1353,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Experience Timeline ── */}
-        <Card>
+        <Card variant="standard">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">💼</span>
@@ -1545,7 +1539,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Education ── */}
-        <Card>
+        <Card variant="standard">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">🎓</span>
@@ -1668,7 +1662,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Skills & Services ── */}
-        <Card>
+        <Card variant="standard">
           <div className="mb-8">
             <div className="flex items-center gap-3">
               <span className="text-xl">🛠️</span>
@@ -1825,7 +1819,7 @@ const ProfilePage = () => {
         </Card>
 
         {/* ── Certifications ── */}
-        <Card>
+        <Card variant="standard">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">📜</span>
@@ -1937,7 +1931,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Achievements ── */}
-        <Card>
+        <Card variant="standard">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">🏆</span>
@@ -2027,7 +2021,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Privacy & Visibility ── */}
-        <Card>
+        <Card variant="standard">
           <SectionTitle icon="🔏" title="Privacy & Settings" />
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -2082,7 +2076,7 @@ const ProfilePage = () => {
         <hr className="border-border-subtle/50 my-2" />
 
         {/* ── Languages ── */}
-        <Card>
+        <Card variant="standard">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
               <span className="text-xl">🌐</span>
@@ -2163,7 +2157,7 @@ const ProfilePage = () => {
 
         {/* ── Referral Info ── */}
         {user?.referralCode && (
-          <Card>
+          <Card variant="standard">
             <SectionTitle icon="🎁" title="Your Referral Code" />
             <div className="flex items-center gap-3">
               <code className="flex-1 text-lg font-black text-action dark:text-accent bg-action/5 dark:bg-accent/10 px-5 py-3 rounded-2xl border border-action/10 dark:border-accent/20 tracking-wider">
