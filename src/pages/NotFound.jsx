@@ -33,10 +33,10 @@ const NotFound = () => {
         <div className="bg-white/80 dark:bg-slate-blue/40 backdrop-blur-xl p-10 rounded-[3rem] shadow-premium border border-white/20 dark:border-white/5 relative overflow-hidden">
           {/* Large Background Details */}
           <div className="relative z-10 flex flex-col items-center py-10">
-            <h1 className="text-8xl md:text-9xl font-black text-gray-500 mb-2 drop-shadow-xl select-none uppercase">
+            <h1 className="text-8xl md:text-9xl font-black text-red-500 mb-2 drop-shadow-xl select-none uppercase bg-black/20 px-6 py-2 rounded-xl backdrop-blur-sm">
               404
             </h1>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-500 mb-12 drop-shadow-lg tracking-wide bg-black/20 px-6 py-2 rounded-xl backdrop-blur-sm">
+            <h2 className="text-2xl md:text-3xl font-bold text-red-500 mb-12 drop-shadow-lg tracking-wide bg-black/20 px-6 py-2 rounded-xl backdrop-blur-sm">
               This page could not be found.
             </h2>
 
