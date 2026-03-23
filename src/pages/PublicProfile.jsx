@@ -128,7 +128,7 @@ const PublicProfile = () => {
     } catch (err) {
       toast.error("Failed to save changes.");
       console.error(err);
-      fetchProfile(); // Revert on failure
+      dispatch(fetchPublicProfile(username)); // Revert on failure
     } finally {
       setIsUpdating(false);
     }
@@ -318,12 +318,12 @@ const PublicProfile = () => {
       </div>
     );
 
-  if (error || !user)
+  if (profileError || !user)
     return (
       <div className="min-h-screen bg-midnight text-white flex flex-col items-center justify-center p-6 text-center">
         <h1 className="text-6xl font-black mb-4">404</h1>
         <p className="text-xl text-[var(--text-secondary)] mb-8">
-          {error || "This profile is private or does not exist."}
+          {profileError || "This profile is private or does not exist."}
         </p>
         <a
           href="/"
