@@ -993,7 +993,7 @@ const PublicProfile = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">ATS Score</p>
-                    <p className="text-xl font-black text-white">{atsScore.score}%</p>
+                    <p className="text-xl font-black text-white">{atsScore?.score || 0}%</p>
                   </div>
                </div>
             </div>
@@ -1042,10 +1042,10 @@ const PublicProfile = () => {
               <div className="relative flex items-center justify-center h-48">
                  <svg className="w-full h-full transform -rotate-90">
                     <circle cx="50%" cy="50%" r="70" className="stroke-white/5 fill-none stroke-[12]" />
-                    <motion.circle cx="50%" cy="50%" r="70" className="stroke-action fill-none stroke-[12]" style={{ strokeDasharray: "440", strokeLinecap: "round" }} initial={{ strokeDashoffset: 440 }} animate={{ strokeDashoffset: 440 - (440 * atsScore.score) / 100 }} />
+                    <motion.circle cx="50%" cy="50%" r="70" className="stroke-action fill-none stroke-[12]" style={{ strokeDasharray: "440", strokeLinecap: "round" }} initial={{ strokeDashoffset: 440 }} animate={{ strokeDashoffset: 440 - (440 * (atsScore?.score || 0)) / 100 }} />
                  </svg>
                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-5xl font-black text-[var(--text-primary)]">{atsScore.score}</span>
+                    <span className="text-5xl font-black text-[var(--text-primary)]">{atsScore?.score || 0}</span>
                     <span className="text-[10px] font-bold text-[var(--text-secondary)] opacity-60">OPTIMIZED</span>
                  </div>
               </div>
@@ -1148,6 +1148,15 @@ const PublicProfile = () => {
                 </Card>
               </motion.div>
             ))}
+            {user.isOwner && (
+              <button 
+                onClick={() => handleLiveUpdate({ experience: [...(user.experience || []), { role: "New Role", company: "Company", startDate: "Date", endDate: "Present", isCurrent: true, achievements: "", tools: [] }] })}
+                className="ml-12 md:ml-24 w-full p-8 rounded-2xl border-2 border-dashed border-[var(--card-border)] hover:border-action/40 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-action bg-[var(--card-bg)]"
+              >
+                <FaPlus />
+                <span className="text-xs font-black uppercase tracking-widest">Add Professional Experience</span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -1174,6 +1183,15 @@ const PublicProfile = () => {
                   </div>
                 </Card>
               ))}
+              {user.isOwner && (
+                <button 
+                  onClick={() => handleLiveUpdate({ education: [...(user.education || []), { degree: "New Degree", institution: "Institution", graduationDate: "Date" }] })}
+                  className="w-full p-6 rounded-xl border-2 border-dashed border-[var(--card-border)] hover:border-orange-500/40 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-orange-500 bg-[var(--card-bg)]"
+                >
+                  <FaPlus />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Add Education History</span>
+                </button>
+              )}
             </div>
           </section>
 
@@ -1198,6 +1216,15 @@ const PublicProfile = () => {
                   </div>
                 </Card>
               ))}
+              {user.isOwner && (
+                <button 
+                  onClick={() => handleLiveUpdate({ services: [...(user.services || []), { title: "New Service", description: "Service Description" }] })}
+                  className="w-full p-6 rounded-xl border-2 border-dashed border-[var(--card-border)] hover:border-action/40 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-action bg-[var(--card-bg)]"
+                >
+                  <FaPlus />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Add Professional Service</span>
+                </button>
+              )}
             </div>
           </section>
         </div>
@@ -1239,205 +1266,10 @@ const PublicProfile = () => {
                 </div>
               </Card>
             ))}
-          </div>
-        </section>
-
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-          
-          {user.isOwner && (
-            <button 
-              onClick={() => handleLiveUpdate({ experience: [...(user.experience || []), { role: "New Role", company: "Company", startDate: "Date", endDate: "Present", isCurrent: true, achievements: "", tools: [] }] })}
-              className="ml-12 md:ml-24 p-8 rounded-2xl border-2 border-dashed border-[var(--card-border)] hover:border-action/50 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-action bg-[var(--card-bg)]"
-            >
-              <FaPlus />
-              <span className="text-xs font-black uppercase tracking-widest">Add Professional Experience</span>
-            </button>
-          )}
-        </div>
-      </section>
-
-      {/* Education & Services Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {/* Education Section */}
-        <section className="space-y-6">
-          <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] uppercase tracking-wide px-2">
-            Academic Foundation
-          </h2>
-          <div className="space-y-6">
-            {(user.education || []).map((edu, i) => (
-              <Card key={i} className="group hover:border-orange-500/30">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/10">
-                    <FaGraduationCap size={20} />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <h3 className="text-lg font-black text-[var(--text-primary)]">
-                      <InlineEdit
-                        value={edu.degree}
-                        onSave={(val) => handleArrayUpdate("education", i, { degree: val })}
-                        isOwner={user.isOwner}
-                        label="Degree"
-                      />
-                    </h3>
-                    <p className="text-orange-500 font-bold text-sm">
-                      <InlineEdit
-                        value={edu.institution}
-                        onSave={(val) => handleArrayUpdate("education", i, { institution: val })}
-                        isOwner={user.isOwner}
-                        label="Institution"
-                      />
-                    </p>
-                    <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest opacity-60">
-                       <InlineEdit value={edu.startYear} onSave={(v) => handleArrayUpdate("education", i, {startYear: v})} isOwner={user.isOwner} label="Start" />
-                       <span className="mx-1">-</span>
-                       <InlineEdit value={edu.endYear || edu.graduationDate} onSave={(v) => handleArrayUpdate("education", i, {endYear: v, graduationDate: v})} isOwner={user.isOwner} label="End" />
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Services Section */}
-        <section className="space-y-6">
-          <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] uppercase tracking-wide px-2">
-            Professional Services
-          </h2>
-          <div className="grid grid-cols-1 gap-6">
-            {(user.services || []).map((service, idx) => (
-              <Card key={idx} className="group hover:border-action/40">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-action/10 flex items-center justify-center text-action border border-action/10">
-                    {service.icon || '🚀'}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-black text-[var(--text-primary)]">
-                      <InlineEdit value={service.title} onSave={(v) => handleArrayUpdate("services", idx, { title: v })} isOwner={user.isOwner} label="Title" />
-                    </h3>
-                    <p className="text-sm text-[var(--text-secondary)] font-medium">
-                      <InlineEdit value={service.description} onSave={(v) => handleArrayUpdate("services", idx, { description: v })} isOwner={user.isOwner} label="Description" />
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-      </div>
-
-
-            {/* Services Section */}
-            {user.services?.length > 0 && (
-              <section
-                className={`${cardClasses} p-8 rounded-[2.5rem] border shadow-xl`}
-              >
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-secondary)] flex items-center gap-3">
-                  {sectionNames.services}
-                  <span className="flex-1 h-px bg-border-subtle"></span>
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {user.services.map((service, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col gap-3 p-6 rounded-3xl border transition-all hover:-translate-y-1 shadow-sm hover:shadow-xl group/service relative"
-                      style={{
-                        backgroundColor: theme.cardStyle === 'glass' ? 'color-mix(in srgb, var(--text-primary) 5%, transparent)' : 'color-mix(in srgb, var(--text-primary) 3%, var(--body-bg))',
-                        borderColor: theme.accentColor + '40',
-                        color: theme.textPrimary
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = theme.accentColor;
-                        e.currentTarget.style.boxShadow = `0 10px 30px -10px ${theme.accentColor}30`;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = theme.accentColor + '40';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                    >
-                      <div className="flex items-center gap-4">
-                        <span 
-                          className="flex items-center justify-center w-12 h-12 rounded-2xl text-xl shadow-inner flex-shrink-0"
-                          style={{
-                            backgroundColor: theme.accentColor + '15',
-                            color: theme.accentColor
-                          }}
-                        >
-                          💼
-                        </span>
-      {/* Portfolio / Projects Grid [V3.3] */}
-      {user.portfolio?.length > 0 && (
-        <section className="space-y-6">
-          <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] uppercase tracking-wide px-2">
-            Signature Projects
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {user.portfolio.map((proj, idx) => (
-              <Card key={idx} className="group hover:border-action/50 overflow-hidden p-0 sm:p-0">
-                {/* Project Thumbnail */}
-                <div className="aspect-video relative overflow-hidden bg-white/5">
-                  {proj.thumbnail ? (
-                    <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-action/10">
-                      <FaLayerGroup className="text-4xl text-action/30" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6 backdrop-blur-sm">
-                    {proj.githubLink && (
-                      <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-white text-slate-900 rounded-full hover:scale-110 transition-transform">
-                        <FaGithub size={20} />
-                      </a>
-                    )}
-                    {proj.liveLink && (
-                      <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" rel="noopener noreferrer" className="p-4 bg-action text-white rounded-full hover:scale-110 transition-transform">
-                        <FaGlobe size={20} />
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* Project Details */}
-                <div className="p-6 space-y-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-black text-[var(--text-primary)] group-hover:text-action transition-colors">
-                      <InlineEdit value={proj.title} onSave={(val) => handleArrayUpdate("portfolio", idx, { title: val })} isOwner={user.isOwner} label="Project Title" />
-                    </h3>
-                  </div>
-                  
-                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-2">
-                    <InlineEdit value={proj.description} onSave={(val) => handleArrayUpdate("portfolio", idx, { description: val })} isOwner={user.isOwner} multiline label="Description" />
-                  </p>
-
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-action/20 transition-all">
-                    <div className="text-[8px] font-black text-emerald-500 uppercase tracking-widest mb-1 flex items-center gap-1">
-                      <FaCheckCircle /> Quantified Impact
-                    </div>
-                    <p className="text-xs font-bold text-[var(--text-primary)]">
-                      <InlineEdit value={proj.impact || "Delivered high-performance solution with optimized architecture."} onSave={(v) => handleArrayUpdate("portfolio", idx, { impact: v })} isOwner={user.isOwner} label="Impact" />
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {(proj.techStack || []).map((tech, tidx) => (
-                      <span key={tidx} className="px-2 py-1 bg-[var(--body-bg)] border border-[var(--card-border)] rounded-md text-[9px] font-black uppercase text-[var(--text-secondary)]">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-            ))}
-            
             {user.isOwner && (
               <button 
                 onClick={() => handleLiveUpdate({ portfolio: [...(user.portfolio || []), { title: "New Project", description: "Project Description", techStack: [] }] })}
-                className="p-12 rounded-2xl border-2 border-dashed border-[var(--card-border)] hover:border-action/40 transition-all flex flex-col items-center justify-center gap-4 bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-action group opacity-60 hover:opacity-100"
+                className="p-12 rounded-[2.5rem] border-2 border-dashed border-[var(--card-border)] hover:border-action/40 transition-all flex flex-col items-center justify-center gap-4 bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-action group opacity-60 hover:opacity-100"
               >
                 <FaPlus size={32} />
                 <span className="text-sm font-black uppercase tracking-widest">Add Project to Portfolio</span>
@@ -1445,7 +1277,7 @@ const PublicProfile = () => {
             )}
           </div>
         </section>
-      )}
+
 
 
       {/* Certifications & Achievements Grid [V3.3] */}
@@ -1476,6 +1308,15 @@ const PublicProfile = () => {
                 </div>
               </Card>
             ))}
+            {user.isOwner && (
+              <button 
+                onClick={() => handleLiveUpdate({ certifications: [...(user.certifications || []), { name: "New Certification", issuer: "Issuer", date: "Date" }] })}
+                className="w-full p-6 rounded-xl border-2 border-dashed border-[var(--card-border)] hover:border-emerald-500/40 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-emerald-500 bg-[var(--card-bg)]"
+              >
+                <FaPlus />
+                <span className="text-[10px] font-black uppercase tracking-widest">Add Certification</span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -1503,6 +1344,15 @@ const PublicProfile = () => {
                 </div>
               </Card>
             ))}
+            {user.isOwner && (
+              <button 
+                onClick={() => handleLiveUpdate({ achievements: [...(user.achievements || []), { title: "New Award", description: "Award Description" }] })}
+                className="w-full p-6 rounded-xl border-2 border-dashed border-[var(--card-border)] hover:border-amber-500/40 transition-all flex items-center justify-center gap-3 text-[var(--text-secondary)] hover:text-amber-500 bg-[var(--card-bg)]"
+              >
+                <FaPlus />
+                <span className="text-[10px] font-black uppercase tracking-widest">Add Award / Honor</span>
+              </button>
+            )}
           </div>
         </section>
       </div>
@@ -1532,6 +1382,28 @@ const PublicProfile = () => {
                     Currently Trending Industry Expert
                  </p>
               </div>
+           </div>
+        </Card>
+
+        {/* Languages Hub [V3.3] */}
+        <Card className="lg:col-span-1 space-y-6">
+           <h3 className="text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-60">Linguistic Mastery</h3>
+           <div className="flex flex-wrap gap-3">
+              {(user.languages || []).map((lang, li) => (
+                 <div key={li} className="px-4 py-2 bg-action/5 border border-action/20 rounded-xl flex items-center gap-2 group hover:bg-action/10 transition-colors">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-wider">{lang.name}</span>
+                    <span className="w-1 h-1 bg-action/40 rounded-full" />
+                    <span className="text-[8px] font-black text-action uppercase opacity-60 tracking-tighter">{lang.level}</span>
+                 </div>
+              ))}
+              {user.isOwner && (
+                 <button 
+                   onClick={() => handleLiveUpdate({ languages: [...(user.languages || []), { name: "Language", level: "Native" }] })}
+                   className="p-2 border border-dashed border-[var(--card-border)] rounded-xl text-action hover:border-action transition-all"
+                 >
+                   <FaPlus size={12} />
+                 </button>
+              )}
            </div>
         </Card>
 
