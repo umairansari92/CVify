@@ -17,6 +17,7 @@ const AdminSettings = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [customMinutes, setCustomMinutes] = useState("");
 
   useEffect(() => {
     fetchSettings();
@@ -211,6 +212,31 @@ const AdminSettings = () => {
                       </button>
                     ))}
                   </div>
+
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="number"
+                      placeholder="Custom minutes..."
+                      value={customMinutes}
+                      onChange={(e) => setCustomMinutes(e.target.value)}
+                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold outline-none focus:border-primary w-32"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const mins = parseInt(customMinutes);
+                        if (mins > 0) {
+                          const date = new Date();
+                          date.setMinutes(date.getMinutes() + mins);
+                          setSettings({ ...settings, maintenanceUntil: date.toISOString() });
+                        }
+                      }}
+                      className="bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary/20 transition-all"
+                    >
+                      Apply Custom
+                    </button>
+                  </div>
+
                   {settings.maintenanceUntil && (
                     <p className="text-[10px] text-primary font-bold">
                       Active until: {new Date(settings.maintenanceUntil).toLocaleString()}
