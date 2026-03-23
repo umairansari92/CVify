@@ -6,6 +6,8 @@ import { BASE_URL } from "../api/axios";
 
 const Maintenance = () => {
   const [message, setMessage] = useState("CVify is currently undergoing maintenance. Please check back later.");
+  const [until, setUntil] = useState(null);
+  const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -14,12 +16,43 @@ const Maintenance = () => {
         if (response.data.message) {
           setMessage(response.data.message);
         }
+        if (response.data.until) {
+          setUntil(response.data.until);
+        }
       } catch (err) {
         console.error("Failed to fetch maintenance status");
       }
     };
     fetchStatus();
   }, []);
+
+  // Countdown logic
+  useEffect(() => {
+    if (!until) return;
+
+    const calculateTime = () => {
+      const difference = new Date(until) - new Date();
+      if (difference <= 0) {
+        setTimeLeft("Almost ready...");
+        return;
+      }
+
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      const parts = [];
+      if (hours > 0) parts.push(`${hours}h`);
+      if (minutes > 0 || hours > 0) parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
+
+      setTimeLeft(parts.join(" "));
+    };
+
+    calculateTime();
+    const timer = setInterval(calculateTime, 1000);
+    return () => clearInterval(timer);
+  }, [until]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -32,9 +65,17 @@ const Maintenance = () => {
         
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-start gap-3 text-left">
           <FiAlertTriangle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
-          <p className="text-amber-800 text-sm leading-relaxed">
-            {message}
-          </p>
+          <div className="flex flex-col">
+            <p className="text-amber-800 text-sm font-bold">
+              {message}
+            </p>
+            {until && (
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded">Estimated Return</span>
+                <span className="text-sm font-black text-amber-700 font-mono">{timeLeft}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <p className="text-slate-600 mb-8 px-4">

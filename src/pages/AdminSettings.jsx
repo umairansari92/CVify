@@ -13,6 +13,7 @@ const AdminSettings = () => {
     extraResumeCost: 30,
     maintenanceMode: false,
     maintenanceMessage: "",
+    maintenanceUntil: null,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -174,6 +175,49 @@ const AdminSettings = () => {
                   placeholder="Tell users why we're down..."
                 />
               </div>
+
+              {settings.maintenanceMode && (
+                <div className="space-y-3 pt-4 border-t border-white/5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-text-muted">Estimated Duration</label>
+                  <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                    {[
+                      { label: "15m", value: 15 },
+                      { label: "30m", value: 30 },
+                      { label: "1h", value: 60 },
+                      { label: "2h", value: 120 },
+                      { label: "4h", value: 240 },
+                      { label: "Clear", value: 0 },
+                    ].map((opt) => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => {
+                          if (opt.value === 0) {
+                            setSettings({ ...settings, maintenanceUntil: null });
+                          } else {
+                            const date = new Date();
+                            date.setMinutes(date.getMinutes() + opt.value);
+                            setSettings({ ...settings, maintenanceUntil: date.toISOString() });
+                          }
+                        }}
+                        className={`py-2 rounded-lg text-xs font-bold border transition-all ${
+                          // Simple check: if maintenanceUntil is roughly now + value
+                          opt.value === 0 && !settings.maintenanceUntil 
+                            ? "bg-primary/20 border-primary text-primary"
+                            : "bg-white/5 border-white/10 hover:border-white/20 text-text-muted"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  {settings.maintenanceUntil && (
+                    <p className="text-[10px] text-primary font-bold">
+                      Active until: {new Date(settings.maintenanceUntil).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
