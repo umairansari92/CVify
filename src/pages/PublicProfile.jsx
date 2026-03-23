@@ -28,6 +28,7 @@ import {
   FaExclamationTriangle,
   FaArrowRight,
   FaChartBar,
+  FaRocket,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
