@@ -21,6 +21,7 @@ import {
   FaTimes,
   FaFilePdf,
   FaEnvelope,
+  FaPhone,
 } from "react-icons/fa";
 import { 
   Trash, 
