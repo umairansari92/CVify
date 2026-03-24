@@ -15,7 +15,9 @@ const TechnicalTemplate = ({ data }) => {
     education,
     experience,
     projects,
-    technicalSkills,
+    technicalSkills, // fallback
+    skills,          // new unified structure
+    interests,       // new unified structure
     competencies,
     softwareProficiency,
     customSections,
@@ -139,91 +141,79 @@ const TechnicalTemplate = ({ data }) => {
                 className="bg-white p-4 rounded shadow-sm border border-slate-200 mb-6"
                 style={{ pageBreakInside: "avoid" }}
               >
-                <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1">
-                  Technical Skills
+                <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1 uppercase tracking-tighter text-[11px]">
+                  Technical Expertsie
                 </h3>
                 <div className="space-y-3">
-                  {data.technicalSkills.frontend?.length > 0 && (
+                  {/* Unified Skills (New Structure) */}
+                  {skills?.technical?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">
-                        Frontend
-                      </div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Technical</div>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {data.technicalSkills.frontend.map((s, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300"
-                          >
-                            {s}
-                          </span>
+                        {skills.technical.map((s, i) => (
+                           <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
                         ))}
                       </div>
                     </div>
                   )}
-                  {data.technicalSkills.backend?.length > 0 && (
+                  {skills?.strategic?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">
-                        Backend
-                      </div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Strategic</div>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {data.technicalSkills.backend.map((s, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300"
-                          >
-                            {s}
-                          </span>
+                        {skills.strategic.map((s, i) => (
+                           <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
                         ))}
                       </div>
                     </div>
                   )}
-                  {data.technicalSkills.database?.length > 0 && (
+
+                  {/* Fallback to legacy technicalSkills prop if any */}
+                  {technicalSkills?.frontend?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">
-                        Database
-                      </div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Frontend</div>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {data.technicalSkills.database.map((s, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300"
-                          >
-                            {s}
-                          </span>
+                        {technicalSkills.frontend.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
                         ))}
                       </div>
                     </div>
                   )}
-                  {data.technicalSkills.aiDevOps?.length > 0 && (
+                  {technicalSkills?.backend?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">
-                        AI/DevOps
-                      </div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Backend</div>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {data.technicalSkills.aiDevOps.map((s, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300"
-                          >
-                            {s}
-                          </span>
+                        {technicalSkills.backend.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
                         ))}
                       </div>
                     </div>
                   )}
-                  {data.technicalSkills.tools?.length > 0 && (
+                  {technicalSkills?.database?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">
-                        Tools
-                      </div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Database</div>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {data.technicalSkills.tools.map((s, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded border border-slate-300"
-                          >
-                            {s}
-                          </span>
+                        {technicalSkills.database.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {technicalSkills?.aiDevOps?.length > 0 && (
+                    <div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">AI/DevOps</div>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {technicalSkills.aiDevOps.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {technicalSkills?.tools?.length > 0 && (
+                    <div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Tools</div>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {technicalSkills.tools.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
                         ))}
                       </div>
                     </div>
@@ -260,20 +250,34 @@ const TechnicalTemplate = ({ data }) => {
 
           {education?.length > 0 && (
             <div className="bg-white p-4 rounded shadow-sm border border-slate-200">
-              <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1">
+              <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1 uppercase tracking-tighter text-[11px]">
                 Education
               </h3>
               {education.map((edu, index) => (
                 <div key={index} className="mb-3 last:mb-0">
-                  <div className="font-bold text-xs">{edu.degree}</div>
-                  <div className="text-xs text-slate-500">
+                  <div className="font-bold text-[11px] leading-tight text-slate-800">{edu.degree}</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">
                     {edu.institution}
                   </div>
-                  <div className="text-[10px] text-slate-400">
-                    {edu.startDate}-{edu.endDate}
+                  <div className="text-[9px] text-slate-400 mt-0.5 font-bold">
+                    {edu.startDate} - {edu.endDate}
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* New Interests Section */}
+          {interests?.length > 0 && (
+            <div className="bg-white p-4 rounded shadow-sm border border-slate-200">
+               <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1 uppercase tracking-tighter text-[11px]">
+                Interests & Passion
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {interests.map((interest, i) => (
+                  <span key={i} className="text-[10px] bg-slate-50 text-slate-600 px-2 py-0.5 rounded border border-slate-100 font-medium lowercase">#{interest.replace(/\s+/g, '')}</span>
+                ))}
+              </div>
             </div>
           )}
         </div>

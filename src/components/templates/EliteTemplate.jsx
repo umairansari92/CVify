@@ -9,10 +9,8 @@ import {
 } from "react-icons/fa";
 
 const EliteTemplate = ({ data }) => {
-  const {
-    personalInfo,
-    education,
-    experience,
+    skills,
+    interests,
     technicalSkills,
     projects,
     competencies,
@@ -264,6 +262,33 @@ const EliteTemplate = ({ data }) => {
                 Expertise
               </h3>
               <div className="space-y-4">
+                {/* New Structure */}
+                {skills?.technical?.length > 0 && (
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Technical
+                    </p>
+                    <ul className="text-[10px] text-slate-700 font-bold space-y-1">
+                      {skills.technical.map((s, idx) => (
+                        <li key={idx}>- {s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {skills?.strategic?.length > 0 && (
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Strategic
+                    </p>
+                    <ul className="text-[10px] text-slate-700 font-bold space-y-1">
+                      {skills.strategic.map((s, idx) => (
+                        <li key={idx}>- {s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Legacy Fallback */}
                 {technicalSkills &&
                   Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
@@ -302,6 +327,18 @@ const EliteTemplate = ({ data }) => {
                         <li key={idx}>- {s}</li>
                       ))}
                     </ul>
+                  </div>
+                )}
+                
+                {/* Interests */}
+                {interests?.length > 0 && (
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
+                      Interests
+                    </p>
+                    <div className="text-[10px] text-slate-500 italic font-bold leading-tight">
+                       {interests.join(", ")}
+                    </div>
                   </div>
                 )}
               </div>

@@ -15,6 +15,7 @@ const ElegantTemplate = ({ data }) => {
     education,
     experience,
     skills,
+    interests,
     projects,
     customSections,
     themeColor = "#2c3e50",
@@ -256,11 +257,8 @@ const ElegantTemplate = ({ data }) => {
             </section>
           )}
 
-          {/* Technical Skills - Elegant Style */}
-          {data.technicalSkills &&
-            Object.values(data.technicalSkills).some(
-              (arr) => arr?.length > 0,
-            ) && (
+          {/* Technical Skills - Improved */}
+          {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
               <section>
                 <h2
                   className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
@@ -269,31 +267,46 @@ const ElegantTemplate = ({ data }) => {
                   Technical Expertise
                 </h2>
                 <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                  {data.technicalSkills.frontend?.length > 0 && (
+                  {/* New Structure */}
+                  {skills?.technical?.length > 0 && (
+                    <div className="text-center">
+                      <span className="font-bold block mb-1">Technical</span>
+                      {skills.technical.join(", ")}
+                    </div>
+                  )}
+                  {skills?.strategic?.length > 0 && (
+                    <div className="text-center">
+                      <span className="font-bold block mb-1">Strategic</span>
+                      {skills.strategic.join(", ")}
+                    </div>
+                  )}
+
+                  {/* Legacy Fallback */}
+                  {data.technicalSkills?.frontend?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Frontend</span>
                       {data.technicalSkills.frontend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.backend?.length > 0 && (
+                  {data.technicalSkills?.backend?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Backend</span>
                       {data.technicalSkills.backend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.database?.length > 0 && (
+                  {data.technicalSkills?.database?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Database</span>
                       {data.technicalSkills.database.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.aiDevOps?.length > 0 && (
+                  {data.technicalSkills?.aiDevOps?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">AI & DevOps</span>
                       {data.technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.tools?.length > 0 && (
+                  {data.technicalSkills?.tools?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Tools</span>
                       {data.technicalSkills.tools.join(", ")}
@@ -336,6 +349,21 @@ const ElegantTemplate = ({ data }) => {
               </h2>
               <div className="text-center text-sm text-gray-600 italic">
                 {data.softwareProficiency.join(" • ")}
+              </div>
+            </section>
+          )}
+
+          {/* Interests */}
+          {interests?.length > 0 && (
+             <section>
+              <h2
+                className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
+                style={{ fontFamily: "Georgia, serif" }}
+              >
+                Interests
+              </h2>
+              <div className="text-center text-sm text-gray-500 italic">
+                 {interests.join(", ")}
               </div>
             </section>
           )}

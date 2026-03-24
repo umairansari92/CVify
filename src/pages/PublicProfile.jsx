@@ -117,6 +117,8 @@ const PublicProfile = () => {
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -227,6 +229,25 @@ const PublicProfile = () => {
     } catch (err) {
       toast.error("Failed to update status.");
       dispatch(fetchPublicProfile(username));
+    }
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    if (isSending) return;
+    
+    setIsSending(true);
+    const loadingToast = toast.loading("Sending your message...");
+    
+    try {
+      await api.post(`/portfolio/contact/${username}`, contactForm);
+      toast.success("Message sent! The owner will get back to you soon.", { id: loadingToast });
+      setContactForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      console.error("[ContactSubmit] Error:", err.message);
+      toast.error(err.response?.data?.message || "Failed to send message. Please try again.", { id: loadingToast });
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -1363,19 +1384,25 @@ const PublicProfile = () => {
 
       {/* Right Column: Contact Form (Image 2) */}
       <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
-        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); /* Dispatch mailto or API thunk here */ }}>
+        <form className="space-y-6" onSubmit={handleContactSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input 
               type="text" 
               placeholder="YOUR NAME" 
               className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
               required
+              value={contactForm.name}
+              onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+              disabled={isSending}
             />
             <input 
               type="email" 
               placeholder="YOUR EMAIL" 
               className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
               required
+              value={contactForm.email}
+              onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+              disabled={isSending}
             />
           </div>
           <input 
@@ -1383,20 +1410,27 @@ const PublicProfile = () => {
             placeholder="ENTER SUBJECT" 
             className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
             required
+            value={contactForm.subject}
+            onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+            disabled={isSending}
           />
           <textarea 
             placeholder="Message Here..." 
             rows="6"
             className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all resize-none"
             required
+            value={contactForm.message}
+            onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+            disabled={isSending}
           ></textarea>
           
           <div className="text-right pt-4">
             <button 
               type="submit" 
-              className="px-10 py-4 bg-transparent border border-[var(--card-border)] hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)]/10 hover:text-[var(--primary-color)] rounded-full text-[var(--text-primary)] font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto"
+              disabled={isSending}
+              className={`px-10 py-4 bg-transparent border border-[var(--card-border)] hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)]/10 hover:text-[var(--primary-color)] rounded-full text-[var(--text-primary)] font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto ${isSending ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Submit <Send size={18} />
+              {isSending ? "Sending..." : "Submit"} <Send size={18} />
             </button>
           </div>
         </form>

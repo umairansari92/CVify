@@ -211,49 +211,63 @@ const ClassicTemplate = ({ data }) => {
       )}
 
       {/* Technical Skills */}
-      {data.technicalSkills &&
-        Object.values(data.technicalSkills).some((arr) => arr?.length > 0) && (
-          <div className="mb-6">
-            <h2
-              className="text-xl font-bold uppercase border-b mb-4 pb-1"
-              style={{ color: themeColor, borderColor: `${themeColor}40` }}
-            >
-              Technical Skills
-            </h2>
-            <div className="grid grid-cols-2 text-sm text-gray-700">
-              {data.technicalSkills.frontend?.length > 0 && (
-                <div className="mb-2 mr-8">
-                  <span className="font-bold">Frontend:</span>{" "}
-                  {data.technicalSkills.frontend.join(", ")}
-                </div>
-              )}
-              {data.technicalSkills.backend?.length > 0 && (
-                <div className="mb-2 mr-8">
-                  <span className="font-bold">Backend:</span>{" "}
-                  {data.technicalSkills.backend.join(", ")}
-                </div>
-              )}
-              {data.technicalSkills.database?.length > 0 && (
-                <div className="mb-2 mr-8">
-                  <span className="font-bold">Database:</span>{" "}
-                  {data.technicalSkills.database.join(", ")}
-                </div>
-              )}
-              {data.technicalSkills.aiDevOps?.length > 0 && (
-                <div className="mb-2 mr-8">
-                  <span className="font-bold">AI / DevOps:</span>{" "}
-                  {data.technicalSkills.aiDevOps.join(", ")}
-                </div>
-              )}
-              {data.technicalSkills.tools?.length > 0 && (
-                <div className="mb-2 mr-8">
-                  <span className="font-bold">Tools:</span>{" "}
-                  {data.technicalSkills.tools.join(", ")}
-                </div>
-              )}
-            </div>
+      {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
+        <div className="mb-6">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
+            Technical Expertise
+          </h2>
+          <div className="grid grid-cols-2 text-sm text-gray-700">
+            {/* New Structure */}
+            {skills?.technical?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Technical:</span>{" "}
+                {skills.technical.join(", ")}
+              </div>
+            )}
+            {skills?.strategic?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Strategic:</span>{" "}
+                {skills.strategic.join(", ")}
+              </div>
+            )}
+
+            {/* Legacy Fallback */}
+            {data.technicalSkills?.frontend?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Frontend:</span>{" "}
+                {data.technicalSkills.frontend.join(", ")}
+              </div>
+            )}
+            {data.technicalSkills?.backend?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Backend:</span>{" "}
+                {data.technicalSkills.backend.join(", ")}
+              </div>
+            )}
+            {data.technicalSkills?.database?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Database:</span>{" "}
+                {data.technicalSkills.database.join(", ")}
+              </div>
+            )}
+            {data.technicalSkills?.aiDevOps?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">AI / DevOps:</span>{" "}
+                {data.technicalSkills.aiDevOps.join(", ")}
+              </div>
+            )}
+            {data.technicalSkills?.tools?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Tools:</span>{" "}
+                {data.technicalSkills.tools.join(", ")}
+              </div>
+            )}
           </div>
-        )}
+        </div>
+      )}
 
       {/* Competencies & Proficiency */}
       {(data.competencies?.length > 0 ||

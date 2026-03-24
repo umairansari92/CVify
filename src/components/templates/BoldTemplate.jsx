@@ -15,6 +15,7 @@ const BoldTemplate = ({ data }) => {
     education,
     experience,
     skills,
+    interests,
     projects,
     customSections,
     themeColor = "#111827",
@@ -233,10 +234,7 @@ const BoldTemplate = ({ data }) => {
             )}
 
             {/* Technical Skills - Improved */}
-            {data.technicalSkills &&
-              Object.values(data.technicalSkills).some(
-                (arr) => arr?.length > 0,
-              ) && (
+            {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
                 <div
                   className="bg-gray-50 p-5 rounded mb-8"
                   style={{ pageBreakInside: "avoid" }}
@@ -251,7 +249,30 @@ const BoldTemplate = ({ data }) => {
                     Expertise
                   </h3>
                   <div className="">
-                    {data.technicalSkills.frontend?.length > 0 && (
+                    {/* New Structure */}
+                    {skills?.technical?.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-bold text-gray-500 uppercase">Technical</div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {skills.technical.map((s, i) => (
+                            <span key={i} className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1">{s}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {skills?.strategic?.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-bold text-gray-500 uppercase">Strategic</div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {skills.strategic.map((s, i) => (
+                            <span key={i} className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1">{s}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Legacy Fallback */}
+                    {data.technicalSkills?.frontend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Frontend
@@ -268,7 +289,7 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills.backend?.length > 0 && (
+                    {data.technicalSkills?.backend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Backend
@@ -285,7 +306,7 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills.database?.length > 0 && (
+                    {data.technicalSkills?.database?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Database
@@ -302,7 +323,7 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills.aiDevOps?.length > 0 && (
+                    {data.technicalSkills?.aiDevOps?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           AI & DevOps
@@ -319,7 +340,7 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills.tools?.length > 0 && (
+                    {data.technicalSkills?.tools?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Tools/Others
@@ -375,6 +396,25 @@ const BoldTemplate = ({ data }) => {
                       className="bg-gray-200 px-2 py-1 text-xs rounded text-gray-800 mr-2 mb-2"
                     >
                       {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Interests Section */}
+            {interests?.length > 0 && (
+               <div
+                className="bg-gray-50 p-5 rounded mb-8"
+                style={{ pageBreakInside: "avoid" }}
+              >
+                 <h3 className="font-bold uppercase text-gray-900 border-b border-gray-300 pb-2 mb-4 text-xs tracking-widest">
+                  Interests
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {interests.map((it, idx) => (
+                    <span key={idx} className="text-[10px] font-bold text-gray-500 uppercase italic">
+                      # {it}
                     </span>
                   ))}
                 </div>

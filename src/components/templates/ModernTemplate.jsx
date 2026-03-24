@@ -119,9 +119,7 @@ const ModernTemplate = ({ data }) => {
 
       {/* Skills & Competencies Grid */}
       <div className="mb-8" style={{ pageBreakInside: "avoid", clear: "both" }}>
-        {((data.technicalSkills &&
-          Object.values(data.technicalSkills).some((arr) => arr?.length > 0)) ||
-          data.competencies?.length > 0) && (
+        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0)) || data.competencies?.length > 0) && (
           <div
             style={{
               display: "inline-block",
@@ -134,27 +132,42 @@ const ModernTemplate = ({ data }) => {
               Technical Expertise
             </h3>
             <div className="">
-              {data.technicalSkills?.frontend?.length > 0 && (
+              {/* New Structure */}
+              {skills?.technical?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Technical:</span>{" "}
+                  <span className="text-gray-600">{skills.technical.join(", ")}</span>
+                </div>
+              )}
+              {skills?.strategic?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Strategic:</span>{" "}
+                  <span className="text-gray-600">{skills.strategic.join(", ")}</span>
+                </div>
+              )}
+              
+              {/* Legacy Fallback */}
+              {technicalSkills?.frontend?.length > 0 && (
                 <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">Frontend:</span>{" "}
                   <span className="text-gray-600">
-                    {data.technicalSkills.frontend.join(", ")}
+                    {technicalSkills.frontend.join(", ")}
                   </span>
                 </div>
               )}
-              {data.technicalSkills?.backend?.length > 0 && (
+              {technicalSkills?.backend?.length > 0 && (
                 <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">Backend:</span>{" "}
                   <span className="text-gray-600">
-                    {data.technicalSkills.backend.join(", ")}
+                    {technicalSkills.backend.join(", ")}
                   </span>
                 </div>
               )}
-              {data.technicalSkills?.aiDevOps?.length > 0 && (
+              {technicalSkills?.aiDevOps?.length > 0 && (
                 <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">AI/DevOps:</span>{" "}
                   <span className="text-gray-600">
-                    {data.technicalSkills.aiDevOps.join(", ")}
+                    {technicalSkills.aiDevOps.join(", ")}
                   </span>
                 </div>
               )}
@@ -302,6 +315,23 @@ const ModernTemplate = ({ data }) => {
               </span>
             </div>
           ))}
+        </ResumeSection>
+      )}
+
+      {/* Interests */}
+      {interests?.length > 0 && (
+        <ResumeSection
+          title="Interests & Personal"
+          titleStyle={{ color: themeColor, borderColor: `${themeColor}20` }}
+        >
+          <div className="flex flex-wrap gap-3">
+             {interests.map((it, idx) => (
+               <span key={idx} className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full border border-gray-100 flex items-center gap-2">
+                 <span className="w-1 h-1 rounded-full bg-blue-400"></span>
+                 {it}
+               </span>
+             ))}
+          </div>
         </ResumeSection>
       )}
 

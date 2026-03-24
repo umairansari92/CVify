@@ -15,6 +15,7 @@ const ProfessionalTemplate = ({ data }) => {
     education,
     experience,
     skills,
+    interests,
     projects,
     customSections,
     themeColor = "#2563eb",
@@ -177,17 +178,37 @@ const ProfessionalTemplate = ({ data }) => {
           </div>
         )}
 
-        {/* Skills (Sidebar) */}
-        {data.technicalSkills &&
-          Object.values(data.technicalSkills).some(
-            (arr) => arr?.length > 0,
-          ) && (
+        {/* Skills (Sidebar) - Improved */}
+        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
             <div className="mt-8">
               <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 border-b border-slate-600 pb-2 mb-4">
-                Technical Skills
+                Technical Expertise
               </h3>
               <div className="text-sm text-slate-300">
-                {data.technicalSkills.frontend?.length > 0 && (
+                {/* New Structure */}
+                {skills?.technical?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">Technical</div>
+                    <div className="flex flex-wrap">
+                      {skills.technical.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {skills?.strategic?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">Strategic</div>
+                    <div className="flex flex-wrap">
+                      {skills.strategic.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Legacy Fallback */}
+                {data.technicalSkills?.frontend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">
                       Frontend
@@ -196,7 +217,7 @@ const ProfessionalTemplate = ({ data }) => {
                       {data.technicalSkills.frontend.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-2 py-0.5 rounded text-xs text-slate-300 mr-2 mb-2"
+                          className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight"
                         >
                           {s}
                         </span>
@@ -204,7 +225,7 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {data.technicalSkills.backend?.length > 0 && (
+                {data.technicalSkills?.backend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">
                       Backend
@@ -213,7 +234,7 @@ const ProfessionalTemplate = ({ data }) => {
                       {data.technicalSkills.backend.map((s, i) => (
                         <span
                           key={i}
-                          className="bg-slate-700 px-2 py-0.5 rounded text-xs text-slate-300 mr-2 mb-2"
+                          className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight"
                         >
                           {s}
                         </span>
@@ -221,10 +242,33 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {/* ... other skills ... */}
+                {data.technicalSkills?.database?.length > 0 && (
+                   <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">Database</div>
+                    <div className="flex flex-wrap">
+                      {data.technicalSkills.database.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
+
+        {/* Interests (Sidebar) */}
+        {interests?.length > 0 && (
+          <div className="mt-8">
+             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 border-b border-slate-600 pb-2 mb-4">
+              Interests
+            </h3>
+            <div className="flex flex-wrap gap-2 text-xs text-slate-400 italic">
+               {interests.map((it, idx) => (
+                 <span key={idx}>#{it.replace(/\s+/g, '')}</span>
+               ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main Content (Right, White) */}

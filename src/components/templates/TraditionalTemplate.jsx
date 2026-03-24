@@ -14,6 +14,7 @@ const TraditionalTemplate = ({ data }) => {
     education,
     experience,
     skills,
+    interests,
     projects,
     customSections,
     themeColor = "#000000",
@@ -227,39 +228,53 @@ const TraditionalTemplate = ({ data }) => {
       )}
 
       {/* Skills */}
-      {/* Technical Skills */}
-      {data.technicalSkills &&
-        Object.values(data.technicalSkills).some((arr) => arr?.length > 0) && (
+      {/* Technical Skills - Improved */}
+      {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
           <div className="mb-6">
             <h2 className="text-lg font-bold border-b border-gray-400 mb-2">
-              Technical Skills
+              Technical Expertise
             </h2>
             <div className="text-sm">
-              {data.technicalSkills.frontend?.length > 0 && (
+              {/* New Structure */}
+              {skills?.technical?.length > 0 && (
+                <div>
+                  <span className="font-bold">Technical:</span>{" "}
+                  {skills.technical.join(", ")}
+                </div>
+              )}
+              {skills?.strategic?.length > 0 && (
+                <div>
+                  <span className="font-bold">Strategic:</span>{" "}
+                  {skills.strategic.join(", ")}
+                </div>
+              )}
+
+              {/* Legacy Fallback */}
+              {data.technicalSkills?.frontend?.length > 0 && (
                 <div>
                   <span className="font-bold">Frontend:</span>{" "}
                   {data.technicalSkills.frontend.join(", ")}
                 </div>
               )}
-              {data.technicalSkills.backend?.length > 0 && (
+              {data.technicalSkills?.backend?.length > 0 && (
                 <div>
                   <span className="font-bold">Backend:</span>{" "}
                   {data.technicalSkills.backend.join(", ")}
                 </div>
               )}
-              {data.technicalSkills.database?.length > 0 && (
+              {data.technicalSkills?.database?.length > 0 && (
                 <div>
                   <span className="font-bold">Database:</span>{" "}
                   {data.technicalSkills.database.join(", ")}
                 </div>
               )}
-              {data.technicalSkills.aiDevOps?.length > 0 && (
+              {data.technicalSkills?.aiDevOps?.length > 0 && (
                 <div>
                   <span className="font-bold">AI / DevOps:</span>{" "}
                   {data.technicalSkills.aiDevOps.join(", ")}
                 </div>
               )}
-              {data.technicalSkills.tools?.length > 0 && (
+              {data.technicalSkills?.tools?.length > 0 && (
                 <div className="mb-2">
                   <span className="font-bold">Tools:</span>{" "}
                   {data.technicalSkills.tools.join(", ")}
@@ -271,10 +286,11 @@ const TraditionalTemplate = ({ data }) => {
 
       {/* Competencies & Software */}
       {(data.competencies?.length > 0 ||
-        data.softwareProficiency?.length > 0) && (
+        data.softwareProficiency?.length > 0 ||
+        interests?.length > 0) && (
         <div className="mb-6">
           <h2 className="text-lg font-bold border-b border-gray-400 mb-2">
-            Additional Skills
+            Additional Information
           </h2>
           <div className="text-sm">
             {data.competencies?.length > 0 && (
@@ -287,6 +303,12 @@ const TraditionalTemplate = ({ data }) => {
               <div>
                 <span className="font-bold">Software Proficiency:</span>{" "}
                 {data.softwareProficiency.join(", ")}
+              </div>
+            )}
+            {interests?.length > 0 && (
+               <div>
+                <span className="font-bold">Interests:</span>{" "}
+                {interests.join(", ")}
               </div>
             )}
           </div>
