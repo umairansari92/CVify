@@ -142,6 +142,43 @@ const PublicProfile = () => {
     }
   }, [dispatch, user?.isOwner]);
 
+  // V5.0 SECURE DISPLAY HELPER [Silicon Valley Polish]
+  const displayValue = useCallback((value, placeholder) => {
+    if (value && value.trim() !== "") return value;
+    if (isOwner) return placeholder;
+    return null; // Visitors shouldn't see placeholders
+  }, [isOwner]);
+
+  // V5.0 HERO STATS COMPONENT
+  const HeroStats = () => {
+    const stats = [
+      { label: "Projects Delivered", value: projects.length > 0 ? `${projects.length}+` : "10+", icon: <Rocket size={14} /> },
+      { label: "Identity", value: displayValue(branding.identityLabel, "Full-stack Expert") || "AI & Web Specialist", icon: <FaMagic size={14} /> },
+      { label: "Availability", value: "Available now", icon: <FaCheckCircle size={14} /> },
+    ];
+
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-12 border-t border-white/5"
+      >
+        {stats.map((stat, i) => (
+          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[var(--primary-color)]/20 transition-all group">
+            <div className="text-[var(--primary-color)] opacity-60 group-hover:opacity-100 transition-all">
+              {stat.icon}
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40 group-hover:opacity-60 transition-all">{stat.label}</p>
+              <p className="text-sm font-black text-[var(--text-primary)]">{stat.value}</p>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    );
+  };
+
   const handleLiveUpdate = async (updates) => {
     if (!user.isOwner) return;
     setIsUpdating(true);
@@ -452,7 +489,7 @@ const PublicProfile = () => {
         </AnimatePresence>
       </nav>
 
-      {/* --- KILLER HERO SECTION (V4.6) --- */}
+      {/* --- KILLER HERO SECTION (V4.6/V5.0 Upgrade) --- */}
       <section id="home" className="relative min-h-[95vh] flex items-center justify-center pt-32 overflow-hidden outline-none">
         
         {/* Background Ambient Glow */}
@@ -466,14 +503,16 @@ const PublicProfile = () => {
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-center"
           >
-            <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
-              <Rocket size={16} className="text-[var(--primary-color)]" />
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
-                <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Available for High-Impact Projects"} selector={state => state.profile.data.branding.identityLabel}>
-                   {branding.identityLabel || "Available for High-Impact Projects"}
-                </InlineEdit>
+            {displayValue(branding.identityLabel, "Available for High-Impact Projects") && (
+              <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
+                <Rocket size={16} className="text-[var(--primary-color)]" />
+                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
+                  <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Available for High-Impact Projects"} selector={state => state.profile.data.branding.identityLabel}>
+                    {branding.identityLabel || "Available for High-Impact Projects"}
+                  </InlineEdit>
+                </span>
               </span>
-            </span>
+            )}
           </motion.div>
 
           {/* Massive Typography Headline */}
@@ -485,7 +524,7 @@ const PublicProfile = () => {
               className="text-6xl md:text-8xl lg:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.9] uppercase"
             >
               <InlineEdit isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
-                {personalInfo.fullName || 'Architect'}
+                {displayValue(personalInfo.fullName, "Architect")}
               </InlineEdit>
             </motion.h1>
             
@@ -493,10 +532,10 @@ const PublicProfile = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-2xl md:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
+              className="text-2xl md:text-4xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
             >
               <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} selector={state => state.profile.data.personalInfo.jobTitle}>
-                {personalInfo.jobTitle || 'Engineering Future Solutions.'}
+                {displayValue(personalInfo.jobTitle, "Engineering Future Solutions.")}
               </InlineEdit>
             </motion.h2>
           </div>
@@ -506,35 +545,40 @@ const PublicProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] font-medium max-w-3xl mx-auto leading-relaxed"
+            className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] font-light max-w-3xl mx-auto leading-relaxed"
           >
             <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} selector={state => state.profile.data.personalInfo.objective} type="textarea">
-              <p className="opacity-80">"{personalInfo.objective || 'I build intelligent digital products that bridge the gap between human needs and complex technology.'}"</p>
+              <p className="opacity-80">"{displayValue(personalInfo.objective, "I build intelligent digital products that bridge the gap between human needs and complex technology.")}"</p>
             </InlineEdit>
           </motion.div>
 
           {/* Interactive CTA Row */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-10"
-          >
-            <a 
-              href="#showcase" 
-              className="group relative px-12 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest overflow-hidden transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-3"
+          <div className="space-y-12">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-10"
             >
-              <span className="relative z-10">🚀 View My Journey</span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            </a>
-            
-            <button 
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-12 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 transition-all flex items-center gap-3"
-            >
-              📩 Contact Me
-            </button>
-          </motion.div>
+              <a 
+                href="#showcase" 
+                className="group relative px-12 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest overflow-hidden transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-3"
+              >
+                <span className="relative z-10">🚀 View My Journey</span>
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              </a>
+              
+              <button 
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-12 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 hover:bg-[var(--primary-color)]/5 transition-all flex items-center gap-3 active:scale-95"
+              >
+                📩 Contact Me
+              </button>
+            </motion.div>
+
+            {/* V5.0 Hero Stats Row */}
+            <HeroStats />
+          </div>
 
         </div>
 
@@ -549,52 +593,76 @@ const PublicProfile = () => {
         </motion.div>
       </section>
 
-      {/* --- 1. ABOUT & INDUSTRY --- */}
-      <section id="about" className="py-24 border-b border-[var(--card-border)]">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
-          {/* Industry Badge */}
-          <div className="flex justify-center mb-4">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold tracking-widest text-[var(--primary-color)] uppercase bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full">
-              <InlineEdit isOwner={isOwner} label="Industry" value={user.personalInfo?.industry} onSave={(v) => handleLiveUpdate({ "personalInfo.industry": v })}>
-                {user.personalInfo?.industry || 'Technology & Software'}
-              </InlineEdit>
-            </span>
-          </div>
-
-          <h2 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
-            <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-              {personalInfo.fullName}
-            </InlineEdit>
-            <span className="opacity-20"> : </span>
-            <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
-              {personalInfo.jobTitle}
-            </InlineEdit>
-          </h2>
+      {/* --- 1. ABOUT & INDUSTRY (UNBOXED V5.0) --- */}
+      <section id="about" className="py-40 relative overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto px-6 text-center space-y-12"
+        >
           
-          <div className="text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto">
+          {/* Subtle Background Badge Layer */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-[var(--primary-color)]/5 to-transparent pointer-events-none opacity-20" />
+
+          {/* Industry Badge */}
+          <div className="flex justify-center">
+            {displayValue(user.personalInfo?.industry, "Technology & Software") && (
+              <span className="inline-flex items-center gap-2 px-6 py-2 text-[10px] font-black tracking-[0.3em] text-[var(--primary-color)] uppercase bg-[var(--primary-color)]/5 border border-[var(--primary-color)]/10 rounded-full">
+                <InlineEdit isOwner={isOwner} label="Industry" value={user.personalInfo?.industry} onSave={(v) => handleLiveUpdate({ "personalInfo.industry": v })}>
+                  {user.personalInfo?.industry || 'Technology & Software'}
+                </InlineEdit>
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] tracking-tighter leading-none uppercase">
+              <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
+                {displayValue(personalInfo.fullName, "Architect")}
+              </InlineEdit>
+            </h2>
+            <div className="h-1.5 w-24 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
+            <p className="text-xl md:text-2xl font-black text-[var(--primary-color)] opacity-80 uppercase tracking-widest">
+              <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
+                {displayValue(personalInfo.jobTitle, "Engineering Excellence")}
+              </InlineEdit>
+            </p>
+          </div>
+          
+          <div className="text-lg md:text-2xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic font-serif">
             <InlineEdit isOwner={isOwner} label="Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} multiline>
-              <p className="whitespace-pre-wrap">{user.summary || "Welcome to my digital space. I am passionate about building scalable solutions and crafting captivating digital experiences..."}</p>
+              <p className="whitespace-pre-wrap">"{displayValue(user.summary, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
             </InlineEdit>
           </div>
 
-          <div className="pt-8">
-            <button onClick={() => setShowResumeModal(true)} className="px-8 py-3 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/10 border border-[var(--card-border)] rounded-full text-[var(--text-primary)] font-medium transition-all flex items-center gap-2 mx-auto">
-              <Download size={18} /> Download CV
+          <div className="pt-10">
+            <button onClick={() => setShowResumeModal(true)} className="px-10 py-4 bg-white/5 hover:bg-[var(--primary-color)]/10 border border-white/10 hover:border-[var(--primary-color)]/30 rounded-full text-[var(--text-primary)] font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 mx-auto group shadow-2xl active:scale-95">
+              <Download size={16} className="group-hover:translate-y-1 transition-transform" /> View Full Dossier
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* --- 2. PROFESSIONAL EXPERIENCE --- */}
+      {/* --- 2. PROFESSIONAL EXPERIENCE (UPGRADED V5.0) --- */}
       {(isOwner || (user.experience?.length > 0)) && (
-        <section id="journey" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center flex items-center gap-3">
-               <FaHistory />
-               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
-                  {user.sectionNames?.experience || "Professional Experience"}
-               </InlineEdit>
-            </h2>
+        <section id="journey" className="py-32 border-b border-white/5 bg-white/[0.01]">
+          <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center space-y-4 mb-20"
+            >
+              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter flex items-center justify-center gap-4">
+                 <FaHistory className="text-[var(--primary-color)]" />
+                 <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
+                    {displayValue(user.sectionNames?.experience, "Professional Journey")}
+                 </InlineEdit>
+              </h2>
+              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
+              <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">The Evolution of Strategy</p>
+            </motion.div>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.experience || []).map((exp, index) => (
                 <motion.div 
@@ -669,15 +737,24 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* --- 3. EDUCATION HISTORY --- */}
+      {/* --- 3. EDUCATION HISTORY (UPGRADED V5.0) --- */}
       {(isOwner || (user.education?.length > 0)) && (
-        <section id="education" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
-          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
-               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
-                  {user.sectionNames?.education || "Education History"}
-               </InlineEdit>
-            </h2>
+        <section id="education" className="py-32 border-b border-white/5">
+          <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center space-y-4 mb-20"
+            >
+              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+                 <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
+                    {displayValue(user.sectionNames?.education, "Academic Foundation")}
+                 </InlineEdit>
+              </h2>
+              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
+              <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">Building the Logical Core</p>
+            </motion.div>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.education || []).map((edu, index) => (
                 <motion.div 
@@ -749,22 +826,28 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* --- SECTION: PROJECTS / PORTFOLIO [V4.3 SURGERY MODE] --- */}
+      {/* --- SECTION: PROJECTS / PORTFOLIO (UPGRADED V5.0) --- */}
       {(isOwner || (profile.data.projects && profile.data.projects.length > 0) || (profile.data.portfolio && profile.data.portfolio.length > 0)) && (
-        <section id="showcase" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-7xl mx-auto px-4">
+        <section id="showcase" className="py-32 border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-6">
             
             {/* Section Header */}
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight flex items-center justify-center gap-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20 space-y-4"
+            >
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter flex items-center justify-center gap-4">
                 <FaBriefcase className="text-[var(--primary-color)]" />
-                <span className="text-[var(--text-primary)]">My </span>
-                <span className="text-[var(--primary-color)]">Portfolio</span>
+                <span className="text-[var(--text-primary)]">Featured </span>
+                <span className="text-[var(--primary-color)]">Showcase</span>
               </h2>
-              <p className="text-lg text-[var(--text-secondary)] font-light max-w-2xl mx-auto opacity-80">
-                A curated collection of my most impactful work and technical expertise.
+              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
+              <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light max-w-2xl mx-auto opacity-70">
+                {displayValue(null, "A curated collection of my most impactful digital products and technical experiments.")}
               </p>
-            </div>
+            </motion.div>
 
             {/* Projects Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -856,58 +939,62 @@ const PublicProfile = () => {
       )}
 
       {/* --- 4. EXPERTISE & SKILLS (Categorized) --- */}
+      {/* --- 4. EXPERTISE & SKILLS (UNBOXED SKILL CLOUD V5.0) --- */}
       {(isOwner || (user.skills?.length > 0)) && (
-        <section id="expertise" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-6xl mx-auto px-4 space-y-24">
-            <h2 className="text-3xl font-bold text-center text-[var(--primary-color)]">
-               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
-                  {user.sectionNames?.skills || "Expertise & Skills"}
-               </InlineEdit>
-            </h2>
-
-            {/* Categorized Skills Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-               {["Technical", "Soft Skills", "Other"].map((cat) => {
-                  const filteredSkills = (user.skills || []).filter(s => (s.category || "Other") === cat || (cat === "Technical" && s.category === "Administrative"));
-                  if (filteredSkills.length === 0 && !isOwner) return null;
-                  
-                  return (
-                     <div key={cat} className="space-y-8">
-                        <div className="flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] border border-[var(--primary-color)]/20"><FaLayerGroup size={16}/></div>
-                           <h3 className="text-lg font-black uppercase tracking-widest text-[var(--text-primary)] opacity-80">{cat}</h3>
-                        </div>
-                        <div className="space-y-6">
-                           {filteredSkills.map((skill, index) => {
-                              const skillName = typeof skill === 'string' ? skill : skill.name;
-                              const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80); 
-                              return (
-                                <div key={index} className="space-y-3 group">
-                                  <div className="flex justify-between items-center">
-                                    <span className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">
-                                      <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>{skillName}</InlineEdit>
-                                    </span>
-                                    <span className="text-[var(--text-secondary)] opacity-50 text-[10px] font-mono">{skillLevel}%</span>
-                                  </div>
-                                  <div className="w-full bg-[var(--card-bg)] rounded-full h-1 overflow-hidden">
-                                    <div className="bg-[var(--primary-color)] h-1 rounded-full group-hover:scale-x-105 transition-transform origin-left" style={{ width: `${skillLevel}%` }}></div>
-                                  </div>
-                                </div>
-                              )
-                           })}
-                        </div>
-                     </div>
-                  )
-               })}
+        <section id="expertise" className="py-32 border-b border-white/5 bg-white/[0.01]">
+          <div className="max-w-6xl mx-auto px-6 space-y-20">
+            <div className="text-center space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
+                    {displayValue(user.sectionNames?.skills, "Expertise & Skills")}
+                </InlineEdit>
+              </h2>
+              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
             </div>
 
-            {isOwner && (
-              <div className="text-center">
-                 <button onClick={() => toast.error("Manage categories in Dashboard.")} className="px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 mx-auto">
-                  <FaPlus size={16} /> Add Skill
+            <div className="flex flex-wrap items-center justify-center gap-4 max-w-5xl mx-auto">
+              {(user.skills || []).map((skill, index) => {
+                const skillName = typeof skill === 'string' ? skill : skill.name;
+                const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80);
+
+                return (
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    whileHover={{ 
+                      scale: 1.1, 
+                      backgroundColor: "rgba(var(--primary-rgb), 0.15)",
+                      borderColor: "rgba(var(--primary-rgb), 0.4)" 
+                    }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                    className="px-6 py-3 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center gap-3 cursor-default group transition-all"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] opacity-40 group-hover:opacity-100 group-hover:scale-125 transition-all" />
+                    <span className="text-sm md:text-base font-bold text-[var(--text-primary)] tracking-wide">
+                      <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>
+                        {skillName}
+                      </InlineEdit>
+                    </span>
+                    {isOwner && (
+                      <span className="text-[10px] font-black opacity-20 group-hover:opacity-60 transition-all font-mono">
+                        {skillLevel}%
+                      </span>
+                    )}
+                  </motion.div>
+                );
+              })}
+              
+              {isOwner && (
+                <button 
+                  onClick={() => toast.error("Manage categories in Dashboard.")}
+                  className="px-6 py-3 border border-dashed border-white/20 hover:border-[var(--primary-color)]/40 rounded-2xl text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-all flex items-center gap-2"
+                >
+                  <FaPlus size={14} /> Add Skill
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </section>
       )}
@@ -1022,38 +1109,68 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* --- 8. HONORS & AWARDS --- */}
-      {(isOwner || user.achievements?.length > 0) && (
-        <section id="achievements" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
-               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.achievements} onSave={(v) => handleLiveUpdate({ "sectionNames.achievements": v })}>
-                  {user.sectionNames?.achievements || "Honors & Awards"}
-               </InlineEdit>
-            </h2>
-            <div className="space-y-6 w-full max-w-2xl">
-              {(user.achievements || []).map((ach, index) => (
-                <div key={index} className="relative p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/30 transition-all flex gap-6 items-center">
-                   <div className="w-16 h-16 rounded-3xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] flex-shrink-0 animate-pulse"><Trophy size={32}/></div>
-                   <div className="flex-1 space-y-2">
-                      <div className="flex justify-between items-start">
-                         <h3 className="text-xl font-black text-[var(--text-primary)]">
-                            <InlineEdit isOwner={isOwner} label="Award Title" value={ach.title} onSave={(v) => handleArrayUpdate("achievements", index, { title: v })}>{ach.title}</InlineEdit>
-                         </h3>
-                         <span className="text-[10px] font-black text-[var(--primary-color)] opacity-60 uppercase tracking-widest">
-                            <InlineEdit isOwner={isOwner} label="Date" value={ach.date} onSave={(v) => handleArrayUpdate("achievements", index, { date: v })}>{ach.date}</InlineEdit>
-                         </span>
-                      </div>
-                      <p className="text-sm text-[var(--text-secondary)] leading-relaxed italic opacity-80">
-                         <InlineEdit isOwner={isOwner} label="Description" value={ach.description} onSave={(v) => handleArrayUpdate("achievements", index, { description: v })} multiline>{ach.description}</InlineEdit>
-                      </p>
-                   </div>
-                </div>
-              ))}
-            </div>
+      {/* --- 9. CONTACT CTA (LET'S BUILD V5.0) --- */}
+      <section id="contact" className="py-40 relative overflow-hidden bg-[var(--bg-primary)]">
+        {/* Massive Ambient Background Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-[800px] bg-[var(--primary-color)]/5 rounded-full blur-[150px] pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto px-6 relative z-10 text-center space-y-24">
+          
+          <div className="space-y-8">
+            <motion.h2 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="text-6xl md:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.85] uppercase"
+            >
+              Let's Build <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-[var(--text-secondary)]">Legendary.</span>
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl md:text-3xl text-[var(--text-secondary)] font-light max-w-3xl mx-auto"
+            >
+              Currently available for high-impact collaborations and disruptive digital products.
+            </motion.p>
           </div>
-        </section>
-      )}
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {[
+              { icon: <Mail size={24} />, label: "Email", value: user.email, link: `mailto:${user.email}` },
+              { icon: <Globe size={24} />, label: "Location", value: user.personalInfo?.location || "Global / Remote", link: "#" },
+              { icon: <Rocket size={24} />, label: "Status", value: "Ready to work", link: "#contact" },
+            ].map((item, i) => (
+              <a 
+                href={item.link} 
+                key={i} 
+                className="group p-10 bg-white/[0.03] border border-white/5 rounded-[2.5rem] hover:border-[var(--primary-color)]/30 hover:bg-[var(--primary-color)]/[0.02] transition-all flex flex-col items-center gap-6 shadow-2xl"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-[var(--primary-color)]/10 text-[var(--primary-color)] flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                  {item.icon}
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40 mb-2">{item.label}</p>
+                  <p className="text-lg font-black text-[var(--text-primary)]">{item.value}</p>
+                </div>
+              </a>
+            ))}
+          </motion.div>
+
+          <div className="pt-12">
+            <button className="px-16 py-6 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-[0.3em] hover:scale-110 hover:shadow-[0_0_50px_var(--primary-color)]/50 transition-all active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+              Drop A Message
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* --- 9. PROFESSIONAL SERVICES --- */}
       {(isOwner || user.services?.length > 0) && (
