@@ -376,8 +376,8 @@ const PublicProfile = () => {
             {(portfolio.length > 0 || isOwner) && <a href="#showcase" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.portfolio || "Portfolio"}</a>}
           </div>
           <div className="flex items-center gap-4">
-              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><Linkedin size={18} /></a>}
-              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><Github size={18} /></a>}
+              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaLinkedin size={18} /></a>}
+              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaGithub size={18} /></a>}
              <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20 ml-2">Get Resume</button>
           </div>
         </div>
@@ -549,9 +549,9 @@ const PublicProfile = () => {
 
             {/* Social Link Suite */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><Linkedin size={18} /></a>}
-              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><Github size={18} /></a>}
-              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><Twitter size={18} /></a>}
+              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><FaLinkedin size={18} /></a>}
+              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><FaGithub size={18} /></a>}
+              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><FaTwitter size={18} /></a>}
               {isOwner && (
                  <button onClick={() => toast.success("Add more socials in Dashboard.")} className="p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl text-white/20 hover:text-white transition-all">
                     <Plus size={18} />
@@ -791,7 +791,7 @@ const PublicProfile = () => {
                       )}
                       {(project.githubUrl || project.githubLink) && (
                         <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors">
-                          <Github size={16} /> Source Code
+                          <FaGithub size={16} /> Source Code
                         </a>
                       )}
                       
@@ -1159,9 +1159,11 @@ const PublicProfile = () => {
               
               const getIcon = (p) => {
                 switch(p) {
-                  case 'linkedin': return <Linkedin size={20} />;
-                  case 'github': return <Github size={20} />;
-                  case 'twitter': return <Twitter size={20} />;
+                  case 'linkedin': return <FaLinkedin size={20} />;
+                  case 'github': return <FaGithub size={20} />;
+                  case 'twitter': return <FaTwitter size={20} />;
+                  case 'instagram': return <FaInstagram size={20} />;
+                  case 'facebook': return <FaFacebook size={20} />;
                   case 'portfolio': return <Globe size={20} />;
                   default: return <Globe size={20} />;
                 }
