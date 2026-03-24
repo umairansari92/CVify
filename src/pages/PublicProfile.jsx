@@ -27,7 +27,12 @@ import {
   FileText, 
   Edit3, 
   Download, 
-  Palette 
+  Palette,
+  Briefcase,
+  GraduationCap,
+  Award,
+  Trophy,
+  Globe
 } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -472,172 +477,229 @@ const PublicProfile = () => {
         </div>
       </section>
 
-      {/* ── SECTION 2: INTELLIGENCE DASHBOARD ── */}
-      <section id="dashboard" className="py-32 px-6 bg-white/[0.01]">
-        <div className="max-w-7xl mx-auto space-y-20">
-          <motion.div {...reveal} className="text-center space-y-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.intelligenceSubtitle || "Career Intelligence"}</h2>
-             <p className="text-4xl md:text-6xl font-black text-[var(--text-primary)]">{branding.intelligenceTitle || "Audit Accuracy & Semantic Power"}</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <ScoreCard label={branding.formattingLabel || "Formatting Precision"} score={atsScores.formattingScore} color="#3b82f6" />
-             <ScoreCard label={branding.keywordsLabel || "Keyword Synergy"} score={atsScores.keywordScore} color="#a855f7" />
-             <ScoreCard label={branding.quantificationLabel || "Data Quantification"} score={atsScores.quantificationScore} color="#f59e0b" />
-             <ScoreCard label={branding.impactLabel || "Strategic Impact"} score={atsScores.impactScore} color="#10b981" />
+      {/* --- 1. ABOUT & INDUSTRY --- */}
+      <section id="about" className="py-24 border-b border-white/10">
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
+          {/* Industry Badge */}
+          <div className="flex justify-center mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold tracking-widest text-cyan-400 uppercase bg-cyan-400/10 border border-cyan-400/20 rounded-full">
+              <InlineEdit isOwner={isOwner} label="Industry" value={user.personalInfo?.industry} onSave={(v) => handleLiveUpdate({ "personalInfo.industry": v })}>
+                {user.personalInfo?.industry || 'Technology & Software'}
+              </InlineEdit>
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-12">
-             <Card className="p-10 space-y-10 group hover:border-emerald-500/20 transition-all">
-                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-emerald-500">
-                   <h3>{branding.strengthsLabel || "AI-Verified Strengths"}</h3>
-                   <FaCheckCircle className="text-emerald-500" />
-                </div>
-                <div className="space-y-6">
-                   {analysis.strengths.map((st, i) => (
-                      <div key={i} className="flex gap-4 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl group-hover:bg-emerald-500/10 transition-all">
-                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shadow-lg shadow-emerald-500/80" />
-                         <p className="text-sm font-bold opacity-80">{st}</p>
-                      </div>
-                   ))}
-                </div>
-             </Card>
-             <Card className="p-10 space-y-10 group hover:border-amber-500/20 transition-all">
-                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-amber-500">
-                   <h3>{branding.weaknessesLabel || "Constructive Weaknesses"}</h3>
-                   <FaExclamationTriangle className="text-amber-500" />
-                </div>
-                <div className="space-y-6">
-                   {analysis.weaknesses.map((wk, i) => (
-                      <div key={i} className="flex gap-4 p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl group-hover:bg-amber-500/10 transition-all">
-                         <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5" />
-                         <p className="text-sm font-bold opacity-80">{wk}</p>
-                      </div>
-                   ))}
-                </div>
-             </Card>
+          <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+            <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
+              {personalInfo.fullName}
+            </InlineEdit>
+            <span className="text-white/50"> : </span>
+            <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
+              {personalInfo.jobTitle}
+            </InlineEdit>
+          </h2>
+          
+          <div className="text-lg md:text-xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto">
+            <InlineEdit isOwner={isOwner} label="Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} multiline>
+              <p className="whitespace-pre-wrap">{user.summary || "Welcome to my digital space. I am passionate about building scalable solutions and crafting captivating digital experiences..."}</p>
+            </InlineEdit>
+          </div>
+
+          <div className="pt-8">
+            <button onClick={() => setShowResumeModal(true)} className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full text-white font-medium transition-all flex items-center gap-2 mx-auto">
+              <Download size={18} /> Download CV
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 3: AI OPTIMIZATION IMPACT ── */}
-      {(user.history?.length > 0 || user.isOwner) && (
-        <section id="impact" className="py-32 px-6 bg-action/5 relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-96 h-96 bg-action/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-           <div className="max-w-6xl mx-auto space-y-20 relative z-10 text-center">
-              <motion.div {...reveal} className="space-y-4">
-                 <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.impactSubtitle || "The Transformation"}</h2>
-                 <p className="text-4xl md:text-6xl font-black">{branding.impactTitle || "AI Optimization Impact"}</p>
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center text-left">
-                 <div className="space-y-8">
-                    <Card className="p-10 bg-white/[0.02] border-white/5 opacity-50 space-y-4">
-                       <span className="text-[8px] font-black uppercase tracking-widest opacity-40">Before Audit</span>
-                       <div className="flex items-end gap-3"><span className="text-6xl font-black">58</span><span className="text-lg font-black opacity-20">%</span></div>
-                    </Card>
-                    <div className="flex justify-center"><FaChevronDown className="text-action animate-bounce" /></div>
-                    <Card className="p-10 border-action/30 bg-action/5 space-y-4">
-                       <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-action">
-                          <span>After AI Engine</span>
-                          <span className="px-3 py-1 bg-emerald-500 text-white rounded-full uppercase">+30% Growth</span>
-                       </div>
-                       <div className="flex items-end gap-3"><span className="text-8xl font-black text-white">{atsScores.overall}</span><span className="text-lg font-black opacity-40 pb-2">%</span></div>
-                    </Card>
-                 </div>
-                 <div className="space-y-10">
-                    <h3 className="text-3xl md:text-4xl font-black leading-tight">{branding.impactLead || "Data doesn't lie."} <br /><span className="text-action">{branding.impactLeadAlt || "Career authority is built."}</span></h3>
-                    <p className="text-lg font-medium opacity-60 leading-relaxed">{branding.impactDescription || "Semantically engineered to pass multi-layer ATS audits and recruiter human psychology."}</p>
-                    <ul className="space-y-6">
-                       {[
-                         { icon: <FaRocket />, label: branding.proofLabel1 || "70% More Semantic Reach" },
-                         { icon: <FaMagic />, label: branding.proofLabel2 || "Faang-Grade Bullet Optimization" },
-                         { icon: <FaCheckCircle />, label: branding.proofLabel3 || "Human-Centric UX Design" }
-                       ].map((item, i) => (
-                         <li key={i} className="flex items-center gap-6 group">
-                            <div className="w-12 h-12 rounded-2xl bg-action/10 flex items-center justify-center text-action group-hover:scale-110 transition-all">{item.icon}</div>
-                            <span className="text-sm font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-all">{item.label}</span>
-                         </li>
-                       ))}
-                    </ul>
-                 </div>
-              </div>
-           </div>
+      {/* --- 2. PROFESSIONAL EXPERIENCE --- */}
+      {(isOwner || (user.experience?.length > 0)) && (
+        <section id="journey" className="py-24 border-b border-white/10">
+          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-teal-400 mb-16 text-center">Professional Experience</h2>
+            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-teal-500/20">
+              {(user.experience || []).map((exp, index) => (
+                <div key={exp._id || index} className="relative flex flex-col items-center group">
+                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-teal-500 text-white mb-6 shadow-lg shadow-teal-500/20">
+                    <Briefcase size={20} />
+                  </div>
+                  <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-teal-500/30 transition-all">
+                    <span className="text-sm font-medium text-teal-400/80 mb-2 block">
+                      <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
+                        const [s, e] = v.split(" - "); 
+                        handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
+                      }}>
+                        {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
+                      </InlineEdit>
+                    </span>
+                    <h3 className="text-2xl font-bold text-white mb-1">
+                      <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
+                    </h3>
+                    <h4 className="text-lg font-semibold text-white/50 mb-6">
+                      <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company}</InlineEdit>
+                    </h4>
+                    <div className="text-sm text-white/70 leading-relaxed">
+                      <InlineEdit isOwner={isOwner} label="Achievements" value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })} multiline>
+                        <p className="whitespace-pre-wrap">{exp.achievements || "Description..."}</p>
+                      </InlineEdit>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {isOwner && (
+              <button onClick={() => toast.error("Please add via Dashboard for full validation.")} className="mt-12 px-6 py-2 bg-white/5 hover:bg-teal-500/20 border border-teal-500/30 rounded-full text-teal-400 text-sm font-medium transition-all flex items-center gap-2 z-10">
+                <Plus size={16} /> Add Experience
+              </button>
+            )}
+          </div>
         </section>
       )}
 
-      {/* ── SECTION 4: SHOWCASE ── */}
-      {portfolio.length > 0 && (
-        <section id="showcase" className="py-32 px-6">
-          <div className="max-w-7xl mx-auto space-y-20">
-            <motion.div {...reveal} className="text-center space-y-4">
-               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.showcaseSubtitle || "Project Showcase"}</h2>
-               <p className="text-4xl md:text-6xl font-black">{branding.showcaseTitle || "High-Impact Deliverables"}</p>
-            </motion.div>
+      {/* --- 3. EDUCATION HISTORY --- */}
+      {(isOwner || (user.education?.length > 0)) && (
+        <section id="education" className="py-24 border-b border-white/10 bg-white/[0.02]">
+          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-purple-400 mb-16 text-center">Education History</h2>
+            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-purple-500/20">
+              {(user.education || []).map((edu, index) => (
+                <div key={edu._id || index} className="relative flex flex-col items-center group">
+                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-purple-500 text-white mb-6 shadow-lg shadow-purple-500/20">
+                    <GraduationCap size={20} />
+                  </div>
+                  <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-purple-500/30 transition-all">
+                    <span className="text-sm font-medium text-purple-400/80 mb-2 block">
+                      <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
+                        const [s, e] = v.split(" - ");
+                        handleArrayUpdate("education", index, { startDate: s, endDate: e === "Present" ? "" : e });
+                      }}>
+                        {edu.startDate} - {edu.endDate || 'Present'}
+                      </InlineEdit>
+                    </span>
+                    <h3 className="text-2xl font-bold text-white mb-1">
+                      <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
+                    </h3>
+                    <h4 className="text-lg font-semibold text-white/50 mb-2">
+                      <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
+                    </h4>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {isOwner && (
+              <button onClick={() => toast.error("Please add via Dashboard.")} className="mt-12 px-6 py-2 bg-white/5 hover:bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium transition-all flex items-center gap-2 z-10">
+                <Plus size={16} /> Add Education
+              </button>
+            )}
+          </div>
+        </section>
+      )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-              {portfolio.map((proj, idx) => (
-                <motion.div key={idx} {...reveal} transition={{ delay: idx * 0.1 }}>
-                  <Card className="p-0 overflow-hidden border-none group hover:shadow-2xl transition-all h-full flex flex-col bg-white/[0.01]">
-                    <div className="aspect-video relative bg-slate-800 overflow-hidden">
-                       {proj.thumbnail && <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />}
-                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-6 transition-all backdrop-blur-md">
-                          {proj.liveLink && <a href={ensureAbsoluteUrl(proj.liveLink)} target="_blank" className="p-5 bg-action text-white rounded-2xl hover:scale-110"><FaGlobe size={20} /></a>}
-                          {proj.githubLink && <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" className="p-5 bg-white text-midnight rounded-2xl hover:scale-110"><FaGithub size={20} /></a>}
-                       </div>
+      {/* --- 4. EXPERTISE & SKILLS --- */}
+      {(isOwner || (user.skills?.length > 0)) && (
+        <section id="expertise" className="py-24 border-b border-white/10">
+          <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center text-blue-400 mb-16">Expertise & Skills</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(user.skills || []).map((skill, index) => {
+                const skillName = typeof skill === 'string' ? skill : skill.name;
+                const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80); 
+                return (
+                  <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 relative group hover:border-blue-500/30 transition-all">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-blue-300 font-medium text-lg">
+                        <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>{skillName}</InlineEdit>
+                      </span>
+                      <span className="text-white/50 text-sm font-mono">{skillLevel}%</span>
                     </div>
-                    <div className="p-10 space-y-6 flex-1">
-                       <div className="space-y-2">
-                          <h3 className="text-xl font-black">
-                            <InlineEdit value={proj.title} onSave={(v) => handleArrayUpdate("portfolio", idx, { title: v })} isOwner={user.isOwner} label="Project Name" />
-                          </h3>
-                       </div>
-                       <p className="text-sm text-[var(--text-secondary)] font-medium leading-relaxed italic opacity-80">
-                         <InlineEdit value={proj.description} onSave={(v) => handleArrayUpdate("portfolio", idx, { description: v })} isOwner={user.isOwner} multiline label="Achievement Summary" />
-                       </p>
+                    <div className="w-full bg-white/10 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-600 to-cyan-400 h-2 rounded-full" style={{ width: `${skillLevel}%` }}></div>
                     </div>
-                  </Card>
-                </motion.div>
+                  </div>
+                )
+              })}
+            </div>
+            {isOwner && (
+              <div className="mt-12 text-center">
+                 <button onClick={() => toast.error("Manage skills in Dashboard.")} className="px-6 py-2 bg-white/5 hover:bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-400 text-sm font-medium transition-all flex items-center gap-2 mx-auto">
+                  <Plus size={16} /> Add Skill
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* --- 5. CREDENTIALS (CERTIFICATIONS & AWARDS) --- */}
+      {(isOwner || user.certifications?.length > 0 || user.honorsAndAwards?.length > 0) && (
+        <section id="credentials" className="py-24 border-b border-white/10 bg-white/[0.02]">
+          <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16">
+            
+            {/* Certifications */}
+            {(isOwner || user.certifications?.length > 0) && (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-bold text-emerald-400 flex items-center gap-3 justify-center md:justify-start"><Award size={24}/> Certifications</h2>
+                <div className="space-y-4">
+                  {(user.certifications || []).map((cert, index) => (
+                    <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-emerald-500/30 transition-all">
+                      <h3 className="text-lg font-bold text-white mb-1">
+                        <InlineEdit isOwner={isOwner} label="Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
+                      </h3>
+                      <p className="text-sm text-emerald-400/80 mb-2">
+                        <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
+                      </p>
+                      <p className="text-xs text-white/40 uppercase tracking-wider">
+                        <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date || 'No Date'}</InlineEdit>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Honors & Awards */}
+            {(isOwner || user.honorsAndAwards?.length > 0) && (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-3 justify-center md:justify-start"><Trophy size={24}/> Honors & Awards</h2>
+                <div className="space-y-4">
+                  {(user.honorsAndAwards || []).map((award, index) => (
+                    <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-yellow-500/30 transition-all">
+                      <h3 className="text-lg font-bold text-white mb-1">
+                        <InlineEdit isOwner={isOwner} label="Title" value={award.title} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { title: v })}>{award.title}</InlineEdit>
+                      </h3>
+                      <p className="text-xs text-white/40 uppercase tracking-wider mt-3">
+                        <InlineEdit isOwner={isOwner} label="Date" value={award.date} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { date: v })}>{award.date || 'No Date'}</InlineEdit>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* --- 6. LANGUAGES --- */}
+      {(isOwner || user.languages?.length > 0) && (
+        <section id="languages" className="py-24">
+          <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
+            <h2 className="text-3xl font-bold text-indigo-400 flex justify-center items-center gap-3"><Globe size={28}/> Languages</h2>
+            <div className="flex flex-wrap justify-center gap-4">
+              {(user.languages || []).map((lang, index) => (
+                <div key={index} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-2xl px-8 py-4 hover:border-indigo-500/40 transition-all">
+                  <span className="text-white font-bold text-lg mb-1">
+                    <InlineEdit isOwner={isOwner} label="Language" value={lang.language} onSave={(v) => handleArrayUpdate("languages", index, { language: v })}>{lang.language}</InlineEdit>
+                  </span>
+                  <span className="text-indigo-400/80 text-xs uppercase tracking-widest font-medium">
+                    <InlineEdit isOwner={isOwner} label="Proficiency" value={lang.proficiency} onSave={(v) => handleArrayUpdate("languages", index, { proficiency: v })}>{lang.proficiency}</InlineEdit>
+                  </span>
+                </div>
               ))}
             </div>
           </div>
         </section>
       )}
-
-      {/* ── SECTION 5: JOURNEY ── */}
-      <section id="journey" className="py-32 px-6 bg-white/[0.01]">
-        <div className="max-w-5xl mx-auto space-y-20">
-          <motion.div {...reveal} className="text-center space-y-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.journeySubtitle || "Professional Journey"}</h2>
-             <p className="text-4xl md:text-6xl font-black">{branding.journeyTitle || "Authority Evolution"}</p>
-          </motion.div>
-
-          <div className="space-y-12 relative before:absolute before:left-[-1px] md:before:left-[31px] before:top-4 before:bottom-4 before:w-0.5 before:bg-white/10 ml-4 md:ml-0 text-left">
-            {(user.experience || []).map((exp, idx) => (
-               <motion.div key={idx} {...reveal} className="relative pl-12 md:pl-24">
-                  <div className="absolute left-[-21px] md:left-[12px] top-6 w-10 h-10 rounded-2xl bg-[var(--body-bg)] border-2 border-white/10 z-10 flex items-center justify-center shadow-xl">
-                     <FaBriefcase className="text-xs text-action" />
-                  </div>
-                  <Card className="p-10 md:p-14 space-y-8 hover:border-action/20 transition-all border-white/5 bg-white/[0.01]">
-                     <div className="space-y-4">
-                        <h3 className="text-3xl font-black leading-none">
-                           <InlineEdit value={exp.role} onSave={(v) => handleArrayUpdate("experience", idx, { role: v })} isOwner={user.isOwner} label="Role" />
-                        </h3>
-                        <div className="flex items-center gap-4 text-action font-black text-[10px] uppercase tracking-[0.2em] opacity-80">
-                           <InlineEdit value={exp.company} onSave={(v) => handleArrayUpdate("experience", idx, { company: v })} isOwner={user.isOwner} label="Company" />
-                           <span className="w-1 h-1 rounded-full bg-white/10" />
-                           <span className="opacity-50 tracking-tighter">{exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate}</span>
-                        </div>
-                     </div>
-                     <p className="text-lg text-[var(--text-secondary)] font-medium leading-relaxed italic opacity-70">
-                        <InlineEdit value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", idx, { achievements: v })} isOwner={user.isOwner} multiline label="Story" className="whitespace-pre-wrap" />
-                     </p>
-                  </Card>
-               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── FOOTER ── */}
       <footer id="contact" className="py-40 px-6 text-center">

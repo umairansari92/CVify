@@ -9,6 +9,7 @@ const InlineEdit = ({
   isOwner = false,
   multiline = false,
   label = "",
+  children,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempValue, setTempValue] = useState(value);
@@ -45,7 +46,7 @@ const InlineEdit = ({
   };
 
   if (!isOwner) {
-    return <span className={className}>{value}</span>;
+    return <div className={className}>{children || value}</div>;
   }
 
   if (isEditing) {
@@ -95,7 +96,7 @@ const InlineEdit = ({
       onDoubleClick={handleDoubleClick}
       className={`group/edit relative cursor-pointer hover:ring-2 hover:ring-action/20 hover:rounded-lg transition-all ${className}`}
     >
-      {value || (
+      {children || value || (
         <span className="text-text-muted italic">Click to add {label}...</span>
       )}
       <FaPencilAlt className="absolute -right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/edit:opacity-50 text-action text-xs transition-opacity" />
