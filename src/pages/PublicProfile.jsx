@@ -341,13 +341,18 @@ const PublicProfile = () => {
                <span className="text-[7px] font-black uppercase tracking-widest text-emerald-500">AI Verified</span>
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest">
-            <a href="#home" className="text-[var(--text-secondary)] hover:text-action">Home</a>
-            <a href="#dashboard" className="text-[var(--text-secondary)] hover:text-action">Intelligence</a>
-            <a href="#showcase" className="text-[var(--text-secondary)] hover:text-action">Showcase</a>
-            <a href="#journey" className="text-[var(--text-secondary)] hover:text-action">Journey</a>
+          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest text-action">
+            <a href="#about" className="hover:opacity-100 transition-all opacity-40">About</a>
+            {(user.experience?.length > 0 || isOwner) && <a href="#journey" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.experience || "Experience"}</a>}
+            {(user.education?.length > 0 || isOwner) && <a href="#education" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.education || "Education"}</a>}
+            {(user.skills?.length > 0 || isOwner) && <a href="#expertise" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.skills || "Skills"}</a>}
+            {(portfolio.length > 0 || isOwner) && <a href="#showcase" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.portfolio || "Portfolio"}</a>}
           </div>
-          <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20">Get Resume</button>
+          <div className="flex items-center gap-4">
+             {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaLinkedin size={18} /></a>}
+             {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaGithub size={18} /></a>}
+             <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20 ml-2">Get Resume</button>
+          </div>
         </div>
       </nav>
 
@@ -465,12 +470,50 @@ const PublicProfile = () => {
               )}
             </div>
 
-            <div className="flex flex-wrap gap-6 pt-6">
-               <button onClick={() => setShowResumeModal(true)} className="px-12 py-6 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/30 flex items-center gap-3">
-                  <Download size={18} /> Download Resume
+            {/* Contact Suite Bar (Advanced) */}
+            <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest py-8 border-y border-white/5">
+              {user.email && (
+                <div className="flex items-center gap-3 group">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-action group-hover:bg-action group-hover:text-white transition-all"><FaEnvelope size={14}/></div>
+                  <span className="opacity-40 group-hover:opacity-100 transition-all font-mono tracking-tighter">{user.email}</span>
+                </div>
+              )}
+              {user.phoneNumber && (
+                 <div className="flex items-center gap-3 group">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all"><FaPhone size={14}/></div>
+                  <span className="opacity-40 group-hover:opacity-100 transition-all">
+                     <InlineEdit value={user.phoneNumber} onSave={(v) => handleLiveUpdate({ phoneNumber: v })} label="Phone">{user.phoneNumber}</InlineEdit>
+                  </span>
+                </div>
+              )}
+              {user.socialLinks?.portfolio && (
+                 <div className="flex items-center gap-3 group">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-all"><FaGlobe size={14}/></div>
+                  <span className="opacity-40 group-hover:opacity-100 transition-all">
+                     <InlineEdit value={user.socialLinks.portfolio} onSave={(v) => handleLiveUpdate({ "socialLinks.portfolio": v })} label="Website">{user.socialLinks.portfolio}</InlineEdit>
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Social Link Suite */}
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><FaLinkedin size={18} /></a>}
+              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><FaGithub size={18} /></a>}
+              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><FaTwitter size={18} /></a>}
+              {isOwner && (
+                 <button onClick={() => toast.success("Add more socials in Dashboard.")} className="p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl text-white/20 hover:text-white transition-all">
+                    <Plus size={18} />
+                 </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-6 pt-12">
+               <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/30 flex items-center gap-3">
+                  <Download size={18} /> Download Executive CV
                </button>
-               <a href={`mailto:${user.email}`} className="px-12 py-6 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
-                  {branding.ctaButtonText || "Inquire Now"} <FaArrowRight className="text-[10px] opacity-60" />
+               <a href={`mailto:${user.email}`} className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
+                  {branding.ctaButtonText || "Direct Inquire"} <FaArrowRight size={12} className="opacity-60" />
                </a>
             </div>
           </div>
@@ -517,7 +560,11 @@ const PublicProfile = () => {
       {(isOwner || (user.experience?.length > 0)) && (
         <section id="journey" className="py-24 border-b border-white/10">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-teal-400 mb-16 text-center">Professional Experience</h2>
+            <h2 className="text-3xl font-bold text-teal-400 mb-16 text-center">
+               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
+                  {user.sectionNames?.experience || "Professional Experience"}
+               </InlineEdit>
+            </h2>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-teal-500/20">
               {(user.experience || []).map((exp, index) => (
                 <div key={exp._id || index} className="relative flex flex-col items-center group">
@@ -525,14 +572,22 @@ const PublicProfile = () => {
                     <Briefcase size={20} />
                   </div>
                   <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-teal-500/30 transition-all">
-                    <span className="text-sm font-medium text-teal-400/80 mb-2 block">
+                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-teal-400/80 mb-2">
                       <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
                         const [s, e] = v.split(" - "); 
                         handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
                       }}>
                         {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
                       </InlineEdit>
-                    </span>
+                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <InlineEdit isOwner={isOwner} label="Location" value={exp.location} onSave={(v) => handleArrayUpdate("experience", index, { location: v })}>
+                         {exp.location || "Location"}
+                      </InlineEdit>
+                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <InlineEdit isOwner={isOwner} label="Mode" value={exp.type} onSave={(v) => handleArrayUpdate("experience", index, { type: v })}>
+                         {exp.type || "Full-time"}
+                      </InlineEdit>
+                    </div>
                     <h3 className="text-2xl font-bold text-white mb-1">
                       <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
                     </h3>
@@ -561,7 +616,11 @@ const PublicProfile = () => {
       {(isOwner || (user.education?.length > 0)) && (
         <section id="education" className="py-24 border-b border-white/10 bg-white/[0.02]">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-purple-400 mb-16 text-center">Education History</h2>
+            <h2 className="text-3xl font-bold text-purple-400 mb-16 text-center">
+               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
+                  {user.sectionNames?.education || "Education History"}
+               </InlineEdit>
+            </h2>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-purple-500/20">
               {(user.education || []).map((edu, index) => (
                 <div key={edu._id || index} className="relative flex flex-col items-center group">
@@ -569,20 +628,29 @@ const PublicProfile = () => {
                     <GraduationCap size={20} />
                   </div>
                   <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-purple-500/30 transition-all">
-                    <span className="text-sm font-medium text-purple-400/80 mb-2 block">
+                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-purple-400/80 mb-2">
                       <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
                         const [s, e] = v.split(" - ");
                         handleArrayUpdate("education", index, { startDate: s, endDate: e === "Present" ? "" : e });
                       }}>
                         {edu.startDate} - {edu.endDate || 'Present'}
                       </InlineEdit>
-                    </span>
+                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <InlineEdit isOwner={isOwner} label="Result" value={edu.fieldOfStudy} onSave={(v) => handleArrayUpdate("education", index, { fieldOfStudy: v })}>
+                         {edu.fieldOfStudy || "Field of Study"}
+                      </InlineEdit>
+                    </div>
                     <h3 className="text-2xl font-bold text-white mb-1">
                       <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
                     </h3>
                     <h4 className="text-lg font-semibold text-white/50 mb-2">
                       <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
                     </h4>
+                    {edu.description && (
+                       <p className="text-xs text-white/40 mt-4 italic">
+                          <InlineEdit isOwner={isOwner} label="Story" value={edu.description} onSave={(v) => handleArrayUpdate("education", index, { description: v })} multiline>{edu.description}</InlineEdit>
+                       </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -596,33 +664,55 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* --- 4. EXPERTISE & SKILLS --- */}
+      {/* --- 4. EXPERTISE & SKILLS (Categorized) --- */}
       {(isOwner || (user.skills?.length > 0)) && (
         <section id="expertise" className="py-24 border-b border-white/10">
-          <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center text-blue-400 mb-16">Expertise & Skills</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(user.skills || []).map((skill, index) => {
-                const skillName = typeof skill === 'string' ? skill : skill.name;
-                const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80); 
-                return (
-                  <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 relative group hover:border-blue-500/30 transition-all">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-blue-300 font-medium text-lg">
-                        <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>{skillName}</InlineEdit>
-                      </span>
-                      <span className="text-white/50 text-sm font-mono">{skillLevel}%</span>
-                    </div>
-                    <div className="w-full bg-white/10 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-600 to-cyan-400 h-2 rounded-full" style={{ width: `${skillLevel}%` }}></div>
-                    </div>
-                  </div>
-                )
-              })}
+          <div className="max-w-6xl mx-auto px-4 space-y-24">
+            <h2 className="text-3xl font-bold text-center text-blue-400">
+               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
+                  {user.sectionNames?.skills || "Expertise & Skills"}
+               </InlineEdit>
+            </h2>
+
+            {/* Categorized Skills Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+               {["Technical", "Soft Skills", "Other"].map((cat) => {
+                  const filteredSkills = (user.skills || []).filter(s => (s.category || "Other") === cat || (cat === "Technical" && s.category === "Administrative"));
+                  if (filteredSkills.length === 0 && !isOwner) return null;
+                  
+                  return (
+                     <div key={cat} className="space-y-8">
+                        <div className="flex items-center gap-4">
+                           <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20"><FaLayerGroup size={16}/></div>
+                           <h3 className="text-lg font-black uppercase tracking-widest text-white/80">{cat}</h3>
+                        </div>
+                        <div className="space-y-6">
+                           {filteredSkills.map((skill, index) => {
+                              const skillName = typeof skill === 'string' ? skill : skill.name;
+                              const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80); 
+                              return (
+                                <div key={index} className="space-y-3 group">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                                      <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>{skillName}</InlineEdit>
+                                    </span>
+                                    <span className="text-white/20 text-[10px] font-mono">{skillLevel}%</span>
+                                  </div>
+                                  <div className="w-full bg-white/5 rounded-full h-1 overflow-hidden">
+                                    <div className="bg-gradient-to-r from-blue-600 to-cyan-400 h-1 rounded-full group-hover:scale-x-105 transition-transform origin-left" style={{ width: `${skillLevel}%` }}></div>
+                                  </div>
+                                </div>
+                              )
+                           })}
+                        </div>
+                     </div>
+                  )
+               })}
             </div>
+
             {isOwner && (
-              <div className="mt-12 text-center">
-                 <button onClick={() => toast.error("Manage skills in Dashboard.")} className="px-6 py-2 bg-white/5 hover:bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-400 text-sm font-medium transition-all flex items-center gap-2 mx-auto">
+              <div className="text-center">
+                 <button onClick={() => toast.error("Manage categories in Dashboard.")} className="px-6 py-2 bg-white/5 hover:bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-400 text-sm font-medium transition-all flex items-center gap-2 mx-auto">
                   <Plus size={16} /> Add Skill
                 </button>
               </div>
@@ -682,14 +772,14 @@ const PublicProfile = () => {
 
       {/* --- 6. LANGUAGES --- */}
       {(isOwner || user.languages?.length > 0) && (
-        <section id="languages" className="py-24">
+        <section id="languages" className="py-24 border-b border-white/10">
           <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
             <h2 className="text-3xl font-bold text-indigo-400 flex justify-center items-center gap-3"><Globe size={28}/> Languages</h2>
             <div className="flex flex-wrap justify-center gap-4">
               {(user.languages || []).map((lang, index) => (
                 <div key={index} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-2xl px-8 py-4 hover:border-indigo-500/40 transition-all">
                   <span className="text-white font-bold text-lg mb-1">
-                    <InlineEdit isOwner={isOwner} label="Language" value={lang.language} onSave={(v) => handleArrayUpdate("languages", index, { language: v })}>{lang.language}</InlineEdit>
+                    <InlineEdit isOwner={isOwner} label="Language" value={lang.name} onSave={(v) => handleArrayUpdate("languages", index, { name: v })}>{lang.name}</InlineEdit>
                   </span>
                   <span className="text-indigo-400/80 text-xs uppercase tracking-widest font-medium">
                     <InlineEdit isOwner={isOwner} label="Proficiency" value={lang.proficiency} onSave={(v) => handleArrayUpdate("languages", index, { proficiency: v })}>{lang.proficiency}</InlineEdit>
@@ -701,6 +791,67 @@ const PublicProfile = () => {
         </section>
       )}
 
+      {/* --- 7. PROFESSIONAL SERVICES --- */}
+      {(isOwner || user.services?.length > 0) && (
+        <section id="services" className="py-32 bg-white/[0.01]">
+          <div className="max-w-6xl mx-auto px-6 space-y-20">
+            <div className="text-center space-y-4">
+               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">Professional Ecosystem</h2>
+               <p className="text-4xl md:text-6xl font-black">
+                  <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.services} onSave={(v) => handleLiveUpdate({ "sectionNames.services": v })}>
+                     {user.sectionNames?.services || "What I Offer"}
+                  </InlineEdit>
+               </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {(user.services || []).map((service, idx) => (
+                <Card key={idx} className="p-10 space-y-6 hover:border-action/20 transition-all border-white/5 bg-white/[0.02]">
+                   <div className="w-16 h-16 rounded-3xl bg-action/10 flex items-center justify-center text-action">
+                      <FaMagic size={24} />
+                   </div>
+                   <div className="space-y-4">
+                      <h3 className="text-xl font-black">
+                         <InlineEdit isOwner={isOwner} label="Service Title" value={service.title} onSave={(v) => handleArrayUpdate("services", idx, { title: v })}>{service.title || "Consulting"}</InlineEdit>
+                      </h3>
+                      <p className="text-sm text-[var(--test-secondary)] font-medium italic opacity-60">
+                         <InlineEdit isOwner={isOwner} label="Service Description" value={service.description} onSave={(v) => handleArrayUpdate("services", idx, { description: v })} multiline>{service.description || "Deep architectural strategy and semantic engineering..."}</InlineEdit>
+                      </p>
+                   </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- 8. INTERESTS & HOBBIES --- */}
+      {(isOwner || user.interests?.length > 0) && (
+        <section id="hobbies" className="py-24 border-b border-white/10">
+          <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
+            <h2 className="text-2xl font-black uppercase tracking-[0.4em] text-cyan-400">Beyond the Desktop</h2>
+            <div className="flex flex-wrap justify-center gap-6">
+               {(user.interests || []).map((hobby, idx) => (
+                  <div key={idx} className="px-8 py-4 bg-white/5 border border-white/10 rounded-3xl hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all text-sm font-bold text-white/60 hover:text-white">
+                     <InlineEdit isOwner={isOwner} label="Hobby" value={hobby} onSave={(v) => { 
+                        const newInterests = [...user.interests];
+                        newInterests[idx] = v;
+                        handleLiveUpdate({ interests: newInterests });
+                     }}>{hobby}</InlineEdit>
+                  </div>
+               ))}
+               {isOwner && (
+                  <button onClick={() => {
+                     const h = window.prompt("Add Hobby:");
+                     if (h) handleLiveUpdate({ interests: [...(user.interests || []), h] });
+                  }} className="px-8 py-4 bg-white/5 border border-dashed border-white/20 rounded-3xl text-sm font-bold text-white/20 hover:text-white transition-all">
+                     + Add Interest
+                  </button>
+               )}
+            </div>
+          </div>
+        </section>
+      )}
+      
       {/* ── FOOTER ── */}
       <footer id="contact" className="py-40 px-6 text-center">
          <div className="max-w-4xl mx-auto space-y-20">
