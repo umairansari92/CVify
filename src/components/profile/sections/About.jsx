@@ -27,21 +27,15 @@ const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setSh
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] tracking-tighter leading-none uppercase">
-            <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-              {displayValue(personalInfo.fullName, "Architect")}
-            </InlineEdit>
+          <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight leading-none uppercase">
+            Professional Narrative
           </h2>
-          <div className="h-1.5 w-24 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
-          <p className="text-xl md:text-2xl font-black text-[var(--primary-color)] opacity-80 uppercase tracking-widest">
-            <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
-              {displayValue(personalInfo.jobTitle, "Engineering Excellence")}
-            </InlineEdit>
-          </p>
+          <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
+          <p className="text-xs font-black text-[var(--primary-color)] uppercase tracking-[0.4em] opacity-40">The Mission & Vision</p>
         </div>
         
-        <div className="text-lg md:text-2xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic font-serif">
-          <InlineEdit isOwner={isOwner} label="Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} multiline>
+        <div className="text-xl md:text-3xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic">
+          <InlineEdit isOwner={isOwner} label="Professional Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} type="textarea">
             <p className="whitespace-pre-wrap">"{displayValue(user.summary, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
           </InlineEdit>
         </div>

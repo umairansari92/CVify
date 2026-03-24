@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
+import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
 import { brandingSchema } from '../../utils/validationSchemas';
 import { FaCopy, FaCheck } from 'react-icons/fa';
@@ -64,6 +65,7 @@ const BrandingForm = () => {
       const res = await api.patch("/auth/profile", payload);
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
+        dispatch(updateActiveProfileLocally(payload));
         toast.success("✅ Branding synchronized!");
       }
     } catch (err) {

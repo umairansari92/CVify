@@ -1,18 +1,35 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Rocket } from "lucide-react";
-import { FaMagic, FaCheckCircle, FaChevronDown } from "react-icons/fa";
+import { Rocket as RocketIcon } from "lucide-react";
+import { FaMagic, FaCheckCircle, FaChevronDown, FaLayerGroup } from "react-icons/fa";
+import { TypeAnimation } from "react-type-animation";
 import InlineEdit from "../InlineEdit";
 
 const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate }) => {
   const personalInfo = user?.personalInfo || {};
   const branding = user?.branding || {};
+  const slogans = user?.heroSlogans || [];
 
   const HeroStats = () => {
     const stats = [
-      { label: "Projects Delivered", value: (user?.projects?.length || 0) > 0 ? `${user.projects.length}+` : "10+", icon: <Rocket size={14} /> },
-      { label: "Identity", value: displayValue(branding.identityLabel, "Full-stack Expert") || "AI & Web Specialist", icon: <FaMagic size={14} /> },
-      { label: "Availability", value: "Available now", icon: <FaCheckCircle size={14} /> },
+      { 
+        label: "Impact", 
+        value: (user?.projects?.length || 0) > 0 ? `${user.projects.length}+ Projects` : "10+ Projects", 
+        icon: <RocketIcon size={14} />,
+        field: null 
+      },
+      { 
+        label: "Identity", 
+        value: displayValue(branding.identityLabel, "Full-stack Expert"), 
+        icon: <FaMagic size={14} />,
+        field: "branding.identityLabel"
+      },
+      { 
+        label: "Availability", 
+        value: displayValue(user?.availability, "Open to Work"), 
+        icon: <FaCheckCircle size={14} />,
+        field: "availability"
+      },
     ];
 
     return (
@@ -29,7 +46,15 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             </div>
             <div className="text-left">
               <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40 group-hover:opacity-60 transition-all">{stat.label}</p>
-              <p className="text-sm font-black text-[var(--text-primary)]">{stat.value}</p>
+              {stat.field ? (
+                <div className="text-sm font-black text-[var(--text-primary)]">
+                  <InlineEdit isOwner={isOwner} id={`stat-${i}`} value={stat.value} onSave={(v) => handleLiveUpdate({ [stat.field]: v })}>
+                    {stat.value}
+                  </InlineEdit>
+                </div>
+              ) : (
+                <p className="text-sm font-black text-[var(--text-primary)]">{stat.value}</p>
+              )}
             </div>
           </div>
         ))}
@@ -42,16 +67,28 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-[var(--primary-color)]/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-10 md:space-y-14">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center">
-          {displayValue(branding.identityLabel, "Available for High-Impact Projects") && (
-            <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
-              <Rocket size={16} className="text-[var(--primary-color)]" />
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
-                <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Available for High-Impact Projects"} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
-                  {branding.identityLabel || "Available for High-Impact Projects"}
-                </InlineEdit>
-              </span>
+        
+        {/* Slogan Identity Layer (Missing in v1) */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center gap-6">
+          <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
+            <RocketIcon size={16} className="text-[var(--primary-color)]" />
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
+              <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Digital Architecture & Strategy"} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
+                {branding.identityLabel || "Digital Architecture & Strategy"}
+              </InlineEdit>
             </span>
+          </span>
+
+          {slogans.length > 0 && (
+            <div className="h-4 flex items-center justify-center">
+              <TypeAnimation
+                sequence={slogans.flatMap(s => [s, 3000])}
+                wrapper="span"
+                speed={50}
+                repeat={Infinity}
+                className="text-xs md:text-sm font-black uppercase tracking-[0.4em] text-[var(--primary-color)] opacity-60"
+              />
+            </div>
           )}
         </motion.div>
 
