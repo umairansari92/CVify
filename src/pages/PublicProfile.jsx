@@ -250,16 +250,16 @@ const PublicProfile = () => {
 
   return (
     <div
-      className="min-h-screen transition-colors duration-500 selection:bg-action selection:text-white overflow-x-hidden"
+      className="min-h-screen transition-colors duration-500 selection:bg-[var(--primary-color)] selection:text-white overflow-x-hidden"
       style={{
         backgroundColor: theme.bodyBg,
         fontFamily: `'${theme.fontPrimary}', sans-serif`,
-        "--action": theme.accentColor || "#2563eb",
+        "--primary-color": theme.accentColor || "#2563eb",
+        "--bg-primary": theme.bodyBg || "#0f172a",
         "--text-primary": theme.textPrimary || "#ffffff",
         "--text-secondary": theme.textSecondary || "#94a3b8",
-        "--body-bg": theme.bodyBg || "#0f172a",
         "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(255,255,255,0.02)",
-        "--card-border": "rgba(255,255,255,0.08)",
+        "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255,255,255,0.08)",
         color: "var(--text-primary)",
       }}
     >
@@ -368,7 +368,7 @@ const PublicProfile = () => {
                <span className="text-[7px] font-black uppercase tracking-widest text-emerald-500">AI Verified</span>
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest text-action">
+          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest text-[var(--primary-color)]">
             <a href="#about" className="hover:opacity-100 transition-all opacity-40">About</a>
             {(user.experience?.length > 0 || isOwner) && <a href="#journey" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.experience || "Experience"}</a>}
             {(user.education?.length > 0 || isOwner) && <a href="#education" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.education || "Education"}</a>}
@@ -378,7 +378,7 @@ const PublicProfile = () => {
           <div className="flex items-center gap-4">
               {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaLinkedin size={18} /></a>}
               {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaGithub size={18} /></a>}
-             <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20 ml-2">Get Resume</button>
+             <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-[var(--primary-color)] text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-[var(--primary-color)]/20 ml-2">Get Resume</button>
           </div>
         </div>
       </nav>
@@ -469,12 +469,14 @@ const PublicProfile = () => {
             <div className="space-y-8">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2 mb-4">
-                   <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action inline-block">{branding.identityLabel || "Professional Showcase"}</span>
+                   <span className="px-5 py-1.5 bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-[var(--primary-color)] flex items-center gap-2">
+                      <FaRocket /> {branding.identityLabel || "Professional Showcase"}
+                   </span>
                    {user.availability && (
-                      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${
                          user.availability === "Not Available" ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
                       }`}>
-                         {user.availability}
+                         {user.availability === "Not Available" && <FaExclamationTriangle />} {user.availability}
                       </span>
                    )}
                    {user.industry && user.industry !== "Other" && (
@@ -512,11 +514,11 @@ const PublicProfile = () => {
             </div>
 
             {/* Contact Suite Bar (Advanced) */}
-            <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest py-8 border-y border-white/5">
+            <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest py-8 border-y border-[var(--card-border)]">
               {(user.privacy?.showEmail !== false || isOwner) && user.email && (
                 <div className="flex items-center gap-3 group">
-                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-action group-hover:bg-action group-hover:text-white transition-all"><FaEnvelope size={14}/></div>
-                  <span className="opacity-40 group-hover:opacity-100 transition-all font-mono tracking-tighter">{user.email}</span>
+                  <div className="w-9 h-9 rounded-xl bg-[var(--card-bg)] flex items-center justify-center text-[var(--primary-color)] group-hover:bg-[var(--primary-color)] group-hover:text-white transition-all"><FaEnvelope size={14}/></div>
+                  <span className="opacity-40 group-hover:opacity-100 transition-all font-mono tracking-tighter text-[var(--text-primary)]">{user.email}</span>
                 </div>
               )}
               {(user.privacy?.showPhone || isOwner) && user.phoneNumber && (
@@ -560,47 +562,53 @@ const PublicProfile = () => {
             </div>
 
             <div className="flex flex-wrap gap-6 pt-12">
-               <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/30 flex items-center gap-3">
+               <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-[var(--primary-color)]/30 flex items-center gap-3">
                   <Download size={18} /> Download Executive CV
                </button>
-               <a href={`mailto:${user.email}`} className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
+               <a href={`mailto:${user.email}`} className="px-10 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all flex items-center gap-3">
                   {branding.ctaButtonText || "Direct Inquire"} <FaArrowRight size={12} className="opacity-60" />
                </a>
             </div>
+          </div>
+          
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 text-[var(--primary-color)] opacity-60 animate-bounce">
+             <span className="text-[8px] font-black uppercase tracking-[0.3em]">Scroll</span>
+             <FaChevronDown size={20} />
           </div>
         </div>
       </section>
 
       {/* --- 1. ABOUT & INDUSTRY --- */}
-      <section id="about" className="py-24 border-b border-white/10">
+      <section id="about" className="py-24 border-b border-[var(--card-border)]">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
           {/* Industry Badge */}
           <div className="flex justify-center mb-4">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold tracking-widest text-cyan-400 uppercase bg-cyan-400/10 border border-cyan-400/20 rounded-full">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold tracking-widest text-[var(--primary-color)] uppercase bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full">
               <InlineEdit isOwner={isOwner} label="Industry" value={user.personalInfo?.industry} onSave={(v) => handleLiveUpdate({ "personalInfo.industry": v })}>
                 {user.personalInfo?.industry || 'Technology & Software'}
               </InlineEdit>
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
             <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
               {personalInfo.fullName}
             </InlineEdit>
-            <span className="text-white/50"> : </span>
+            <span className="opacity-20"> : </span>
             <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
               {personalInfo.jobTitle}
             </InlineEdit>
           </h2>
           
-          <div className="text-lg md:text-xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto">
+          <div className="text-lg md:text-xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto">
             <InlineEdit isOwner={isOwner} label="Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} multiline>
               <p className="whitespace-pre-wrap">{user.summary || "Welcome to my digital space. I am passionate about building scalable solutions and crafting captivating digital experiences..."}</p>
             </InlineEdit>
           </div>
 
           <div className="pt-8">
-            <button onClick={() => setShowResumeModal(true)} className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full text-white font-medium transition-all flex items-center gap-2 mx-auto">
+            <button onClick={() => setShowResumeModal(true)} className="px-8 py-3 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/10 border border-[var(--card-border)] rounded-full text-[var(--text-primary)] font-medium transition-all flex items-center gap-2 mx-auto">
               <Download size={18} /> Download CV
             </button>
           </div>
@@ -609,43 +617,44 @@ const PublicProfile = () => {
 
       {/* --- 2. PROFESSIONAL EXPERIENCE --- */}
       {(isOwner || (user.experience?.length > 0)) && (
-        <section id="journey" className="py-24 border-b border-white/10">
+        <section id="journey" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-teal-400 mb-16 text-center">
+            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center flex items-center gap-3">
+               <FaHistory />
                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
                   {user.sectionNames?.experience || "Professional Experience"}
                </InlineEdit>
             </h2>
-            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-teal-500/20">
+            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.experience || []).map((exp, index) => (
                 <div key={exp._id || index} className="relative flex flex-col items-center group">
-                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-teal-500 text-white mb-6 shadow-lg shadow-teal-500/20">
+                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-lg shadow-[var(--primary-color)]/20">
                     <Briefcase size={20} />
                   </div>
-                  <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-teal-500/30 transition-all">
-                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-teal-400/80 mb-2">
+                  <div className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-[var(--primary-color)]/30 transition-all">
+                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--primary-color)] opacity-80 mb-2">
                       <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
                         const [s, e] = v.split(" - "); 
                         handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
                       }}>
                         {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
                       </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
                       <InlineEdit isOwner={isOwner} label="Location" value={exp.location} onSave={(v) => handleArrayUpdate("experience", index, { location: v })}>
                          {exp.location || "Location"}
                       </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
                       <InlineEdit isOwner={isOwner} label="Mode" value={exp.type} onSave={(v) => handleArrayUpdate("experience", index, { type: v })}>
                          {exp.type || "Full-time"}
                       </InlineEdit>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-1">
+                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-1">
                       <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
                     </h3>
-                    <h4 className="text-lg font-semibold text-white/50 mb-6">
+                    <h4 className="text-lg font-semibold text-[var(--text-secondary)] mb-6">
                       <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company}</InlineEdit>
                     </h4>
-                    <div className="text-sm text-white/70 leading-relaxed">
+                    <div className="text-sm text-[var(--text-secondary)] leading-relaxed">
                       <InlineEdit isOwner={isOwner} label="Achievements" value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })} multiline>
                         <p className="whitespace-pre-wrap">{exp.achievements || "Description..."}</p>
                       </InlineEdit>
@@ -655,8 +664,8 @@ const PublicProfile = () => {
               ))}
             </div>
             {isOwner && (
-              <button onClick={() => toast.error("Please add via Dashboard for full validation.")} className="mt-12 px-6 py-2 bg-white/5 hover:bg-teal-500/20 border border-teal-500/30 rounded-full text-teal-400 text-sm font-medium transition-all flex items-center gap-2 z-10">
-                <Plus size={16} /> Add Experience
+              <button onClick={() => toast.error("Please add via Dashboard for full validation.")} className="mt-12 px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 z-10">
+                <FaPlus size={16} /> Add Experience
               </button>
             )}
           </div>
@@ -665,40 +674,40 @@ const PublicProfile = () => {
 
       {/* --- 3. EDUCATION HISTORY --- */}
       {(isOwner || (user.education?.length > 0)) && (
-        <section id="education" className="py-24 border-b border-white/10 bg-white/[0.02]">
+        <section id="education" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-purple-400 mb-16 text-center">
+            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
                   {user.sectionNames?.education || "Education History"}
                </InlineEdit>
             </h2>
-            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-purple-500/20">
+            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.education || []).map((edu, index) => (
                 <div key={edu._id || index} className="relative flex flex-col items-center group">
-                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-purple-500 text-white mb-6 shadow-lg shadow-purple-500/20">
+                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-lg shadow-[var(--primary-color)]/20">
                     <GraduationCap size={20} />
                   </div>
-                  <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-purple-500/30 transition-all">
-                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-purple-400/80 mb-2">
+                  <div className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-[var(--primary-color)]/30 transition-all">
+                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--primary-color)] opacity-80 mb-2">
                       <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
                         const [s, e] = v.split(" - ");
                         handleArrayUpdate("education", index, { startDate: s, endDate: e === "Present" ? "" : e });
                       }}>
                         {edu.startDate} - {edu.endDate || 'Present'}
                       </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
                       <InlineEdit isOwner={isOwner} label="Result" value={edu.fieldOfStudy} onSave={(v) => handleArrayUpdate("education", index, { fieldOfStudy: v })}>
                          {edu.fieldOfStudy || "Field of Study"}
                       </InlineEdit>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-1">
+                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-1">
                       <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
                     </h3>
-                    <h4 className="text-lg font-semibold text-white/50 mb-2">
+                    <h4 className="text-lg font-semibold text-[var(--text-secondary)] mb-2">
                       <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
                     </h4>
                     {edu.description && (
-                       <p className="text-xs text-white/40 mt-4 italic">
+                       <p className="text-xs text-[var(--text-secondary)] opacity-60 mt-4 italic">
                           <InlineEdit isOwner={isOwner} label="Story" value={edu.description} onSave={(v) => handleArrayUpdate("education", index, { description: v })} multiline>{edu.description}</InlineEdit>
                        </p>
                     )}
@@ -707,8 +716,8 @@ const PublicProfile = () => {
               ))}
             </div>
             {isOwner && (
-              <button onClick={() => toast.error("Please add via Dashboard.")} className="mt-12 px-6 py-2 bg-white/5 hover:bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium transition-all flex items-center gap-2 z-10">
-                <Plus size={16} /> Add Education
+              <button onClick={() => toast.error("Please add via Dashboard.")} className="mt-12 px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 z-10">
+                <FaPlus size={16} /> Add Education
               </button>
             )}
           </div>
@@ -717,17 +726,18 @@ const PublicProfile = () => {
 
       {/* --- SECTION: PROJECTS / PORTFOLIO [V4.3 SURGERY MODE] --- */}
       {(isOwner || (profile.data.projects && profile.data.projects.length > 0) || (profile.data.portfolio && profile.data.portfolio.length > 0)) && (
-        <section id="showcase" className="py-24 border-b border-white/10">
+        <section id="showcase" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-7xl mx-auto px-4">
             
             {/* Section Header */}
             <div className="text-center mb-16 space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
-                <span className="text-white">My </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Portfolio</span>
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight flex items-center justify-center gap-4">
+                <FaBriefcase className="text-[var(--primary-color)]" />
+                <span className="text-[var(--text-primary)]">My </span>
+                <span className="text-[var(--primary-color)]">Portfolio</span>
               </h2>
-              <p className="text-lg text-white/60 font-light max-w-2xl mx-auto">
-                Here is some of my selected work that showcases my expertise.
+              <p className="text-lg text-[var(--text-secondary)] font-light max-w-2xl mx-auto opacity-80">
+                A curated collection of my most impactful work and technical expertise.
               </p>
             </div>
 
@@ -740,7 +750,7 @@ const PublicProfile = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="group flex flex-col bg-[#0f172a]/80 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-cyan-400/80 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)] hover:-translate-y-1"
+                  className="group flex flex-col bg-[var(--card-bg)] backdrop-blur-sm border border-[var(--card-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--primary-color)]/80 hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.25)] hover:-translate-y-1"
                 >
                   {/* Project Image / Thumbnail */}
                   <div className="relative aspect-video w-full bg-white/5 overflow-hidden border-b border-white/10">
@@ -766,7 +776,7 @@ const PublicProfile = () => {
                   {/* Project Content */}
                   <div className="p-6 flex flex-col flex-1">
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-white leading-tight">
+                      <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight">
                         <InlineEdit isOwner={isOwner} id={`proj-title-${index}`} value={project.title} onSave={(v) => handleArrayUpdate("projects", index, { title: v })}>
                           {project.title || 'Project Title'}
                         </InlineEdit>
@@ -776,21 +786,21 @@ const PublicProfile = () => {
                       )}
                     </div>
                     
-                    <div className="text-sm text-white/60 leading-relaxed mb-6 flex-1 line-clamp-3 group-hover:line-clamp-none transition-all">
+                    <div className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6 flex-1 line-clamp-3 group-hover:line-clamp-none transition-all">
                       <InlineEdit isOwner={isOwner} id={`proj-desc-${index}`} value={project.description} type="textarea" onSave={(v) => handleArrayUpdate("projects", index, { description: v })}>
                         <p>{project.description || 'Describe the problem you solved and the technologies you used...'}</p>
                       </InlineEdit>
                     </div>
 
                     {/* Links & Actions */}
-                    <div className="flex items-center gap-4 pt-4 border-t border-white/5 mt-auto">
+                    <div className="flex items-center gap-4 pt-4 border-t border-[var(--card-border)] mt-auto">
                       {(project.liveUrl || project.liveLink) && (
-                        <a href={project.liveUrl || project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors">
+                        <a href={project.liveUrl || project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-[var(--primary-color)] hover:opacity-80 transition-all">
                           <ExternalLink size={16} /> Live Demo
                         </a>
                       )}
                       {(project.githubUrl || project.githubLink) && (
-                        <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors">
+                        <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
                           <FaGithub size={16} /> Source Code
                         </a>
                       )}
@@ -811,8 +821,8 @@ const PublicProfile = () => {
 
             {isOwner && (
               <div className="mt-16 text-center">
-                <button onClick={() => dispatch(openProjectModalThunk())} className="px-8 py-3 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-full text-cyan-400 font-medium transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(34,211,238,0.1)]">
-                  <Plus size={18} /> Add New Project
+                <button onClick={() => dispatch(openProjectModalThunk())} className="px-8 py-3 bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] font-medium transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+                  <FaPlus size={18} /> Add New Project
                 </button>
               </div>
             )}
@@ -822,9 +832,9 @@ const PublicProfile = () => {
 
       {/* --- 4. EXPERTISE & SKILLS (Categorized) --- */}
       {(isOwner || (user.skills?.length > 0)) && (
-        <section id="expertise" className="py-24 border-b border-white/10">
+        <section id="expertise" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-6xl mx-auto px-4 space-y-24">
-            <h2 className="text-3xl font-bold text-center text-blue-400">
+            <h2 className="text-3xl font-bold text-center text-[var(--primary-color)]">
                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
                   {user.sectionNames?.skills || "Expertise & Skills"}
                </InlineEdit>
@@ -839,8 +849,8 @@ const PublicProfile = () => {
                   return (
                      <div key={cat} className="space-y-8">
                         <div className="flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20"><FaLayerGroup size={16}/></div>
-                           <h3 className="text-lg font-black uppercase tracking-widest text-white/80">{cat}</h3>
+                           <div className="w-10 h-10 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] border border-[var(--primary-color)]/20"><FaLayerGroup size={16}/></div>
+                           <h3 className="text-lg font-black uppercase tracking-widest text-[var(--text-primary)] opacity-80">{cat}</h3>
                         </div>
                         <div className="space-y-6">
                            {filteredSkills.map((skill, index) => {
@@ -849,13 +859,13 @@ const PublicProfile = () => {
                               return (
                                 <div key={index} className="space-y-3 group">
                                   <div className="flex justify-between items-center">
-                                    <span className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                                    <span className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">
                                       <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>{skillName}</InlineEdit>
                                     </span>
-                                    <span className="text-white/20 text-[10px] font-mono">{skillLevel}%</span>
+                                    <span className="text-[var(--text-secondary)] opacity-50 text-[10px] font-mono">{skillLevel}%</span>
                                   </div>
-                                  <div className="w-full bg-white/5 rounded-full h-1 overflow-hidden">
-                                    <div className="bg-gradient-to-r from-blue-600 to-cyan-400 h-1 rounded-full group-hover:scale-x-105 transition-transform origin-left" style={{ width: `${skillLevel}%` }}></div>
+                                  <div className="w-full bg-[var(--card-bg)] rounded-full h-1 overflow-hidden">
+                                    <div className="bg-[var(--primary-color)] h-1 rounded-full group-hover:scale-x-105 transition-transform origin-left" style={{ width: `${skillLevel}%` }}></div>
                                   </div>
                                 </div>
                               )
@@ -868,8 +878,8 @@ const PublicProfile = () => {
 
             {isOwner && (
               <div className="text-center">
-                 <button onClick={() => toast.error("Manage categories in Dashboard.")} className="px-6 py-2 bg-white/5 hover:bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-400 text-sm font-medium transition-all flex items-center gap-2 mx-auto">
-                  <Plus size={16} /> Add Skill
+                 <button onClick={() => toast.error("Manage categories in Dashboard.")} className="px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 mx-auto">
+                  <FaPlus size={16} /> Add Skill
                 </button>
               </div>
             )}
@@ -879,23 +889,23 @@ const PublicProfile = () => {
 
       {/* --- 5. CREDENTIALS (CERTIFICATIONS & AWARDS) --- */}
       {(isOwner || user.certifications?.length > 0 || user.honorsAndAwards?.length > 0) && (
-        <section id="credentials" className="py-24 border-b border-white/10 bg-white/[0.02]">
+        <section id="credentials" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
           <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16">
             
             {/* Certifications */}
             {(isOwner || user.certifications?.length > 0) && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-emerald-400 flex items-center gap-3 justify-center md:justify-start"><Award size={24}/> Certifications</h2>
+                <h2 className="text-2xl font-bold text-[var(--primary-color)] flex items-center gap-3 justify-center md:justify-start"><Award size={24}/> Certifications</h2>
                 <div className="space-y-4">
                   {(user.certifications || []).map((cert, index) => (
-                    <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-emerald-500/30 transition-all">
-                      <h3 className="text-lg font-bold text-white mb-1">
+                    <div key={index} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-6 hover:border-[var(--primary-color)]/30 transition-all">
+                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">
                         <InlineEdit isOwner={isOwner} label="Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
                       </h3>
-                      <p className="text-sm text-emerald-400/80 mb-2">
+                      <p className="text-sm text-[var(--primary-color)] opacity-80 mb-2">
                         <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
                       </p>
-                      <p className="text-xs text-white/40 uppercase tracking-wider">
+                      <p className="text-xs text-[var(--text-secondary)] opacity-60 uppercase tracking-wider">
                         <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date || 'No Date'}</InlineEdit>
                       </p>
                     </div>
@@ -907,14 +917,14 @@ const PublicProfile = () => {
             {/* Honors & Awards */}
             {(isOwner || user.honorsAndAwards?.length > 0) && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-yellow-400 flex items-center gap-3 justify-center md:justify-start"><Trophy size={24}/> Honors & Awards</h2>
+                <h2 className="text-2xl font-bold text-[var(--primary-color)] flex items-center gap-3 justify-center md:justify-start"><Trophy size={24}/> Honors & Awards</h2>
                 <div className="space-y-4">
                   {(user.honorsAndAwards || []).map((award, index) => (
-                    <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-yellow-500/30 transition-all">
-                      <h3 className="text-lg font-bold text-white mb-1">
+                    <div key={index} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-6 hover:border-[var(--primary-color)]/30 transition-all">
+                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">
                         <InlineEdit isOwner={isOwner} label="Title" value={award.title} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { title: v })}>{award.title}</InlineEdit>
                       </h3>
-                      <p className="text-xs text-white/40 uppercase tracking-wider mt-3">
+                      <p className="text-xs text-[var(--text-secondary)] opacity-60 uppercase tracking-wider mt-3">
                         <InlineEdit isOwner={isOwner} label="Date" value={award.date} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { date: v })}>{award.date || 'No Date'}</InlineEdit>
                       </p>
                     </div>
@@ -928,16 +938,16 @@ const PublicProfile = () => {
 
       {/* --- 6. LANGUAGES --- */}
       {(isOwner || user.languages?.length > 0) && (
-        <section id="languages" className="py-24 border-b border-white/10">
+        <section id="languages" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
-            <h2 className="text-3xl font-bold text-indigo-400 flex justify-center items-center gap-3"><Globe size={28}/> Languages</h2>
+            <h2 className="text-3xl font-bold text-[var(--primary-color)] flex justify-center items-center gap-3"><Globe size={28}/> Languages</h2>
             <div className="flex flex-wrap justify-center gap-4">
               {(user.languages || []).map((lang, index) => (
-                <div key={index} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-2xl px-8 py-4 hover:border-indigo-500/40 transition-all">
-                  <span className="text-white font-bold text-lg mb-1">
+                <div key={index} className="flex flex-col items-center bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl px-8 py-4 hover:border-[var(--primary-color)]/40 transition-all">
+                  <span className="text-[var(--text-primary)] font-bold text-lg mb-1">
                     <InlineEdit isOwner={isOwner} label="Language" value={lang.name} onSave={(v) => handleArrayUpdate("languages", index, { name: v })}>{lang.name}</InlineEdit>
                   </span>
-                  <span className="text-indigo-400/80 text-xs uppercase tracking-widest font-medium">
+                  <span className="text-[var(--primary-color)] opacity-80 text-xs uppercase tracking-widest font-medium">
                     <InlineEdit isOwner={isOwner} label="Proficiency" value={lang.proficiency} onSave={(v) => handleArrayUpdate("languages", index, { proficiency: v })}>{lang.proficiency}</InlineEdit>
                   </span>
                 </div>
@@ -949,31 +959,31 @@ const PublicProfile = () => {
 
       {/* --- 7. CERTIFICATIONS --- */}
       {(isOwner || user.certifications?.length > 0) && (
-        <section id="certifications" className="py-24 border-b border-white/10 bg-white/[0.01]">
+        <section id="certifications" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-emerald-400 mb-16 text-center">
+            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.certifications} onSave={(v) => handleLiveUpdate({ "sectionNames.certifications": v })}>
                   {user.sectionNames?.certifications || "Certifications"}
                </InlineEdit>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
               {(user.certifications || []).map((cert, index) => (
-                <div key={index} className="p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-emerald-500/30 transition-all group">
+                <div key={index} className="p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/30 transition-all group">
                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400"><Award size={24}/></div>
+                      <div className="w-12 h-12 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)]"><Award size={24}/></div>
                       <div className="flex-1 space-y-1">
-                         <h3 className="text-lg font-black text-white">
+                         <h3 className="text-lg font-black text-[var(--text-primary)]">
                             <InlineEdit isOwner={isOwner} label="Cert Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
                          </h3>
-                         <p className="text-sm font-bold text-emerald-400/80">
+                         <p className="text-sm font-bold text-[var(--primary-color)] opacity-80">
                             <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
                          </p>
-                         <div className="flex items-center gap-3 text-[10px] text-white/30 font-bold uppercase tracking-widest pt-2">
+                         <div className="flex items-center gap-3 text-[10px] text-[var(--text-secondary)] opacity-40 font-bold uppercase tracking-widest pt-2">
                             <span>
                                <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date}</InlineEdit>
                             </span>
                             {cert.link && (
-                               <a href={ensureAbsoluteUrl(cert.link)} target="_blank" className="text-emerald-500 hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                               <a href={ensureAbsoluteUrl(cert.link)} target="_blank" className="text-[var(--primary-color)] hover:opacity-80 flex items-center gap-1 transition-colors">
                                   Verify Cert <FaArrowRight size={8}/>
                                </a>
                             )}
@@ -989,27 +999,27 @@ const PublicProfile = () => {
 
       {/* --- 8. HONORS & AWARDS --- */}
       {(isOwner || user.achievements?.length > 0) && (
-        <section id="achievements" className="py-24 border-b border-white/10">
+        <section id="achievements" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-amber-400 mb-16 text-center">
+            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.achievements} onSave={(v) => handleLiveUpdate({ "sectionNames.achievements": v })}>
                   {user.sectionNames?.achievements || "Honors & Awards"}
                </InlineEdit>
             </h2>
             <div className="space-y-6 w-full max-w-2xl">
               {(user.achievements || []).map((ach, index) => (
-                <div key={index} className="relative p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-amber-500/30 transition-all flex gap-6 items-center">
-                   <div className="w-16 h-16 rounded-3xl bg-amber-500/10 flex items-center justify-center text-amber-400 flex-shrink-0 animate-pulse"><Trophy size={32}/></div>
+                <div key={index} className="relative p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/30 transition-all flex gap-6 items-center">
+                   <div className="w-16 h-16 rounded-3xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] flex-shrink-0 animate-pulse"><Trophy size={32}/></div>
                    <div className="flex-1 space-y-2">
                       <div className="flex justify-between items-start">
-                         <h3 className="text-xl font-black text-white">
+                         <h3 className="text-xl font-black text-[var(--text-primary)]">
                             <InlineEdit isOwner={isOwner} label="Award Title" value={ach.title} onSave={(v) => handleArrayUpdate("achievements", index, { title: v })}>{ach.title}</InlineEdit>
                          </h3>
-                         <span className="text-[10px] font-black text-amber-400/60 uppercase tracking-widest">
+                         <span className="text-[10px] font-black text-[var(--primary-color)] opacity-60 uppercase tracking-widest">
                             <InlineEdit isOwner={isOwner} label="Date" value={ach.date} onSave={(v) => handleArrayUpdate("achievements", index, { date: v })}>{ach.date}</InlineEdit>
                          </span>
                       </div>
-                      <p className="text-sm text-white/50 leading-relaxed italic">
+                      <p className="text-sm text-[var(--text-secondary)] leading-relaxed italic opacity-80">
                          <InlineEdit isOwner={isOwner} label="Description" value={ach.description} onSave={(v) => handleArrayUpdate("achievements", index, { description: v })} multiline>{ach.description}</InlineEdit>
                       </p>
                    </div>
@@ -1022,10 +1032,10 @@ const PublicProfile = () => {
 
       {/* --- 9. PROFESSIONAL SERVICES --- */}
       {(isOwner || user.services?.length > 0) && (
-        <section id="services" className="py-32 bg-white/[0.01]">
+        <section id="services" className="py-32">
           <div className="max-w-6xl mx-auto px-6 space-y-20">
             <div className="text-center space-y-4">
-               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">Professional Ecosystem</h2>
+               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-[var(--primary-color)]">Professional Ecosystem</h2>
                <p className="text-4xl md:text-6xl font-black">
                   <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.services} onSave={(v) => handleLiveUpdate({ "sectionNames.services": v })}>
                      {user.sectionNames?.services || "What I Offer"}
@@ -1034,19 +1044,19 @@ const PublicProfile = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(user.services || []).map((service, idx) => (
-                <Card key={idx} className="p-10 space-y-6 hover:border-action/20 transition-all border-white/5 bg-white/[0.02]">
-                   <div className="w-16 h-16 rounded-3xl bg-action/10 flex items-center justify-center text-action">
+                <div key={idx} className="p-10 space-y-6 rounded-3xl transition-all border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-[var(--primary-color)]/30 group">
+                   <div className="w-16 h-16 rounded-3xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] group-hover:bg-[var(--primary-color)] group-hover:text-white transition-all">
                       <FaMagic size={24} />
                    </div>
                    <div className="space-y-4">
-                      <h3 className="text-xl font-black">
+                      <h3 className="text-xl font-black text-[var(--text-primary)]">
                          <InlineEdit isOwner={isOwner} label="Service Title" value={service.title} onSave={(v) => handleArrayUpdate("services", idx, { title: v })}>{service.title || "Consulting"}</InlineEdit>
                       </h3>
-                      <p className="text-sm text-[var(--test-secondary)] font-medium italic opacity-60">
+                      <p className="text-sm text-[var(--text-secondary)] font-medium italic opacity-60">
                          <InlineEdit isOwner={isOwner} label="Service Description" value={service.description} onSave={(v) => handleArrayUpdate("services", idx, { description: v })} multiline>{service.description || "Deep architectural strategy and semantic engineering..."}</InlineEdit>
                       </p>
                    </div>
-                </Card>
+                </div>
               ))}
             </div>
           </div>
@@ -1055,12 +1065,12 @@ const PublicProfile = () => {
 
       {/* --- 8. INTERESTS & HOBBIES --- */}
       {(isOwner || user.interests?.length > 0) && (
-        <section id="hobbies" className="py-24 border-b border-white/10">
+        <section id="hobbies" className="py-24 border-b border-[var(--card-border)]">
           <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
-            <h2 className="text-2xl font-black uppercase tracking-[0.4em] text-cyan-400">Beyond the Desktop</h2>
+            <h2 className="text-2xl font-black uppercase tracking-[0.4em] text-[var(--primary-color)]">Beyond the Desktop</h2>
             <div className="flex flex-wrap justify-center gap-6">
                {(user.interests || []).map((hobby, idx) => (
-                  <div key={idx} className="px-8 py-4 bg-white/5 border border-white/10 rounded-3xl hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all text-sm font-bold text-white/60 hover:text-white">
+                  <div key={idx} className="px-8 py-4 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/40 hover:bg-[var(--primary-color)]/5 transition-all text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                      <InlineEdit isOwner={isOwner} label="Hobby" value={hobby} onSave={(v) => { 
                         const newInterests = [...user.interests];
                         newInterests[idx] = v;
@@ -1072,7 +1082,7 @@ const PublicProfile = () => {
                   <button onClick={() => {
                      const h = window.prompt("Add Hobby:");
                      if (h) handleLiveUpdate({ interests: [...(user.interests || []), h] });
-                  }} className="px-8 py-4 bg-white/5 border border-dashed border-white/20 rounded-3xl text-sm font-bold text-white/20 hover:text-white transition-all">
+                  }} className="px-8 py-4 bg-[var(--card-bg)] border border-dashed border-[var(--card-border)] rounded-3xl text-sm font-bold text-[var(--text-secondary)] opacity-40 hover:opacity-100 transition-all">
                      + Add Interest
                   </button>
                )}
@@ -1082,11 +1092,11 @@ const PublicProfile = () => {
       )}
       
 {/* --- SECTION: CONTACT --- */}
-<section id="contact" className="relative py-32 border-b border-white/10 overflow-hidden bg-[#0f172a]/50">
+<section id="contact" className="relative py-32 border-b border-[var(--card-border)] overflow-hidden bg-[var(--bg-primary)]/50">
   
   {/* Large Background Text Effect (From Image 2) */}
   <div className="absolute top-10 left-0 w-full text-center pointer-events-none select-none overflow-hidden flex justify-center">
-    <h2 className="text-[10vw] font-black text-white/[0.03] uppercase tracking-tighter whitespace-nowrap">
+    <h2 className="text-[10vw] font-black text-[var(--text-primary)] opacity-[0.03] uppercase tracking-tighter whitespace-nowrap">
       For Assistance
     </h2>
   </div>
@@ -1094,8 +1104,8 @@ const PublicProfile = () => {
   <div className="max-w-7xl mx-auto px-4 relative z-10">
     
     <div className="text-center mb-20">
-      <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white flex justify-center gap-3">
-        Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Me</span>
+      <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex justify-center gap-3">
+        Contact <span className="text-[var(--primary-color)]">Me</span>
       </h2>
     </div>
 
@@ -1104,15 +1114,15 @@ const PublicProfile = () => {
       {/* Left Column: Contact Info & Socials */}
       <div className="space-y-12">
         <div>
-          <h3 className="text-2xl font-bold text-white mb-8 uppercase tracking-wider">Contact Me Here</h3>
+          <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-8 uppercase tracking-wider">Contact Me Here</h3>
           
           <div className="space-y-6">
             {/* Location */}
             <div className="flex items-start gap-4">
-              <div className="mt-1 text-cyan-400"><MapPin size={24} /></div>
+              <div className="mt-1 text-[var(--primary-color)]"><MapPin size={24} /></div>
               <div>
-                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Location</span>
-                <span className="text-white/90 text-lg">
+                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Location</span>
+                <span className="text-[var(--text-primary)] opacity-90 text-lg">
                   <InlineEdit isOwner={isOwner} id="loc" value={personalInfo.location} selector={state => state.profile.data.personalInfo.location}>
                     {personalInfo.location || 'City, Country'}
                   </InlineEdit>
@@ -1122,10 +1132,10 @@ const PublicProfile = () => {
 
             {/* Email */}
             <div className="flex items-start gap-4">
-              <div className="mt-1 text-cyan-400"><Mail size={24} /></div>
+              <div className="mt-1 text-[var(--primary-color)]"><Mail size={24} /></div>
               <div>
-                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Email</span>
-                <span className="text-white/90 text-lg">
+                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Email</span>
+                <span className="text-[var(--text-primary)] opacity-90 text-lg">
                   <InlineEdit isOwner={isOwner} id="email" value={personalInfo.email} selector={state => state.profile.data.personalInfo.email}>
                     {personalInfo.email || 'your.email@example.com'}
                   </InlineEdit>
@@ -1135,10 +1145,10 @@ const PublicProfile = () => {
 
             {/* Phone */}
             <div className="flex items-start gap-4">
-              <div className="mt-1 text-cyan-400"><Phone size={24} /></div>
+              <div className="mt-1 text-[var(--primary-color)]"><Phone size={24} /></div>
               <div>
-                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Mobile Number</span>
-                <span className="text-white/90 text-lg">
+                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Mobile Number</span>
+                <span className="text-[var(--text-primary)] opacity-90 text-lg">
                   <InlineEdit isOwner={isOwner} id="phone" value={personalInfo.phone} selector={state => state.profile.data.personalInfo.phone}>
                     {personalInfo.phone || '+00 123 456 789'}
                   </InlineEdit>
@@ -1150,7 +1160,7 @@ const PublicProfile = () => {
 
         {/* Social Icons (Inspired by Image 1) */}
         <div>
-          <h3 className="text-xl font-bold text-yellow-400 mb-6 uppercase tracking-wider">Follow Me:</h3>
+          <h3 className="text-xl font-bold text-[var(--primary-color)] mb-6 uppercase tracking-wider">Follow Me:</h3>
           <div className="flex flex-wrap gap-4">
             {/* Map through socialLinks if available, fallback to placeholders for owner to edit */}
             {['linkedin', 'github', 'twitter', 'portfolio'].map((platform) => {
@@ -1176,51 +1186,51 @@ const PublicProfile = () => {
                   target="_blank" 
                   rel="noopener noreferrer"
                   title={platform}
-                  className="w-12 h-12 rounded-full border border-yellow-500/50 bg-yellow-500/10 text-yellow-400 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-rotate-12 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.5)]"
+                  className="w-12 h-12 rounded-full border border-[var(--primary-color)]/50 bg-[var(--primary-color)]/10 text-[var(--primary-color)] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-rotate-12 hover:bg-[var(--primary-color)] hover:text-gray-900 hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
                 >
                   {getIcon(platform)}
                 </a>
               );
             })}
           </div>
-          {isOwner && <p className="text-xs text-white/30 mt-3">* Edit social links in your dashboard settings.</p>}
+          {isOwner && <p className="text-xs text-[var(--text-secondary)] opacity-30 mt-3">* Edit social links in your dashboard settings.</p>}
         </div>
       </div>
 
       {/* Right Column: Contact Form (Image 2) */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
         <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); /* Dispatch mailto or API thunk here */ }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input 
               type="text" 
               placeholder="YOUR NAME" 
-              className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+              className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
               required
             />
             <input 
               type="email" 
               placeholder="YOUR EMAIL" 
-              className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+              className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
               required
             />
           </div>
           <input 
             type="text" 
             placeholder="ENTER SUBJECT" 
-            className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+            className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
             required
           />
           <textarea 
             placeholder="Message Here..." 
             rows="6"
-            className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors resize-none"
+            className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all resize-none"
             required
           ></textarea>
           
           <div className="text-right pt-4">
             <button 
               type="submit" 
-              className="px-10 py-4 bg-transparent border border-white/30 hover:border-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-400 rounded-full text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto"
+              className="px-10 py-4 bg-transparent border border-[var(--card-border)] hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)]/10 hover:text-[var(--primary-color)] rounded-full text-[var(--text-primary)] font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto"
             >
               Submit <Send size={18} />
             </button>
@@ -1233,13 +1243,13 @@ const PublicProfile = () => {
 </section>
 
 {/* --- FOOTER --- */}
-<footer id="footer" className="py-8 bg-[#0b1121] border-t border-white/10 text-center">
+<footer id="footer" className="py-8 bg-[var(--bg-primary)] border-t border-[var(--card-border)] text-center">
   <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-    <p className="text-white/50 text-sm">
-      © {new Date().getFullYear()} <span className="text-white/80 font-medium">{personalInfo.fullName}</span>. Powered by <a href="https://cvifypro.vercel.app/" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">CVify Pro</a>.
+    <p className="text-[var(--text-secondary)] opacity-50 text-sm">
+      © {new Date().getFullYear()} <span className="text-[var(--text-primary)] opacity-80 font-medium">{personalInfo.fullName}</span>. Powered by <a href="https://cvifypro.vercel.app/" target="_blank" rel="noreferrer" className="text-[var(--primary-color)] hover:underline">CVify Pro</a>.
     </p>
     <div className="flex items-center gap-4">
-       <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/50 hover:text-white text-sm transition-colors">
+       <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[var(--text-secondary)] opacity-50 hover:text-[var(--text-primary)] hover:opacity-100 text-sm transition-colors">
          Back to Top ↑
        </button>
     </div>
