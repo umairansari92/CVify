@@ -270,7 +270,7 @@ const EliteTemplate = ({ data }) => {
                 {skills?.technical?.length > 0 && (
                   <div>
                     <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
-                      Technical
+                      Skills
                     </p>
                     <ul className="text-[10px] text-slate-700 font-bold space-y-1">
                       {skills.technical.map((s, idx) => (
@@ -299,7 +299,7 @@ const EliteTemplate = ({ data }) => {
                       list?.length > 0 && (
                         <div key={i}>
                           <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
-                            {cat}
+                            Skills
                           </p>
                           <ul className="text-[10px] text-slate-700 font-bold space-y-1">
                             {list.map((s, idx) => (

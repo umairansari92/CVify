@@ -270,7 +270,7 @@ const ElegantTemplate = ({ data }) => {
                   {/* New Structure */}
                   {skills?.technical?.length > 0 && (
                     <div className="text-center">
-                      <span className="font-bold block mb-1">Technical</span>
+                      <span className="font-bold block mb-1">Skills</span>
                       {skills.technical.join(", ")}
                     </div>
                   )}
@@ -284,7 +284,7 @@ const ElegantTemplate = ({ data }) => {
                   {/* Legacy Fallback */}
                   {data.technicalSkills?.frontend?.length > 0 && (
                     <div className="text-center">
-                      <span className="font-bold block mb-1">Frontend</span>
+                      <span className="font-bold block mb-1">Skills</span>
                       {data.technicalSkills.frontend.join(", ")}
                     </div>
                   )}

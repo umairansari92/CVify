@@ -142,13 +142,13 @@ const TechnicalTemplate = ({ data }) => {
                 style={{ pageBreakInside: "avoid" }}
               >
                 <h3 className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-1 uppercase tracking-tighter text-[11px]">
-                  Technical Expertsie
+                  Technical Skills
                 </h3>
                 <div className="space-y-3">
                   {/* Unified Skills (New Structure) */}
                   {skills?.technical?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">Technical</div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Skills</div>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {skills.technical.map((s, i) => (
                            <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
@@ -170,7 +170,7 @@ const TechnicalTemplate = ({ data }) => {
                   {/* Fallback to legacy technicalSkills prop if any */}
                   {technicalSkills?.frontend?.length > 0 && (
                     <div>
-                      <div className="text-[10px] uppercase text-slate-400 font-bold">Frontend</div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Skills</div>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {technicalSkills.frontend.map((s, i) => (
                           <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>

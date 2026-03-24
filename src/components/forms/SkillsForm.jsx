@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
+import api from "../../api/axios";
 
 // ─── Smart Skill Suggestions by Job Title ───────────────────────────────────
 const SKILL_SUGGESTIONS = {
@@ -270,7 +271,34 @@ const TagInput = ({
   hint,
 }) => {
   const [inputVal, setInputVal] = useState("");
+  const [remoteSuggestions, setRemoteSuggestions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef(null);
+
+  // Fetch remote suggestions from Global Database
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      const query = inputVal.trim();
+      if (query.length < 2) {
+        setRemoteSuggestions([]);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const { data } = await api.get(`/skills/search?q=${query}`);
+        // Filter out skills already in the local list
+        setRemoteSuggestions(data.filter((s) => !skills.includes(s)));
+      } catch (err) {
+        console.error("Failed to fetch suggestions:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const timer = setTimeout(fetchSuggestions, 300); // Simple debounce
+    return () => clearTimeout(timer);
+  }, [inputVal, skills]);
 
   const handleKeyDown = (e) => {
     if ((e.key === "Enter" || e.key === ",") && inputVal.trim()) {
@@ -287,27 +315,57 @@ const TagInput = ({
       <label className="text-xs font-black text-text-muted uppercase tracking-[0.2em] ml-1">
         {label}
       </label>
-      <div
-        className="min-h-[3rem] p-3 rounded-2xl border-2 border-border-subtle bg-midground flex flex-wrap gap-2 items-center cursor-text transition-all duration-200 focus-within:border-primary"
-        onClick={() => inputRef.current?.focus()}
-      >
-        {skills.map((skill) => (
-          <SkillTag
-            key={skill}
-            skill={skill}
-            onRemove={onRemove}
-            color={color}
+      <div className="relative group/taginput">
+        <div
+          className="min-h-[3.5rem] p-3 rounded-2xl border-2 border-border-subtle bg-midground flex flex-wrap gap-2 items-center cursor-text transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 shadow-sm"
+          onClick={() => inputRef.current?.focus()}
+        >
+          {skills.map((skill) => (
+            <SkillTag
+              key={skill}
+              skill={skill}
+              onRemove={onRemove}
+              color={color}
+            />
+          ))}
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={skills.length === 0 ? placeholder : "Add more..."}
+            className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-text-primary placeholder:text-text-muted/50 font-medium"
           />
-        ))}
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputVal}
-          onChange={(e) => setInputVal(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={skills.length === 0 ? placeholder : "Add more..."}
-          className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-text-primary placeholder:text-text-muted/50 font-medium"
-        />
+        </div>
+
+        {/* Remote Suggestions Dropdown */}
+        {remoteSuggestions.length > 0 && (
+          <div className="absolute z-50 left-0 right-0 top-full mt-2 bg-midground border-2 border-border-subtle rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="p-2 border-b border-border-subtle bg-background/50">
+              <span className="text-[10px] font-black text-text-muted uppercase tracking-widest px-2">
+                Suggestions from Global List
+              </span>
+            </div>
+            <div className="max-h-[200px] overflow-y-auto">
+              {remoteSuggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => {
+                    onAdd(suggestion);
+                    setInputVal("");
+                    setRemoteSuggestions([]);
+                  }}
+                  className="w-full text-left px-4 py-2.5 text-sm font-bold text-text-primary hover:bg-primary hover:text-white transition-colors flex justify-between items-center group"
+                >
+                  {suggestion}
+                  <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Press to Add</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       {hint && (
         <p className="text-[10px] text-text-muted/60 font-bold italic ml-1">
@@ -362,12 +420,22 @@ const SkillsForm = () => {
   // ── Handlers for "skills" field ──
   const addSkill = useCallback(
     (skill) => {
-      const formatted = skill.trim();
+      let formatted = skill.trim();
       if (!formatted) return;
+
+      // Normalization: First letter uppercase as requested
+      formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+
       // Use Set to strictly enforce uniqueness during addition
       const updated = Array.from(new Set([...skills, formatted]));
       
       dispatch(setResumeField({ field: "skills", value: updated }));
+
+      // Track the skill globally
+      api.post("/skills/track", { skills: [formatted] }).catch((err) => {
+        console.error("Global tracking failed:", err);
+      });
+
       // Sync back to technicalSkills for PDF / Legacy Template compatibility
       dispatch(
         setResumeField({
