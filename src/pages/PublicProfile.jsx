@@ -327,17 +327,17 @@ const PublicProfile = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Owner Analytics Bar ── */}
+      {/* ── Owner Analytics Bar (V4.6 HUD Dock) ── */}
       {user.isOwner && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[110] w-full max-w-lg px-4 flex items-center justify-center pointer-events-none">
-          <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] w-full max-w-lg px-4 flex items-center justify-center pointer-events-none">
+          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto">
             <div className="flex items-center gap-2 px-4 border-r border-white/5">
-              <FaChartBar className="text-action text-sm" />
-              <span className="text-[8px] font-black uppercase tracking-widest opacity-60">Intelligence Hub</span>
+              <FaChartBar className="text-[var(--primary-color)] text-sm" />
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-60">HUD Intelligence</span>
             </div>
             <div className="flex gap-8 px-4">
               <div className="text-center"><p className="text-sm font-black text-white">{analytics.views || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Views</p></div>
-              <div className="text-center"><p className="text-sm font-black text-white">{analytics.resumeDownloads || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Downloads</p></div>
+              <div className="text-center"><p className="text-sm font-black text-white">{analytics.resumeDownloads || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Pulse</p></div>
               <div className="text-center"><p className="text-sm font-black text-white">{analytics.contactClicks || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Interests</p></div>
             </div>
           </motion.div>
@@ -346,7 +346,7 @@ const PublicProfile = () => {
 
       {/* --- PREMIUM FLOATING NAVBAR (V4.5) --- */}
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 flex justify-center ${scrolled ? 'pt-4' : 'pt-8'}`}>
-        <div className={`w-full max-w-7xl px-8 h-20 md:h-24 flex items-center justify-between backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
+        <div className={`w-full max-w-7xl px-8 h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
           {/* Brand/Identity (Left) */}
           <div 
@@ -363,21 +363,21 @@ const PublicProfile = () => {
             </div>
           </div>
 
-          {/* Dynamic Name Branding (Center) */}
+          {/* Dynamic Name Branding (Center - Hidden on Mobile, shown on Large) */}
           <div 
-             className="absolute left-1/2 -translate-x-1/2 cursor-pointer hover:opacity-80 transition-opacity"
+             className="hidden lg:flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <InlineEdit isOwner={isOwner} id="fullNameNav" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
-              <h1 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase font-serif">
+              <h1 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase font-serif whitespace-nowrap">
                 {personalInfo.fullName || 'Welcome'}
               </h1>
             </InlineEdit>
           </div>
 
           {/* Navigation & Action (Right) */}
-          <div className="flex items-center gap-6">
-            <div className="hidden lg:flex items-center space-x-8">
+          <div className="flex items-center justify-end gap-6">
+            <div className="hidden xl:flex items-center space-x-6">
               {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
                 <a 
                   key={item} 
@@ -386,7 +386,7 @@ const PublicProfile = () => {
                     e.preventDefault();
                     document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-[10px] font-black uppercase tracking-widest transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-[10px] font-black uppercase tracking-widest transition-colors whitespace-nowrap"
                 >
                   {item}
                 </a>
@@ -400,7 +400,7 @@ const PublicProfile = () => {
               </div>
             )}
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile/Small Screen Menu Toggle */}
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-3 rounded-full bg-white/5 text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
