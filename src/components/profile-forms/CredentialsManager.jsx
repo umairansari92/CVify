@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import api from '../../api/axios';
-import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode } from 'react-icons/fa';
 import { awardSchema, certificationSchema, languageSchema } from '../../utils/validationSchemas';
 
 const credentialsSchema = yup.object().shape({
