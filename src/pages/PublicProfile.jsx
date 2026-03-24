@@ -653,35 +653,53 @@ const PublicProfile = () => {
             </h2>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.education || []).map((edu, index) => (
-                <div key={edu._id || index} className="relative flex flex-col items-center group">
-                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-lg shadow-[var(--primary-color)]/20">
-                    <GraduationCap size={20} />
-                  </div>
-                  <div className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-[var(--primary-color)]/30 transition-all">
-                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--primary-color)] opacity-80 mb-2">
+                <div key={edu._id || index} className="relative flex flex-col items-center group mb-12 last:mb-0">
+                  {/* Floating Graduation Cap Icon with Pulse */}
+                  <motion.div 
+                    whileHover={{ rotate: 15, scale: 1.2 }}
+                    className="z-10 flex items-center justify-center w-14 h-14 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-2xl shadow-[var(--primary-color)]/40 transition-shadow duration-500 group-hover:shadow-[var(--primary-color)]/60 cursor-default"
+                  >
+                    <GraduationCap size={24} />
+                  </motion.div>
+
+                  {/* 3D-Elevated Education Card */}
+                  <motion.div 
+                    whileHover={{ 
+                      y: -15, 
+                      scale: 1.03,
+                      rotateX: 2,
+                      rotateY: -1
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2.5rem] p-10 text-center shadow-xl backdrop-blur-md hover:border-[var(--primary-color)]/50 hover:shadow-[0_20px_60px_rgba(var(--primary-rgb),0.2)] transition-all duration-500 perspective-1000"
+                  >
+                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-black text-[var(--primary-color)] tracking-widest uppercase mb-4 opacity-80 group-hover:opacity-100 transition-opacity">
                       <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
                         const [s, e] = v.split(" - ");
                         handleArrayUpdate("education", index, { startDate: s, endDate: e === "Present" ? "" : e });
                       }}>
                         {edu.startDate} - {edu.endDate || 'Present'}
                       </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
-                      <InlineEdit isOwner={isOwner} label="Result" value={edu.fieldOfStudy} onSave={(v) => handleArrayUpdate("education", index, { fieldOfStudy: v })}>
+                      <span className="w-1 h-1 rounded-full bg-[var(--primary-color)]/40" />
+                      <InlineEdit isOwner={isOwner} label="Field of Study" value={edu.fieldOfStudy} onSave={(v) => handleArrayUpdate("education", index, { fieldOfStudy: v })}>
                          {edu.fieldOfStudy || "Field of Study"}
                       </InlineEdit>
                     </div>
-                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-1">
+
+                    <h3 className="text-3xl font-black text-[var(--text-primary)] leading-tight mb-2 tracking-tight">
                       <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
                     </h3>
-                    <h4 className="text-lg font-semibold text-[var(--text-secondary)] mb-2">
+                    
+                    <h4 className="text-xl font-bold text-[var(--text-secondary)] mb-6 opacity-70">
                       <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
                     </h4>
+
                     {edu.description && (
-                       <p className="text-xs text-[var(--text-secondary)] opacity-60 mt-4 italic">
+                       <p className="text-sm text-[var(--text-secondary)] leading-relaxed italic opacity-50 group-hover:opacity-80 transition-opacity">
                           <InlineEdit isOwner={isOwner} label="Story" value={edu.description} onSave={(v) => handleArrayUpdate("education", index, { description: v })} multiline>{edu.description}</InlineEdit>
                        </p>
                     )}
-                  </div>
+                  </motion.div>
                 </div>
               ))}
             </div>
