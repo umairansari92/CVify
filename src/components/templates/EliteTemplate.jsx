@@ -22,7 +22,7 @@ const EliteTemplate = ({ data }) => {
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Playfair Display",
-  } = data || {};
+  } = (data || {});
 
   const getFontFamily = (font) => {
     switch (font) {
@@ -250,7 +250,7 @@ const EliteTemplate = ({ data }) => {
                         </div>
                       </div>
                       <p className="text-xs text-slate-600 leading-relaxed italic border-l-2 border-slate-100 pl-4">
-                        {proj.description?.join(" ")}
+                        {(proj.description || []).join(" ")}
                       </p>
                     </div>
                   ))}
@@ -341,7 +341,7 @@ const EliteTemplate = ({ data }) => {
                       Interests
                     </p>
                     <div className="text-[10px] text-slate-500 italic font-bold leading-tight">
-                       {interests.join(", ")}
+                       {(interests || []).join(", ")}
                     </div>
                   </div>
                 )}

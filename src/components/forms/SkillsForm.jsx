@@ -349,7 +349,8 @@ const SkillsForm = () => {
     if (hasOldSkills && !hasNewSkills) {
       const merged = Object.values(currentResume.technicalSkills)
         .flat()
-        .filter(Boolean);
+        .filter(Boolean)
+        .filter((v, i, a) => a.indexOf(v) === i); // Ensure unique on migration
       if (merged.length > 0) {
         dispatch(setResumeField({ field: "skills", value: merged }));
       }
@@ -362,15 +363,17 @@ const SkillsForm = () => {
   const addSkill = useCallback(
     (skill) => {
       const formatted = skill.trim();
-      if (!formatted || skills.includes(formatted)) return;
-      const updated = [...skills, formatted];
+      if (!formatted) return;
+      // Use Set to strictly enforce uniqueness during addition
+      const updated = Array.from(new Set([...skills, formatted]));
+      
       dispatch(setResumeField({ field: "skills", value: updated }));
-      // Also sync to technicalSkills.frontend for PDF compatibility
+      // Sync back to technicalSkills for PDF / Legacy Template compatibility
       dispatch(
         setResumeField({
           field: "technicalSkills",
           value: {
-            frontend: updated,
+            frontend: updated, // We put everything in 'frontend' for flat structure
             backend: [],
             database: [],
             aiDevOps: [],
@@ -386,6 +389,7 @@ const SkillsForm = () => {
     (skill) => {
       const updated = skills.filter((s) => s !== skill);
       dispatch(setResumeField({ field: "skills", value: updated }));
+      // Sync back to technicalSkills to ensure PDF/Legacy parity
       dispatch(
         setResumeField({
           field: "technicalSkills",
@@ -446,12 +450,8 @@ const SkillsForm = () => {
 
   const removeInterest = useCallback(
     (item) => {
-      dispatch(
-        setResumeField({
-          field: "interests",
-          value: interests.filter((i) => i !== item),
-        }),
-      );
+      const updated = interests.filter((i) => i !== item);
+      dispatch(setResumeField({ field: "interests", value: updated }));
     },
     [interests, dispatch],
   );

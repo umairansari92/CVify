@@ -306,11 +306,30 @@ const ClassicTemplate = ({ data }) => {
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
             style={{ color: themeColor, borderColor: `${themeColor}40` }}
           >
-            Interests
+            Interests & Hobbies
           </h2>
-          <p className="text-sm text-gray-700">{data.interests.join(", ")}</p>
+          <div className="text-sm text-gray-700 leading-relaxed italic">
+            {(data.interests || []).join(", ")}
+          </div>
         </div>
       )}
+
+      {/* Custom Sections */}
+      {data.customSections?.map((section, i) => (
+        <div key={i} className="mb-6">
+          <h2
+            className="text-xl font-bold uppercase border-b mb-4 pb-1"
+            style={{ color: themeColor, borderColor: `${themeColor}40` }}
+          >
+            {section.title}
+          </h2>
+          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+            {section.content.map((item, j) => (
+              <li key={j}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 };

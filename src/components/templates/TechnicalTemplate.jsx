@@ -218,6 +218,17 @@ const TechnicalTemplate = ({ data }) => {
                       </div>
                     </div>
                   )}
+                  {/* Interests */}
+                  {interests?.length > 0 && (
+                    <div className="pt-2">
+                       <p className="text-[11px] font-bold text-slate-800 uppercase tracking-tighter mb-1 border-t border-slate-100 pt-2">
+                         Personal Interests
+                       </p>
+                       <div className="text-[10px] text-slate-500 italic font-medium leading-relaxed">
+                          {(interests || []).join(", ")}
+                       </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
