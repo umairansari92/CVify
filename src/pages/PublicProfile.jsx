@@ -20,6 +20,7 @@ import {
   FaChevronDown,
   FaTimes,
   FaFilePdf,
+  FaEnvelope,
 } from "react-icons/fa";
 import { 
   Trash, 
@@ -84,18 +85,15 @@ const PublicProfile = () => {
 
   useEffect(() => {
     if (user?.themeSettings) {
-      setLocalTheme(user.themeSettings);
-    } else if (user) {
-      setLocalTheme({
-        headerBg: "#2563eb",
-        headerBgSecondary: "#9333ea",
-        bodyBg: "#0f172a",
-        cardStyle: "glass",
-        fontPrimary: "Inter",
-        textPrimary: "#ffffff",
-        textSecondary: "#94a3b8",
-        accentColor: "#2563eb",
-      });
+      const theme = user.themeSettings;
+      const root = document.documentElement;
+      root.style.setProperty('--bg-body', theme.bodyBg || "#0f172a");
+      root.style.setProperty('--accent', theme.accentColor || "#2563eb");
+      root.style.setProperty('--header-from', theme.headerBg || "#2563eb");
+      root.style.setProperty('--header-to', theme.headerBgSecondary || "#9333ea");
+      root.style.setProperty('--text-primary', theme.textPrimary || "#ffffff");
+      root.style.setProperty('--text-secondary', theme.textSecondary || "#94a3b8");
+      setLocalTheme(theme);
     }
   }, [user]);
 
@@ -441,7 +439,21 @@ const PublicProfile = () => {
           <div className="space-y-12">
             <div className="space-y-8">
               <div className="space-y-2">
-                <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action mb-4 inline-block">{branding.identityLabel || "Professional Showcase"}</span>
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                   <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action inline-block">{branding.identityLabel || "Professional Showcase"}</span>
+                   {user.availability && (
+                      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                         user.availability === "Not Available" ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                      }`}>
+                         {user.availability}
+                      </span>
+                   )}
+                   {user.industry && user.industry !== "Other" && (
+                      <span className="px-4 py-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[9px] font-black uppercase tracking-widest">
+                         {user.industry}
+                      </span>
+                   )}
+                </div>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">
                   <InlineEdit 
                     value={personalInfo.fullName} 
@@ -472,19 +484,29 @@ const PublicProfile = () => {
 
             {/* Contact Suite Bar (Advanced) */}
             <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest py-8 border-y border-white/5">
-              {user.email && (
+              {(user.privacy?.showEmail !== false || isOwner) && user.email && (
                 <div className="flex items-center gap-3 group">
                   <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-action group-hover:bg-action group-hover:text-white transition-all"><FaEnvelope size={14}/></div>
                   <span className="opacity-40 group-hover:opacity-100 transition-all font-mono tracking-tighter">{user.email}</span>
                 </div>
               )}
-              {user.phoneNumber && (
+              {(user.privacy?.showPhone || isOwner) && user.phoneNumber && (
                  <div className="flex items-center gap-3 group">
                   <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all"><FaPhone size={14}/></div>
                   <span className="opacity-40 group-hover:opacity-100 transition-all">
                      <InlineEdit value={user.phoneNumber} onSave={(v) => handleLiveUpdate({ phoneNumber: v })} label="Phone">{user.phoneNumber}</InlineEdit>
                   </span>
                 </div>
+              )}
+              {user.location && (
+                 <div className="flex items-center gap-3 group">
+                    <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-orange-400 group-hover:bg-orange-400 group-hover:text-white transition-all font-black">
+                       <InlineEdit value={user.location} onSave={(v) => handleLiveUpdate({ location: v })} label="Location">📍</InlineEdit>
+                    </div>
+                    <span className="opacity-40 group-hover:opacity-100 transition-all uppercase tracking-[0.1em]">
+                       {user.location}
+                    </span>
+                 </div>
               )}
               {user.socialLinks?.portfolio && (
                  <div className="flex items-center gap-3 group">
@@ -791,7 +813,80 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* --- 7. PROFESSIONAL SERVICES --- */}
+      {/* --- 7. CERTIFICATIONS --- */}
+      {(isOwner || user.certifications?.length > 0) && (
+        <section id="certifications" className="py-24 border-b border-white/10 bg-white/[0.01]">
+          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-emerald-400 mb-16 text-center">
+               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.certifications} onSave={(v) => handleLiveUpdate({ "sectionNames.certifications": v })}>
+                  {user.sectionNames?.certifications || "Certifications"}
+               </InlineEdit>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+              {(user.certifications || []).map((cert, index) => (
+                <div key={index} className="p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-emerald-500/30 transition-all group">
+                   <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400"><Award size={24}/></div>
+                      <div className="flex-1 space-y-1">
+                         <h3 className="text-lg font-black text-white">
+                            <InlineEdit isOwner={isOwner} label="Cert Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
+                         </h3>
+                         <p className="text-sm font-bold text-emerald-400/80">
+                            <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
+                         </p>
+                         <div className="flex items-center gap-3 text-[10px] text-white/30 font-bold uppercase tracking-widest pt-2">
+                            <span>
+                               <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date}</InlineEdit>
+                            </span>
+                            {cert.link && (
+                               <a href={ensureAbsoluteUrl(cert.link)} target="_blank" className="text-emerald-500 hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                                  Verify Cert <FaArrowRight size={8}/>
+                               </a>
+                            )}
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- 8. HONORS & AWARDS --- */}
+      {(isOwner || user.achievements?.length > 0) && (
+        <section id="achievements" className="py-24 border-b border-white/10">
+          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-amber-400 mb-16 text-center">
+               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.achievements} onSave={(v) => handleLiveUpdate({ "sectionNames.achievements": v })}>
+                  {user.sectionNames?.achievements || "Honors & Awards"}
+               </InlineEdit>
+            </h2>
+            <div className="space-y-6 w-full max-w-2xl">
+              {(user.achievements || []).map((ach, index) => (
+                <div key={index} className="relative p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-amber-500/30 transition-all flex gap-6 items-center">
+                   <div className="w-16 h-16 rounded-3xl bg-amber-500/10 flex items-center justify-center text-amber-400 flex-shrink-0 animate-pulse"><Trophy size={32}/></div>
+                   <div className="flex-1 space-y-2">
+                      <div className="flex justify-between items-start">
+                         <h3 className="text-xl font-black text-white">
+                            <InlineEdit isOwner={isOwner} label="Award Title" value={ach.title} onSave={(v) => handleArrayUpdate("achievements", index, { title: v })}>{ach.title}</InlineEdit>
+                         </h3>
+                         <span className="text-[10px] font-black text-amber-400/60 uppercase tracking-widest">
+                            <InlineEdit isOwner={isOwner} label="Date" value={ach.date} onSave={(v) => handleArrayUpdate("achievements", index, { date: v })}>{ach.date}</InlineEdit>
+                         </span>
+                      </div>
+                      <p className="text-sm text-white/50 leading-relaxed italic">
+                         <InlineEdit isOwner={isOwner} label="Description" value={ach.description} onSave={(v) => handleArrayUpdate("achievements", index, { description: v })} multiline>{ach.description}</InlineEdit>
+                      </p>
+                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- 9. PROFESSIONAL SERVICES --- */}
       {(isOwner || user.services?.length > 0) && (
         <section id="services" className="py-32 bg-white/[0.01]">
           <div className="max-w-6xl mx-auto px-6 space-y-20">
