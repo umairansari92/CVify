@@ -14,17 +14,6 @@ import {
   FaCheckCircle,
   FaPlus,
   FaLayerGroup,
-  FaRocket,
-  FaChartBar,
-  FaExclamationTriangle,
-  FaArrowRight,
-  FaHistory,
-  FaMagic,
-  FaChevronDown,
-  FaTimes,
-  FaFilePdf,
-  FaEnvelope,
-  FaPhone,
 } from "react-icons/fa";
 import { 
   Trash, 
@@ -43,7 +32,11 @@ import {
   Mail,
   Phone,
   Send,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Rocket,
+  Edit2,
+  X,
+  Menu
 } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -105,6 +98,7 @@ const PublicProfile = () => {
   const [showThemePanel, setShowThemePanel] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -175,22 +169,13 @@ const PublicProfile = () => {
       
       await api.patch(`/resumes/${resumeId}`, { isPublic: newStatus });
       toast.success(newStatus ? "Resume Shared Publicly!" : "Resume Private.");
-    } catch (err) {
+    } catch (_err) {
       toast.error("Failed to update status.");
       dispatch(fetchPublicProfile(username));
     }
   };
 
-  const handleApplyAtsFix = async (field, index, bullet) => {
-    if (!user.isOwner) return;
-    setIsUpdating(true);
-    try {
-      const updatedBullet = bullet.improved || bullet.original;
-      handleArrayUpdate(field, index, { achievements: updatedBullet });
-      toast.success("AI Fix Applied Locally!");
-    } catch (err) { toast.error("AI Fix failed."); }
-    finally { setIsUpdating(false); }
-  };
+
 
   const ensureAbsoluteUrl = (url) => {
     if (!url || typeof url !== "string") return "";
@@ -220,17 +205,7 @@ const PublicProfile = () => {
     </div>
   );
 
-  const portfolio = user.portfolio || user.projects || [];
   const theme = localTheme || themePresets[0];
-  const atsScores = user.atsScore || { overall: 85, formattingScore: 90, keywordScore: 82, quantificationScore: 78, impactScore: 88 };
-  const analysis = user.analysis || { strengths: ["Action verbs usage", "Clean formatting"], weaknesses: ["Keyword density could be higher"], weakBullets: [] };
-
-  const reveal = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-100px" },
-    transition: { duration: 0.8, ease: "easeOut" }
-  };
 
   const ScoreCard = ({ label, score, color = "var(--action)" }) => (
     <Card className="p-8 space-y-6 bg-white/[0.02]">
@@ -358,225 +333,209 @@ const PublicProfile = () => {
         </div>
       )}
 
-      {/* ── Sticky Navigation ── */}
-      <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 border-b ${scrolled ? "py-4 bg-[var(--body-bg)]/80 backdrop-blur-xl border-white/10 shadow-xl" : "py-8 bg-transparent border-transparent"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-black uppercase tracking-tighter">{personalInfo.fullName}</span>
-            <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center gap-1.5">
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[7px] font-black uppercase tracking-widest text-emerald-500">AI Verified</span>
+      {/* --- PREMIUM FLOATING NAVBAR (V4.5) --- */}
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 flex justify-center ${scrolled ? 'pt-4' : 'pt-8'}`}>
+        <div className={`w-full max-w-7xl px-8 h-20 md:h-24 flex items-center justify-between backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
+          
+          {/* Brand/Identity (Left) */}
+          <div 
+            className="flex items-center gap-3 cursor-pointer group"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500">
+               <span className="text-2xl font-black text-[var(--text-primary)]">C</span>
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-lg font-black tracking-tighter text-[var(--text-primary)]">
+                CVify <span className="text-[var(--primary-color)]">Pro</span>
+              </span>
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest text-[var(--primary-color)]">
-            <a href="#about" className="hover:opacity-100 transition-all opacity-40">About</a>
-            {(user.experience?.length > 0 || isOwner) && <a href="#journey" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.experience || "Experience"}</a>}
-            {(user.education?.length > 0 || isOwner) && <a href="#education" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.education || "Education"}</a>}
-            {(user.skills?.length > 0 || isOwner) && <a href="#expertise" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.skills || "Skills"}</a>}
-            {(portfolio.length > 0 || isOwner) && <a href="#showcase" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.portfolio || "Portfolio"}</a>}
+
+          {/* Dynamic Name Branding (Center) */}
+          <div 
+             className="absolute left-1/2 -translate-x-1/2 cursor-pointer hover:opacity-80 transition-opacity"
+             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <InlineEdit isOwner={isOwner} id="fullNameNav" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
+              <h1 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase font-serif">
+                {personalInfo.fullName || 'Welcome'}
+              </h1>
+            </InlineEdit>
           </div>
-          <div className="flex items-center gap-4">
-              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaLinkedin size={18} /></a>}
-              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaGithub size={18} /></a>}
-             <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-[var(--primary-color)] text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-[var(--primary-color)]/20 ml-2">Get Resume</button>
+
+          {/* Navigation & Action (Right) */}
+          <div className="flex items-center gap-6">
+            <div className="hidden lg:flex items-center space-x-8">
+              {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
+                <a 
+                  key={item} 
+                  href={`#${item.toLowerCase()}`} 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-[10px] font-black uppercase tracking-widest transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+
+            {/* Owner HUD Widget */}
+            {isOwner && (
+              <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--primary-color)]/10 text-[var(--primary-color)] text-[8px] font-black tracking-widest uppercase animate-pulse">
+                <Edit2 size={12} /> Live Editor
+              </div>
+            )}
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-3 rounded-full bg-white/5 text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+            
+            {/* Resume Button (Desktop) */}
+            <button 
+              onClick={() => setShowResumeModal(true)}
+              className="hidden md:flex px-6 py-3 bg-[var(--primary-color)] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_var(--primary-color)]/30"
+            >
+              Get CV
+            </button>
           </div>
         </div>
+
+        {/* --- MOBILE DRAWER (V4.6) --- */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed top-32 left-6 right-6 z-[90] p-8 bg-[var(--bg-primary)]/95 backdrop-blur-2xl border border-[var(--card-border)] rounded-[3rem] shadow-2xl lg:hidden flex flex-col gap-6"
+            >
+              {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
+                <a 
+                  key={item} 
+                  href={`#${item.toLowerCase()}`} 
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-[var(--text-primary)] text-2xl font-black uppercase tracking-tighter hover:text-[var(--primary-color)] transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
+              <hr className="border-white/5" />
+              <button 
+                onClick={() => { setIsMenuOpen(false); setShowResumeModal(true); }}
+                className="w-full py-5 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest"
+              >
+                Download Resume
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* ── SECTION 1: HERO (HOME) ── */}
-      <section id="home" className="space-y-16 py-24">
-        {/* Slogans Builder Div */}
-        {(isOwner || (slogans && slogans.length > 0)) && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="border-t border-b border-white/5 py-10 bg-white/[0.01]">
-            <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
-              {isOwner ? (
-                <>
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-action">Builder: My Slogans (Max 5)</h4>
-                  <div className="flex flex-wrap gap-3 justify-center">
-                    {slogans.slice(0, 5).map((slogan, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:border-action/30 transition-all">
-                        <span className="text-[10px] font-bold uppercase tracking-tight">{slogan}</span>
-                        <button onClick={() => dispatch(deleteSloganThunk(index))} className="text-red-500 hover:text-red-400 p-1">
-                          <Trash size={12} />
-                        </button>
-                      </div>
-                    ))}
-                    {slogans.length < 5 && (
-                      <button 
-                        onClick={() => {
-                          const s = window.prompt("Enter new slogan:");
-                          if (s) dispatch(addSloganThunk(s));
-                        }} 
-                        className="bg-action/10 border border-action/20 rounded-full px-4 py-2 hover:bg-action/20 flex items-center gap-2 text-[10px] font-black uppercase text-action transition-all"
-                      >
-                        <Plus size={14} /> Add Slogan
-                      </button>
-                    )}
-                  </div>
-                </>
-              ) : (
-                slogans.length > 0 && (
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={slogans[0]}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.8 }}
-                      className="font-black text-xl uppercase tracking-[0.2em] text-action"
-                    >
-                      <TypeAnimation
-                        sequence={slogans.flatMap(slogan => [slogan, 3000])}
-                        wrapper="p"
-                        speed={50}
-                        repeat={Infinity}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                )
-              )}
-            </div>
-          </motion.div>
-        )}
+      {/* --- KILLER HERO SECTION (V4.6) --- */}
+      <section id="home" className="relative min-h-[95vh] flex items-center justify-center pt-32 overflow-hidden outline-none">
+        
+        {/* Background Ambient Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-[var(--primary-color)]/10 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Split Hero: Image | Text [Dynamic Polish] */}
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="relative aspect-square flex items-center justify-center group text-center">
-            <div className="absolute inset-0 bg-action/20 blur-3xl rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
-            {personalInfo.image ? (
-              <img src={personalInfo.image} alt={personalInfo.fullName} className="w-full h-full object-cover rounded-[4rem] shadow-2xl border-4 border-white/10 relative z-10 hover:scale-[1.01] transition-transform duration-700" />
-            ) : (
-              <div className="w-full h-full bg-white/5 rounded-[4rem] border-4 border-dashed border-white/10 flex items-center justify-center relative z-10">
-                <FileText size={48} className="text-white/20" />
-              </div>
-            )}
-            {isOwner && (
-              <button 
-                onClick={() => {
-                  const url = window.prompt("Enter image URL:");
-                  if (url) dispatch(updateHeroImageThunk(url));
-                }} 
-                className="absolute inset-0 z-20 flex items-center justify-center rounded-[4rem] opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-sm transition-all"
-              >
-                <div className="bg-white/10 p-5 rounded-3xl border border-white/20 hover:scale-110 transition-transform">
-                   <Edit3 size={24} className="text-white" />
-                </div>
-              </button>
-            )}
-          </motion.div>
-
-          <div className="space-y-12">
-            <div className="space-y-8">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2 mb-4">
-                   <span className="px-5 py-1.5 bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-[var(--primary-color)] flex items-center gap-2">
-                      <FaRocket /> {branding.identityLabel || "Professional Showcase"}
-                   </span>
-                   {user.availability && (
-                      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${
-                         user.availability === "Not Available" ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                      }`}>
-                         {user.availability === "Not Available" && <FaExclamationTriangle />} {user.availability}
-                      </span>
-                   )}
-                   {user.industry && user.industry !== "Other" && (
-                      <span className="px-4 py-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[9px] font-black uppercase tracking-widest">
-                         {user.industry}
-                      </span>
-                   )}
-                </div>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">
-                  <InlineEdit 
-                    value={personalInfo.fullName} 
-                    onSave={(v) => { 
-                      const [f, ...l] = v.split(" "); 
-                      handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); 
-                    }} 
-                    isOwner={isOwner} 
-                    label="Full Name" 
-                  />
-                </h1>
-              </div>
-
-              {personalInfo.objective && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                  <div className="text-2xl md:text-4xl font-black text-white/90 leading-tight">
-                    <TypeAnimation
-                      sequence={[personalInfo.objective, 2000, branding.taglineAlt || "Semantically Engineered Authority.", 2000, personalInfo.objective, 2000]}
-                      wrapper="p"
-                      speed={50}
-                      repeat={Infinity}
-                      className="inline-block"
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Contact Suite Bar (Advanced) */}
-            <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest py-8 border-y border-[var(--card-border)]">
-              {(user.privacy?.showEmail !== false || isOwner) && user.email && (
-                <div className="flex items-center gap-3 group">
-                  <div className="w-9 h-9 rounded-xl bg-[var(--card-bg)] flex items-center justify-center text-[var(--primary-color)] group-hover:bg-[var(--primary-color)] group-hover:text-white transition-all"><FaEnvelope size={14}/></div>
-                  <span className="opacity-40 group-hover:opacity-100 transition-all font-mono tracking-tighter text-[var(--text-primary)]">{user.email}</span>
-                </div>
-              )}
-              {(user.privacy?.showPhone || isOwner) && user.phoneNumber && (
-                 <div className="flex items-center gap-3 group">
-                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all"><FaPhone size={14}/></div>
-                  <span className="opacity-40 group-hover:opacity-100 transition-all">
-                     <InlineEdit value={user.phoneNumber} onSave={(v) => handleLiveUpdate({ phoneNumber: v })} label="Phone">{user.phoneNumber}</InlineEdit>
-                  </span>
-                </div>
-              )}
-              {user.location && (
-                 <div className="flex items-center gap-3 group">
-                    <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-orange-400 group-hover:bg-orange-400 group-hover:text-white transition-all font-black">
-                       <InlineEdit value={user.location} onSave={(v) => handleLiveUpdate({ location: v })} label="Location">📍</InlineEdit>
-                    </div>
-                    <span className="opacity-40 group-hover:opacity-100 transition-all uppercase tracking-[0.1em]">
-                       {user.location}
-                    </span>
-                 </div>
-              )}
-              {user.socialLinks?.portfolio && (
-                 <div className="flex items-center gap-3 group">
-                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-all"><FaGlobe size={14}/></div>
-                  <span className="opacity-40 group-hover:opacity-100 transition-all">
-                     <InlineEdit value={user.socialLinks.portfolio} onSave={(v) => handleLiveUpdate({ "socialLinks.portfolio": v })} label="Website">{user.socialLinks.portfolio}</InlineEdit>
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Social Link Suite */}
-            <div className="flex flex-wrap items-center gap-4 pt-4">
-              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><FaLinkedin size={18} /></a>}
-              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><FaGithub size={18} /></a>}
-              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><FaTwitter size={18} /></a>}
-              {isOwner && (
-                 <button onClick={() => toast.success("Add more socials in Dashboard.")} className="p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl text-white/20 hover:text-white transition-all">
-                    <Plus size={18} />
-                 </button>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-6 pt-12">
-               <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-[var(--primary-color)]/30 flex items-center gap-3">
-                  <Download size={18} /> Download Executive CV
-               </button>
-               <a href={`mailto:${user.email}`} className="px-10 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all flex items-center gap-3">
-                  {branding.ctaButtonText || "Direct Inquire"} <FaArrowRight size={12} className="opacity-60" />
-               </a>
-            </div>
-          </div>
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-10 md:space-y-14">
           
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 text-[var(--primary-color)] opacity-60 animate-bounce">
-             <span className="text-[8px] font-black uppercase tracking-[0.3em]">Scroll</span>
-             <FaChevronDown size={20} />
+          {/* Status Badge */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center"
+          >
+            <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
+              <Rocket size={16} className="text-[var(--primary-color)]" />
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
+                <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Available for High-Impact Projects"} selector={state => state.profile.data.branding.identityLabel}>
+                   {branding.identityLabel || "Available for High-Impact Projects"}
+                </InlineEdit>
+              </span>
+            </span>
+          </motion.div>
+
+          {/* Massive Typography Headline */}
+          <div className="space-y-6">
+            <motion.h1 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="text-6xl md:text-8xl lg:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.9] uppercase"
+            >
+              <InlineEdit isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
+                {personalInfo.fullName || 'Architect'}
+              </InlineEdit>
+            </motion.h1>
+            
+            <motion.h2 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-2xl md:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
+            >
+              <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} selector={state => state.profile.data.personalInfo.jobTitle}>
+                {personalInfo.jobTitle || 'Engineering Future Solutions.'}
+              </InlineEdit>
+            </motion.h2>
           </div>
+
+          {/* Power Tagline */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] font-medium max-w-3xl mx-auto leading-relaxed"
+          >
+            <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} selector={state => state.profile.data.personalInfo.objective} type="textarea">
+              <p className="opacity-80">"{personalInfo.objective || 'I build intelligent digital products that bridge the gap between human needs and complex technology.'}"</p>
+            </InlineEdit>
+          </motion.div>
+
+          {/* Interactive CTA Row */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-10"
+          >
+            <a 
+              href="#showcase" 
+              className="group relative px-12 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest overflow-hidden transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-3"
+            >
+              <span className="relative z-10">🚀 View My Journey</span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </a>
+            
+            <button 
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-12 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 transition-all flex items-center gap-3"
+            >
+              📩 Contact Me
+            </button>
+          </motion.div>
+
         </div>
+
+        {/* Subtle Animated Scroll Indicator */}
+        <motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[var(--primary-color)] opacity-40 flex flex-col items-center gap-2"
+        >
+           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Initialize</span>
+           <FaChevronDown size={20} />
+        </motion.div>
       </section>
 
       {/* --- 1. ABOUT & INDUSTRY --- */}
