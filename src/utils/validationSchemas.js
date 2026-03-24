@@ -68,3 +68,10 @@ export const securitySchema = yup.object().shape({
         .oneOf([yup.ref('newPassword'), null], 'Passwords must match')
         .required('Confirm your password'),
 });
+
+export const awardSchema = yup.object().shape({
+    title: yup.string().required('Award title is required'),
+    issuer: yup.string().required('Issuer is required'),
+    date: yup.string().required('Date is required'),
+    description: yup.string().nullable(),
+});
