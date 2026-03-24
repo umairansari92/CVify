@@ -15,6 +15,8 @@ import ProjectsManager from '../components/profile-forms/ProjectsManager';
 import SecuritySettings from '../components/profile-forms/SecuritySettings';
 import ThemeEditor from '../components/profile/ThemeEditor';
 
+import ThreeBackground from '../components/three/ThreeBackground';
+
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('identity');
@@ -39,45 +41,47 @@ const ProfilePage = () => {
     if (user.bio || user.summary) score += 15;
     if (user.experience?.length > 0) score += 20;
     if (user.projects?.length > 0) score += 20;
-    if (user.skills?.length > 0) score += 15;
+    if (user.skills?.technical?.length > 0 || user.skills?.strategic?.length > 0) score += 15;
     if (user.education?.length > 0) score += 10;
     if (Object.keys(user.socialLinks || {}).length > 0) score += 10;
-    return score;
+    return Math.min(score, 100);
   };
 
   const strength = calculateStrength();
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen relative bg-background transition-colors duration-500 overflow-y-auto custom-scrollbar no-scrollbar">
+      <ThreeBackground />
+      
       {/* --- DASHBOARD HEADER --- */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 pb-8">
+      <div className="max-w-7xl mx-auto px-6 pt-12 pb-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Builder Dashboard V5.1</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Builder Dashboard V5.2</span>
             </div>
-            <h1 className="text-5xl font-black tracking-tight leading-none">
-              Refine Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 italic">Digital Identity</span>.
+            <h1 className="text-5xl font-black tracking-tight leading-none text-text-main">
+              Refine Your <span className="text-gradient italic">Digital Identity</span>.
             </h1>
-            <p className="text-white/40 max-w-xl text-lg font-light leading-relaxed">
+            <p className="text-text-muted max-w-xl text-lg font-bold leading-relaxed opacity-70">
               Every detail you add here powers your high-impact public portfolio. Focus on results, not just roles.
             </p>
           </div>
 
-          <div className="flex items-center gap-6 p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] backdrop-blur-xl">
+          <div className="flex items-center gap-6 p-6 glass rounded-[2rem]">
             <div className="relative">
                 <svg className="w-20 h-20 -rotate-90">
-                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="currentColor" strokeWidth="4" className="text-white/5" />
-                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="currentColor" strokeWidth="4" strokeDasharray={226} strokeDashoffset={226 - (226 * strength) / 100} className="text-cyan-500 transition-all duration-1000 ease-out" />
+                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="currentColor" strokeWidth="4" className="text-text-main/5" />
+                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="currentColor" strokeWidth="4" strokeDasharray={226} strokeDashoffset={226 - (226 * strength) / 100} className="text-primary transition-all duration-1000 ease-out" />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center font-black text-xs">
+                <div className="absolute inset-0 flex items-center justify-center font-black text-xs text-text-main">
                     {strength}%
                 </div>
             </div>
             <div>
-                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Profile Strength</p>
-                <div className="flex items-center gap-2 text-cyan-400 font-black">
+                <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Profile Strength</p>
+                <div className="flex items-center gap-2 text-primary font-black">
                     <FaGem size={14} className="animate-bounce" />
                     <span>{user?.diamonds || 0} Builder Points</span>
                 </div>
@@ -86,18 +90,18 @@ const ProfilePage = () => {
         </div>
 
         {/* --- TAB NAVIGATION --- */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 custom-scrollbar no-scrollbar border-b border-white/5">
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 custom-scrollbar no-scrollbar border-b border-border-subtle">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl whitespace-nowrap transition-all duration-300 font-black text-xs uppercase tracking-widest ${
                 activeTab === tab.id
-                  ? `bg-${tab.color}-600/10 text-${tab.color}-400 border border-${tab.color}-500/30 shadow-[0_0_20px_-5px_rgba(6,182,212,0.1)]`
-                  : 'bg-white/[0.02] text-white/40 border border-white/5 hover:bg-white/5 hover:text-white'
+                  ? `bg-primary/10 text-primary border border-primary/30 shadow-lg`
+                  : 'bg-foreground/20 text-text-muted border border-border-subtle hover:bg-foreground/40 hover:text-text-main'
               }`}
             >
-              <span className={activeTab === tab.id ? `text-${tab.color}-400` : 'text-white/20'}>{tab.icon}</span>
+              <span className={activeTab === tab.id ? `text-primary` : 'text-text-muted/30'}>{tab.icon}</span>
               {tab.label}
             </button>
           ))}
@@ -105,18 +109,14 @@ const ProfilePage = () => {
       </div>
 
       {/* --- CONTENT AREA --- */}
-      <div className="max-w-4xl mx-auto px-6 pb-24">
+      <div className="max-w-4xl mx-auto px-6 pb-24 relative z-10">
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden"
+          className="premium-card p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden"
         >
-          {/* Subtle Background Glow */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
-
           {activeTab === 'identity' && <PersonalInfoForm />}
           {activeTab === 'branding' && <BrandingForm />}
           {activeTab === 'portfolio' && <ProjectsManager />}
@@ -130,15 +130,15 @@ const ProfilePage = () => {
           <AnimatePresence>
             {!tabs.find(t => t.id === activeTab) && (
                 <div className="text-center py-20">
-                    <p className="text-white/20 font-black uppercase tracking-widest italic animate-pulse">Initializing Component...</p>
+                    <p className="text-text-muted font-black uppercase tracking-widest italic animate-pulse opacity-20">Initializing Component...</p>
                 </div>
             )}
           </AnimatePresence>
         </motion.div>
         
         <div className="mt-8 flex justify-center">
-            <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">
-                All edits are synchronized in real-time with your <a href={`/p/${user?.username}`} target="_blank" className="text-cyan-500/50 hover:text-cyan-400 transition-colors">public portfolio website</a>.
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.4em] opacity-30">
+                All edits are synchronized in real-time with your <a href={`/p/${user?.username}`} target="_blank" className="text-primary hover:text-primary/80 transition-colors">public portfolio website</a>.
             </p>
         </div>
       </div>
