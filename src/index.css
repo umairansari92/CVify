@@ -226,20 +226,36 @@
   }
 }
 
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+/* ==========================================
+   CVify Pro: Premium Custom Scrollbar 
+   ========================================== */
+
+/* For Webkit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+::-webkit-scrollbar-track {
+  background: var(--bg-primary, #0B1121); 
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color, #2DD4BF);
   border-radius: 10px;
+  /* Adds a transparent border around the thumb to make it look thinner and padded */
+  border: 3px solid var(--bg-primary, #0B1121); 
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color, #2DD4BF);
+  /* Fallback hover effect */
+  opacity: 0.8; 
 }
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color, #2DD4BF) var(--bg-primary, #0B1121);
+}
+
