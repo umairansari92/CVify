@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import api from "../api/axios";
@@ -66,6 +66,18 @@ import {
   openProjectModalThunk
 } from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
+
+// Modular Sections (Hero and About are critical, others lazy)
+import Hero from "../components/profile/sections/Hero";
+import About from "../components/profile/sections/About";
+const Experience = lazy(() => import("../components/profile/sections/Experience"));
+const Education = lazy(() => import("../components/profile/sections/Education"));
+const Showcase = lazy(() => import("../components/profile/sections/Showcase"));
+const Skills = lazy(() => import("../components/profile/sections/Skills"));
+const Contact = lazy(() => import("../components/profile/sections/Contact"));
+const Footer = lazy(() => import("../components/profile/sections/Footer"));
+
+// Modular Components
 import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
@@ -97,7 +109,6 @@ const PublicProfile = () => {
     return baseProjects;
   }, [user?.projects, user?.portfolio, user?.username]);
 
-  // V4.4 Dynamic Selectors
   const slogans = user?.heroSlogans || [];
   const personalInfo = user?.personalInfo || { 
     fullName: user?.firstName + " " + user?.lastName, 
@@ -151,42 +162,11 @@ const PublicProfile = () => {
     }
   }, [dispatch, user?.isOwner]);
 
-  // V5.0 SECURE DISPLAY HELPER [Silicon Valley Polish]
   const displayValue = useCallback((value, placeholder) => {
     if (value && value.trim() !== "") return value;
     if (isOwner) return placeholder;
-    return null; // Visitors shouldn't see placeholders
+    return null;
   }, [isOwner]);
-
-  // V5.0 HERO STATS COMPONENT
-  const HeroStats = () => {
-    const stats = [
-      { label: "Projects Delivered", value: projects.length > 0 ? `${projects.length}+` : "10+", icon: <Rocket size={14} /> },
-      { label: "Identity", value: displayValue(branding.identityLabel, "Full-stack Expert") || "AI & Web Specialist", icon: <FaMagic size={14} /> },
-      { label: "Availability", value: "Available now", icon: <FaCheckCircle size={14} /> },
-    ];
-
-    return (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-12 border-t border-white/5"
-      >
-        {stats.map((stat, i) => (
-          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[var(--primary-color)]/20 transition-all group">
-            <div className="text-[var(--primary-color)] opacity-60 group-hover:opacity-100 transition-all">
-              {stat.icon}
-            </div>
-            <div className="text-left">
-              <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40 group-hover:opacity-60 transition-all">{stat.label}</p>
-              <p className="text-sm font-black text-[var(--text-primary)]">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-    );
-  };
 
   const handleLiveUpdate = async (updates) => {
     if (!user.isOwner) return;
@@ -220,7 +200,6 @@ const PublicProfile = () => {
     if (!user.isOwner) return;
     try {
       const newStatus = !currentStatus;
-      // Optimistic Update
       const updatedResumes = user.resumes.map(r => r._id === resumeId ? { ...r, isPublic: newStatus } : r);
       dispatch(updateActiveProfileLocally({ resumes: updatedResumes }));
       
@@ -235,23 +214,18 @@ const PublicProfile = () => {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     if (isSending) return;
-    
     setIsSending(true);
     const loadingToast = toast.loading("Sending your message...");
-    
     try {
       await api.post(`/portfolio/contact/${username}`, contactForm);
       toast.success("Message sent! The owner will get back to you soon.", { id: loadingToast });
       setContactForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      console.error("[ContactSubmit] Error:", err.message);
       toast.error(err.response?.data?.message || "Failed to send message. Please try again.", { id: loadingToast });
     } finally {
       setIsSending(false);
     }
   };
-
-
 
   const ensureAbsoluteUrl = (url) => {
     if (!url || typeof url !== "string") return "";
@@ -283,22 +257,6 @@ const PublicProfile = () => {
 
   const theme = localTheme || themePresets[0];
 
-  const ScoreCard = ({ label, score, color = "var(--action)" }) => (
-    <Card className="p-8 space-y-6 bg-white/[0.02]">
-      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest opacity-60">
-        <span>{label}</span>
-        <span style={{ color }}>{score}%</span>
-      </div>
-      <div className="flex items-end gap-2">
-        <span className="text-4xl font-black">{score}</span>
-        <span className="text-[10px] font-bold opacity-30 pb-1.5">%</span>
-      </div>
-      <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-        <motion.div initial={{ width: 0 }} whileInView={{ width: `${score}%` }} transition={{ duration: 1.5 }} className="h-full" style={{ backgroundColor: color }} />
-      </div>
-    </Card>
-  );
-
   return (
     <div
       className="min-h-screen transition-colors duration-500 selection:bg-[var(--primary-color)] selection:text-white overflow-x-hidden"
@@ -320,7 +278,7 @@ const PublicProfile = () => {
         <style>{`html { scroll-behavior: smooth; }`}</style>
       </Helmet>
 
-      {/* ── Resume Selector Modal [V4.4] ── */}
+      {/* ── Resume Selector Modal ── */}
       <AnimatePresence>
         {showResumeModal && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
@@ -339,7 +297,7 @@ const PublicProfile = () => {
                 <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                   {publicResumes.length > 0 ? (
                     publicResumes.map((resume, idx) => (
-                      <div className="flex flex-col gap-2 w-full">
+                      <div className="flex flex-col gap-2 w-full" key={resume._id}>
                         <div className="flex items-center justify-between w-full">
                           <button 
                             onClick={() => { handleDownloadPDF(resume, resume.templateId); setShowResumeModal(false); }}
@@ -392,7 +350,7 @@ const PublicProfile = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Owner Analytics Bar (V4.6 HUD Dock) ── */}
+      {/* ── Owner Analytics Bar (HUD Dock) ── */}
       {user.isOwner && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] w-full max-w-lg px-4 flex items-center justify-center pointer-events-none">
           <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto">
@@ -409,7 +367,7 @@ const PublicProfile = () => {
         </div>
       )}
 
-      {/* --- PREMIUM FLOATING NAVBAR (V4.5) --- */}
+      {/* --- PREMIUM FLOATING NAVBAR --- */}
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 flex justify-center ${scrolled ? 'pt-4' : 'pt-8'}`}>
         <div className={`w-full max-w-7xl px-8 h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
@@ -428,17 +386,7 @@ const PublicProfile = () => {
             </div>
           </div>
 
-          {/* Dynamic Name Branding (Center - Hidden on Mobile, shown on Large) */}
-          <div 
-             className="hidden lg:flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
-             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            {/* <InlineEdit isOwner={isOwner} id="fullNameNav" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
-              <h1 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase font-serif whitespace-nowrap">
-                {personalInfo.fullName || 'Welcome'}
-              </h1>
-            </InlineEdit> */}
-          </div>
+          <div className="hidden lg:flex justify-center" />
 
           {/* Navigation & Action (Right) */}
           <div className="flex items-center justify-end gap-6">
@@ -458,14 +406,12 @@ const PublicProfile = () => {
               ))}
             </div>
 
-            {/* Owner HUD Widget */}
             {isOwner && (
               <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--primary-color)]/10 text-[var(--primary-color)] text-[8px] font-black tracking-widest uppercase animate-pulse">
                 <Edit2 size={12} /> Live Editor
               </div>
             )}
 
-            {/* Mobile/Small Screen Menu Toggle */}
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-3 rounded-full bg-white/5 text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
@@ -473,7 +419,6 @@ const PublicProfile = () => {
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             
-            {/* Resume Button (Desktop) */}
             <button 
               onClick={() => setShowResumeModal(true)}
               className="hidden md:flex px-6 py-3 bg-[var(--primary-color)] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_var(--primary-color)]/30"
@@ -483,7 +428,7 @@ const PublicProfile = () => {
           </div>
         </div>
 
-        {/* --- MOBILE DRAWER (V4.6) --- */}
+        {/* --- MOBILE DRAWER --- */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
@@ -517,942 +462,84 @@ const PublicProfile = () => {
         </AnimatePresence>
       </nav>
 
-      {/* --- KILLER HERO SECTION (V4.6/V5.0 Upgrade) --- */}
-      <section id="home" className="relative min-h-[95vh] flex items-center justify-center pt-32 overflow-hidden outline-none">
-        
-        {/* Background Ambient Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-[var(--primary-color)]/10 rounded-full blur-[120px] pointer-events-none" />
+      <Hero 
+        user={user} 
+        isOwner={isOwner} 
+        theme={theme} 
+        displayValue={displayValue} 
+        handleLiveUpdate={handleLiveUpdate} 
+      />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-10 md:space-y-14">
-          
-          {/* Status Badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center"
-          >
-            {displayValue(branding.identityLabel, "Available for High-Impact Projects") && (
-              <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
-                <Rocket size={16} className="text-[var(--primary-color)]" />
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
-                  <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Available for High-Impact Projects"} selector={state => state.profile.data.branding.identityLabel}>
-                    {branding.identityLabel || "Available for High-Impact Projects"}
-                  </InlineEdit>
-                </span>
-              </span>
-            )}
-          </motion.div>
+      <About 
+        user={user} 
+        isOwner={isOwner} 
+        displayValue={displayValue} 
+        handleLiveUpdate={handleLiveUpdate} 
+        setShowResumeModal={setShowResumeModal} 
+      />
 
-          {/* Massive Typography Headline */}
-          <div className="space-y-6">
-            <motion.h1 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="text-6xl md:text-8xl lg:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.9] uppercase"
-            >
-              <InlineEdit isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
-                {displayValue(personalInfo.fullName, "Architect")}
-              </InlineEdit>
-            </motion.h1>
-            
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-2xl md:text-4xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
-            >
-              <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} selector={state => state.profile.data.personalInfo.jobTitle}>
-                {displayValue(personalInfo.jobTitle, "Engineering Future Solutions.")}
-              </InlineEdit>
-            </motion.h2>
-          </div>
-
-          {/* Power Tagline */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] font-light max-w-3xl mx-auto leading-relaxed"
-          >
-            <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} selector={state => state.profile.data.personalInfo.objective} type="textarea">
-              <p className="opacity-80">"{displayValue(personalInfo.objective, "I build intelligent digital products that bridge the gap between human needs and complex technology.")}"</p>
-            </InlineEdit>
-          </motion.div>
-
-          {/* Interactive CTA Row */}
-          <div className="space-y-12">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-10"
-            >
-              <a 
-                href="#showcase" 
-                className="group relative px-12 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest overflow-hidden transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-3"
-              >
-                <span className="relative z-10">🚀 View My Journey</span>
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-              </a>
-              
-              <button 
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-12 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 hover:bg-[var(--primary-color)]/5 transition-all flex items-center gap-3 active:scale-95"
-              >
-                📩 Contact Me
-              </button>
-            </motion.div>
-
-            {/* V5.0 Hero Stats Row */}
-            <HeroStats />
-          </div>
-
+      <Suspense fallback={
+        <div className="py-20 text-center opacity-20 animate-pulse font-black uppercase tracking-[0.5em] text-[8px]">
+          Loading Intelligence...
         </div>
-
-        {/* Subtle Animated Scroll Indicator */}
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[var(--primary-color)] opacity-40 flex flex-col items-center gap-2"
-        >
-           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Initialize</span>
-           <FaChevronDown size={20} />
-        </motion.div>
-      </section>
-
-      {/* --- 1. ABOUT & INDUSTRY (UNBOXED V5.0) --- */}
-      <section id="about" className="py-40 relative overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto px-6 text-center space-y-12"
-        >
-          
-          {/* Subtle Background Badge Layer */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-[var(--primary-color)]/5 to-transparent pointer-events-none opacity-20" />
-
-          {/* Industry Badge */}
-          <div className="flex justify-center">
-            {displayValue(user.personalInfo?.industry, "Technology & Software") && (
-              <span className="inline-flex items-center gap-2 px-6 py-2 text-[10px] font-black tracking-[0.3em] text-[var(--primary-color)] uppercase bg-[var(--primary-color)]/5 border border-[var(--primary-color)]/10 rounded-full">
-                <InlineEdit isOwner={isOwner} label="Industry" value={user.personalInfo?.industry} onSave={(v) => handleLiveUpdate({ "personalInfo.industry": v })}>
-                  {user.personalInfo?.industry || 'Technology & Software'}
-                </InlineEdit>
-              </span>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] tracking-tighter leading-none uppercase">
-              <InlineEdit isOwner={isOwner} label="Full Name" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-                {displayValue(personalInfo.fullName, "Architect")}
-              </InlineEdit>
-            </h2>
-            <div className="h-1.5 w-24 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
-            <p className="text-xl md:text-2xl font-black text-[var(--primary-color)] opacity-80 uppercase tracking-widest">
-              <InlineEdit isOwner={isOwner} label="Job Title" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
-                {displayValue(personalInfo.jobTitle, "Engineering Excellence")}
-              </InlineEdit>
-            </p>
-          </div>
-          
-          <div className="text-lg md:text-2xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic font-serif">
-            <InlineEdit isOwner={isOwner} label="Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} multiline>
-              <p className="whitespace-pre-wrap">"{displayValue(user.summary, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
-            </InlineEdit>
-          </div>
-
-          <div className="pt-10">
-            <button onClick={() => setShowResumeModal(true)} className="px-10 py-4 bg-white/5 hover:bg-[var(--primary-color)]/10 border border-white/10 hover:border-[var(--primary-color)]/30 rounded-full text-[var(--text-primary)] font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 mx-auto group shadow-2xl active:scale-95">
-              <Download size={16} className="group-hover:translate-y-1 transition-transform" /> View Full Dossier
-            </button>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* --- 2. PROFESSIONAL EXPERIENCE (UPGRADED V5.0) --- */}
-      {(isOwner || (user.experience?.length > 0)) && (
-        <section id="journey" className="py-32 border-b border-white/5 bg-white/[0.01]">
-          <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center space-y-4 mb-20"
-            >
-              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter flex items-center justify-center gap-4">
-                 <FaHistory className="text-[var(--primary-color)]" />
-                 <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
-                    {displayValue(user.sectionNames?.experience, "Professional Journey")}
-                 </InlineEdit>
-              </h2>
-              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
-              <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">The Evolution of Strategy</p>
-            </motion.div>
-            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
-              {(user.experience || []).map((exp, index) => (
-                <motion.div 
-                  key={exp._id || index}
-                  initial={{ opacity: 0, x: 100 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
-                  className="relative flex flex-col items-center group w-full"
-                >
-                  {/* Briefcase Icon with Magnetic Pulse */}
-                  <motion.div 
-                    whileHover={{ scale: 1.25, rotate: -5 }}
-                    className="z-20 flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--primary-color)] text-white mb-6 shadow-xl shadow-[var(--primary-color)]/30 group-hover:shadow-[var(--primary-color)]/60 transition-all duration-300"
-                  >
-                    <Briefcase size={22} />
-                  </motion.div>
-
-                  {/* Wide Professional Card with Side-Shift Highlight */}
-                  <motion.div 
-                    whileHover={{ 
-                      x: 12,
-                      backgroundColor: "rgba(var(--primary-rgb), 0.04)"
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    className="w-full bg-[var(--card-bg)] border-l-0 border-t border-b border-r border-[var(--card-border)] hover:border-l-4 hover:border-[var(--primary-color)] rounded-2xl p-8 md:p-10 text-center md:text-left shadow-xl backdrop-blur-sm transition-all duration-300 relative overflow-hidden group/card"
-                  >
-                    {/* Progress Bar Top Highlight */}
-                    <div className="absolute top-0 left-0 w-0 h-1 bg-[var(--primary-color)] group-hover/card:w-full transition-all duration-700" />
-                    
-                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm font-bold text-[var(--primary-color)] tracking-wider mb-3">
-                      <div className="flex items-center gap-2 px-3 py-1 bg-[var(--primary-color)]/10 rounded-full border border-[var(--primary-color)]/20">
-                         <span className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse" />
-                         <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
-                           const [s, e] = v.split(" - "); 
-                           handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
-                         }}>
-                           {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
-                         </InlineEdit>
-                      </div>
-                      <InlineEdit isOwner={isOwner} label="Location" value={exp.location} onSave={(v) => handleArrayUpdate("experience", index, { location: v })}>
-                         <span className="opacity-60">{exp.location || "Location"}</span>
-                      </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
-                      <InlineEdit isOwner={isOwner} label="Mode" value={exp.type} onSave={(v) => handleArrayUpdate("experience", index, { type: v })}>
-                         <span className="opacity-60">{exp.type || "Full-time"}</span>
-                      </InlineEdit>
-                    </div>
-
-                    <h3 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-1 tracking-tight">
-                      <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
-                    </h3>
-                    <h4 className="text-lg md:text-xl font-bold text-[var(--primary-color)] mb-6 opacity-90">
-                      <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company}</InlineEdit>
-                    </h4>
-
-                    <div className="text-base text-[var(--text-secondary)] leading-relaxed relative pl-4 border-l border-white/10 group-hover:border-[var(--primary-color)]/30 transition-colors">
-                      <InlineEdit isOwner={isOwner} label="Achievements" value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })} multiline>
-                        <p className="whitespace-pre-wrap opacity-70 group-hover:opacity-100 transition-opacity">{exp.achievements || "Description..."}</p>
-                      </InlineEdit>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-            {isOwner && (
-              <button onClick={() => toast.error("Please add via Dashboard for full validation.")} className="mt-12 px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 z-10">
-                <FaPlus size={16} /> Add Experience
-              </button>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* --- 3. EDUCATION HISTORY (UPGRADED V5.0) --- */}
-      {(isOwner || (user.education?.length > 0)) && (
-        <section id="education" className="py-32 border-b border-white/5">
-          <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center space-y-4 mb-20"
-            >
-              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
-                 <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
-                    {displayValue(user.sectionNames?.education, "Academic Foundation")}
-                 </InlineEdit>
-              </h2>
-              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
-              <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">Building the Logical Core</p>
-            </motion.div>
-            <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
-              {(user.education || []).map((edu, index) => (
-                <motion.div 
-                  key={edu._id || index}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50, y: 30 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: index * 0.2, ease: "easeOut" }}
-                  className="relative flex flex-col items-center group mb-20 last:mb-0 w-full"
-                >
-                  {/* Floating Graduation Cap Icon with Full Spin */}
-                  <motion.div 
-                    whileHover={{ rotate: 360, scale: 1.3 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                    className="z-20 flex items-center justify-center w-16 h-16 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-2xl shadow-[var(--primary-color)]/50 transition-all duration-500 group-hover:shadow-[var(--primary-color)]/80 cursor-default"
-                  >
-                    <GraduationCap size={28} />
-                  </motion.div>
-
-                  {/* High-Impact 3D Card */}
-                  <motion.div 
-                    whileHover={{ 
-                      y: -25, 
-                      scale: 1.05,
-                      rotateX: 3,
-                      rotateY: -2,
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[3rem] p-10 md:p-14 text-center shadow-2xl backdrop-blur-xl hover:border-[var(--primary-color)]/60 hover:bg-[var(--primary-color)]/[0.05] hover:shadow-[0_40px_80px_rgba(var(--primary-rgb),0.3)] transition-all duration-500 perspective-2000"
-                  >
-                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-black text-[var(--primary-color)] tracking-[0.2em] uppercase mb-6 opacity-60 group-hover:opacity-100 transition-opacity">
-                      <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
-                        const [s, e] = v.split(" - ");
-                        handleArrayUpdate("education", index, { startDate: s, endDate: e === "Present" ? "" : e });
-                      }}>
-                        {edu.startDate} - {edu.endDate || 'Present'}
-                      </InlineEdit>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary-color)]" />
-                      <InlineEdit isOwner={isOwner} label="Field of Study" value={edu.fieldOfStudy} onSave={(v) => handleArrayUpdate("education", index, { fieldOfStudy: v })}>
-                         {edu.fieldOfStudy || "Field of Study"}
-                      </InlineEdit>
-                    </div>
-
-                    <h3 className="text-3xl md:text-4xl font-black text-[var(--text-primary)] leading-tight mb-3 tracking-tighter">
-                      <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
-                    </h3>
-                    
-                    <h4 className="text-xl md:text-2xl font-bold text-[var(--text-secondary)] mb-8 opacity-80 decoration-[var(--primary-color)]/30 underline-offset-8">
-                      <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
-                    </h4>
-
-                    {edu.description && (
-                       <div className="relative pt-6 border-t border-white/5">
-                         <p className="text-base text-[var(--text-secondary)] leading-relaxed italic opacity-40 group-hover:opacity-90 transition-all duration-500">
-                            <InlineEdit isOwner={isOwner} label="Story" value={edu.description} onSave={(v) => handleArrayUpdate("education", index, { description: v })} multiline>{edu.description}</InlineEdit>
-                         </p>
-                       </div>
-                    )}
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-            {isOwner && (
-              <button onClick={() => toast.error("Please add via Dashboard.")} className="mt-12 px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 z-10">
-                <FaPlus size={16} /> Add Education
-              </button>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* --- SECTION: PROJECTS / PORTFOLIO (UPGRADED V5.0) --- */}
-      {(isOwner || (profile.data.projects && profile.data.projects.length > 0) || (profile.data.portfolio && profile.data.portfolio.length > 0)) && (
-        <section id="showcase" className="py-32 border-b border-white/5">
-          <div className="max-w-7xl mx-auto px-6">
-            
-            {/* Section Header */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-20 space-y-4"
-            >
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter flex items-center justify-center gap-4">
-                <FaBriefcase className="text-[var(--primary-color)]" />
-                <span className="text-[var(--text-primary)]">Featured </span>
-                <span className="text-[var(--primary-color)]">Showcase</span>
-              </h2>
-              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light max-w-2xl mx-auto opacity-70">
-                {displayValue(null, "A curated collection of my most impactful digital products and technical experiments.")}
-              </p>
-            </motion.div>
-
-            {/* Projects Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
-                <motion.div 
-                  key={project._id || index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group flex flex-col bg-[var(--card-bg)] backdrop-blur-sm border border-[var(--card-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--primary-color)]/80 hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.25)] hover:-translate-y-1"
-                >
-                  {/* Project Image / Thumbnail */}
-                  <div className="relative aspect-video w-full bg-white/5 overflow-hidden border-b border-white/10">
-                    {project.thumbnail || project.image ? (
-                      <img 
-                        src={project.thumbnail || project.image} 
-                        alt={project.title} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white/20">
-                        <ImageIcon size={48} strokeWidth={1} />
-                      </div>
-                    )}
-                    {/* Overlay for Owner to change image */}
-                    {isOwner && (
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-                        <span className="text-sm text-white font-medium px-4 py-2 bg-white/10 rounded-full border border-white/20">Change Image</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Project Content */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight">
-                        <InlineEdit isOwner={isOwner} id={`proj-title-${index}`} value={project.title} onSave={(v) => handleArrayUpdate("projects", index, { title: v })}>
-                          {project.title || 'Project Title'}
-                        </InlineEdit>
-                      </h3>
-                      {(project.featured || project.isFeatured) && (
-                        <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-1 bg-orange-500/20 text-orange-400 rounded">Featured</span>
-                      )}
-                    </div>
-                    
-                    <div className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6 flex-1 line-clamp-3 group-hover:line-clamp-none transition-all">
-                      <InlineEdit isOwner={isOwner} id={`proj-desc-${index}`} value={project.description} type="textarea" onSave={(v) => handleArrayUpdate("projects", index, { description: v })}>
-                        <p>{project.description || 'Describe the problem you solved and the technologies you used...'}</p>
-                      </InlineEdit>
-                    </div>
-
-                    {/* Links & Actions */}
-                    <div className="flex items-center gap-4 pt-4 border-t border-[var(--card-border)] mt-auto">
-                      {(project.liveUrl || project.liveLink) && (
-                        <a href={project.liveUrl || project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-[var(--primary-color)] hover:opacity-80 transition-all">
-                          <ExternalLink size={16} /> Live Demo
-                        </a>
-                      )}
-                      {(project.githubUrl || project.githubLink) && (
-                        <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
-                          <FaGithub size={16} /> Source Code
-                        </a>
-                      )}
-                      
-                      {/* Spacer */}
-                      <div className="flex-1"></div>
-
-                      {isOwner && (
-                        <button onClick={() => dispatch(deleteProjectThunk(project._id || index))} className="text-white/30 hover:text-red-400 transition-colors">
-                          <Trash size={16} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {isOwner && (
-              <div className="mt-16 text-center">
-                <button onClick={() => dispatch(openProjectModalThunk())} className="px-8 py-3 bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] font-medium transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
-                  <FaPlus size={18} /> Add New Project
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* --- 4. EXPERTISE & SKILLS (Categorized) --- */}
-      {/* --- 4. EXPERTISE & SKILLS (UNBOXED SKILL CLOUD V5.0) --- */}
-      {(isOwner || (user.skills?.length > 0)) && (
-        <section id="expertise" className="py-32 border-b border-white/5 bg-white/[0.01]">
-          <div className="max-w-6xl mx-auto px-6 space-y-20">
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
-                <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
-                    {displayValue(user.sectionNames?.skills, "Expertise & Skills")}
-                </InlineEdit>
-              </h2>
-              <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-4 max-w-5xl mx-auto">
-              {(user.skills || []).map((skill, index) => {
-                const skillName = typeof skill === 'string' ? skill : skill.name;
-                const skillLevel = typeof skill === 'string' ? 80 : (skill.percentage || 80);
-
-                return (
-                  <motion.div 
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    whileHover={{ 
-                      scale: 1.1, 
-                      backgroundColor: "rgba(var(--primary-rgb), 0.15)",
-                      borderColor: "rgba(var(--primary-rgb), 0.4)" 
-                    }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    className="px-6 py-3 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center gap-3 cursor-default group transition-all"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] opacity-40 group-hover:opacity-100 group-hover:scale-125 transition-all" />
-                    <span className="text-sm md:text-base font-bold text-[var(--text-primary)] tracking-wide">
-                      <InlineEdit isOwner={isOwner} label="Skill" value={skillName} onSave={(v) => handleArrayUpdate("skills", index, { name: v })}>
-                        {skillName}
-                      </InlineEdit>
-                    </span>
-                    {isOwner && (
-                      <span className="text-[10px] font-black opacity-20 group-hover:opacity-60 transition-all font-mono">
-                        {skillLevel}%
-                      </span>
-                    )}
-                  </motion.div>
-                );
-              })}
-              
-              {isOwner && (
-                <button 
-                  onClick={() => toast.error("Manage categories in Dashboard.")}
-                  className="px-6 py-3 border border-dashed border-white/20 hover:border-[var(--primary-color)]/40 rounded-2xl text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-all flex items-center gap-2"
-                >
-                  <FaPlus size={14} /> Add Skill
-                </button>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* --- 5. CREDENTIALS (CERTIFICATIONS & AWARDS) --- */}
-      {(isOwner || user.certifications?.length > 0 || user.honorsAndAwards?.length > 0) && (
-        <section id="credentials" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
-          <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16">
-            
-            {/* Certifications */}
-            {(isOwner || user.certifications?.length > 0) && (
-              <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-[var(--primary-color)] flex items-center gap-3 justify-center md:justify-start"><Award size={24}/> Certifications</h2>
-                <div className="space-y-4">
-                  {(user.certifications || []).map((cert, index) => (
-                    <div key={index} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-6 hover:border-[var(--primary-color)]/30 transition-all">
-                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">
-                        <InlineEdit isOwner={isOwner} label="Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
-                      </h3>
-                      <p className="text-sm text-[var(--primary-color)] opacity-80 mb-2">
-                        <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
-                      </p>
-                      <p className="text-xs text-[var(--text-secondary)] opacity-60 uppercase tracking-wider">
-                        <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date || 'No Date'}</InlineEdit>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Honors & Awards */}
-            {(isOwner || user.honorsAndAwards?.length > 0) && (
-              <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-[var(--primary-color)] flex items-center gap-3 justify-center md:justify-start"><Trophy size={24}/> Honors & Awards</h2>
-                <div className="space-y-4">
-                  {(user.honorsAndAwards || []).map((award, index) => (
-                    <div key={index} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-6 hover:border-[var(--primary-color)]/30 transition-all">
-                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">
-                        <InlineEdit isOwner={isOwner} label="Title" value={award.title} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { title: v })}>{award.title}</InlineEdit>
-                      </h3>
-                      <p className="text-xs text-[var(--text-secondary)] opacity-60 uppercase tracking-wider mt-3">
-                        <InlineEdit isOwner={isOwner} label="Date" value={award.date} onSave={(v) => handleArrayUpdate("honorsAndAwards", index, { date: v })}>{award.date || 'No Date'}</InlineEdit>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* --- 6. LANGUAGES --- */}
-      {(isOwner || user.languages?.length > 0) && (
-        <section id="languages" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
-            <h2 className="text-3xl font-bold text-[var(--primary-color)] flex justify-center items-center gap-3"><Globe size={28}/> Languages</h2>
-            <div className="flex flex-wrap justify-center gap-4">
-              {(user.languages || []).map((lang, index) => (
-                <div key={index} className="flex flex-col items-center bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl px-8 py-4 hover:border-[var(--primary-color)]/40 transition-all">
-                  <span className="text-[var(--text-primary)] font-bold text-lg mb-1">
-                    <InlineEdit isOwner={isOwner} label="Language" value={lang.name} onSave={(v) => handleArrayUpdate("languages", index, { name: v })}>{lang.name}</InlineEdit>
-                  </span>
-                  <span className="text-[var(--primary-color)] opacity-80 text-xs uppercase tracking-widest font-medium">
-                    <InlineEdit isOwner={isOwner} label="Proficiency" value={lang.proficiency} onSave={(v) => handleArrayUpdate("languages", index, { proficiency: v })}>{lang.proficiency}</InlineEdit>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* --- 7. CERTIFICATIONS --- */}
-      {(isOwner || user.certifications?.length > 0) && (
-        <section id="certifications" className="py-24 border-b border-[var(--card-border)] bg-white/[0.01]">
-          <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-16 text-center">
-               <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.certifications} onSave={(v) => handleLiveUpdate({ "sectionNames.certifications": v })}>
-                  {user.sectionNames?.certifications || "Certifications"}
-               </InlineEdit>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-              {(user.certifications || []).map((cert, index) => (
-                <div key={index} className="p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/30 transition-all group">
-                   <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)]"><Award size={24}/></div>
-                      <div className="flex-1 space-y-1">
-                         <h3 className="text-lg font-black text-[var(--text-primary)]">
-                            <InlineEdit isOwner={isOwner} label="Cert Name" value={cert.name} onSave={(v) => handleArrayUpdate("certifications", index, { name: v })}>{cert.name}</InlineEdit>
-                         </h3>
-                         <p className="text-sm font-bold text-[var(--primary-color)] opacity-80">
-                            <InlineEdit isOwner={isOwner} label="Issuer" value={cert.issuer} onSave={(v) => handleArrayUpdate("certifications", index, { issuer: v })}>{cert.issuer}</InlineEdit>
-                         </p>
-                         <div className="flex items-center gap-3 text-[10px] text-[var(--text-secondary)] opacity-40 font-bold uppercase tracking-widest pt-2">
-                            <span>
-                               <InlineEdit isOwner={isOwner} label="Date" value={cert.date} onSave={(v) => handleArrayUpdate("certifications", index, { date: v })}>{cert.date}</InlineEdit>
-                            </span>
-                            {cert.link && (
-                               <a href={ensureAbsoluteUrl(cert.link)} target="_blank" className="text-[var(--primary-color)] hover:opacity-80 flex items-center gap-1 transition-colors">
-                                  Verify Cert <FaArrowRight size={8}/>
-                               </a>
-                            )}
-                         </div>
-                      </div>
-                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* --- 9. CONTACT CTA (LET'S BUILD V5.0) --- */}
-      <section id="contact" className="py-40 relative overflow-hidden bg-[var(--bg-primary)]">
-        {/* Massive Ambient Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-[800px] bg-[var(--primary-color)]/5 rounded-full blur-[150px] pointer-events-none" />
-
-        <div className="max-w-6xl mx-auto px-6 relative z-10 text-center space-y-24">
-          
-          <div className="space-y-8">
-            <motion.h2 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="text-6xl md:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.85] uppercase"
-            >
-              Let's Build <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-[var(--text-secondary)]">Legendary.</span>
-            </motion.h2>
-            
-            <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl md:text-3xl text-[var(--text-secondary)] font-light max-w-3xl mx-auto"
-            >
-              Currently available for high-impact collaborations and disruptive digital products.
-            </motion.p>
-          </div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {[
-              { icon: <Mail size={24} />, label: "Email", value: user.email, link: `mailto:${user.email}` },
-              { icon: <Globe size={24} />, label: "Location", value: user.personalInfo?.location || "Global / Remote", link: "#" },
-              { icon: <Rocket size={24} />, label: "Status", value: "Ready to work", link: "#contact" },
-            ].map((item, i) => (
-              <a 
-                href={item.link} 
-                key={i} 
-                className="group p-10 bg-white/[0.03] border border-white/5 rounded-[2.5rem] hover:border-[var(--primary-color)]/30 hover:bg-[var(--primary-color)]/[0.02] transition-all flex flex-col items-center gap-6 shadow-2xl"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-[var(--primary-color)]/10 text-[var(--primary-color)] flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                  {item.icon}
-                </div>
-                <div className="text-center">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-40 mb-2">{item.label}</p>
-                  <p className="text-lg font-black text-[var(--text-primary)]">{item.value}</p>
-                </div>
-              </a>
-            ))}
-          </motion.div>
-
-          <div className="pt-12">
-            <button className="px-16 py-6 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-[0.3em] hover:scale-110 hover:shadow-[0_0_50px_var(--primary-color)]/50 transition-all active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
-              Drop A Message
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* --- 9. PROFESSIONAL SERVICES --- */}
-      {(isOwner || user.services?.length > 0) && (
-        <section id="services" className="py-32">
-          <div className="max-w-6xl mx-auto px-6 space-y-20">
-            <div className="text-center space-y-4">
-               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-[var(--primary-color)]">Professional Ecosystem</h2>
-               <p className="text-4xl md:text-6xl font-black">
-                  <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.services} onSave={(v) => handleLiveUpdate({ "sectionNames.services": v })}>
-                     {user.sectionNames?.services || "What I Offer"}
-                  </InlineEdit>
-               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(user.services || []).map((service, idx) => (
-                <div key={idx} className="p-10 space-y-6 rounded-3xl transition-all border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-[var(--primary-color)]/30 group">
-                   <div className="w-16 h-16 rounded-3xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)] group-hover:bg-[var(--primary-color)] group-hover:text-white transition-all">
-                      <FaMagic size={24} />
-                   </div>
-                   <div className="space-y-4">
-                      <h3 className="text-xl font-black text-[var(--text-primary)]">
-                         <InlineEdit isOwner={isOwner} label="Service Title" value={service.title} onSave={(v) => handleArrayUpdate("services", idx, { title: v })}>{service.title || "Consulting"}</InlineEdit>
-                      </h3>
-                      <p className="text-sm text-[var(--text-secondary)] font-medium italic opacity-60">
-                         <InlineEdit isOwner={isOwner} label="Service Description" value={service.description} onSave={(v) => handleArrayUpdate("services", idx, { description: v })} multiline>{service.description || "Deep architectural strategy and semantic engineering..."}</InlineEdit>
-                      </p>
-                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* --- 8. INTERESTS & HOBBIES --- */}
-      {(isOwner || user.interests?.length > 0) && (
-        <section id="hobbies" className="py-24 border-b border-[var(--card-border)]">
-          <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
-            <h2 className="text-2xl font-black uppercase tracking-[0.4em] text-[var(--primary-color)]">Beyond the Desktop</h2>
-            <div className="flex flex-wrap justify-center gap-6">
-               {(user.interests || []).map((hobby, idx) => (
-                  <div key={idx} className="px-8 py-4 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl hover:border-[var(--primary-color)]/40 hover:bg-[var(--primary-color)]/5 transition-all text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
-                     <InlineEdit isOwner={isOwner} label="Hobby" value={hobby} onSave={(v) => { 
-                        const newInterests = [...user.interests];
-                        newInterests[idx] = v;
-                        handleLiveUpdate({ interests: newInterests });
-                     }}>{hobby}</InlineEdit>
-                  </div>
-               ))}
-               {isOwner && (
-                  <button onClick={() => {
-                     const h = window.prompt("Add Hobby:");
-                     if (h) handleLiveUpdate({ interests: [...(user.interests || []), h] });
-                  }} className="px-8 py-4 bg-[var(--card-bg)] border border-dashed border-[var(--card-border)] rounded-3xl text-sm font-bold text-[var(--text-secondary)] opacity-40 hover:opacity-100 transition-all">
-                     + Add Interest
-                  </button>
-               )}
-            </div>
-          </div>
-        </section>
-      )}
-      
-{/* --- SECTION: CONTACT --- */}
-<section id="contact" className="relative py-32 border-b border-[var(--card-border)] overflow-hidden bg-[var(--bg-primary)]/50">
-  
-  {/* Large Background Text Effect (From Image 2) */}
-  <div className="absolute top-10 left-0 w-full text-center pointer-events-none select-none overflow-hidden flex justify-center">
-    <h2 className="text-[10vw] font-black text-[var(--text-primary)] opacity-[0.03] uppercase tracking-tighter whitespace-nowrap">
-      For Assistance
-    </h2>
-  </div>
-
-  <div className="max-w-7xl mx-auto px-4 relative z-10">
-    
-    <div className="text-center mb-20">
-      <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex justify-center gap-3">
-        Contact <span className="text-[var(--primary-color)]">Me</span>
-      </h2>
-    </div>
-
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-      
-      {/* Left Column: Contact Info & Socials */}
-      <div className="space-y-12">
-        <div>
-          <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-8 uppercase tracking-wider">Contact Me Here</h3>
-          
-          <div className="space-y-6">
-            {/* Location */}
-            <div className="flex items-start gap-4">
-              <div className="mt-1 text-[var(--primary-color)]"><MapPin size={24} /></div>
-              <div>
-                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Location</span>
-                <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit 
-                    isOwner={isOwner} 
-                    id="loc" 
-                    value={personalInfo.location} 
-                    onSave={(v) => handleLiveUpdate({ location: v })}
-                  >
-                    {personalInfo.location || 'City, Country'}
-                  </InlineEdit>
-                </span>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="flex items-start gap-4">
-              <div className="mt-1 text-[var(--primary-color)]"><Mail size={24} /></div>
-              <div>
-                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Email</span>
-                <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit 
-                    isOwner={isOwner} 
-                    id="email" 
-                    value={personalInfo.email} 
-                    onSave={(v) => handleLiveUpdate({ email: v })}
-                  >
-                    {personalInfo.email || 'your.email@example.com'}
-                  </InlineEdit>
-                </span>
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className="flex items-start gap-4">
-              <div className="mt-1 text-[var(--primary-color)]"><Phone size={24} /></div>
-              <div>
-                <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Mobile Number</span>
-                <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit 
-                    isOwner={isOwner} 
-                    id="phone" 
-                    value={personalInfo.phone} 
-                    onSave={(v) => handleLiveUpdate({ phoneNumber: v })}
-                  >
-                    {personalInfo.phone || '+00 123 456 789'}
-                  </InlineEdit>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Social Icons (Inspired by Image 1) */}
-        <div>
-          <h3 className="text-xl font-bold text-[var(--primary-color)] mb-6 uppercase tracking-wider">Follow Me:</h3>
-          <div className="flex flex-wrap gap-4">
-            {/* Map through socialLinks if available, fallback to placeholders for owner to edit */}
-            {['linkedin', 'github', 'twitter', 'portfolio'].map((platform) => {
-              const link = profile.data.socialLinks?.[platform];
-              if (!link && !isOwner) return null; // Hide if empty and visitor
-              
-              const getIcon = (p) => {
-                switch(p) {
-                  case 'linkedin': return <FaLinkedin size={20} />;
-                  case 'github': return <FaGithub size={20} />;
-                  case 'twitter': return <FaTwitter size={20} />;
-                  case 'instagram': return <FaInstagram size={20} />;
-                  case 'facebook': return <FaFacebook size={20} />;
-                  case 'portfolio': return <Globe size={20} />;
-                  default: return <Globe size={20} />;
-                }
-              };
-
-              return (
-                <a 
-                  key={platform}
-                  href={link || '#'} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  title={platform}
-                  className="w-12 h-12 rounded-full border border-[var(--primary-color)]/50 bg-[var(--primary-color)]/10 text-[var(--primary-color)] flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-rotate-12 hover:bg-[var(--primary-color)] hover:text-gray-900 hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
-                >
-                  {getIcon(platform)}
-                </a>
-              );
-            })}
-          </div>
-          {isOwner && <p className="text-xs text-[var(--text-secondary)] opacity-30 mt-3">* Edit social links in your dashboard settings.</p>}
-        </div>
-      </div>
-
-      {/* Right Column: Contact Form (Image 2) */}
-      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
-        <form className="space-y-6" onSubmit={handleContactSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input 
-              type="text" 
-              placeholder="YOUR NAME" 
-              className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-              required
-              value={contactForm.name}
-              onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-              disabled={isSending}
-            />
-            <input 
-              type="email" 
-              placeholder="YOUR EMAIL" 
-              className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-              required
-              value={contactForm.email}
-              onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-              disabled={isSending}
-            />
-          </div>
-          <input 
-            type="text" 
-            placeholder="ENTER SUBJECT" 
-            className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-            required
-            value={contactForm.subject}
-            onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-            disabled={isSending}
+      }>
+        {(isOwner || (user.experience?.length > 0)) && (
+          <Experience 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
           />
-          <textarea 
-            placeholder="Message Here..." 
-            rows="6"
-            className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all resize-none"
-            required
-            value={contactForm.message}
-            onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-            disabled={isSending}
-          ></textarea>
-          
-          <div className="text-right pt-4">
-            <button 
-              type="submit" 
-              disabled={isSending}
-              className={`px-10 py-4 bg-transparent border border-[var(--card-border)] hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)]/10 hover:text-[var(--primary-color)] rounded-full text-[var(--text-primary)] font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto ${isSending ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {isSending ? "Sending..." : "Submit"} <Send size={18} />
-            </button>
-          </div>
-        </form>
-      </div>
+        )}
 
-    </div>
-  </div>
-</section>
+        {(isOwner || (user.education?.length > 0)) && (
+          <Education 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
+          />
+        )}
 
-{/* --- FOOTER --- */}
-<footer id="footer" className="py-8 bg-[var(--bg-primary)] border-t border-[var(--card-border)] text-center">
-  <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-    <p className="text-[var(--text-secondary)] opacity-50 text-sm">
-      © {new Date().getFullYear()} <span className="text-[var(--text-primary)] opacity-80 font-medium">{personalInfo.fullName}</span>. Powered by <a href="https://cvifypro.vercel.app/" target="_blank" rel="noreferrer" className="text-[var(--primary-color)] hover:underline">CVify Pro</a>.
-    </p>
-    <div className="flex items-center gap-4">
-       <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[var(--text-secondary)] opacity-50 hover:text-[var(--text-primary)] hover:opacity-100 text-sm transition-colors">
-         Back to Top ↑
-       </button>
-    </div>
-  </div>
-</footer>
+        {(isOwner || (user.projects?.length > 0) || (user.portfolio?.length > 0)) && (
+          <Showcase 
+            user={user} 
+            isOwner={isOwner} 
+            projects={projects} 
+            displayValue={displayValue} 
+            handleArrayUpdate={handleArrayUpdate} 
+            dispatch={dispatch} 
+            deleteProjectThunk={deleteProjectThunk} 
+            openProjectModalThunk={openProjectModalThunk} 
+          />
+        )}
+
+        {(isOwner || (user.skills?.length > 0)) && (
+          <Skills 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
+          />
+        )}
+
+        <Contact 
+          user={user} 
+          isOwner={isOwner} 
+          contactForm={contactForm} 
+          setContactForm={setContactForm} 
+          handleContactSubmit={handleContactSubmit} 
+          isSending={isSending} 
+          handleLiveUpdate={handleLiveUpdate} 
+          ensureAbsoluteUrl={ensureAbsoluteUrl} 
+        />
+
+        <Footer personalInfo={personalInfo} />
+      </Suspense>
+
 
       {/* ── Builder Controls ── */}
       {user.isOwner && (

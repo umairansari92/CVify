@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { fetchAllGlobalSkills } from "./globalSkillsThunk";
 
 const initialState = {
@@ -40,5 +40,24 @@ const globalSkillsSlice = createSlice({
   },
 });
 
+export { fetchAllGlobalSkills };
 export const { addSkillToCache } = globalSkillsSlice.actions;
 export default globalSkillsSlice.reducer;
+
+// Memoized Selectors (V6.0 Optimization)
+const selectGlobalSkillsState = (state) => state.globalSkills;
+
+export const selectAllSkills = createSelector(
+  [selectGlobalSkillsState],
+  (globalSkills) => globalSkills.skills || []
+);
+
+export const selectIsSkillsLoaded = createSelector(
+  [selectGlobalSkillsState],
+  (globalSkills) => globalSkills.loaded
+);
+
+export const selectSkillsLoading = createSelector(
+  [selectGlobalSkillsState],
+  (globalSkills) => globalSkills.loading
+);

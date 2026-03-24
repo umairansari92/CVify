@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import {
   createResume,
   getMyResumes,
@@ -152,3 +152,26 @@ export const {
   setResumeField,
 } = resumeSlice.actions;
 export default resumeSlice.reducer;
+
+// Memoized Selectors (V6.0 Optimization)
+const selectResumeState = (state) => state.resume;
+
+export const selectAllResumes = createSelector(
+  [selectResumeState],
+  (resume) => resume.resumes || []
+);
+
+export const selectCurrentResume = createSelector(
+  [selectResumeState],
+  (resume) => resume.currentResume
+);
+
+export const selectResumeLoading = createSelector(
+  [selectResumeState],
+  (resume) => resume.loading
+);
+
+export const selectResumeError = createSelector(
+  [selectResumeState],
+  (resume) => resume.error
+);
