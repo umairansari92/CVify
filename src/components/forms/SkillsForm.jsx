@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
+import { fetchAllGlobalSkills, addSkillToCache } from "../../features/skills/globalSkillsSlice";
 import api from "../../api/axios";
 
 // ─── Smart Skill Suggestions by Job Title ───────────────────────────────────
@@ -270,35 +271,28 @@ const TagInput = ({
   color,
   hint,
 }) => {
+  const { skills: globalSkills, loaded } = useSelector((state) => state.globalSkills);
   const [inputVal, setInputVal] = useState("");
-  const [remoteSuggestions, setRemoteSuggestions] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const inputRef = useRef(null);
 
-  // Fetch remote suggestions from Global Database
+  // Local Filtering with slice(0, 10) for performance
   useEffect(() => {
-    const fetchSuggestions = async () => {
-      const query = inputVal.trim();
-      if (query.length < 2) {
-        setRemoteSuggestions([]);
-        return;
-      }
+    const query = inputVal.trim().toLowerCase();
+    if (query.length < 2) {
+      setFilteredSuggestions([]);
+      return;
+    }
 
-      setIsSearching(true);
-      try {
-        const { data } = await api.get(`/skills/search?q=${query}`);
-        // Filter out skills already in the local list
-        setRemoteSuggestions(data.filter((s) => !skills.includes(s)));
-      } catch (err) {
-        console.error("Failed to fetch suggestions:", err);
-      } finally {
-        setIsSearching(false);
-      }
-    };
+    const timer = setTimeout(() => {
+      const matches = globalSkills
+        .filter((s) => s.toLowerCase().includes(query) && !skills.includes(s))
+        .slice(0, 10);
+      setFilteredSuggestions(matches);
+    }, 150); // Light debounce for smooth UI
 
-    const timer = setTimeout(fetchSuggestions, 300); // Simple debounce
     return () => clearTimeout(timer);
-  }, [inputVal, skills]);
+  }, [inputVal, globalSkills, skills]);
 
   const handleKeyDown = (e) => {
     if ((e.key === "Enter" || e.key === ",") && inputVal.trim()) {
@@ -339,30 +333,41 @@ const TagInput = ({
           />
         </div>
 
-        {/* Remote Suggestions Dropdown */}
-        {remoteSuggestions.length > 0 && (
+        {/* Suggestions Dropdown */}
+        {(filteredSuggestions.length > 0 || (inputVal.trim().length >= 2 && !filteredSuggestions.includes(inputVal.trim()))) && (
           <div className="absolute z-50 left-0 right-0 top-full mt-2 bg-midground border-2 border-border-subtle rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="p-2 border-b border-border-subtle bg-background/50">
+            <div className="p-2 border-b border-border-subtle bg-background/50 flex justify-between items-center">
               <span className="text-[10px] font-black text-text-muted uppercase tracking-widest px-2">
-                Suggestions from Global List
+                {filteredSuggestions.length > 0 ? "Global Skills" : "New Skill Discovery"}
               </span>
+              {filteredSuggestions.length === 0 && (
+                <span className="text-[10px] text-primary/60 font-bold px-2 italic">
+                  Press Enter to create
+                </span>
+              )}
             </div>
-            <div className="max-h-[200px] overflow-y-auto">
-              {remoteSuggestions.map((suggestion) => (
+            <div className="max-h-[250px] overflow-y-auto custom-scrollbar">
+              {filteredSuggestions.map((suggestion) => (
                 <button
                   key={suggestion}
                   type="button"
                   onClick={() => {
                     onAdd(suggestion);
                     setInputVal("");
-                    setRemoteSuggestions([]);
                   }}
-                  className="w-full text-left px-4 py-2.5 text-sm font-bold text-text-primary hover:bg-primary hover:text-white transition-colors flex justify-between items-center group"
+                  className="w-full text-left px-4 py-3 text-sm font-bold text-text-primary hover:bg-primary hover:text-white transition-colors flex justify-between items-center group/item"
                 >
                   {suggestion}
-                  <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Press to Add</span>
+                  <span className="text-[10px] opacity-0 group-hover/item:opacity-100 transition-opacity bg-white/20 px-2 py-1 rounded-md">Add Skill</span>
                 </button>
               ))}
+              {filteredSuggestions.length === 0 && inputVal.trim() && (
+                <div className="p-4 text-center">
+                  <p className="text-xs text-text-muted font-bold">
+                    Add "<span className="text-primary">{inputVal}</span>" as a new skill
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -392,30 +397,14 @@ const SkillsForm = () => {
   const themeColor = currentResume?.themeColor || "#0f172a";
   const suggestions = getSuggestions(jobTitle);
 
-  // ── Backward Compatibility: Migrate old technicalSkills → skills ──
-  // If an existing resume has old category-based skills but no flat skills array,
-  // auto-merge them into the new universal skills field on first load.
-  React.useEffect(() => {
-    const hasOldSkills =
-      currentResume?.technicalSkills &&
-      Object.values(currentResume.technicalSkills).some(
-        (a) => Array.isArray(a) && a.length > 0,
-      );
-    const hasNewSkills =
-      currentResume?.skills && currentResume.skills.length > 0;
+  const { loaded } = useSelector((state) => state.globalSkills);
 
-    if (hasOldSkills && !hasNewSkills) {
-      const merged = Object.values(currentResume.technicalSkills)
-        .flat()
-        .filter(Boolean)
-        .filter((v, i, a) => a.indexOf(v) === i); // Ensure unique on migration
-      if (merged.length > 0) {
-        dispatch(setResumeField({ field: "skills", value: merged }));
-      }
+  // Load Global Skills Cache once on mount
+  useEffect(() => {
+    if (!loaded) {
+      dispatch(fetchAllGlobalSkills());
     }
-    // Only run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentResume?._id]);
+  }, [dispatch, loaded]);
 
   // ── Handlers for "skills" field ──
   const addSkill = useCallback(
@@ -430,6 +419,8 @@ const SkillsForm = () => {
       const updated = Array.from(new Set([...skills, formatted]));
       
       dispatch(setResumeField({ field: "skills", value: updated }));
+      // Optimistically update global cache too
+      dispatch(addSkillToCache(formatted));
 
       // Track the skill globally
       api.post("/skills/track", { skills: [formatted] }).catch((err) => {
