@@ -711,9 +711,24 @@ const PublicProfile = () => {
 
             {/* Projects Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(profile.data.projects || profile.data.portfolio || []).map((project, index) => (
-                <motion.div 
-                  key={project._id || index}
+              {(() => {
+                const projects = [...(profile.data.projects || profile.data.portfolio || [])];
+                
+                // V4.3 ENRICHMENT: Seed Namaz Tracking App if missing for umairansari92
+                if (projects.length === 0 && profile.data.username === "umairansari92") {
+                   projects.push({
+                      _id: "seed-namaz",
+                      title: "Namaz Tracking Dashboard — Real-Time Utility",
+                      description: "A specialized PWA built with Firebase & Firestore for seamless daily prayer tracking. Features include history filtering (7/30 days), Urdu & English UI support (Nastaliq fonts), and privacy-first offline capability.",
+                      githubLink: "https://github.com/umairansari92/Namaz-Tracking-App",
+                      isFeatured: true,
+                      techStack: ["React", "Firebase", "PWA", "Urdu Fonts"]
+                   });
+                }
+
+                return projects.map((project, index) => (
+                  <motion.div 
+                    key={project._id || index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
