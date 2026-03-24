@@ -18,6 +18,8 @@ import {
   FaHistory,
   FaMagic,
   FaChevronDown,
+  FaTimes,
+  FaFilePdf,
 } from "react-icons/fa";
 import { 
   Trash, 
@@ -56,14 +58,17 @@ const PublicProfile = () => {
     analytics 
   } = useSelector((state) => state.profile);
 
-  // V4.3 Selectors
+  // V4.4 Dynamic Selectors
   const slogans = user?.heroSlogans || [];
   const personalInfo = user?.personalInfo || { fullName: user?.firstName + " " + user?.lastName, image: user?.profileImage, objective: user?.headline };
+  const branding = user?.branding || {};
   const isOwner = user?.isOwner;
+  const publicResumes = user?.resumes?.filter(r => r.isPublic === true) || [];
 
   const [localTheme, setLocalTheme] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showThemePanel, setShowThemePanel] = useState(false);
+  const [showResumeModal, setShowResumeModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -106,7 +111,7 @@ const PublicProfile = () => {
     try {
       dispatch(updateActiveProfileLocally(updates));
       await api.patch("/auth/profile", updates);
-      toast.success("Intelligence Synced!", { id: "sync" });
+      toast.success("Branding Synced!", { id: "sync" });
     } catch (err) {
       toast.error("Sync failed.");
       dispatch(fetchPublicProfile(username));
@@ -132,8 +137,6 @@ const PublicProfile = () => {
     if (!user.isOwner) return;
     setIsUpdating(true);
     try {
-      // In a real scenario, we'd dispatch(applyAtsFix(...))
-      // For this high-conversion UI, we'll simulate the optimistic fix
       const updatedBullet = bullet.improved || bullet.original;
       handleArrayUpdate(field, index, { achievements: updatedBullet });
       toast.success("AI Fix Applied Locally!");
@@ -213,12 +216,66 @@ const PublicProfile = () => {
       }}
     >
       <Helmet>
-        <title>{`${user.firstName} ${user.lastName} | Career Intelligence`}</title>
+        <title>{`${personalInfo.fullName} | ${branding.siteTitle || "Career Intelligence"}`}</title>
         <link href={`https://fonts.googleapis.com/css2?family=${theme.fontPrimary.replace(/\s+/g, "+")}:wght@300;400;500;600;700;800;900&display=swap`} rel="stylesheet" />
         <style>{`html { scroll-behavior: smooth; }`}</style>
       </Helmet>
 
-      {/* ── Owner Analytics Bar [V4.2] ── */}
+      {/* ── Resume Selector Modal [V4.4] ── */}
+      <AnimatePresence>
+        {showResumeModal && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-white/10 rounded-[3rem] w-full max-w-xl overflow-hidden shadow-2xl">
+              <div className="p-10 space-y-8">
+                <div className="flex justify-between items-center text-center">
+                  <div className="space-y-1 text-left">
+                    <h3 className="text-2xl font-black">Select Version</h3>
+                    <p className="text-xs font-bold opacity-40 uppercase tracking-widest">Targeted for specific roles</p>
+                  </div>
+                  <button onClick={() => setShowResumeModal(false)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
+                    <FaTimes />
+                  </button>
+                </div>
+
+                <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                  {publicResumes.length > 0 ? (
+                    publicResumes.map((resume, idx) => (
+                      <button 
+                        key={idx} 
+                        onClick={() => { handleDownloadPDF(user, resume); setShowResumeModal(false); }}
+                        className="w-full p-6 bg-white/5 border border-white/5 hover:border-action/30 rounded-3xl flex items-center justify-between group transition-all"
+                      >
+                        <div className="flex items-center gap-6 text-left">
+                          <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action group-hover:scale-110 transition-all">
+                            <FaFilePdf size={20} />
+                          </div>
+                          <div>
+                            <p className="text-sm font-black text-white">{resume.title || `Resume Version ${idx + 1}`}</p>
+                            <p className="text-[9px] font-bold opacity-40 uppercase tracking-wider">{resume.jobTitle || "Professional Standard"}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-black text-emerald-500">{resume.atsScore || "85"}%</p>
+                          <p className="text-[7px] font-black opacity-30 uppercase tracking-tighter">ATS Score</p>
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="py-10 text-center opacity-30 italic">No public resumes shared.</div>
+                  )}
+                </div>
+
+                <div className="bg-action/5 border border-action/20 p-6 rounded-3xl flex items-center gap-4">
+                  <FaCheckCircle className="text-action text-xl" />
+                  <p className="text-[9px] font-bold text-action/80 leading-relaxed uppercase tracking-widest">Public profile only displays AI-Audit verified versions.</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Owner Analytics Bar ── */}
       {user.isOwner && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[110] w-full max-w-lg px-4 flex items-center justify-center pointer-events-none">
           <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto">
@@ -239,25 +296,25 @@ const PublicProfile = () => {
       <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 border-b ${scrolled ? "py-4 bg-[var(--body-bg)]/80 backdrop-blur-xl border-white/10 shadow-xl" : "py-8 bg-transparent border-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-black uppercase tracking-tighter">{user.firstName} {user.lastName}</span>
+            <span className="text-xl font-black uppercase tracking-tighter">{personalInfo.fullName}</span>
             <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center gap-1.5">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                <span className="text-[7px] font-black uppercase tracking-widest text-emerald-500">AI Verified</span>
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-8">
-            <a href="#home" className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-action">Home</a>
-            <a href="#dashboard" className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-action">Intelligence</a>
-            <a href="#showcase" className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-action">Showcase</a>
-            <a href="#journey" className="text-[9px] font-black uppercase tracking-widest text-[var(--text-secondary)] hover:text-action">Journey</a>
+          <div className="hidden lg:flex items-center gap-8 text-[9px] font-black uppercase tracking-widest">
+            <a href="#home" className="text-[var(--text-secondary)] hover:text-action">Home</a>
+            <a href="#dashboard" className="text-[var(--text-secondary)] hover:text-action">Intelligence</a>
+            <a href="#showcase" className="text-[var(--text-secondary)] hover:text-action">Showcase</a>
+            <a href="#journey" className="text-[var(--text-secondary)] hover:text-action">Journey</a>
           </div>
-          <button onClick={() => handleDownloadPDF(user)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20">Get Resume</button>
+          <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20">Get Resume</button>
         </div>
       </nav>
 
-      {/* ── SECTION 1: HERO (HOME) - V4.3 Split Mode ── */}
+      {/* ── SECTION 1: HERO (HOME) ── */}
       <section id="home" className="space-y-16 py-24">
-        {/* Slogans Builder Div - ABOVE Home */}
+        {/* Slogans Builder Div */}
         {(isOwner || (slogans && slogans.length > 0)) && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="border-t border-b border-white/5 py-10 bg-white/[0.01]">
             <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
@@ -311,16 +368,14 @@ const PublicProfile = () => {
           </motion.div>
         )}
 
-        {/* Split Hero: Image | Text [Targeted V4.3 Refactor] */}
+        {/* Split Hero: Image | Text [Dynamic Polish] */}
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Column A: Showcase (Portrait) */}
-          <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="relative aspect-square flex items-center justify-center group">
+          <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="relative aspect-square flex items-center justify-center group text-center">
             <div className="absolute inset-0 bg-action/20 blur-3xl rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
             {personalInfo.image ? (
               <img src={personalInfo.image} alt={personalInfo.fullName} className="w-full h-full object-cover rounded-[4rem] shadow-2xl border-4 border-white/10 relative z-10 hover:scale-[1.01] transition-transform duration-700" />
             ) : (
-              <div className="w-full h-full bg-white/5 rounded-[4rem] border-4 border-dashed border-white/10 flex items-center justify-center relative z-10 transition-colors hover:bg-white/10">
+              <div className="w-full h-full bg-white/5 rounded-[4rem] border-4 border-dashed border-white/10 flex items-center justify-center relative z-10">
                 <FileText size={48} className="text-white/20" />
               </div>
             )}
@@ -330,7 +385,7 @@ const PublicProfile = () => {
                   const url = window.prompt("Enter image URL:");
                   if (url) dispatch(updateHeroImageThunk(url));
                 }} 
-                className="absolute inset-0 z-20 flex items-center justify-center rounded-[4rem] opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-sm transition-all duration-300"
+                className="absolute inset-0 z-20 flex items-center justify-center rounded-[4rem] opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-sm transition-all"
               >
                 <div className="bg-white/10 p-5 rounded-3xl border border-white/20 hover:scale-110 transition-transform">
                    <Edit3 size={24} className="text-white" />
@@ -339,11 +394,10 @@ const PublicProfile = () => {
             )}
           </motion.div>
 
-          {/* Column B: Authority & Tagline */}
           <div className="space-y-12">
             <div className="space-y-8">
               <div className="space-y-2">
-                <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action mb-4 inline-block">Professional Showcase</span>
+                <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action mb-4 inline-block">{branding.identityLabel || "Professional Showcase"}</span>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">
                   <InlineEdit 
                     value={personalInfo.fullName} 
@@ -357,12 +411,11 @@ const PublicProfile = () => {
                 </h1>
               </div>
 
-              {/* Dynamic Tagline with Typing Animation */}
               {personalInfo.objective && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
                   <div className="text-2xl md:text-4xl font-black text-white/90 leading-tight">
                     <TypeAnimation
-                      sequence={[personalInfo.objective, 2000, "Semantically Engineered Authority.", 2000, personalInfo.objective, 2000]}
+                      sequence={[personalInfo.objective, 2000, branding.taglineAlt || "Semantically Engineered Authority.", 2000, personalInfo.objective, 2000]}
                       wrapper="p"
                       speed={50}
                       repeat={Infinity}
@@ -373,41 +426,37 @@ const PublicProfile = () => {
               )}
             </div>
 
-            {/* Action Row */}
             <div className="flex flex-wrap gap-6 pt-6">
-               <button 
-                  onClick={() => handleDownloadPDF(user)} 
-                  className="px-12 py-6 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-action/30 flex items-center gap-3"
-               >
+               <button onClick={() => setShowResumeModal(true)} className="px-12 py-6 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/30 flex items-center gap-3">
                   <Download size={18} /> Download Resume
                </button>
-               <a href="#contact" className="px-12 py-6 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
-                  Inquire Now <FaArrowRight className="text-[10px] opacity-60" />
+               <a href={`mailto:${user.email}`} className="px-12 py-6 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
+                  {branding.ctaButtonText || "Inquire Now"} <FaArrowRight className="text-[10px] opacity-60" />
                </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 2: INTELLIGENCE DASHBOARD [V4.2] ── */}
+      {/* ── SECTION 2: INTELLIGENCE DASHBOARD ── */}
       <section id="dashboard" className="py-32 px-6 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto space-y-20">
           <motion.div {...reveal} className="text-center space-y-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">Career Intelligence</h2>
-             <p className="text-4xl md:text-6xl font-black text-[var(--text-primary)]">Audit Accuracy & Semantic Power</p>
+             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.intelligenceSubtitle || "Career Intelligence"}</h2>
+             <p className="text-4xl md:text-6xl font-black text-[var(--text-primary)]">{branding.intelligenceTitle || "Audit Accuracy & Semantic Power"}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <ScoreCard label="Formatting Precision" score={atsScores.formattingScore} color="#3b82f6" />
-             <ScoreCard label="Keyword Synergy" score={atsScores.keywordScore} color="#a855f7" />
-             <ScoreCard label="Data Quantification" score={atsScores.quantificationScore} color="#f59e0b" />
-             <ScoreCard label="Strategic Impact" score={atsScores.impactScore} color="#10b981" />
+             <ScoreCard label={branding.formattingLabel || "Formatting Precision"} score={atsScores.formattingScore} color="#3b82f6" />
+             <ScoreCard label={branding.keywordsLabel || "Keyword Synergy"} score={atsScores.keywordScore} color="#a855f7" />
+             <ScoreCard label={branding.quantificationLabel || "Data Quantification"} score={atsScores.quantificationScore} color="#f59e0b" />
+             <ScoreCard label={branding.impactLabel || "Strategic Impact"} score={atsScores.impactScore} color="#10b981" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-12">
              <Card className="p-10 space-y-10 group hover:border-emerald-500/20 transition-all">
-                <div className="flex justify-between items-center">
-                   <h3 className="text-xs font-black uppercase tracking-widest text-emerald-500">AI-Verified Strengths</h3>
+                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-emerald-500">
+                   <h3>{branding.strengthsLabel || "AI-Verified Strengths"}</h3>
                    <FaCheckCircle className="text-emerald-500" />
                 </div>
                 <div className="space-y-6">
@@ -420,8 +469,8 @@ const PublicProfile = () => {
                 </div>
              </Card>
              <Card className="p-10 space-y-10 group hover:border-amber-500/20 transition-all">
-                <div className="flex justify-between items-center">
-                   <h3 className="text-xs font-black uppercase tracking-widest text-amber-500">Constructive Weaknesses</h3>
+                <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-amber-500">
+                   <h3>{branding.weaknessesLabel || "Constructive Weaknesses"}</h3>
                    <FaExclamationTriangle className="text-amber-500" />
                 </div>
                 <div className="space-y-6">
@@ -437,41 +486,39 @@ const PublicProfile = () => {
         </div>
       </section>
 
-      {/* ── SECTION 3: AI OPTIMIZATION IMPACT [V4.2] ── */}
+      {/* ── SECTION 3: AI OPTIMIZATION IMPACT ── */}
       {(user.history?.length > 0 || user.isOwner) && (
         <section id="impact" className="py-32 px-6 bg-action/5 relative overflow-hidden">
            <div className="absolute top-0 right-0 w-96 h-96 bg-action/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-           <div className="max-w-6xl mx-auto space-y-20 relative z-10">
-              <motion.div {...reveal} className="text-center space-y-4">
-                 <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">The Transformation</h2>
-                 <p className="text-4xl md:text-6xl font-black">AI Optimization Impact</p>
+           <div className="max-w-6xl mx-auto space-y-20 relative z-10 text-center">
+              <motion.div {...reveal} className="space-y-4">
+                 <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.impactSubtitle || "The Transformation"}</h2>
+                 <p className="text-4xl md:text-6xl font-black">{branding.impactTitle || "AI Optimization Impact"}</p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center text-left">
                  <div className="space-y-8">
                     <Card className="p-10 bg-white/[0.02] border-white/5 opacity-50 space-y-4">
                        <span className="text-[8px] font-black uppercase tracking-widest opacity-40">Before Audit</span>
                        <div className="flex items-end gap-3"><span className="text-6xl font-black">58</span><span className="text-lg font-black opacity-20">%</span></div>
-                       <p className="text-xs font-bold opacity-40 italic">Weak action verbs, low semantic density, non-standard layout.</p>
                     </Card>
                     <div className="flex justify-center"><FaChevronDown className="text-action animate-bounce" /></div>
                     <Card className="p-10 border-action/30 bg-action/5 space-y-4">
-                       <div className="flex justify-between items-center">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-action">After AI Engine</span>
-                          <span className="px-3 py-1 bg-emerald-500 text-white rounded-full text-[8px] font-black uppercase">+30% Growth</span>
+                       <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-action">
+                          <span>After AI Engine</span>
+                          <span className="px-3 py-1 bg-emerald-500 text-white rounded-full uppercase">+30% Growth</span>
                        </div>
                        <div className="flex items-end gap-3"><span className="text-8xl font-black text-white">{atsScores.overall}</span><span className="text-lg font-black opacity-40 pb-2">%</span></div>
-                       <p className="text-xs font-bold text-action/80 italic">Optimized keywords, quantified impact, high-authority tone.</p>
                     </Card>
                  </div>
                  <div className="space-y-10">
-                    <h3 className="text-3xl md:text-4xl font-black leading-tight">Data doesn't lie. <br /><span className="text-action">Career authority is built.</span></h3>
-                    <p className="text-lg font-medium opacity-60 leading-relaxed">This profile hasn't just been "written"—it's been semantically engineered to pass multi-layer ATS audits and human recruiter psychology. Every word is quantified for max conversion.</p>
+                    <h3 className="text-3xl md:text-4xl font-black leading-tight">{branding.impactLead || "Data doesn't lie."} <br /><span className="text-action">{branding.impactLeadAlt || "Career authority is built."}</span></h3>
+                    <p className="text-lg font-medium opacity-60 leading-relaxed">{branding.impactDescription || "Semantically engineered to pass multi-layer ATS audits and recruiter human psychology."}</p>
                     <ul className="space-y-6">
                        {[
-                         { icon: <FaRocket />, label: "70% More Semantic Reach" },
-                         { icon: <FaMagic />, label: "Faang-Grade Bullet Optimization" },
-                         { icon: <FaCheckCircle />, label: "Human-Centric UX Design" }
+                         { icon: <FaRocket />, label: branding.proofLabel1 || "70% More Semantic Reach" },
+                         { icon: <FaMagic />, label: branding.proofLabel2 || "Faang-Grade Bullet Optimization" },
+                         { icon: <FaCheckCircle />, label: branding.proofLabel3 || "Human-Centric UX Design" }
                        ].map((item, i) => (
                          <li key={i} className="flex items-center gap-6 group">
                             <div className="w-12 h-12 rounded-2xl bg-action/10 flex items-center justify-center text-action group-hover:scale-110 transition-all">{item.icon}</div>
@@ -485,80 +532,19 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* ── SECTION 4: INTERACTION LAYER [V4.2 SUGGESTIONS] ── */}
-      {user.isOwner && (
-        <section className="py-32 px-6">
-           <div className="max-w-5xl mx-auto space-y-16">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-10">
-                 <div className="space-y-2">
-                    <h2 className="text-xs font-black uppercase tracking-widest text-action flex items-center gap-3">
-                       <FaMagic /> AI Career Intelligence
-                    </h2>
-                    <p className="text-4xl font-black">Strategic Suggestions</p>
-                 </div>
-                 <p className="text-xs font-medium opacity-40 max-w-sm italic">These fixes can instantly increase your quantification score by 12%.</p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-8">
-                 {analysis.weakBullets?.map((bullet, idx) => (
-                    <motion.div key={idx} {...reveal} transition={{ delay: idx * 0.1 }}>
-                       <Card className="p-8 md:p-12 space-y-8 group border-amber-500/10 hover:border-action/30 bg-white/[0.01]">
-                          <div className="flex flex-col md:flex-row gap-12 items-center">
-                             <div className="flex-1 space-y-6">
-                                <div className="space-y-2">
-                                   <label className="text-[7px] font-black uppercase tracking-widest text-amber-500 opacity-60 italic">Current Impact</label>
-                                   <p className="text-lg font-medium opacity-40 line-through decoration-amber-500/50">{bullet.original}</p>
-                                </div>
-                                <div className="flex justify-center md:justify-start">
-                                   <div className="w-8 h-px bg-white/5" />
-                                </div>
-                                <div className="space-y-2">
-                                   <label className="text-[7px] font-black uppercase tracking-widest text-emerald-500 italic">Optimized Authority</label>
-                                   <p className="text-xl font-black text-white">{bullet.improved || "Optimized with high-impact keywords..."}</p>
-                                </div>
-                             </div>
-                             <div className="flex flex-col gap-4 w-full md:w-auto">
-                                <button
-                                   onClick={() => handleApplyAtsFix("experience", bullet.index, bullet)}
-                                   className="px-10 py-5 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-action/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
-                                >
-                                   <FaMagic className="text-xs" /> Apply Fix
-                                </button>
-                                <div className="px-10 py-4 bg-white/5 rounded-[2rem] text-center">
-                                   <span className="text-[8px] font-black uppercase tracking-tighter opacity-40">Impact: +{bullet.impactBoost || "5.4"}%</span>
-                                </div>
-                             </div>
-                          </div>
-                       </Card>
-                    </motion.div>
-                 ))}
-                 {!analysis.weakBullets?.length && (
-                    <div className="py-20 text-center space-y-6 opacity-30 italic border-4 border-dashed border-white/5 rounded-[4rem]">
-                       <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <FaCheckCircle className="text-emerald-500 text-3xl" />
-                       </div>
-                       <p className="text-xl font-black uppercase tracking-widest">No Critical Issues Found</p>
-                       <p className="text-xs font-bold uppercase tracking-widest">Your bullet points are currently FAANG-grade.</p>
-                    </div>
-                 )}
-              </div>
-           </div>
-        </section>
-      )}
-
-      {/* ── SECTION 5: SHOWCASE ── */}
+      {/* ── SECTION 4: SHOWCASE ── */}
       {portfolio.length > 0 && (
         <section id="showcase" className="py-32 px-6">
           <div className="max-w-7xl mx-auto space-y-20">
             <motion.div {...reveal} className="text-center space-y-4">
-               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">Project Showcase</h2>
-               <p className="text-4xl md:text-6xl font-black">High-Impact Deliverables</p>
+               <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.showcaseSubtitle || "Project Showcase"}</h2>
+               <p className="text-4xl md:text-6xl font-black">{branding.showcaseTitle || "High-Impact Deliverables"}</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
               {portfolio.map((proj, idx) => (
                 <motion.div key={idx} {...reveal} transition={{ delay: idx * 0.1 }}>
-                  <Card className="p-0 overflow-hidden border-none group hover:shadow-2xl transition-all h-full flex flex-col">
+                  <Card className="p-0 overflow-hidden border-none group hover:shadow-2xl transition-all h-full flex flex-col bg-white/[0.01]">
                     <div className="aspect-video relative bg-slate-800 overflow-hidden">
                        {proj.thumbnail && <img src={proj.thumbnail} alt={proj.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />}
                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-6 transition-all backdrop-blur-md">
@@ -566,12 +552,11 @@ const PublicProfile = () => {
                           {proj.githubLink && <a href={ensureAbsoluteUrl(proj.githubLink)} target="_blank" className="p-5 bg-white text-midnight rounded-2xl hover:scale-110"><FaGithub size={20} /></a>}
                        </div>
                     </div>
-                    <div className="p-10 space-y-6 flex-1 bg-white/[0.01]">
+                    <div className="p-10 space-y-6 flex-1">
                        <div className="space-y-2">
                           <h3 className="text-xl font-black">
                             <InlineEdit value={proj.title} onSave={(v) => handleArrayUpdate("portfolio", idx, { title: v })} isOwner={user.isOwner} label="Project Name" />
                           </h3>
-                          <div className="h-0.5 w-10 bg-action/20" />
                        </div>
                        <p className="text-sm text-[var(--text-secondary)] font-medium leading-relaxed italic opacity-80">
                          <InlineEdit value={proj.description} onSave={(v) => handleArrayUpdate("portfolio", idx, { description: v })} isOwner={user.isOwner} multiline label="Achievement Summary" />
@@ -585,31 +570,29 @@ const PublicProfile = () => {
         </section>
       )}
 
-      {/* ── SECTION 6: JOURNEY (TIMELINE) ── */}
+      {/* ── SECTION 5: JOURNEY ── */}
       <section id="journey" className="py-32 px-6 bg-white/[0.01]">
         <div className="max-w-5xl mx-auto space-y-20">
           <motion.div {...reveal} className="text-center space-y-4">
-             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">Professional Journey</h2>
-             <p className="text-4xl md:text-6xl font-black">Authority Evolution</p>
+             <h2 className="text-xs font-black uppercase tracking-[0.5em] text-action">{branding.journeySubtitle || "Professional Journey"}</h2>
+             <p className="text-4xl md:text-6xl font-black">{branding.journeyTitle || "Authority Evolution"}</p>
           </motion.div>
 
-          <div className="space-y-12 relative before:absolute before:left-[-1px] md:before:left-[31px] before:top-4 before:bottom-4 before:w-0.5 before:bg-white/10 ml-4 md:ml-0">
+          <div className="space-y-12 relative before:absolute before:left-[-1px] md:before:left-[31px] before:top-4 before:bottom-4 before:w-0.5 before:bg-white/10 ml-4 md:ml-0 text-left">
             {(user.experience || []).map((exp, idx) => (
                <motion.div key={idx} {...reveal} className="relative pl-12 md:pl-24">
                   <div className="absolute left-[-21px] md:left-[12px] top-6 w-10 h-10 rounded-2xl bg-[var(--body-bg)] border-2 border-white/10 z-10 flex items-center justify-center shadow-xl">
                      <FaBriefcase className="text-xs text-action" />
                   </div>
                   <Card className="p-10 md:p-14 space-y-8 hover:border-action/20 transition-all border-white/5 bg-white/[0.01]">
-                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                        <div className="space-y-4">
-                           <h3 className="text-3xl font-black leading-none">
-                             <InlineEdit value={exp.role} onSave={(v) => handleArrayUpdate("experience", idx, { role: v })} isOwner={user.isOwner} label="Role" />
-                           </h3>
-                           <div className="flex items-center gap-4 text-action font-black text-[10px] uppercase tracking-[0.2em] opacity-80">
-                              <span><InlineEdit value={exp.company} onSave={(v) => handleArrayUpdate("experience", idx, { company: v })} isOwner={user.isOwner} label="Company" /></span>
-                              <span className="w-1 h-1 rounded-full bg-white/10" />
-                              <span className="opacity-50 tracking-tighter">{exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate}</span>
-                           </div>
+                     <div className="space-y-4">
+                        <h3 className="text-3xl font-black leading-none">
+                           <InlineEdit value={exp.role} onSave={(v) => handleArrayUpdate("experience", idx, { role: v })} isOwner={user.isOwner} label="Role" />
+                        </h3>
+                        <div className="flex items-center gap-4 text-action font-black text-[10px] uppercase tracking-[0.2em] opacity-80">
+                           <InlineEdit value={exp.company} onSave={(v) => handleArrayUpdate("experience", idx, { company: v })} isOwner={user.isOwner} label="Company" />
+                           <span className="w-1 h-1 rounded-full bg-white/10" />
+                           <span className="opacity-50 tracking-tighter">{exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate}</span>
                         </div>
                      </div>
                      <p className="text-lg text-[var(--text-secondary)] font-medium leading-relaxed italic opacity-70">
@@ -622,23 +605,23 @@ const PublicProfile = () => {
         </div>
       </section>
 
-      {/* ── FOOTER (CTA) ── */}
+      {/* ── FOOTER ── */}
       <footer id="contact" className="py-40 px-6 text-center">
          <div className="max-w-4xl mx-auto space-y-20">
             <motion.div {...reveal} className="space-y-12">
                <div className="space-y-4">
-                  <h3 className="text-7xl md:text-9xl font-black tracking-tighter">Ready for <br /><span className="text-action underline decoration-action/20 decoration-8 underline-offset-10">Impact?</span></h3>
-                  <p className="text-xl md:text-2xl text-[var(--text-secondary)] font-medium max-w-2xl mx-auto opacity-60">Leverage the power of AI-verified career intelligence for your next transformation.</p>
+                  <h3 className="text-7xl md:text-9xl font-black tracking-tighter">{branding.ctaTitle || "Ready for Impact?"}</h3>
+                  <p className="text-xl md:text-2xl text-[var(--text-secondary)] font-medium max-w-2xl mx-auto opacity-60">{branding.ctaSubtitle || "Leverage the power of career intelligence."}</p>
                </div>
                <div className="flex flex-wrap justify-center gap-8 pt-10">
                   <a href={`mailto:${user.email}`} className="px-12 py-6 bg-action text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/40">Launch Conversation</a>
-                  {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-all text-[var(--text-primary)]"><FaGithub size={24} /></a>}
+                  {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-all"><FaGithub size={24} /></a>}
                </div>
             </motion.div>
             
             <div className="pt-20 border-t border-white/5 space-y-6">
                <div className="opacity-30 space-y-2">
-                  <p className="text-[9px] font-black uppercase tracking-[0.8em]">Career Intelligence V4.2</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.8em]">{branding.siteFooter || "Career Intelligence V4.4"}</p>
                   <p className="text-[7px] font-bold uppercase tracking-[0.3em] text-action">Powered by CVify Semantic Architecture</p>
                </div>
             </div>
