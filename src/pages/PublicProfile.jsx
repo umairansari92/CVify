@@ -368,11 +368,11 @@ const PublicProfile = () => {
              className="hidden lg:flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <InlineEdit isOwner={isOwner} id="fullNameNav" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
+            {/* <InlineEdit isOwner={isOwner} id="fullNameNav" value={personalInfo.fullName} selector={state => state.profile.data.personalInfo.fullName}>
               <h1 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase font-serif whitespace-nowrap">
                 {personalInfo.fullName || 'Welcome'}
               </h1>
-            </InlineEdit>
+            </InlineEdit> */}
           </div>
 
           {/* Navigation & Action (Right) */}
