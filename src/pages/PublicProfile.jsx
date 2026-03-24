@@ -14,6 +14,17 @@ import {
   FaCheckCircle,
   FaPlus,
   FaLayerGroup,
+  FaRocket,
+  FaChartBar,
+  FaExclamationTriangle,
+  FaArrowRight,
+  FaHistory,
+  FaMagic,
+  FaChevronDown,
+  FaTimes,
+  FaFilePdf,
+  FaEnvelope,
+  FaPhone,
 } from "react-icons/fa";
 import { 
   Trash, 
@@ -169,7 +180,7 @@ const PublicProfile = () => {
       
       await api.patch(`/resumes/${resumeId}`, { isPublic: newStatus });
       toast.success(newStatus ? "Resume Shared Publicly!" : "Resume Private.");
-    } catch (_err) {
+    } catch (err) {
       toast.error("Failed to update status.");
       dispatch(fetchPublicProfile(username));
     }
