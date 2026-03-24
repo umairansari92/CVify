@@ -99,7 +99,14 @@ const PublicProfile = () => {
 
   // V4.4 Dynamic Selectors
   const slogans = user?.heroSlogans || [];
-  const personalInfo = user?.personalInfo || { fullName: user?.firstName + " " + user?.lastName, image: user?.profileImage, objective: user?.headline };
+  const personalInfo = user?.personalInfo || { 
+    fullName: user?.firstName + " " + user?.lastName, 
+    image: user?.profileImage, 
+    objective: user?.headline,
+    location: user?.location,
+    email: user?.email,
+    phone: user?.phoneNumber
+  };
   const branding = user?.branding || {};
   const isOwner = user?.isOwner;
   const publicResumes = isOwner ? (user?.resumes || []) : (user?.resumes?.filter(r => r.isPublic === true) || []);
@@ -1265,7 +1272,12 @@ const PublicProfile = () => {
               <div>
                 <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Location</span>
                 <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit isOwner={isOwner} id="loc" value={personalInfo.location} selector={state => state.profile.data.personalInfo.location}>
+                  <InlineEdit 
+                    isOwner={isOwner} 
+                    id="loc" 
+                    value={personalInfo.location} 
+                    onSave={(v) => handleLiveUpdate({ location: v })}
+                  >
                     {personalInfo.location || 'City, Country'}
                   </InlineEdit>
                 </span>
@@ -1278,7 +1290,12 @@ const PublicProfile = () => {
               <div>
                 <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Email</span>
                 <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit isOwner={isOwner} id="email" value={personalInfo.email} selector={state => state.profile.data.personalInfo.email}>
+                  <InlineEdit 
+                    isOwner={isOwner} 
+                    id="email" 
+                    value={personalInfo.email} 
+                    onSave={(v) => handleLiveUpdate({ email: v })}
+                  >
                     {personalInfo.email || 'your.email@example.com'}
                   </InlineEdit>
                 </span>
@@ -1291,7 +1308,12 @@ const PublicProfile = () => {
               <div>
                 <span className="block text-sm text-[var(--text-secondary)] opacity-50 uppercase font-medium mb-1">Mobile Number</span>
                 <span className="text-[var(--text-primary)] opacity-90 text-lg">
-                  <InlineEdit isOwner={isOwner} id="phone" value={personalInfo.phone} selector={state => state.profile.data.personalInfo.phone}>
+                  <InlineEdit 
+                    isOwner={isOwner} 
+                    id="phone" 
+                    value={personalInfo.phone} 
+                    onSave={(v) => handleLiveUpdate({ phoneNumber: v })}
+                  >
                     {personalInfo.phone || '+00 123 456 789'}
                   </InlineEdit>
                 </span>
