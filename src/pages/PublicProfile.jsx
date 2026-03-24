@@ -597,40 +597,67 @@ const PublicProfile = () => {
             </h2>
             <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">
               {(user.experience || []).map((exp, index) => (
-                <div key={exp._id || index} className="relative flex flex-col items-center group">
-                  <div className="z-10 flex items-center justify-center w-12 h-12 rounded-full bg-[var(--primary-color)] text-white mb-6 shadow-lg shadow-[var(--primary-color)]/20">
-                    <Briefcase size={20} />
-                  </div>
-                  <div className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-8 text-center shadow-xl backdrop-blur-sm hover:border-[var(--primary-color)]/30 transition-all">
-                    <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--primary-color)] opacity-80 mb-2">
-                      <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
-                        const [s, e] = v.split(" - "); 
-                        handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
-                      }}>
-                        {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
-                      </InlineEdit>
-                      <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
+                <motion.div 
+                  key={exp._id || index}
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+                  className="relative flex flex-col items-center group w-full"
+                >
+                  {/* Briefcase Icon with Magnetic Pulse */}
+                  <motion.div 
+                    whileHover={{ scale: 1.25, rotate: -5 }}
+                    className="z-20 flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--primary-color)] text-white mb-6 shadow-xl shadow-[var(--primary-color)]/30 group-hover:shadow-[var(--primary-color)]/60 transition-all duration-300"
+                  >
+                    <Briefcase size={22} />
+                  </motion.div>
+
+                  {/* Wide Professional Card with Side-Shift Highlight */}
+                  <motion.div 
+                    whileHover={{ 
+                      x: 12,
+                      backgroundColor: "rgba(var(--primary-rgb), 0.04)"
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className="w-full bg-[var(--card-bg)] border-l-0 border-t border-b border-r border-[var(--card-border)] hover:border-l-4 hover:border-[var(--primary-color)] rounded-2xl p-8 md:p-10 text-center md:text-left shadow-xl backdrop-blur-sm transition-all duration-300 relative overflow-hidden group/card"
+                  >
+                    {/* Progress Bar Top Highlight */}
+                    <div className="absolute top-0 left-0 w-0 h-1 bg-[var(--primary-color)] group-hover/card:w-full transition-all duration-700" />
+                    
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm font-bold text-[var(--primary-color)] tracking-wider mb-3">
+                      <div className="flex items-center gap-2 px-3 py-1 bg-[var(--primary-color)]/10 rounded-full border border-[var(--primary-color)]/20">
+                         <span className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse" />
+                         <InlineEdit isOwner={isOwner} label="Period" value={`${exp.startDate} - ${exp.endDate || 'Present'}`} onSave={(v) => { 
+                           const [s, e] = v.split(" - "); 
+                           handleArrayUpdate("experience", index, { startDate: s, endDate: e === "Present" ? "" : e, isCurrent: e === "Present" });
+                         }}>
+                           {exp.startDate} - {exp.isCurrent ? "Present" : exp.endDate}
+                         </InlineEdit>
+                      </div>
                       <InlineEdit isOwner={isOwner} label="Location" value={exp.location} onSave={(v) => handleArrayUpdate("experience", index, { location: v })}>
-                         {exp.location || "Location"}
+                         <span className="opacity-60">{exp.location || "Location"}</span>
                       </InlineEdit>
                       <span className="w-1 h-1 rounded-full bg-[var(--text-secondary)]/20" />
                       <InlineEdit isOwner={isOwner} label="Mode" value={exp.type} onSave={(v) => handleArrayUpdate("experience", index, { type: v })}>
-                         {exp.type || "Full-time"}
+                         <span className="opacity-60">{exp.type || "Full-time"}</span>
                       </InlineEdit>
                     </div>
-                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-1">
+
+                    <h3 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-1 tracking-tight">
                       <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
                     </h3>
-                    <h4 className="text-lg font-semibold text-[var(--text-secondary)] mb-6">
+                    <h4 className="text-lg md:text-xl font-bold text-[var(--primary-color)] mb-6 opacity-90">
                       <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company}</InlineEdit>
                     </h4>
-                    <div className="text-sm text-[var(--text-secondary)] leading-relaxed">
+
+                    <div className="text-base text-[var(--text-secondary)] leading-relaxed relative pl-4 border-l border-white/10 group-hover:border-[var(--primary-color)]/30 transition-colors">
                       <InlineEdit isOwner={isOwner} label="Achievements" value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })} multiline>
-                        <p className="whitespace-pre-wrap">{exp.achievements || "Description..."}</p>
+                        <p className="whitespace-pre-wrap opacity-70 group-hover:opacity-100 transition-opacity">{exp.achievements || "Description..."}</p>
                       </InlineEdit>
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               ))}
             </div>
             {isOwner && (
