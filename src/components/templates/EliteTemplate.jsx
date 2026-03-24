@@ -9,6 +9,10 @@ import {
 } from "react-icons/fa";
 
 const EliteTemplate = ({ data }) => {
+  const {
+    personalInfo,
+    education,
+    experience,
     skills,
     interests,
     technicalSkills,
