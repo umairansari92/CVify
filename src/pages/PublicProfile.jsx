@@ -259,7 +259,7 @@ const PublicProfile = () => {
                       <div className="flex flex-col gap-2 w-full">
                         <div className="flex items-center justify-between w-full">
                           <button 
-                            onClick={() => { handleDownloadPDF(user, resume); setShowResumeModal(false); }}
+                            onClick={() => { handleDownloadPDF(resume, resume.templateId); setShowResumeModal(false); }}
                             className="flex-1 p-6 bg-white/5 border border-white/5 hover:border-action/30 rounded-3xl flex items-center justify-between group transition-all mr-2"
                           >
                             <div className="flex items-center gap-6 text-left">
