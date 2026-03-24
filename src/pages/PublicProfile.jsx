@@ -5,6 +5,9 @@ import api from "../api/axios";
 import {
   FaLinkedin,
   FaGithub,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook,
   FaGlobe,
   FaBriefcase,
   FaPalette,
@@ -36,7 +39,10 @@ import {
   Trophy,
   Globe,
   ExternalLink,
-  Github as GithubIcon,
+  MapPin,
+  Mail,
+  Phone,
+  Send,
   Image as ImageIcon
 } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
@@ -370,8 +376,8 @@ const PublicProfile = () => {
             {(portfolio.length > 0 || isOwner) && <a href="#showcase" className="hover:opacity-100 transition-all opacity-40">{user.sectionNames?.portfolio || "Portfolio"}</a>}
           </div>
           <div className="flex items-center gap-4">
-             {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaLinkedin size={18} /></a>}
-             {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><FaGithub size={18} /></a>}
+              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><Linkedin size={18} /></a>}
+              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="opacity-40 hover:opacity-100 transition-all"><Github size={18} /></a>}
              <button onClick={() => setShowResumeModal(true)} className="px-6 py-2.5 bg-action text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-action/20 ml-2">Get Resume</button>
           </div>
         </div>
@@ -543,9 +549,9 @@ const PublicProfile = () => {
 
             {/* Social Link Suite */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><FaLinkedin size={18} /></a>}
-              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><FaGithub size={18} /></a>}
-              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><FaTwitter size={18} /></a>}
+              {user.socialLinks?.linkedin && <a href={ensureAbsoluteUrl(user.socialLinks.linkedin)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-action/20 transition-all text-white/40 hover:text-white"><Linkedin size={18} /></a>}
+              {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-white/40 hover:text-white"><Github size={18} /></a>}
+              {user.socialLinks?.twitter && <a href={ensureAbsoluteUrl(user.socialLinks.twitter)} target="_blank" className="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-blue-400/20 transition-all text-white/40 hover:text-white"><Twitter size={18} /></a>}
               {isOwner && (
                  <button onClick={() => toast.success("Add more socials in Dashboard.")} className="p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl text-white/20 hover:text-white transition-all">
                     <Plus size={18} />
@@ -785,7 +791,7 @@ const PublicProfile = () => {
                       )}
                       {(project.githubUrl || project.githubLink) && (
                         <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors">
-                          <GithubIcon size={16} /> Source Code
+                          <Github size={16} /> Source Code
                         </a>
                       )}
                       
@@ -1075,28 +1081,168 @@ const PublicProfile = () => {
         </section>
       )}
       
-      {/* ── FOOTER ── */}
-      <footer id="contact" className="py-40 px-6 text-center">
-         <div className="max-w-4xl mx-auto space-y-20">
-            <motion.div {...reveal} className="space-y-12">
-               <div className="space-y-4">
-                  <h3 className="text-7xl md:text-9xl font-black tracking-tighter">{branding.ctaTitle || "Ready for Impact?"}</h3>
-                  <p className="text-xl md:text-2xl text-[var(--text-secondary)] font-medium max-w-2xl mx-auto opacity-60">{branding.ctaSubtitle || "Leverage the power of career intelligence."}</p>
-               </div>
-               <div className="flex flex-wrap justify-center gap-8 pt-10">
-                  <a href={`mailto:${user.email}`} className="px-12 py-6 bg-action text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-action/40">Launch Conversation</a>
-                  {user.socialLinks?.github && <a href={ensureAbsoluteUrl(user.socialLinks.github)} target="_blank" className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-all"><FaGithub size={24} /></a>}
-               </div>
-            </motion.div>
-            
-            <div className="pt-20 border-t border-white/5 space-y-6">
-               <div className="opacity-30 space-y-2">
-                  <p className="text-[9px] font-black uppercase tracking-[0.8em]">{branding.siteFooter || "Career Intelligence V4.4"}</p>
-                  <p className="text-[7px] font-bold uppercase tracking-[0.3em] text-action">Powered by CVify Semantic Architecture</p>
-               </div>
+{/* --- SECTION: CONTACT --- */}
+<section id="contact" className="relative py-32 border-b border-white/10 overflow-hidden bg-[#0f172a]/50">
+  
+  {/* Large Background Text Effect (From Image 2) */}
+  <div className="absolute top-10 left-0 w-full text-center pointer-events-none select-none overflow-hidden flex justify-center">
+    <h2 className="text-[10vw] font-black text-white/[0.03] uppercase tracking-tighter whitespace-nowrap">
+      For Assistance
+    </h2>
+  </div>
+
+  <div className="max-w-7xl mx-auto px-4 relative z-10">
+    
+    <div className="text-center mb-20">
+      <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white flex justify-center gap-3">
+        Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Me</span>
+      </h2>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      
+      {/* Left Column: Contact Info & Socials */}
+      <div className="space-y-12">
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-8 uppercase tracking-wider">Contact Me Here</h3>
+          
+          <div className="space-y-6">
+            {/* Location */}
+            <div className="flex items-start gap-4">
+              <div className="mt-1 text-cyan-400"><MapPin size={24} /></div>
+              <div>
+                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Location</span>
+                <span className="text-white/90 text-lg">
+                  <InlineEdit isOwner={isOwner} id="loc" value={personalInfo.location} selector={state => state.profile.data.personalInfo.location}>
+                    {personalInfo.location || 'City, Country'}
+                  </InlineEdit>
+                </span>
+              </div>
             </div>
-         </div>
-      </footer>
+
+            {/* Email */}
+            <div className="flex items-start gap-4">
+              <div className="mt-1 text-cyan-400"><Mail size={24} /></div>
+              <div>
+                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Email</span>
+                <span className="text-white/90 text-lg">
+                  <InlineEdit isOwner={isOwner} id="email" value={personalInfo.email} selector={state => state.profile.data.personalInfo.email}>
+                    {personalInfo.email || 'your.email@example.com'}
+                  </InlineEdit>
+                </span>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="flex items-start gap-4">
+              <div className="mt-1 text-cyan-400"><Phone size={24} /></div>
+              <div>
+                <span className="block text-sm text-white/50 uppercase font-medium mb-1">Mobile Number</span>
+                <span className="text-white/90 text-lg">
+                  <InlineEdit isOwner={isOwner} id="phone" value={personalInfo.phone} selector={state => state.profile.data.personalInfo.phone}>
+                    {personalInfo.phone || '+00 123 456 789'}
+                  </InlineEdit>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Icons (Inspired by Image 1) */}
+        <div>
+          <h3 className="text-xl font-bold text-yellow-400 mb-6 uppercase tracking-wider">Follow Me:</h3>
+          <div className="flex flex-wrap gap-4">
+            {/* Map through socialLinks if available, fallback to placeholders for owner to edit */}
+            {['linkedin', 'github', 'twitter', 'portfolio'].map((platform) => {
+              const link = profile.data.socialLinks?.[platform];
+              if (!link && !isOwner) return null; // Hide if empty and visitor
+              
+              const getIcon = (p) => {
+                switch(p) {
+                  case 'linkedin': return <Linkedin size={20} />;
+                  case 'github': return <Github size={20} />;
+                  case 'twitter': return <Twitter size={20} />;
+                  case 'portfolio': return <Globe size={20} />;
+                  default: return <Globe size={20} />;
+                }
+              };
+
+              return (
+                <a 
+                  key={platform}
+                  href={link || '#'} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title={platform}
+                  className="w-12 h-12 rounded-full border border-yellow-500/50 bg-yellow-500/10 text-yellow-400 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-rotate-12 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.5)]"
+                >
+                  {getIcon(platform)}
+                </a>
+              );
+            })}
+          </div>
+          {isOwner && <p className="text-xs text-white/30 mt-3">* Edit social links in your dashboard settings.</p>}
+        </div>
+      </div>
+
+      {/* Right Column: Contact Form (Image 2) */}
+      <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
+        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); /* Dispatch mailto or API thunk here */ }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input 
+              type="text" 
+              placeholder="YOUR NAME" 
+              className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+              required
+            />
+            <input 
+              type="email" 
+              placeholder="YOUR EMAIL" 
+              className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+              required
+            />
+          </div>
+          <input 
+            type="text" 
+            placeholder="ENTER SUBJECT" 
+            className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
+            required
+          />
+          <textarea 
+            placeholder="Message Here..." 
+            rows="6"
+            className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors resize-none"
+            required
+          ></textarea>
+          
+          <div className="text-right pt-4">
+            <button 
+              type="submit" 
+              className="px-10 py-4 bg-transparent border border-white/30 hover:border-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-400 rounded-full text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 ml-auto"
+            >
+              Submit <Send size={18} />
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{/* --- FOOTER --- */}
+<footer id="footer" className="py-8 bg-[#0b1121] border-t border-white/10 text-center">
+  <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+    <p className="text-white/50 text-sm">
+      © {new Date().getFullYear()} <span className="text-white/80 font-medium">{personalInfo.fullName}</span>. Powered by <a href="https://cvifypro.vercel.app/" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">CVify Pro</a>.
+    </p>
+    <div className="flex items-center gap-4">
+       <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/50 hover:text-white text-sm transition-colors">
+         Back to Top ↑
+       </button>
+    </div>
+  </div>
+</footer>
 
       {/* ── Builder Controls ── */}
       {user.isOwner && (
