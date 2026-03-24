@@ -34,7 +34,10 @@ import {
   GraduationCap,
   Award,
   Trophy,
-  Globe
+  Globe,
+  ExternalLink,
+  Github as GithubIcon,
+  Image as ImageIcon
 } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,7 +51,9 @@ import {
   applyAtsFix,
   deleteSloganThunk,
   addSloganThunk,
-  updateHeroImageThunk
+  updateHeroImageThunk,
+  deleteProjectThunk,
+  openProjectModalThunk
 } from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
@@ -64,6 +69,7 @@ const PublicProfile = () => {
     error: profileError, 
     analytics 
   } = useSelector((state) => state.profile);
+  const profile = { data: user || {} };
 
   // V4.4 Dynamic Selectors
   const slogans = user?.heroSlogans || [];
@@ -682,6 +688,111 @@ const PublicProfile = () => {
               <button onClick={() => toast.error("Please add via Dashboard.")} className="mt-12 px-6 py-2 bg-white/5 hover:bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium transition-all flex items-center gap-2 z-10">
                 <Plus size={16} /> Add Education
               </button>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* --- SECTION: PROJECTS / PORTFOLIO [V4.3 SURGERY MODE] --- */}
+      {(isOwner || (profile.data.projects && profile.data.projects.length > 0) || (profile.data.portfolio && profile.data.portfolio.length > 0)) && (
+        <section id="showcase" className="py-24 border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-4">
+            
+            {/* Section Header */}
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
+                <span className="text-white">My </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Portfolio</span>
+              </h2>
+              <p className="text-lg text-white/60 font-light max-w-2xl mx-auto">
+                Here is some of my selected work that showcases my expertise.
+              </p>
+            </div>
+
+            {/* Projects Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {(profile.data.projects || profile.data.portfolio || []).map((project, index) => (
+                <motion.div 
+                  key={project._id || index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group flex flex-col bg-[#0f172a]/80 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-cyan-400/80 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)] hover:-translate-y-1"
+                >
+                  {/* Project Image / Thumbnail */}
+                  <div className="relative aspect-video w-full bg-white/5 overflow-hidden border-b border-white/10">
+                    {project.thumbnail || project.image ? (
+                      <img 
+                        src={project.thumbnail || project.image} 
+                        alt={project.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white/20">
+                        <ImageIcon size={48} strokeWidth={1} />
+                      </div>
+                    )}
+                    {/* Overlay for Owner to change image */}
+                    {isOwner && (
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                        <span className="text-sm text-white font-medium px-4 py-2 bg-white/10 rounded-full border border-white/20">Change Image</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Project Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-xl font-bold text-white leading-tight">
+                        <InlineEdit isOwner={isOwner} id={`proj-title-${index}`} value={project.title} onSave={(v) => handleArrayUpdate("projects", index, { title: v })}>
+                          {project.title || 'Project Title'}
+                        </InlineEdit>
+                      </h3>
+                      {(project.featured || project.isFeatured) && (
+                        <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-1 bg-orange-500/20 text-orange-400 rounded">Featured</span>
+                      )}
+                    </div>
+                    
+                    <div className="text-sm text-white/60 leading-relaxed mb-6 flex-1 line-clamp-3 group-hover:line-clamp-none transition-all">
+                      <InlineEdit isOwner={isOwner} id={`proj-desc-${index}`} value={project.description} type="textarea" onSave={(v) => handleArrayUpdate("projects", index, { description: v })}>
+                        <p>{project.description || 'Describe the problem you solved and the technologies you used...'}</p>
+                      </InlineEdit>
+                    </div>
+
+                    {/* Links & Actions */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-white/5 mt-auto">
+                      {(project.liveUrl || project.liveLink) && (
+                        <a href={project.liveUrl || project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors">
+                          <ExternalLink size={16} /> Live Demo
+                        </a>
+                      )}
+                      {(project.githubUrl || project.githubLink) && (
+                        <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors">
+                          <GithubIcon size={16} /> Source Code
+                        </a>
+                      )}
+                      
+                      {/* Spacer */}
+                      <div className="flex-1"></div>
+
+                      {isOwner && (
+                        <button onClick={() => dispatch(deleteProjectThunk(project._id || index))} className="text-white/30 hover:text-red-400 transition-colors">
+                          <Trash size={16} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {isOwner && (
+              <div className="mt-16 text-center">
+                <button onClick={() => dispatch(openProjectModalThunk())} className="px-8 py-3 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-full text-cyan-400 font-medium transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+                  <Plus size={18} /> Add New Project
+                </button>
+              </div>
             )}
           </div>
         </section>

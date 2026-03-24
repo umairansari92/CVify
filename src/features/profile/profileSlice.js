@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/axios";
+import { toast } from "react-hot-toast";
 
 // Fetch public profile by username
 export const fetchPublicProfile = createAsyncThunk(
@@ -72,6 +73,7 @@ const profileSlice = createSlice({
     analytics: { views: 0, resumeDownloads: 0, contactClicks: 0 },
     loading: false,
     error: null,
+    isProjectModalOpen: false, // V4.3 Surgery Mode 
   },
   reducers: {
     clearActiveProfile: (state) => {
@@ -86,6 +88,9 @@ const profileSlice = createSlice({
           state.profiles[state.activeProfile.username] = state.activeProfile;
         }
       }
+    },
+    setProjectModal: (state, action) => {
+      state.isProjectModalOpen = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -111,5 +116,33 @@ const profileSlice = createSlice({
   },
 });
 
-export const { clearActiveProfile, updateActiveProfileLocally } = profileSlice.actions;
+export const { clearActiveProfile, updateActiveProfileLocally, setProjectModal } = profileSlice.actions;
+
+// Project Showcase Thunks [V4.3 Surgery Mode]
+export const openProjectModalThunk = () => (dispatch) => dispatch(setProjectModal(true));
+export const closeProjectModalThunk = () => (dispatch) => dispatch(setProjectModal(false));
+
+export const deleteProjectThunk = (projectId) => async (dispatch, getState) => {
+  const { activeProfile } = getState().profile;
+  if (!activeProfile) return;
+
+  // Optimistic UI Update
+  const updatedPortfolio = (activeProfile.portfolio || []).filter(p => p._id !== projectId);
+  const updatedProjects = (activeProfile.projects || []).filter(p => p._id !== projectId);
+  
+  dispatch(updateActiveProfileLocally({ 
+    portfolio: updatedPortfolio,
+    projects: updatedProjects
+  }));
+
+  try {
+    await api.delete(`/auth/projects/${projectId}`);
+    toast.success("Project Decoupled.");
+  } catch (err) {
+    toast.error("Deep Delete failed.");
+    // Revert on failure
+    dispatch(fetchPublicProfile(activeProfile.username));
+  }
+};
+
 export default profileSlice.reducer;
