@@ -63,7 +63,7 @@ const PublicProfile = () => {
   const personalInfo = user?.personalInfo || { fullName: user?.firstName + " " + user?.lastName, image: user?.profileImage, objective: user?.headline };
   const branding = user?.branding || {};
   const isOwner = user?.isOwner;
-  const publicResumes = user?.resumes?.filter(r => r.isPublic === true) || [];
+  const publicResumes = isOwner ? (user?.resumes || []) : (user?.resumes?.filter(r => r.isPublic === true) || []);
 
   const [localTheme, setLocalTheme] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -131,6 +131,22 @@ const PublicProfile = () => {
     window.themeUpdateTimeout = setTimeout(() => {
       handleLiveUpdate({ themeSettings: newTheme });
     }, 500);
+  };
+
+  const handleTogglePublic = async (resumeId, currentStatus) => {
+    if (!user.isOwner) return;
+    try {
+      const newStatus = !currentStatus;
+      // Optimistic Update
+      const updatedResumes = user.resumes.map(r => r._id === resumeId ? { ...r, isPublic: newStatus } : r);
+      dispatch(updateActiveProfileLocally({ resumes: updatedResumes }));
+      
+      await api.patch(`/resumes/${resumeId}`, { isPublic: newStatus });
+      toast.success(newStatus ? "Resume Shared Publicly!" : "Resume Private.");
+    } catch (err) {
+      toast.error("Failed to update status.");
+      dispatch(fetchPublicProfile(username));
+    }
   };
 
   const handleApplyAtsFix = async (field, index, bullet) => {
@@ -240,25 +256,43 @@ const PublicProfile = () => {
                 <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                   {publicResumes.length > 0 ? (
                     publicResumes.map((resume, idx) => (
-                      <button 
-                        key={idx} 
-                        onClick={() => { handleDownloadPDF(user, resume); setShowResumeModal(false); }}
-                        className="w-full p-6 bg-white/5 border border-white/5 hover:border-action/30 rounded-3xl flex items-center justify-between group transition-all"
-                      >
-                        <div className="flex items-center gap-6 text-left">
-                          <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action group-hover:scale-110 transition-all">
-                            <FaFilePdf size={20} />
-                          </div>
-                          <div>
-                            <p className="text-sm font-black text-white">{resume.title || `Resume Version ${idx + 1}`}</p>
-                            <p className="text-[9px] font-bold opacity-40 uppercase tracking-wider">{resume.jobTitle || "Professional Standard"}</p>
-                          </div>
+                      <div className="flex flex-col gap-2 w-full">
+                        <div className="flex items-center justify-between w-full">
+                          <button 
+                            onClick={() => { handleDownloadPDF(user, resume); setShowResumeModal(false); }}
+                            className="flex-1 p-6 bg-white/5 border border-white/5 hover:border-action/30 rounded-3xl flex items-center justify-between group transition-all mr-2"
+                          >
+                            <div className="flex items-center gap-6 text-left">
+                              <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action group-hover:scale-110 transition-all">
+                                <FaFilePdf size={20} />
+                              </div>
+                              <div>
+                                <p className="text-sm font-black text-white">{resume.title || `Resume Version ${idx + 1}`}</p>
+                                <p className="text-[9px] font-bold opacity-40 uppercase tracking-wider">{resume.jobTitle || "Professional Standard"}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-black text-emerald-500">{resume.atsScore || "85"}%</p>
+                              <p className="text-[7px] font-black opacity-30 uppercase tracking-tighter">ATS Score</p>
+                            </div>
+                          </button>
+                          
+                          {isOwner && (
+                            <button 
+                              onClick={() => handleTogglePublic(resume._id, resume.isPublic)}
+                              className={`p-6 rounded-3xl border transition-all ${resume.isPublic ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" : "bg-white/5 border-white/10 text-white/40"}`}
+                              title={resume.isPublic ? "Publicly Shared" : "Private (Hidden)"}
+                            >
+                              {resume.isPublic ? <FaCheckCircle size={20} /> : <FaTimes size={20} />}
+                            </button>
+                          )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-lg font-black text-emerald-500">{resume.atsScore || "85"}%</p>
-                          <p className="text-[7px] font-black opacity-30 uppercase tracking-tighter">ATS Score</p>
-                        </div>
-                      </button>
+                        {isOwner && (
+                          <p className="text-[7px] font-black uppercase tracking-widest opacity-30 pl-4">
+                            {resume.isPublic ? "Visible to Recruiters" : "Hidden from Public"}
+                          </p>
+                        )}
+                      </div>
                     ))
                   ) : (
                     <div className="py-10 text-center opacity-30 italic">No public resumes shared.</div>
