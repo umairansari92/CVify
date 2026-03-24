@@ -75,3 +75,16 @@ export const awardSchema = yup.object().shape({
     date: yup.string().required('Date is required'),
     description: yup.string().nullable(),
 });
+
+export const certificationSchema = yup.object().shape({
+    name: yup.string().required('Certification name is required'),
+    issuer: yup.string().required('Issuer is required'),
+    date: yup.string().required('Date is required'),
+    link: yup.string().url('Invalid URL').nullable().transform((v) => (v === "" ? null : v)),
+    description: yup.string().nullable(),
+});
+
+export const languageSchema = yup.object().shape({
+    name: yup.string().required('Language name is required'),
+    proficiency: yup.string().oneOf(['Native', 'Beginner', 'Professional', 'Advanced'], 'Invalid proficiency').required('Proficiency is required'),
+});

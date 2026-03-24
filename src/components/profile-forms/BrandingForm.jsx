@@ -67,32 +67,32 @@ const BrandingForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Custom Username (URL)</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Custom Username (URL)</label>
           <div className="relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20 text-xs font-bold">cvify.pro/p/</span>
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted opacity-40 text-xs font-bold">cvify.pro/p/</span>
             <input
               {...register('username')}
-              className={`w-full pl-24 pr-5 py-4 rounded-2xl border ${errors.username ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
+              className={`w-full pl-24 pr-5 py-4 rounded-2xl border ${errors.username ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
             />
           </div>
           {errors.username && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.username.message}</p>}
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Identity Label (Stats Row)</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Identity Label (Stats Row)</label>
           <input
             {...register('identityLabel')}
             placeholder="e.g. Design Lead @ Figma"
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Availability Status</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Availability Status</label>
           <select
             {...register('availability')}
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           >
             <option value="Open to Work">🟢 Open to Work</option>
             <option value="Freelance Available">⚡ Freelance Available</option>
@@ -102,31 +102,31 @@ const BrandingForm = () => {
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Industry Focus</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Industry Focus</label>
           <select
             {...register('industry')}
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           >
             {["Technology & Software", "Healthcare", "Education", "Finance", "Marketing", "Engineering", "Design", "Other"].map(ind => (
-              <option key={ind} value={ind}>{ind}</option>
+              <option key={ind} value={ind} className="bg-midground text-text-main">{ind}</option>
             ))}
           </select>
         </div>
       </div>
 
       <div className="space-y-2">
-        <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Professional Headline</label>
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Professional Headline</label>
         <input
           {...register('headline')}
           placeholder="e.g. Senior Product Designer | Apple Enthusiast"
-          className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+          className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
         />
       </div>
 
       <button
         type="submit"
         disabled={saving || !isDirty}
-        className="px-10 py-4 bg-gray-800 hover:bg-gray-700 text-white border border-white/10 font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+        className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Updating Branding..." : "Save Branding"}
       </button>

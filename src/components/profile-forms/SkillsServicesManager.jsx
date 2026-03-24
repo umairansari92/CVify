@@ -104,16 +104,16 @@ const SkillsServicesManager = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
       {/* Skills Section */}
       <section className="space-y-8">
-        <div className="flex items-center justify-between pb-6 border-b border-white/5">
+        <div className="flex items-center justify-between pb-6 border-b border-border-subtle">
             <div className="space-y-1">
-                <h3 className="text-xl font-black text-white flex items-center gap-3">
+                <h3 className="text-xl font-black text-text-main flex items-center gap-3">
                     <FaStar className="text-yellow-500" /> 
                     <input 
                         {...register('sectionNames.skills')}
-                        className="bg-transparent border-none outline-none focus:ring-0 w-64 text-white placeholder-white/20"
+                        className="bg-transparent border-none outline-none focus:ring-0 w-64 text-text-main placeholder-text-muted/20"
                     />
                 </h3>
-                <p className="text-[10px] text-white/40 font-black uppercase tracking-widest leading-loose">
+                <p className="text-[10px] text-text-muted font-black uppercase tracking-widest leading-loose opacity-60">
                     Categorize your masteries. Blend code with strategy.
                 </p>
             </div>
@@ -123,22 +123,22 @@ const SkillsServicesManager = () => {
             {/* Technical Skills */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-[10px] font-black text-white/60 uppercase tracking-widest flex items-center gap-2">
-                        <FaCode className="text-cyan-500" /> Technical Arsenal
+                    <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2 opacity-80">
+                        <FaCode className="text-primary" /> Technical Arsenal
                     </h4>
-                    <button type="button" onClick={() => appendTech("")} className="text-cyan-500 hover:text-cyan-400 p-1 transition-all">
+                    <button type="button" onClick={() => appendTech("")} className="text-primary hover:opacity-80 p-1 transition-all">
                         <FaPlus size={10} />
                     </button>
                 </div>
                 <div className="flex flex-wrap gap-3">
                     {techFields.map((field, idx) => (
-                        <div key={field.id} className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full group hover:border-cyan-500/50 transition-all">
+                        <div key={field.id} className="flex items-center gap-2 bg-foreground/10 border border-border-subtle px-4 py-2 rounded-full group hover:border-primary/50 transition-all shadow-sm">
                             <input
                                 {...register(`technicalSkills.${idx}`)}
                                 placeholder="Skill..."
-                                className="bg-transparent border-none outline-none text-xs font-bold text-white w-20 placeholder-white/10"
+                                className="bg-transparent border-none outline-none text-xs font-bold text-text-main w-20 placeholder-text-muted/10"
                             />
-                            <button type="button" onClick={() => removeTech(idx)} className="text-white/20 hover:text-red-500 transition-colors">
+                            <button type="button" onClick={() => removeTech(idx)} className="text-text-muted opacity-20 hover:text-red-500 transition-colors">
                                 <FaTrash size={8} />
                             </button>
                         </div>
@@ -149,22 +149,22 @@ const SkillsServicesManager = () => {
             {/* Strategic Skills */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-[10px] font-black text-white/60 uppercase tracking-widest flex items-center gap-2">
+                    <h4 className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2 opacity-80">
                         <FaLightbulb className="text-amber-500" /> Strategic mindset
                     </h4>
-                    <button type="button" onClick={() => appendStrat("")} className="text-amber-500 hover:text-amber-400 p-1 transition-all">
+                    <button type="button" onClick={() => appendStrat("")} className="text-amber-500 hover:opacity-80 p-1 transition-all">
                         <FaPlus size={10} />
                     </button>
                 </div>
                 <div className="flex flex-wrap gap-3">
                     {stratFields.map((field, idx) => (
-                        <div key={field.id} className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full group hover:border-amber-500/50 transition-all">
+                        <div key={field.id} className="flex items-center gap-2 bg-foreground/10 border border-border-subtle px-4 py-2 rounded-full group hover:border-amber-500/50 transition-all shadow-sm">
                             <input
                                 {...register(`strategicSkills.${idx}`)}
                                 placeholder="Concept..."
-                                className="bg-transparent border-none outline-none text-xs font-bold text-white w-24 placeholder-white/10"
+                                className="bg-transparent border-none outline-none text-xs font-bold text-text-main w-24 placeholder-text-muted/10"
                             />
-                            <button type="button" onClick={() => removeStrat(idx)} className="text-white/20 hover:text-red-500 transition-colors">
+                            <button type="button" onClick={() => removeStrat(idx)} className="text-text-muted opacity-20 hover:text-red-500 transition-colors">
                                 <FaTrash size={8} />
                             </button>
                         </div>
@@ -175,24 +175,24 @@ const SkillsServicesManager = () => {
       </section>
 
       {/* Services Section */}
-      <section className="space-y-8 pt-8 border-t border-white/5">
+      <section className="space-y-8 pt-8 border-t border-border-subtle">
         <div className="flex items-center justify-between pb-6">
             <div className="space-y-1">
-                <h3 className="text-xl font-black text-white flex items-center gap-3">
+                <h3 className="text-xl font-black text-text-main flex items-center gap-3">
                     <FaServicestack className="text-violet-500" /> 
                     <input 
                         {...register('sectionNames.services')}
-                        className="bg-transparent border-none outline-none focus:ring-0 w-64 text-white placeholder-white/20"
+                        className="bg-transparent border-none outline-none focus:ring-0 w-64 text-text-main placeholder-text-muted/20"
                     />
                 </h3>
-                <p className="text-[10px] text-white/40 font-black uppercase tracking-widest leading-loose">
+                <p className="text-[10px] text-text-muted font-black uppercase tracking-widest leading-loose opacity-60">
                     What can you do for others? Clear value propositions.
                 </p>
             </div>
             <button
                 type="button"
                 onClick={() => appendService({ title: '', description: '' })}
-                className="px-6 py-2 bg-violet-600/10 hover:bg-violet-600/20 text-violet-400 font-black text-[10px] uppercase tracking-widest rounded-full border border-violet-500/20 transition-all flex items-center gap-2"
+                className="px-6 py-2 bg-violet-600/10 hover:bg-violet-600/20 text-violet-500 font-black text-[10px] uppercase tracking-widest rounded-full border border-violet-500/20 transition-all flex items-center gap-2"
             >
                 <FaPlus size={10} /> New Service
             </button>
@@ -200,28 +200,28 @@ const SkillsServicesManager = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {serviceFields.map((field, idx) => (
-                <div key={field.id} className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl space-y-4 hover:border-violet-500/20 transition-all relative group">
+                <div key={field.id} className="p-6 bg-midground border border-border-subtle rounded-3xl space-y-4 hover:border-violet-500/20 transition-all relative group shadow-sm">
                     <button
                         type="button"
                         onClick={() => removeService(idx)}
-                        className="absolute right-4 top-4 text-white/10 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute right-4 top-4 text-text-muted opacity-10 hover:text-red-500 transition-all group-hover:opacity-40"
                     >
                         <FaTrash size={12} />
                     </button>
                     <div className="space-y-2">
-                        <label className="text-[9px] font-black text-white/30 uppercase tracking-widest ml-1">Service Headline</label>
+                        <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Service Headline</label>
                         <input
                             {...register(`services.${idx}.title`)}
                             placeholder="e.g. Fullstack Web Architecture"
-                            className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white focus:border-violet-500/50 outline-none transition-all font-bold text-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-foreground/10 text-text-main focus:border-violet-500/50 outline-none transition-all font-bold text-sm"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-[9px] font-black text-white/30 uppercase tracking-widest ml-1">Value Description</label>
+                        <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Value Description</label>
                         <textarea
                             {...register(`services.${idx}.description`)}
                             placeholder="Describe the problem you solve and the value you provide..."
-                            className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white focus:border-violet-500/50 outline-none transition-all font-medium text-xs h-24 resize-none leading-relaxed"
+                            className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-foreground/10 text-text-main focus:border-violet-500/50 outline-none transition-all font-medium text-xs h-24 resize-none leading-relaxed"
                         />
                     </div>
                 </div>
@@ -229,11 +229,11 @@ const SkillsServicesManager = () => {
         </div>
       </section>
 
-      <div className="pt-8 border-t border-white/5">
+      <div className="pt-8 border-t border-border-subtle">
         <button
           type="submit"
           disabled={saving || !isDirty}
-          className="px-10 py-4 bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50 border border-white/10"
+          className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
         >
           {saving ? "Deploying Expertise..." : "Save Professional Capabilities"}
         </button>

@@ -67,23 +67,23 @@ const ExperienceManager = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <div className="flex items-center justify-between pb-6 border-b border-white/5">
+      <div className="flex items-center justify-between pb-6 border-b border-border-subtle">
         <div className="space-y-1">
-            <h3 className="text-xl font-black text-white flex items-center gap-3">
-                <FaBriefcase className="text-blue-500" /> 
+            <h3 className="text-xl font-black text-text-main flex items-center gap-3">
+                <FaBriefcase className="text-primary" /> 
                 <input 
                     {...register('sectionName')}
-                    className="bg-transparent border-none outline-none focus:ring-0 w-48 text-white placeholder-white/20"
+                    className="bg-transparent border-none outline-none focus:ring-0 w-48 text-text-main placeholder-text-muted/20"
                 />
             </h3>
-            <p className="text-[10px] text-white/40 font-black uppercase tracking-widest leading-loose">
+            <p className="text-[10px] text-text-muted font-black uppercase tracking-widest leading-loose opacity-60">
                 Your professional narrative. Focus on outcomes and quantifiable impact.
             </p>
         </div>
         <button
           type="button"
           onClick={() => append({ company: '', role: '', startDate: '', endDate: '', isCurrent: false, achievements: '' })}
-          className="px-6 py-2 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 font-black text-[10px] uppercase tracking-widest rounded-full border border-blue-500/20 transition-all flex items-center gap-2"
+          className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-black text-[10px] uppercase tracking-widest rounded-full border border-primary/20 transition-all flex items-center gap-2"
         >
           <FaPlus size={10} /> Add Role
         </button>
@@ -91,54 +91,54 @@ const ExperienceManager = () => {
 
       <div className="space-y-10">
         {fields.map((field, idx) => (
-          <div key={field.id} className="group relative p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] space-y-6 hover:border-blue-500/20 transition-all">
+          <div key={field.id} className="group relative p-8 bg-midground border border-border-subtle rounded-[2.5rem] space-y-6 hover:border-primary/20 transition-all shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Company / Organization</label>
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Company / Organization</label>
                 <input
                   {...register(`experiences.${idx}.company`)}
-                  className={`w-full px-5 py-4 rounded-2xl border ${errors.experiences?.[idx]?.company ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-blue-500/50 outline-none transition-all font-semibold text-sm`}
+                  className={`w-full px-5 py-4 rounded-2xl border ${errors.experiences?.[idx]?.company ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Job Title</label>
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Job Title</label>
                 <input
                   {...register(`experiences.${idx}.role`)}
-                  className={`w-full px-5 py-4 rounded-2xl border ${errors.experiences?.[idx]?.role ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-blue-500/50 outline-none transition-all font-semibold text-sm`}
+                  className={`w-full px-5 py-4 rounded-2xl border ${errors.experiences?.[idx]?.role ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-                    <FaCalendarAlt size={10} className="text-blue-500/50" /> Start Date
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 flex items-center gap-2 opacity-60">
+                    <FaCalendarAlt size={10} className="text-primary/50" /> Start Date
                 </label>
                 <input
                   type="date"
                   {...register(`experiences.${idx}.startDate`)}
-                  className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-blue-500/50 outline-none transition-all font-semibold text-sm"
+                  className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
                 />
               </div>
               
               <div className="space-y-2">
                 <div className="flex justify-between items-center mb-1">
-                    <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-                        <FaCalendarAlt size={10} className="text-blue-500/50" /> End Date
+                    <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 flex items-center gap-2 opacity-60">
+                        <FaCalendarAlt size={10} className="text-primary/50" /> End Date
                     </label>
                     <div className="flex items-center gap-2 mr-2">
                         <input 
                             type="checkbox" 
                             {...register(`experiences.${idx}.isCurrent`)}
-                            className="w-3 h-3 rounded border-white/10 bg-white/5 text-blue-600 focus:ring-0" 
+                            className="w-3 h-3 rounded border-border-subtle bg-foreground/10 text-primary focus:ring-0" 
                         />
-                        <span className="text-[9px] font-black uppercase text-white/30">Present</span>
+                        <span className="text-[9px] font-black uppercase text-text-muted opacity-40">Present</span>
                     </div>
                 </div>
                 <input
                   type="date"
                   {...register(`experiences.${idx}.endDate`)}
-                  className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-blue-500/50 outline-none transition-all font-semibold text-sm disabled:opacity-20"
+                  className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm disabled:opacity-20"
                 />
               </div>
 
@@ -153,28 +153,28 @@ const ExperienceManager = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Key Achievements & Responsibilities</label>
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Key Achievements & Responsibilities</label>
               <textarea
                 {...register(`experiences.${idx}.achievements`)}
                 placeholder="e.g. Scaled platform to 1M+ users, Managed 15+ engineers, etc."
-                className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-blue-500/50 outline-none transition-all font-medium text-sm h-32 resize-none leading-relaxed"
+                className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-medium text-sm h-32 resize-none leading-relaxed"
               />
             </div>
           </div>
         ))}
 
         {fields.length === 0 && (
-            <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
-                <p className="text-white/20 font-black uppercase tracking-widest italic">No professional history recorded yet.</p>
+            <div className="py-20 text-center border-2 border-dashed border-border-subtle rounded-[3rem] opacity-50">
+                <p className="text-text-muted font-black uppercase tracking-widest italic">No professional history recorded yet.</p>
             </div>
         )}
       </div>
 
-      <div className="pt-8 border-t border-white/5">
+      <div className="pt-8 border-t border-border-subtle">
         <button
           type="submit"
           disabled={saving || !isDirty}
-          className="px-10 py-4 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+          className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
         >
           {saving ? "Syncing Journey..." : "Save Professional History"}
         </button>

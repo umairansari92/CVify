@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaUser, FaBriefcase, FaGraduationCap, FaTools, FaLaptopCode, FaShieldAlt, FaPalette, FaGem, FaCheckCircle, FaRocket } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
+import { updateUser } from '../features/auth/authSlice';
+import api from '../api/axios';
 
 // Modular Form Imports
 import PersonalInfoForm from '../components/profile-forms/PersonalInfoForm';
@@ -10,7 +13,7 @@ import SocialLinksForm from '../components/profile-forms/SocialLinksForm';
 import ExperienceManager from '../components/profile-forms/ExperienceManager';
 import EducationManager from '../components/profile-forms/EducationManager';
 import SkillsServicesManager from '../components/profile-forms/SkillsServicesManager';
-import AwardsManager from '../components/profile-forms/AwardsManager';
+import CredentialsManager from '../components/profile-forms/CredentialsManager';
 import ProjectsManager from '../components/profile-forms/ProjectsManager';
 import SecuritySettings from '../components/profile-forms/SecuritySettings';
 import ThemeEditor from '../components/profile/ThemeEditor';
@@ -20,6 +23,29 @@ import ThreeBackground from '../components/three/ThreeBackground';
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('identity');
+  const [savingTheme, setSavingTheme] = useState(false);
+
+  const handleThemeUpdate = async (newSettings, file = null) => {
+    setSavingTheme(true);
+    try {
+      const formData = new FormData();
+      formData.append('themeSettings', JSON.stringify(newSettings));
+      if (file) formData.append('banner', file);
+
+      const res = await api.patch("/auth/profile", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      if (res.data.user) {
+        dispatch(updateUser(res.data.user));
+        toast.success("✨ Theme preferences synced!");
+      }
+    } catch (err) {
+      toast.error("Failed to sync theme");
+    } finally {
+      setSavingTheme(false);
+    }
+  };
 
   const tabs = [
     { id: 'identity', label: 'Identity', icon: <FaUser />, color: 'cyan' },
@@ -118,14 +144,27 @@ const ProfilePage = () => {
           className="premium-card p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden"
         >
           {activeTab === 'identity' && <PersonalInfoForm />}
-          {activeTab === 'branding' && <BrandingForm />}
+          {activeTab === 'branding' && (
+            <div className="space-y-12">
+              <BrandingForm />
+              <div className="pt-12 border-t border-border-subtle">
+                <SocialLinksForm />
+              </div>
+            </div>
+          )}
           {activeTab === 'portfolio' && <ProjectsManager />}
           {activeTab === 'experience' && <ExperienceManager />}
           {activeTab === 'education' && <EducationManager />}
           {activeTab === 'expertise' && <SkillsServicesManager />}
-          {activeTab === 'credentials' && <AwardsManager />}
+          {activeTab === 'credentials' && <CredentialsManager />}
           {activeTab === 'security' && <SecuritySettings />}
-          {activeTab === 'theme' && <ThemeEditor />}
+          {activeTab === 'theme' && (
+            <ThemeEditor 
+              settings={user?.themeSettings} 
+              onUpdate={handleThemeUpdate} 
+              saving={savingTheme} 
+            />
+          )}
 
           <AnimatePresence>
             {!tabs.find(t => t.id === activeTab) && (

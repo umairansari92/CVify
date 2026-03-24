@@ -79,13 +79,13 @@ const PersonalInfoForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="flex flex-col md:flex-row items-center gap-8 mb-8 pb-8 border-b border-white/5">
+      <div className="flex flex-col md:flex-row items-center gap-8 mb-8 pb-8 border-b border-border-subtle">
         <div className="relative group flex-shrink-0">
-          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-cyan-500/20 bg-gray-800 flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-primary/20 bg-foreground/20 flex items-center justify-center">
             {previewImg ? (
               <img src={previewImg} alt="Profile" className="w-full h-full object-cover object-top" />
             ) : (
-              <span className="text-4xl font-black text-white/20 italic">
+              <span className="text-4xl font-black text-text-muted opacity-20 italic">
                 {user?.firstName?.[0]}{user?.lastName?.[0]}
               </span>
             )}
@@ -107,8 +107,8 @@ const PersonalInfoForm = () => {
           />
         </div>
         <div className="text-center md:text-left space-y-2">
-            <h3 className="text-xl font-black text-white">Profile Identity</h3>
-            <p className="text-xs text-white/40 max-w-xs uppercase tracking-widest leading-loose">
+            <h3 className="text-xl font-black text-text-main">Profile Identity</h3>
+            <p className="text-xs text-text-muted max-w-xs uppercase tracking-widest leading-loose opacity-60">
                 Upload a high-quality headshot. This is the first thing recruiters see.
             </p>
         </div>
@@ -116,18 +116,18 @@ const PersonalInfoForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">First Name</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">First Name</label>
           <input
             {...register('firstName')}
-            className={`w-full px-5 py-4 rounded-2xl border ${errors.firstName ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
+            className={`w-full px-5 py-4 rounded-2xl border ${errors.firstName ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
           />
           {errors.firstName && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.firstName.message}</p>}
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Last Name</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Last Name</label>
           <input
             {...register('lastName')}
-            className={`w-full px-5 py-4 rounded-2xl border ${errors.lastName ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
+            className={`w-full px-5 py-4 rounded-2xl border ${errors.lastName ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
           />
           {errors.lastName && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.lastName.message}</p>}
         </div>
@@ -135,19 +135,19 @@ const PersonalInfoForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Mobile Number</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Mobile Number</label>
           <input
             {...register('phoneNumber')}
             placeholder="e.g. +92 300 1234567"
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Location</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Location</label>
           <input
             {...register('location')}
             placeholder="e.g. Lahore, Pakistan"
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           />
         </div>
       </div>
@@ -155,7 +155,7 @@ const PersonalInfoForm = () => {
       <button
         type="submit"
         disabled={saving || (!isDirty && !imageFile)}
-        className="px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+        className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Syncing..." : "Save Identity"}
       </button>
