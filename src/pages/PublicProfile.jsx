@@ -19,6 +19,15 @@ import {
   FaMagic,
   FaChevronDown,
 } from "react-icons/fa";
+import { 
+  Trash, 
+  Plus, 
+  FileText, 
+  Edit3, 
+  Download, 
+  Palette 
+} from "lucide-react";
+import { TypeAnimation } from "react-type-animation";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +36,10 @@ import {
   fetchProfileAnalytics,
   updateActiveProfileLocally,
   clearActiveProfile,
-  applyAtsFix
+  applyAtsFix,
+  deleteSloganThunk,
+  addSloganThunk,
+  updateHeroImageThunk
 } from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
@@ -43,6 +55,11 @@ const PublicProfile = () => {
     error: profileError, 
     analytics 
   } = useSelector((state) => state.profile);
+
+  // V4.3 Selectors
+  const slogans = user?.heroSlogans || [];
+  const personalInfo = user?.personalInfo || { fullName: user?.firstName + " " + user?.lastName, image: user?.profileImage, objective: user?.headline };
+  const isOwner = user?.isOwner;
 
   const [localTheme, setLocalTheme] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -238,47 +255,136 @@ const PublicProfile = () => {
         </div>
       </nav>
 
-      {/* ── SECTION 1: HERO [AUTHORITY] ── */}
-      <section id="home" className="min-h-screen flex flex-col items-center justify-center relative px-6 py-32 text-center">
-        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accentColor} 0%, transparent 70%)` }} />
-        <div className="max-w-6xl mx-auto space-y-12 relative z-10">
-          
-          <div className="relative group mx-auto w-48 h-48 md:w-64 md:h-64 mb-8">
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.8 }} className="absolute inset-0 rounded-[3.5rem] bg-gradient-to-br from-action to-transparent opacity-20 blur-2xl group-hover:opacity-40 transition-opacity" />
-            <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden border-4 border-white/10 shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
-              <img src={user.profileImage || "https://images.unsplash.com/photo-1519085185758-2ad3ed098fb4"} className="w-full h-full object-cover" alt={user.firstName} />
+      {/* ── SECTION 1: HERO (HOME) - V4.3 Split Mode ── */}
+      <section id="home" className="space-y-16 py-24">
+        {/* Slogans Builder Div - ABOVE Home */}
+        {(isOwner || (slogans && slogans.length > 0)) && (
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="border-t border-b border-white/5 py-10 bg-white/[0.01]">
+            <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
+              {isOwner ? (
+                <>
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-action">Builder: My Slogans (Max 5)</h4>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    {slogans.slice(0, 5).map((slogan, index) => (
+                      <div key={index} className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:border-action/30 transition-all">
+                        <span className="text-[10px] font-bold uppercase tracking-tight">{slogan}</span>
+                        <button onClick={() => dispatch(deleteSloganThunk(index))} className="text-red-500 hover:text-red-400 p-1">
+                          <Trash size={12} />
+                        </button>
+                      </div>
+                    ))}
+                    {slogans.length < 5 && (
+                      <button 
+                        onClick={() => {
+                          const s = window.prompt("Enter new slogan:");
+                          if (s) dispatch(addSloganThunk(s));
+                        }} 
+                        className="bg-action/10 border border-action/20 rounded-full px-4 py-2 hover:bg-action/20 flex items-center gap-2 text-[10px] font-black uppercase text-action transition-all"
+                      >
+                        <Plus size={14} /> Add Slogan
+                      </button>
+                    )}
+                  </div>
+                </>
+              ) : (
+                slogans.length > 0 && (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={slogans[0]}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.8 }}
+                      className="font-black text-xl uppercase tracking-[0.2em] text-action"
+                    >
+                      <TypeAnimation
+                        sequence={slogans.flatMap(slogan => [slogan, 3000])}
+                        wrapper="p"
+                        speed={50}
+                        repeat={Infinity}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                )
+              )}
             </div>
-            {/* ATS Score Gauge */}
-            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-slate-900 border-4 border-white/5 rounded-full flex flex-col items-center justify-center shadow-2xl ring-8 ring-action/5">
-               <span className="text-2xl font-black" style={{ color: atsScores.overall >= 80 ? "#10b981" : atsScores.overall >= 50 ? "#f59e0b" : "#ef4444" }}>{atsScores.overall}</span>
-               <span className="text-[7px] font-black uppercase tracking-tighter opacity-40">ATS Multi-layer</span>
-            </div>
-          </div>
+          </motion.div>
+        )}
 
-          <div className="space-y-6">
-            <div className="flex flex-col items-center gap-3">
-               <div className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-2">
-                 <FaCheckCircle className="text-emerald-500 text-xs" />
-                 <span className="text-[9px] font-black uppercase tracking-widest leading-none">AI-Audit Complete & Proof-Backed</span>
-               </div>
-               <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-none text-[var(--text-primary)]">
-                  <InlineEdit value={user.firstName} onSave={(v) => handleLiveUpdate({ firstName: v })} isOwner={user.isOwner} label="First Name" />
-               </h1>
-               <p className="text-2xl md:text-5xl font-black text-action opacity-90 tracking-tight">
-                  <InlineEdit value={user.headline} onSave={(v) => handleLiveUpdate({ headline: v })} isOwner={user.isOwner} label="Headline" />
-               </p>
-            </div>
-          </div>
+        {/* Split Hero: Image | Text [Targeted V4.3 Refactor] */}
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          <div className="max-w-3xl mx-auto py-10 opacity-70">
-            <div className="text-lg md:text-2xl font-medium leading-relaxed italic text-[var(--text-secondary)]">
-               <InlineEdit value={user.bio} onSave={(v) => handleLiveUpdate({ bio: v })} isOwner={user.isOwner} multiline label="About Authority" className="whitespace-pre-wrap" />
-            </div>
-          </div>
+          {/* Column A: Showcase (Portrait) */}
+          <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="relative aspect-square flex items-center justify-center group">
+            <div className="absolute inset-0 bg-action/20 blur-3xl rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
+            {personalInfo.image ? (
+              <img src={personalInfo.image} alt={personalInfo.fullName} className="w-full h-full object-cover rounded-[4rem] shadow-2xl border-4 border-white/10 relative z-10 hover:scale-[1.01] transition-transform duration-700" />
+            ) : (
+              <div className="w-full h-full bg-white/5 rounded-[4rem] border-4 border-dashed border-white/10 flex items-center justify-center relative z-10 transition-colors hover:bg-white/10">
+                <FileText size={48} className="text-white/20" />
+              </div>
+            )}
+            {isOwner && (
+              <button 
+                onClick={() => {
+                  const url = window.prompt("Enter image URL:");
+                  if (url) dispatch(updateHeroImageThunk(url));
+                }} 
+                className="absolute inset-0 z-20 flex items-center justify-center rounded-[4rem] opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-sm transition-all duration-300"
+              >
+                <div className="bg-white/10 p-5 rounded-3xl border border-white/20 hover:scale-110 transition-transform">
+                   <Edit3 size={24} className="text-white" />
+                </div>
+              </button>
+            )}
+          </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-8 pt-4">
-             <a href="#dashboard" className="px-14 py-6 bg-action text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-action/30">View Intelligence Dashboard</a>
-             <button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })} className="px-14 py-6 bg-white/5 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Direct Inquiry</button>
+          {/* Column B: Authority & Tagline */}
+          <div className="space-y-12">
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <span className="px-5 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-action mb-4 inline-block">Professional Showcase</span>
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">
+                  <InlineEdit 
+                    value={personalInfo.fullName} 
+                    onSave={(v) => { 
+                      const [f, ...l] = v.split(" "); 
+                      handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); 
+                    }} 
+                    isOwner={isOwner} 
+                    label="Full Name" 
+                  />
+                </h1>
+              </div>
+
+              {/* Dynamic Tagline with Typing Animation */}
+              {personalInfo.objective && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                  <div className="text-2xl md:text-4xl font-black text-white/90 leading-tight">
+                    <TypeAnimation
+                      sequence={[personalInfo.objective, 2000, "Semantically Engineered Authority.", 2000, personalInfo.objective, 2000]}
+                      wrapper="p"
+                      speed={50}
+                      repeat={Infinity}
+                      className="inline-block"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Action Row */}
+            <div className="flex flex-wrap gap-6 pt-6">
+               <button 
+                  onClick={() => handleDownloadPDF(user)} 
+                  className="px-12 py-6 bg-action text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-action/30 flex items-center gap-3"
+               >
+                  <Download size={18} /> Download Resume
+               </button>
+               <a href="#contact" className="px-12 py-6 bg-white/5 border border-white/10 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3">
+                  Inquire Now <FaArrowRight className="text-[10px] opacity-60" />
+               </a>
+            </div>
           </div>
         </div>
       </section>

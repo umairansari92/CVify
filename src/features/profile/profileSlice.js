@@ -23,23 +23,33 @@ export const applyAtsFix = createAsyncThunk(
         bulletPoints,
         jobDescription
       });
-      
       const { optimizedBullets } = response.data;
-      
-      // Update local profile state
-      if (index !== undefined) {
-        // It's an array field (like experience responsibilities)
-        // Note: The UI will handle the specific mapping, but we can pass the final updated array here if we wanted.
-        // For simplicity, let's just return the new bullets and let the component handle the local update via updateActiveProfileLocally if needed, 
-        // OR we can do the full patch here.
-      }
-      
       return { field, index, optimizedBullets };
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Failed to apply fix");
     }
   }
 );
+
+// Slogans Builder Thunks [V4.3]
+export const deleteSloganThunk = (index) => async (dispatch, getState) => {
+  const { activeProfile } = getState().profile;
+  const newSlogans = (activeProfile.heroSlogans || []).filter((_, i) => i !== index);
+  dispatch(updateActiveProfileLocally({ heroSlogans: newSlogans }));
+  await api.patch("/auth/profile", { heroSlogans: newSlogans });
+};
+
+export const addSloganThunk = (slogan) => async (dispatch, getState) => {
+  const { activeProfile } = getState().profile;
+  const newSlogans = [...(activeProfile.heroSlogans || []), slogan].slice(0, 5);
+  dispatch(updateActiveProfileLocally({ heroSlogans: newSlogans }));
+  await api.patch("/auth/profile", { heroSlogans: newSlogans });
+};
+
+export const updateHeroImageThunk = (imageUrl) => async (dispatch) => {
+  dispatch(updateActiveProfileLocally({ profileImage: imageUrl }));
+  await api.patch("/auth/profile", { profileImage: imageUrl });
+};
 
 // Fetch private analytics (Owner only)
 export const fetchProfileAnalytics = createAsyncThunk(
