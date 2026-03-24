@@ -1,40 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import api from '../../api/axios';
+import { brandingSchema } from '../../utils/validationSchemas';
 
 const BrandingForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  
-  const [username, setUsername] = useState(user?.username || '');
-  const [headline, setHeadline] = useState(user?.headline || '');
-  const [identityLabel, setIdentityLabel] = useState(user?.branding?.identityLabel || '');
-  const [availability, setAvailability] = useState(user?.availability || 'Open to Work');
-  const [industry, setIndustry] = useState(user?.industry || 'Other');
   const [saving, setSaving] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty }
+  } = useForm({
+    resolver: yupResolver(brandingSchema),
+    defaultValues: {
+      username: user?.username || '',
+      headline: user?.headline || '',
+      identityLabel: user?.branding?.identityLabel || '',
+      availability: user?.availability || 'Open to Work',
+      industry: user?.industry || 'Technology & Software',
+    }
+  });
 
   useEffect(() => {
     if (user) {
-      setUsername(user.username || '');
-      setHeadline(user.headline || '');
-      setIdentityLabel(user.branding?.identityLabel || '');
-      setAvailability(user.availability || 'Open to Work');
-      setIndustry(user.industry || 'Other');
+      reset({
+        username: user.username || '',
+        headline: user.headline || '',
+        identityLabel: user.branding?.identityLabel || '',
+        availability: user.availability || 'Open to Work',
+        industry: user.industry || 'Technology & Software',
+      });
     }
-  }, [user]);
+  }, [user, reset]);
 
-  const handleSave = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setSaving(true);
     try {
       const payload = {
-        username,
-        headline,
-        branding: { ...user.branding, identityLabel },
-        availability,
-        industry
+        username: data.username,
+        headline: data.headline,
+        branding: { ...user.branding, identityLabel: data.identityLabel },
+        availability: data.availability,
+        industry: data.industry
       };
 
       const res = await api.patch("/auth/profile", payload);
@@ -50,26 +64,23 @@ const BrandingForm = () => {
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Custom Username (URL)</label>
           <div className="relative">
             <span className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20 text-xs font-bold">cvify.pro/p/</span>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full pl-24 pr-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+              {...register('username')}
+              className={`w-full pl-24 pr-5 py-4 rounded-2xl border ${errors.username ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
             />
           </div>
+          {errors.username && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.username.message}</p>}
         </div>
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Identity Label (Stats Row)</label>
           <input
-            type="text"
-            value={identityLabel}
-            onChange={(e) => setIdentityLabel(e.target.value)}
+            {...register('identityLabel')}
             placeholder="e.g. Design Lead @ Figma"
             className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
           />
@@ -80,8 +91,7 @@ const BrandingForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Availability Status</label>
           <select
-            value={availability}
-            onChange={(e) => setAvailability(e.target.value)}
+            {...register('availability')}
             className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
           >
             <option value="Open to Work">🟢 Open to Work</option>
@@ -94,11 +104,10 @@ const BrandingForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Industry Focus</label>
           <select
-            value={industry}
-            onChange={(e) => setIndustry(e.target.value)}
+            {...register('industry')}
             className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
           >
-            {["Technology", "Healthcare", "Education", "Finance", "Marketing", "Engineering", "Design", "Other"].map(ind => (
+            {["Technology & Software", "Healthcare", "Education", "Finance", "Marketing", "Engineering", "Design", "Other"].map(ind => (
               <option key={ind} value={ind}>{ind}</option>
             ))}
           </select>
@@ -108,9 +117,7 @@ const BrandingForm = () => {
       <div className="space-y-2">
         <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Professional Headline</label>
         <input
-          type="text"
-          value={headline}
-          onChange={(e) => setHeadline(e.target.value)}
+          {...register('headline')}
           placeholder="e.g. Senior Product Designer | Apple Enthusiast"
           className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
         />
@@ -118,7 +125,7 @@ const BrandingForm = () => {
 
       <button
         type="submit"
-        disabled={saving}
+        disabled={saving || !isDirty}
         className="px-10 py-4 bg-gray-800 hover:bg-gray-700 text-white border border-white/10 font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Updating Branding..." : "Save Branding"}

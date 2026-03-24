@@ -1,70 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import api from '../../api/axios';
-import { FaLaptopCode, FaPlus, FaTrash, FaLink, FaGithub, FaEye, FaImage, FaCloudUploadAlt } from 'react-icons/fa';
+import { FaProjectDiagram, FaPlus, FaTrash, FaExternalLinkAlt, FaGithub, FaCloudUploadAlt, FaImage } from 'react-icons/fa';
+import { projectSchema } from '../../utils/validationSchemas';
+
+const projectsArraySchema = yup.object().shape({
+  projects: yup.array().of(projectSchema),
+  sectionName: yup.string().required(),
+});
 
 const ProjectsManager = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  
-  const [projects, setProjects] = useState(user?.projects || []);
-  const [sectionName, setSectionName] = useState(user?.sectionNames?.projects || 'Selected Works');
   const [saving, setSaving] = useState(false);
-  const [uploadingIdx, setUploadingIdx] = useState(null);
+  const [imageFiles, setImageFiles] = useState({}); // Tracking files per index
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty }
+  } = useForm({
+    resolver: yupResolver(projectsArraySchema),
+    defaultValues: {
+      projects: user?.projects || [],
+      sectionName: user?.sectionNames?.projects || 'Featured Projects',
+    }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "projects",
+  });
 
   useEffect(() => {
-    if (user?.projects) setProjects(user.projects);
-    if (user?.sectionNames?.projects) setSectionName(user.sectionNames.projects);
-  }, [user]);
+    if (user) {
+      reset({
+        projects: user.projects || [],
+        sectionName: user.sectionNames?.projects || 'Featured Projects',
+      });
+    }
+  }, [user, reset]);
 
-  const addProject = () => {
-    setProjects([
-      ...projects,
-      { title: "", description: "", image: "", link: "", githubLink: "", tags: [], isFeatured: false },
-    ]);
-  };
-
-  const updateProject = (idx, field, value) => {
-    const newProjects = [...projects];
-    newProjects[idx] = { ...newProjects[idx], [field]: value };
-    setProjects(newProjects);
-  };
-
-  const deleteProject = (idx) => {
-    setProjects(projects.filter((_, i) => i !== idx));
-  };
-
-  const handleImageUpload = async (idx, file) => {
-    if (!file) return;
-    setUploadingIdx(idx);
-    try {
-      const fd = new FormData();
-      fd.append("image", file);
-      // Assuming a general upload endpoint exists or we use the specific project update logic from the old ProfilePage
-      const res = await api.post("/upload/image", fd); // Adjust endpoint based on your backend
-      if (res.data.url) {
-        updateProject(idx, 'image', res.data.url);
-        toast.success("Image uploaded!");
-      }
-    } catch (err) {
-      toast.error("Upload failed: " + err.message);
-    } finally {
-      setUploadingIdx(null);
+  const handleImageChange = (idx, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) return toast.error("Max 5MB per project image");
+      setImageFiles({ ...imageFiles, [idx]: file });
     }
   };
 
-  const handleSave = async () => {
+  const onSubmit = async (data) => {
     setSaving(true);
     try {
-      const res = await api.patch("/auth/profile", { 
-        projects, 
-        sectionNames: { ...user.sectionNames, projects: sectionName } 
-      });
+      // Note: This implementation assumes the backend can handle the array of projects.
+      // For images, we would ideally need a specialized multi-part upload strategy.
+      // For now, we sync the text data first, and then handle images if any were added.
+      
+      const payload = {
+        projects: data.projects,
+        sectionNames: { ...user.sectionNames, projects: data.sectionName }
+      };
+
+      // Handle image uploads if files exist
+      const updatedProjects = [...data.projects];
+      for (const [idx, file] of Object.entries(imageFiles)) {
+        const fd = new FormData();
+        fd.append("image", file);
+        // Assuming a specific endpoint for project image upload or we handle it in-line
+        try {
+            const imgRes = await api.post(`/auth/profile/projects/${idx}/image`, fd);
+            if (imgRes.data.imageUrl) {
+                updatedProjects[idx].image = imgRes.data.imageUrl;
+            }
+        } catch (imgErr) {
+            console.error(`Failed to upload image for project ${idx}`, imgErr);
+        }
+      }
+
+      const res = await api.patch("/auth/profile", { ...payload, projects: updatedProjects });
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
-        toast.success("✅ Portfolio synchronized!");
+        setImageFiles({});
+        toast.success("🚀 Projects synchronized!");
       }
     } catch (err) {
       toast.error(err.message);
@@ -74,137 +98,141 @@ const ProjectsManager = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <div className="flex items-center justify-between pb-6 border-b border-white/5">
         <div className="space-y-1">
             <h3 className="text-xl font-black text-white flex items-center gap-3">
-                <FaLaptopCode size={20} className="text-cyan-500" />
+                <FaProjectDiagram className="text-cyan-500" /> 
                 <input 
-                    value={sectionName}
-                    onChange={(e) => setSectionName(e.target.value)}
-                    className="bg-transparent border-none outline-none focus:ring-0 w-full"
+                    {...register('sectionName')}
+                    className="bg-transparent border-none outline-none focus:ring-0 w-64 text-white placeholder-white/20"
                 />
             </h3>
             <p className="text-[10px] text-white/40 font-black uppercase tracking-widest leading-loose">
-                Showcase your most impactful builds and experiments.
+                Showcase your best work. High-resolution images and clear narratives.
             </p>
         </div>
         <button
-          onClick={addProject}
+          type="button"
+          onClick={() => append({ title: '', description: '', link: '', github: '', tech: '', image: '' })}
           className="px-6 py-2 bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-400 font-black text-[10px] uppercase tracking-widest rounded-full border border-cyan-500/20 transition-all flex items-center gap-2"
         >
           <FaPlus size={10} /> Add Project
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
-        {projects.map((proj, idx) => (
-          <div key={idx} className="group p-8 bg-white/[0.02] border border-white/5 rounded-[2.5rem] space-y-6 hover:border-cyan-500/20 transition-all">
-            <div className="flex flex-col md:flex-row gap-8">
-              {/* Project Image Preview/Upload */}
-              <div className="md:w-64 h-48 rounded-3xl bg-gray-900 border border-white/5 overflow-hidden relative border-dashed flex flex-col items-center justify-center group-hover:border-cyan-500/30 transition-all">
-                {proj.image ? (
-                  <>
-                    <img src={proj.image} alt="Preview" className="w-full h-full object-cover" />
-                    <button 
-                        onClick={() => updateProject(idx, 'image', '')}
-                        className="absolute top-2 right-2 p-2 bg-black/60 rounded-full text-red-500 opacity-0 group-hover/img:opacity-100 transition-opacity"
-                    >
-                        <FaTrash size={12} />
-                    </button>
-                  </>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {fields.map((field, idx) => (
+          <div key={field.id} className="group relative bg-[#0a0a0a] border border-white/5 rounded-[3rem] overflow-hidden flex flex-col hover:border-cyan-500/20 transition-all">
+            <button
+                type="button"
+                onClick={() => remove(idx)}
+                className="absolute right-6 top-6 z-10 p-2 bg-black/50 text-white/40 hover:text-red-500 rounded-full transition-all"
+            >
+                <FaTrash size={12} />
+            </button>
+
+            {/* Project Image Preview/Upload */}
+            <div 
+                className="h-56 bg-white/5 relative flex items-center justify-center group/img overflow-hidden cursor-pointer"
+                onClick={() => document.getElementById(`project-img-${idx}`).click()}
+            >
+                {imageFiles[idx] || field.image ? (
+                    <img 
+                        src={imageFiles[idx] ? URL.createObjectURL(imageFiles[idx]) : field.image} 
+                        alt="Project" 
+                        className="w-full h-full object-cover group-hover/img:scale-105 transition-all duration-700" 
+                    />
                 ) : (
-                  <label className="cursor-pointer flex flex-col items-center gap-2 text-white/20 hover:text-cyan-500 transition-colors">
-                    <FaCloudUploadAlt size={32} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Upload Cover</span>
-                    <input 
-                        type="file" 
-                        className="hidden" 
-                        onChange={(e) => {
-                            // Since a general upload endpoint might not exist, 
-                            // we'll just allow URL input for now or use the file path if provided
-                            // In a real scenario, this would trigger a file upload thunk
-                            toast.info("Image upload requires a backend endpoint. Use URL for now.");
-                        }} 
-                    />
-                  </label>
+                    <div className="flex flex-col items-center gap-2 text-white/10 uppercase font-black text-[10px] tracking-[0.3em]">
+                        <FaImage size={40} />
+                        Upload Visual
+                    </div>
                 )}
-                {uploadingIdx === idx && <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-xs font-bold text-cyan-400 animate-pulse">Uploading...</div>}
-              </div>
-
-              <div className="flex-1 space-y-4">
-                <div className="flex justify-between items-start gap-4">
-                    <input 
-                        value={proj.title}
-                        onChange={(e) => updateProject(idx, 'title', e.target.value)}
-                        placeholder="Project Title"
-                        className="flex-1 bg-transparent text-lg font-black text-white outline-none focus:border-b border-cyan-500/30"
-                    />
-                    <div className="flex items-center gap-2">
-                        <input 
-                            type="checkbox" 
-                            checked={proj.isFeatured} 
-                            onChange={(e) => updateProject(idx, 'isFeatured', e.target.checked)}
-                            className="w-4 h-4 rounded border-white/10 bg-white/5 text-cyan-600 focus:ring-0"
-                        />
-                        <label className="text-[9px] font-black uppercase text-white/40">Featured</label>
-                    </div>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                    <FaCloudUploadAlt className="text-white text-3xl" />
                 </div>
-
-                <textarea 
-                    value={proj.description}
-                    onChange={(e) => updateProject(idx, 'description', e.target.value)}
-                    placeholder="Short description of the technical challenge and solution..."
-                    className="w-full bg-transparent text-sm text-white/40 h-24 resize-none outline-none leading-relaxed"
+                <input 
+                    id={`project-img-${idx}`} 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(idx, e)}
                 />
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="flex items-center gap-2 bg-white/5 px-4 py-3 rounded-2xl border border-white/5">
-                        <FaImage className="text-white/20" size={12} />
-                        <input value={proj.image} onChange={(e) => updateProject(idx, 'image', e.target.value)} placeholder="Image URL" className="bg-transparent text-[10px] text-white/60 outline-none w-full" />
+            <div className="p-8 space-y-6">
+                <div className="space-y-4">
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-white/30 ml-1">Project Title</label>
+                        <input
+                            {...register(`projects.${idx}.title`)}
+                            placeholder="e.g. AI SaaS Platform"
+                            className="w-full bg-transparent border-none p-0 text-white focus:ring-0 font-black text-xl placeholder-white/5"
+                        />
+                        {errors.projects?.[idx]?.title && <p className="text-red-500 text-[8px] font-black uppercase ml-1">{errors.projects[idx].title.message}</p>}
                     </div>
-                    <div className="flex items-center gap-2 bg-white/5 px-4 py-3 rounded-2xl border border-white/5">
-                        <FaLink className="text-white/20" size={12} />
-                        <input value={proj.link} onChange={(e) => updateProject(idx, 'link', e.target.value)} placeholder="Live Demo" className="bg-transparent text-[10px] text-white/60 outline-none w-full" />
-                    </div>
-                    <div className="flex items-center gap-2 bg-white/5 px-4 py-3 rounded-2xl border border-white/5">
-                        <FaGithub className="text-white/20" size={12} />
-                        <input value={proj.githubLink} onChange={(e) => updateProject(idx, 'githubLink', e.target.value)} placeholder="Source Code" className="bg-transparent text-[10px] text-white/60 outline-none w-full" />
-                    </div>
-                </div>
 
-                <div className="flex items-center justify-between pt-2">
-                    <div className="flex-1 mr-6">
-                        <input 
-                            value={proj.tags?.join(", ")}
-                            onChange={(e) => updateProject(idx, 'tags', e.target.value.split(",").map(t => t.trim()))}
-                            placeholder="Tags (e.g. React, Node.js, AI)"
-                            className="w-full bg-white/5 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-cyan-500 border border-white/5 focus:border-cyan-500/20"
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-white/30 ml-1">Core Tech Stack</label>
+                        <input
+                            {...register(`projects.${idx}.tech`)}
+                            placeholder="React, Node.js, OpenAI..."
+                            className="w-full bg-transparent border-none p-0 text-cyan-500 focus:ring-0 font-bold text-xs placeholder-white/5 uppercase tracking-widest"
                         />
                     </div>
-                    <button
-                        onClick={() => deleteProject(idx)}
-                        className="p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
-                    >
-                        <FaTrash size={14} />
-                    </button>
                 </div>
-              </div>
+
+                <div className="space-y-1">
+                    <label className="text-[9px] font-black uppercase text-white/30 ml-1">System Narrative / Description</label>
+                    <textarea
+                        {...register(`projects.${idx}.description`)}
+                        placeholder="Explain the problem, solution, and high-impact result..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white/70 focus:border-cyan-500/50 outline-none transition-all font-medium text-xs h-32 resize-none leading-relaxed"
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-white/30 ml-1 flex items-center gap-2">
+                            <FaExternalLinkAlt size={8} /> Live URL
+                        </label>
+                        <input
+                            {...register(`projects.${idx}.link`)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white/60 focus:border-cyan-500/50 outline-none transition-all font-semibold text-[10px]"
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-white/30 ml-1 flex items-center gap-2">
+                            <FaGithub size={10} /> Source
+                        </label>
+                        <input
+                            {...register(`projects.${idx}.github`)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white/60 focus:border-cyan-500/50 outline-none transition-all font-semibold text-[10px]"
+                        />
+                    </div>
+                </div>
             </div>
           </div>
         ))}
+
+        {fields.length === 0 && (
+            <div className="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[4rem]">
+                <p className="text-white/20 font-black uppercase tracking-widest italic leading-loose"> No projects deployed. Add your first masterpiece. </p>
+            </div>
+        )}
       </div>
 
       <div className="pt-8 border-t border-white/5">
         <button
-          onClick={handleSave}
-          disabled={saving}
-          className="px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+          type="submit"
+          disabled={saving || (!isDirty && Object.keys(imageFiles).length === 0)}
+          className="px-12 py-5 bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-3xl transition-all shadow-xl shadow-cyan-500/10 active:scale-95 disabled:opacity-50"
         >
-          {saving ? "Syncing Portfolio..." : "Save Works"}
+          {saving ? "Deploying Showcase..." : "Synchronize Portfolio"}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

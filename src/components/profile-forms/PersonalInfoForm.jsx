@@ -1,31 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import api from '../../api/axios';
-import { FaCloudUploadAlt, FaImage } from 'react-icons/fa';
+import { FaCloudUploadAlt } from 'react-icons/fa';
+import { personalInfoSchema } from '../../utils/validationSchemas';
 
 const PersonalInfoForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   
-  const [firstName, setFirstName] = useState(user?.firstName || '');
-  const [lastName, setLastName] = useState(user?.lastName || '');
-  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || '');
-  const [location, setLocation] = useState(user?.location || '');
   const [previewImg, setPreview] = useState(user?.profileImage || '');
   const [imageFile, setImgFile] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty }
+  } = useForm({
+    resolver: yupResolver(personalInfoSchema),
+    defaultValues: {
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      phoneNumber: user?.phoneNumber || '',
+      location: user?.location || '',
+    }
+  });
+
+  // Sync form with Redux state if user changes (e.g., initial load)
   useEffect(() => {
     if (user) {
-      setFirstName(user.firstName || '');
-      setLastName(user.lastName || '');
-      setPhoneNumber(user.phoneNumber || '');
-      setLocation(user.location || '');
+      reset({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        phoneNumber: user.phoneNumber || '',
+        location: user.location || '',
+      });
       setPreview(user.profileImage || '');
     }
-  }, [user]);
+  }, [user, reset]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -38,18 +55,13 @@ const PersonalInfoForm = () => {
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    if (!firstName.trim() || !lastName.trim()) {
-      return toast.error("First and last name are required.");
-    }
+  const onSubmit = async (data) => {
     setSaving(true);
     try {
       const fd = new FormData();
-      fd.append("firstName", firstName.trim());
-      fd.append("lastName", lastName.trim());
-      fd.append("phoneNumber", phoneNumber);
-      fd.append("location", location.trim());
+      Object.keys(data).forEach(key => {
+        if (data[key]) fd.append(key, data[key]);
+      });
       if (imageFile) fd.append("profileImage", imageFile);
 
       const res = await api.patch("/auth/profile", fd);
@@ -66,7 +78,7 @@ const PersonalInfoForm = () => {
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex flex-col md:flex-row items-center gap-8 mb-8 pb-8 border-b border-white/5">
         <div className="relative group flex-shrink-0">
           <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-cyan-500/20 bg-gray-800 flex items-center justify-center">
@@ -74,7 +86,7 @@ const PersonalInfoForm = () => {
               <img src={previewImg} alt="Profile" className="w-full h-full object-cover object-top" />
             ) : (
               <span className="text-4xl font-black text-white/20 italic">
-                {firstName?.[0]}{lastName?.[0]}
+                {user?.firstName?.[0]}{user?.lastName?.[0]}
               </span>
             )}
           </div>
@@ -106,20 +118,18 @@ const PersonalInfoForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">First Name</label>
           <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            {...register('firstName')}
+            className={`w-full px-5 py-4 rounded-2xl border ${errors.firstName ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
           />
+          {errors.firstName && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.firstName.message}</p>}
         </div>
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Last Name</label>
           <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
+            {...register('lastName')}
+            className={`w-full px-5 py-4 rounded-2xl border ${errors.lastName ? 'border-red-500/50' : 'border-white/10'} bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm`}
           />
+          {errors.lastName && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.lastName.message}</p>}
         </div>
       </div>
 
@@ -127,9 +137,7 @@ const PersonalInfoForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Mobile Number</label>
           <input
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            {...register('phoneNumber')}
             placeholder="e.g. +92 300 1234567"
             className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
           />
@@ -137,9 +145,7 @@ const PersonalInfoForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] ml-1">Location</label>
           <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            {...register('location')}
             placeholder="e.g. Lahore, Pakistan"
             className="w-full px-5 py-4 rounded-2xl border border-white/10 bg-white/5 text-white focus:border-cyan-500/50 outline-none transition-all font-semibold text-sm"
           />
@@ -148,7 +154,7 @@ const PersonalInfoForm = () => {
 
       <button
         type="submit"
-        disabled={saving}
+        disabled={saving || (!isDirty && !imageFile)}
         className="px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Syncing..." : "Save Identity"}
