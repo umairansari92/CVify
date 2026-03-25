@@ -98,10 +98,10 @@ const BrandingForm = () => {
           {errors.username && <p className="text-red-500 text-[9px] font-black uppercase ml-1">{errors.username.message}</p>}
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Identity Label (Stats Row)</label>
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Main Portfolio Role / Headline (Huge Text)</label>
           <input
-            {...register('identityLabel')}
-            placeholder="e.g. Design Lead @ Figma"
+            {...register('headline')}
+            placeholder="e.g. Senior Product Designer | Apple Enthusiast"
             className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
           />
         </div>
@@ -135,10 +135,10 @@ const BrandingForm = () => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Professional Headline</label>
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Small Status Pill (Below Profile Image)</label>
         <input
-          {...register('headline')}
-          placeholder="e.g. Senior Product Designer | Apple Enthusiast"
+          {...register('identityLabel')}
+          placeholder="e.g. Design Lead @ Figma"
           className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
         />
       </div>
