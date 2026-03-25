@@ -68,9 +68,20 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-10 md:space-y-14">
         
-        {/* Slogan Identity Layer (Missing in v1) */}
+        {/* Profile Image & Slogan Identity Layer */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center gap-6">
-          <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl">
+          
+          {personalInfo.image && (
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full p-2 bg-gradient-to-tr from-[var(--primary-color)] to-transparent relative z-20 shadow-2xl">
+              <img 
+                src={personalInfo.image} 
+                alt="Profile Identity" 
+                className="w-full h-full rounded-full object-cover object-top bg-[var(--card-bg)]"
+              />
+            </div>
+          )}
+
+          <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl mt-4">
             <RocketIcon size={16} className="text-[var(--primary-color)]" />
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
               <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel || "Digital Architecture & Strategy"} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>

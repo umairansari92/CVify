@@ -112,8 +112,8 @@ const PublicProfile = () => {
   }, [user?.projects, user?.portfolio, user?.username]);
 
   const slogans = user?.heroSlogans || [];
-  const personalInfo = user?.personalInfo || { 
-    fullName: user?.firstName + " " + user?.lastName, 
+  const personalInfo = { 
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "), 
     image: user?.profileImage, 
     jobTitle: user?.headline,
     objective: user?.bio,
