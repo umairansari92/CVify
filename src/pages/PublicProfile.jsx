@@ -74,6 +74,8 @@ const Experience = lazy(() => import("../components/profile/sections/Experience"
 const Education = lazy(() => import("../components/profile/sections/Education"));
 const Showcase = lazy(() => import("../components/profile/sections/Showcase"));
 const Skills = lazy(() => import("../components/profile/sections/Skills"));
+const Dossier = lazy(() => import("../components/profile/sections/Dossier"));
+const Interests = lazy(() => import("../components/profile/sections/Interests"));
 const Contact = lazy(() => import("../components/profile/sections/Contact"));
 const Footer = lazy(() => import("../components/profile/sections/Footer"));
 
@@ -113,7 +115,9 @@ const PublicProfile = () => {
   const personalInfo = user?.personalInfo || { 
     fullName: user?.firstName + " " + user?.lastName, 
     image: user?.profileImage, 
-    objective: user?.headline,
+    jobTitle: user?.headline,
+    objective: user?.bio,
+    summary: user?.bio,
     location: user?.location,
     email: user?.email,
     phone: user?.phoneNumber
@@ -518,6 +522,26 @@ const PublicProfile = () => {
 
         {(isOwner || (user.skills?.length > 0)) && (
           <Skills 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
+          />
+        )}
+
+        {(isOwner || (user.certifications?.length > 0) || (user.achievements?.length > 0)) && (
+          <Dossier 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
+          />
+        )}
+
+        {(isOwner || (user.interests?.length > 0)) && (
+          <Interests 
             user={user} 
             isOwner={isOwner} 
             displayValue={displayValue} 

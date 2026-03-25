@@ -35,8 +35,8 @@ const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setSh
         </div>
         
         <div className="text-xl md:text-3xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic">
-          <InlineEdit isOwner={isOwner} label="Professional Summary" value={user.summary} onSave={(v) => handleLiveUpdate({ summary: v })} type="textarea">
-            <p className="whitespace-pre-wrap">"{displayValue(user.summary, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
+          <InlineEdit isOwner={isOwner} label="Professional Summary" value={user.bio} onSave={(v) => handleLiveUpdate({ bio: v })} type="textarea">
+            <p className="whitespace-pre-wrap">"{displayValue(user.bio, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
           </InlineEdit>
         </div>
 

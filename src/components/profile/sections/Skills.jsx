@@ -9,12 +9,18 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
     <section id="expertise" className="py-32 border-b border-white/5 bg-white/[0.01]">
       <div className="max-w-6xl mx-auto px-6 space-y-20">
         <div className="text-center space-y-4">
+          <p className="text-xs font-black text-[var(--primary-color)] uppercase tracking-[0.5em] opacity-40">Expertise & Skills</p>
           <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
             <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
-                {displayValue(user.sectionNames?.skills, "Expertise & Skills")}
+                {displayValue(user.sectionNames?.skills, "Technical & Professional Skills")}
             </InlineEdit>
           </h2>
           <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
+          {user.skills?.length > 0 && (
+            <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em]">
+              <span className="text-[var(--primary-color)]">{user.skills.length} skills</span> — YOUR SKILLS
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 max-w-5xl mx-auto">

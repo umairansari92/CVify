@@ -110,7 +110,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             transition={{ delay: 0.2 }}
             className="text-2xl md:text-4xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
           >
-            <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ "personalInfo.jobTitle": v })}>
+            <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ headline: v })}>
               {displayValue(personalInfo.jobTitle, "Engineering Future Solutions.")}
             </InlineEdit>
           </motion.h2>
@@ -122,7 +122,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
           transition={{ delay: 0.4 }}
           className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] font-light max-w-3xl mx-auto leading-relaxed"
         >
-          <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} onSave={(v) => handleLiveUpdate({ "personalInfo.objective": v })} type="textarea">
+          <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} onSave={(v) => handleLiveUpdate({ bio: v })} type="textarea">
             <p className="opacity-80">"{displayValue(personalInfo.objective, "I build intelligent digital products that bridge the gap between human needs and complex technology.")}"</p>
           </InlineEdit>
         </motion.div>
