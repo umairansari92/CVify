@@ -71,7 +71,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
   };
 
   return (
-    <section id="home" className="relative min-h-[100vh] flex flex-col justify-center pt-28 pb-40 outline-none bg-gradient-to-b from-[var(--bg-color)] to-[var(--card-bg)]" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5vw))' }}>
+    <section id="home" className="relative min-h-[100vh] flex flex-col justify-center pt-36 lg:pt-48 pb-40 outline-none bg-gradient-to-b from-[var(--bg-color)] to-[var(--card-bg)]" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5vw))' }}>
       {/* Background Glow */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-full max-w-3xl h-[600px] bg-[var(--primary-color)]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -85,29 +85,29 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             Hi, I'm
           </h2>
 
-          <div className="flex flex-col text-6xl md:text-[5.5rem] lg:text-[7rem] font-black leading-[0.95] tracking-tighter w-full">
+          <div className="flex flex-col text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[6.5rem] font-black leading-[1.1] tracking-tighter w-full">
             <InlineEdit className="w-full" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
               {(() => {
                 const val = displayValue(personalInfo.fullName, "User Name");
                 const parts = val.split(" ");
                 const lastWord = parts.pop() || "";
                 return (
-                  <div className="flex flex-col items-start w-full">
+                  <div className="flex flex-row flex-wrap items-baseline gap-x-4 w-full">
                     {parts.map((word, i) => (
                       <span key={i} className="text-transparent uppercase" style={{ WebkitTextStroke: '1px var(--text-secondary)', opacity: 0.6 }}>{word}</span>
                     ))}
-                    <div className="flex flex-wrap items-end gap-3 md:gap-4 mt-2">
-                      <span className="text-transparent uppercase" style={{ WebkitTextStroke: '1px var(--text-secondary)', opacity: 0.6 }}>{lastWord}.</span>
-                      <span className="text-3xl md:text-5xl lg:text-5xl font-bold text-[var(--text-primary)] tracking-normal mb-1 md:mb-2 whitespace-nowrap">I'm a</span>
-                    </div>
+                    <span className="text-transparent uppercase" style={{ WebkitTextStroke: '1px var(--text-secondary)', opacity: 0.6 }}>{lastWord}.</span>
                   </div>
                 );
               })()}
             </InlineEdit>
           </div>
 
-          <div className="text-4xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] mt-4 tracking-tight">
-            Professional
+          <div className="flex flex-wrap items-baseline gap-x-4 mt-2">
+            <span className="text-3xl md:text-5xl lg:text-5xl font-bold text-[var(--text-primary)] tracking-normal whitespace-nowrap">I'm a</span>
+            <span className="text-4xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] tracking-tight">
+              Professional
+            </span>
           </div>
 
           <div className="text-2xl md:text-4xl lg:text-5xl font-light text-[var(--text-secondary)] mt-2 h-12 md:h-16 flex items-center">
