@@ -131,26 +131,8 @@ const CreateResume = () => {
         <div className="flex flex-col gap-6 lg:gap-8 mb-8 lg:mb-12">
           <div className="flex flex-col sm:flex-row items-stretch lg:items-center justify-between gap-4 lg:gap-6 w-full">
             
-            {/* Desktop Tabs */}
-            <div className="hidden lg:flex gap-1 lg:gap-2 p-1 lg:p-2 bg-foreground/10 rounded-2xl lg:rounded-3xl border border-border-subtle overflow-x-auto no-scrollbar w-full lg:w-auto">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 lg:px-6 py-2 lg:py-3 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black transition-all duration-300 whitespace-nowrap flex-shrink-0
-                               ${
-                                 activeTab === tab.id
-                                   ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]"
-                                   : "text-text-muted hover:bg-white/10 hover:text-primary"
-                               }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile Tags / Section Switcher (Dropdown) */}
-            <div className="relative group w-full lg:hidden">
+            {/* Unified Section Switcher (Dropdown) */}
+            <div className="relative group flex-1 lg:max-w-xs">
               <div className="relative">
                 <select
                   className="w-full appearance-none pl-6 pr-12 py-4 bg-primary text-white font-black text-xs uppercase tracking-widest border-none rounded-2xl shadow-xl shadow-primary/20 cursor-pointer outline-none transition-all hover:bg-primary/90"
