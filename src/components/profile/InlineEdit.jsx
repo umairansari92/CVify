@@ -22,7 +22,10 @@ const InlineEdit = ({
   }, [isEditing]);
 
   const handleDoubleClick = () => {
-    if (isOwner) setIsEditing(true);
+    if (isOwner) {
+      setTempValue(value); // Synchronize state completely before opening edit box
+      setIsEditing(true);
+    }
   };
 
   const handleSave = () => {
