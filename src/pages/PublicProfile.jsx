@@ -240,9 +240,12 @@ const PublicProfile = () => {
   };
 
   const themePresets = [
-    { name: "Classic Pro", headerBg: "#2563eb", headerBgSecondary: "#9333ea", bodyBg: "#0f172a", fontPrimary: "Inter", cardStyle: "glass", icon: "⚡", textPrimary: "#ffffff", textSecondary: "#94a3b8", accentColor: "#2563eb" },
-    { name: "Executive Dark", headerBg: "#000000", headerBgSecondary: "#1e293b", bodyBg: "#020617", fontPrimary: "JetBrains Mono", cardStyle: "minimal", icon: "💎", textPrimary: "#f8fafc", textSecondary: "#94a3b8", accentColor: "#38bdf8" },
-    { name: "Minimalist", headerBg: "#f1f5f9", headerBgSecondary: "#e2e8f0", bodyBg: "#ffffff", fontPrimary: "Outfit", cardStyle: "classic", icon: "⚪", textPrimary: "#1e293b", textSecondary: "#475569", accentColor: "#1e3a8a" },
+    { name: "CVIFY CLASSIC", headerBg: "#2563eb", headerBgSecondary: "#9333ea", bodyBg: "#f8fafc", fontPrimary: "Inter", cardStyle: "glass", icon: "⚡", textPrimary: "#0f172a", textSecondary: "#64748b", accentColor: "#2563eb" },
+    { name: "MIDNIGHT DEV", headerBg: "#0f172a", headerBgSecondary: "#1e293b", bodyBg: "#020617", fontPrimary: "JetBrains Mono", cardStyle: "minimal", icon: "🌙", textPrimary: "#f8fafc", textSecondary: "#94a3b8", accentColor: "#38bdf8" },
+    { name: "CORPORATE GOLD", headerBg: "#1e3a8a", headerBgSecondary: "#1e40af", bodyBg: "#ffffff", fontPrimary: "Outfit", cardStyle: "classic", icon: "🏢", textPrimary: "#1e293b", textSecondary: "#475569", accentColor: "#d97706" },
+    { name: "CREATIVE SUNSET", headerBg: "#f97316", headerBgSecondary: "#db2777", bodyBg: "#fff7ed", fontPrimary: "Poppins", cardStyle: "glass", icon: "🌅", textPrimary: "#431407", textSecondary: "#9a3412", accentColor: "#e11d48" },
+    { name: "SLATE MINIMALIST", headerBg: "#475569", headerBgSecondary: "#64748b", bodyBg: "#f1f5f9", fontPrimary: "Roboto", cardStyle: "minimal", icon: "🎨", textPrimary: "#334155", textSecondary: "#64748b", accentColor: "#0f172a" },
+    { name: "EMERALD LEADER", headerBg: "#059669", headerBgSecondary: "#10b981", bodyBg: "#f0fdf4", fontPrimary: "Montserrat", cardStyle: "classic", icon: "🌿", textPrimary: "#064e3b", textSecondary: "#065f46", accentColor: "#059669" },
   ];
 
   if (loading) return (
