@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, Mail, Phone, Send } from "lucide-react";
-import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaFacebook, FaGlobe } from "react-icons/fa";
+import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaWhatsapp } from "react-icons/fa";
 import InlineEdit from "../InlineEdit";
 
 const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handleContactSubmit, isSending, handleLiveUpdate, ensureAbsoluteUrl }) => {
@@ -22,6 +22,7 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
       case 'instagram': return <FaInstagram size={20} />;
       case 'facebook': return <FaFacebook size={20} />;
       case 'portfolio': return <FaGlobe size={20} />;
+      case 'whatsapp': return <FaWhatsapp size={20} />;
       default: return <Globe size={20} />;
     }
   };
@@ -87,13 +88,22 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
             <div>
               <h3 className="text-xl font-bold text-[var(--primary-color)] mb-6 uppercase tracking-wider">Follow Me:</h3>
               <div className="flex flex-wrap gap-4">
-                {['linkedin', 'github', 'twitter', 'portfolio'].map((platform) => {
-                  const link = user.socialLinks?.[platform];
+                {['linkedin', 'github', 'whatsapp', 'twitter', 'portfolio'].map((platform) => {
+                  let link = user.socialLinks?.[platform];
+                  
+                  // WhatsApp Logic: Use phone number if platform is whatsapp
+                  if (platform === 'whatsapp') {
+                    const phone = user.phoneNumber || user.personalInfo?.phoneNumber;
+                    if (!phone) return null;
+                    const cleanPhone = phone.replace(/\D/g, ''); // Remove all non-digits
+                    link = `https://wa.me/${cleanPhone}`;
+                  }
+
                   if (!link && !isOwner) return null;
                   return (
                     <a 
                       key={platform}
-                      href={ensureAbsoluteUrl(link) || '#'} 
+                      href={platform === 'whatsapp' ? link : (ensureAbsoluteUrl(link) || '#')} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       title={platform}

@@ -7,6 +7,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaWhatsapp,
 } from "react-icons/fa";
 
 const ModernTemplate = ({ data }) => {
@@ -67,9 +68,19 @@ const ModernTemplate = ({ data }) => {
             </span>
           )}
           {personalInfo?.phone && (
-            <span className="flex items-center gap-2 mr-6 mb-3">
-              <FaPhoneAlt className="text-blue-500" /> {personalInfo.phone}
-            </span>
+            <>
+              <span className="flex items-center gap-2 mr-6 mb-3">
+                <FaPhoneAlt className="text-blue-500" /> {personalInfo.phone}
+              </span>
+              <a
+                href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 mr-6 mb-3 hover:underline text-green-600"
+              >
+                <FaWhatsapp /> WhatsApp
+              </a>
+            </>
           )}
           {personalInfo?.location && (
             <span className="flex items-center gap-2 mr-6 mb-3">
