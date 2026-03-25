@@ -116,11 +116,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             </InlineEdit>
           </div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-[var(--text-secondary)] font-light max-w-xl leading-relaxed mt-6">
-            <InlineEdit isOwner={isOwner} id="heroObjective" value={personalInfo.objective} type="textarea" onSave={(v) => handleLiveUpdate({ bio: v })}>
-              <p className="opacity-80">"{displayValue(personalInfo.objective, "Write Your Objective Here...")}"</p>
-            </InlineEdit>
-          </motion.div>
+
 
 
 
