@@ -377,17 +377,17 @@ const PublicProfile = () => {
           
           {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}
           <div 
-            className="flex items-center gap-3 w-1/3 cursor-pointer group" 
+            className="flex items-center gap-4 cursor-pointer group" 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            {/* Glowing App Icon */}
-            <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-blue-600 shadow-[0_0_20px_var(--primary-color)]/40 overflow-hidden border border-white/10 transition-transform duration-300 group-hover:scale-105">
+            {/* App Icon */}
+            <div className="relative flex items-center justify-center w-14 h-14 rounded-2xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
               {/* Shine Animation overlay */}
-              <div className="absolute inset-0 bg-white/30 w-[150%] h-full transform -skew-x-12 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-out z-0"></div>
+              <div className="absolute inset-0 bg-white/20 w-[150%] h-full transform -skew-x-12 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-out z-20"></div>
               <img 
                 src="/CVify Favicon.jpg" 
                 alt="CVify Logo" 
-                className="w-10 h-10 object-contain relative z-10 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" 
+                className="w-full h-full object-contain relative z-10" 
               />
             </div>
             
@@ -396,7 +396,7 @@ const PublicProfile = () => {
               <span className="text-xl font-black tracking-tight text-[var(--text-primary)] leading-none mb-0.5">
                 CVify<span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400">Pro</span>
               </span>
-              <span className="text-[9px] text-[var(--text-secondary)] font-bold tracking-[0.1em] uppercase">
+              <span className="text-[9px] text-[var(--text-secondary)] font-bold tracking-[0.1em] uppercase whitespace-nowrap">
                 Portfolio Engine
               </span>
             </div>
