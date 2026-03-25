@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, signupUser, verifyOtp, getMe } from "./authThunk";
 
 const getSafeToken = () => {
-  const token = localStorage.getItem("token") || localStorage.getItem("Tocken");
+  const token = localStorage.getItem("token");
   if (!token || token === "undefined") return null;
   return token;
 };
@@ -10,7 +10,6 @@ const getSafeToken = () => {
 const saveUserToLocalStorage = (user, token) => {
   if (token) {
     localStorage.setItem("token", token);
-    localStorage.setItem("Tocken", token);
   }
   if (user) {
     const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
@@ -23,7 +22,6 @@ const saveUserToLocalStorage = (user, token) => {
 
 const clearUserFromLocalStorage = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("Tocken");
   localStorage.removeItem("Full name");
   localStorage.removeItem("Email");
   localStorage.removeItem("Mobile Number");
