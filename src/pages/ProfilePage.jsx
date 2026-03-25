@@ -32,6 +32,7 @@ import ThemeEditor from "../components/profile/ThemeEditor";
 import ThreeBackground from "../components/three/ThreeBackground";
 
 const ProfilePage = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("identity");
   const [savingTheme, setSavingTheme] = useState(false);
@@ -41,7 +42,7 @@ const ProfilePage = () => {
     try {
       const formData = new FormData();
       formData.append("themeSettings", JSON.stringify(newSettings));
-      if (file) formData.append("banner", file);
+      if (file) formData.append("bannerImage", file);
 
       const res = await api.patch("/auth/profile", formData, {
         headers: { "Content-Type": "multipart/form-data" },
