@@ -252,9 +252,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
 
         {/* --- Section 3: Typography Style --- */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="flex items-center gap-2">
-              <span className="text-blue-500 text-[10px] font-black">A</span>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Typography Style</span>
+          <div className="flex items-center gap-3">
+              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-[10px] font-black">A</div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Typography Style</span>
           </div>
           <div className="p-10 bg-white rounded-[2.5rem] border border-slate-100 flex flex-col items-center justify-center space-y-8 shadow-sm h-[300px]">
               <div className="relative w-full">
