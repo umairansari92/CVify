@@ -127,10 +127,12 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl md:text-4xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)] tracking-tight leading-tight"
+            className="text-2xl md:text-4xl lg:text-6xl font-black tracking-tight leading-tight"
           >
             <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} onSave={(v) => handleLiveUpdate({ headline: v })}>
-              {displayValue(personalInfo.jobTitle, "Engineering Future Solutions.")}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--text-primary)] via-[var(--primary-color)] to-[var(--text-secondary)]">
+                {displayValue(personalInfo.jobTitle, "Engineering Future Solutions.")}
+              </span>
             </InlineEdit>
           </motion.h2>
         </div>
