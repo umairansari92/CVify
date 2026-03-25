@@ -149,21 +149,23 @@ const CreateResume = () => {
               ))}
             </div>
 
-            {/* Mobile Tabs Dropdown */}
-            <div className="relative group w-full sm:flex-1 lg:hidden">
-              <select
-                className="w-full appearance-none pl-6 pr-12 py-3.5 bg-primary/10 text-primary font-black text-sm border-2 border-primary/20 rounded-2xl shadow-sm focus:border-primary transition-all cursor-pointer outline-none"
-                value={activeTab}
-                onChange={(e) => setActiveTab(e.target.value)}
-              >
-                {tabs.map((tab) => (
-                  <option key={tab.id} value={tab.id}>{tab.label} Section</option>
-                ))}
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7"></path>
-                </svg>
+            {/* Mobile Tags / Section Switcher (Dropdown) */}
+            <div className="relative group w-full lg:hidden">
+              <div className="relative">
+                <select
+                  className="w-full appearance-none pl-6 pr-12 py-4 bg-primary text-white font-black text-xs uppercase tracking-widest border-none rounded-2xl shadow-xl shadow-primary/20 cursor-pointer outline-none transition-all hover:bg-primary/90"
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                >
+                  {tabs.map((tab) => (
+                    <option key={tab.id} value={tab.id} className="bg-slate-900 text-white font-bold">{tab.label} Section</option>
+                  ))}
+                </select>
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-white/60">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
               </div>
             </div>
 
