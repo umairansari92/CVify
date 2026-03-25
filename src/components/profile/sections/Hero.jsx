@@ -122,14 +122,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             </InlineEdit>
           </motion.div>
 
-          <span className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xl mt-6">
-            <RocketIcon size={16} className="text-[var(--primary-color)]" />
-            <span className="text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">
-               <InlineEdit isOwner={isOwner} id="heroStatus" value={branding.identityLabel} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
-                 {branding.identityLabel || "Digital Architecture & Strategy"}
-               </InlineEdit>
-            </span>
-          </span>
+
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-6 pt-6">
              <a href="#showcase" className="px-8 py-4 bg-[var(--primary-color)] text-[var(--bg-color)] rounded-full font-black text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_var(--primary-color)]/30 flex items-center gap-2">
@@ -160,6 +153,21 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
                <div className="absolute -inset-4 bg-gradient-to-tr from-[var(--primary-color)] to-transparent opacity-20 blur-2xl -z-10 rounded-[3rem]" />
              </div>
            )}
+
+           {/* Identity Label Pill (Relocated below image) */}
+           <motion.div 
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 1 }}
+             className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-6 py-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]/80 backdrop-blur-xl shadow-2xl whitespace-nowrap min-w-[200px] justify-center"
+           >
+             <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse shadow-[0_0_10px_var(--primary-color)]" />
+             <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-[var(--text-primary)]">
+                <InlineEdit isOwner={isOwner} id="heroStatusBadge" value={branding.identityLabel} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
+                  {displayValue(branding.identityLabel, "Visionary Designer")}
+                </InlineEdit>
+             </span>
+           </motion.div>
         </motion.div>
       </div>
       
