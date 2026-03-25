@@ -15,6 +15,7 @@ const ModernTemplate = ({ data }) => {
     education,
     experience,
     skills,
+    technicalSkills, // fallback
     projects,
     interests,
     competencies,
