@@ -81,32 +81,38 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
         {/* LEFT COLUMN: TEXT */}
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-4">
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] leading-[1.3] tracking-normal w-full">
-            Hi, I'm{" "}
-            <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-              <span className="text-transparent uppercase" style={{ WebkitTextStroke: '2px var(--text-secondary)', opacity: 0.8 }}>
-                {displayValue(personalInfo.fullName, "User Name")}.
-              </span>
-            </InlineEdit>{" "}
-            I'm a <br className="hidden lg:block" /> Professional
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] leading-[1.2] tracking-normal w-full">
+            <span className="block mb-2 md:mb-4">
+              Hi, I'm{" "}
+              <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
+                <span className="text-transparent uppercase" style={{ WebkitTextStroke: '2px var(--text-secondary)', opacity: 0.8 }}>
+                  {displayValue(personalInfo.fullName, "User Name")}.
+                </span>
+              </InlineEdit>
+            </span>
+            <span className="block">
+              I'm a Professional
+            </span>
           </h1>
 
-          <div className="text-3xl md:text-5xl lg:text-6xl font-light text-[var(--text-secondary)] mt-2 h-14 md:h-20 flex items-center">
-            <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
-              <TypeAnimation
-                key={personalInfo.jobTitle} // Force re-render on live update
-                sequence={
-                  slogans.length > 0 
-                  ? slogans.flatMap(s => [s, 2000]) 
-                  : (personalInfo.jobTitle 
-                      ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) 
-                      : ["Software Engineer", 2000])
-                }
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-                className="text-[var(--text-secondary)]"
-              />
+          <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
+            <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
+              <div className="w-full break-words leading-snug">
+                <TypeAnimation
+                  key={personalInfo.jobTitle} // Force re-render on live update
+                  sequence={
+                    slogans.length > 0 
+                    ? slogans.flatMap(s => [s, 2000]) 
+                    : (personalInfo.jobTitle 
+                        ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) 
+                        : ["Software Engineer", 2000])
+                  }
+                  wrapper="span"
+                  speed={50}
+                  repeat={Infinity}
+                  className="text-[var(--text-secondary)]"
+                />
+              </div>
             </InlineEdit>
           </div>
 
