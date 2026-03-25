@@ -81,49 +81,33 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
         {/* LEFT COLUMN: TEXT */}
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-4">
           
-          <h2 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)]">
-            Hi, I'm
-          </h2>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] leading-[1.3] tracking-normal w-full">
+            Hi, I'm{" "}
+            <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
+              <span className="text-transparent uppercase" style={{ WebkitTextStroke: '2px var(--text-secondary)', opacity: 0.8 }}>
+                {displayValue(personalInfo.fullName, "User Name")}.
+              </span>
+            </InlineEdit>{" "}
+            I'm a <br className="hidden lg:block" /> Professional
+          </h1>
 
-          <div className="flex flex-col text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[6.5rem] font-black leading-[1.1] tracking-tighter w-full">
-            <InlineEdit className="w-full" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-              {(() => {
-                const val = displayValue(personalInfo.fullName, "User Name");
-                const parts = val.split(" ");
-                const lastWord = parts.pop() || "";
-                return (
-                  <div className="flex flex-row flex-wrap items-baseline gap-x-4 w-full">
-                    {parts.map((word, i) => (
-                      <span key={i} className="text-transparent uppercase" style={{ WebkitTextStroke: '1px var(--text-secondary)', opacity: 0.6 }}>{word}</span>
-                    ))}
-                    <span className="text-transparent uppercase" style={{ WebkitTextStroke: '1px var(--text-secondary)', opacity: 0.6 }}>{lastWord}.</span>
-                  </div>
-                );
-              })()}
+          <div className="text-3xl md:text-5xl lg:text-6xl font-light text-[var(--text-secondary)] mt-2 h-14 md:h-20 flex items-center">
+            <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
+              <TypeAnimation
+                key={personalInfo.jobTitle} // Force re-render on live update
+                sequence={
+                  slogans.length > 0 
+                  ? slogans.flatMap(s => [s, 2000]) 
+                  : (personalInfo.jobTitle 
+                      ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) 
+                      : ["Software Engineer", 2000])
+                }
+                wrapper="span"
+                speed={50}
+                repeat={Infinity}
+                className="text-[var(--text-secondary)]"
+              />
             </InlineEdit>
-          </div>
-
-          <div className="flex flex-wrap items-baseline gap-x-4 mt-2">
-            <span className="text-3xl md:text-5xl lg:text-5xl font-bold text-[var(--text-primary)] tracking-normal whitespace-nowrap">I'm a</span>
-            <span className="text-4xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] tracking-tight">
-              Professional
-            </span>
-          </div>
-
-          <div className="text-2xl md:text-4xl lg:text-5xl font-light text-[var(--text-secondary)] mt-2 h-12 md:h-16 flex items-center">
-            {isOwner ? (
-                <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
-                  {displayValue(personalInfo.jobTitle, "Software Engineer")}
-                </InlineEdit>
-            ) : (
-                <TypeAnimation
-                  sequence={slogans.length > 0 ? slogans.flatMap(s => [s, 3000]) : [personalInfo.jobTitle || "Software Engineer", 3000]}
-                  wrapper="span"
-                  speed={50}
-                  repeat={Infinity}
-                  className="text-[var(--text-secondary)]"
-                />
-            )}
           </div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-[var(--text-secondary)] font-light max-w-xl leading-relaxed mt-6">
