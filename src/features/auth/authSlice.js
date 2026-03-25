@@ -2,9 +2,32 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, signupUser, verifyOtp, getMe } from "./authThunk";
 
 const getSafeToken = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || localStorage.getItem("Tocken");
   if (!token || token === "undefined") return null;
   return token;
+};
+
+const saveUserToLocalStorage = (user, token) => {
+  if (token) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("Tocken", token);
+  }
+  if (user) {
+    const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
+    if (fullName) localStorage.setItem("Full name", fullName);
+    if (user.email) localStorage.setItem("Email", user.email);
+    if (user.phoneNumber) localStorage.setItem("Mobile Number", user.phoneNumber);
+    if (user.location) localStorage.setItem("Location", user.location);
+  }
+};
+
+const clearUserFromLocalStorage = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("Tocken");
+  localStorage.removeItem("Full name");
+  localStorage.removeItem("Email");
+  localStorage.removeItem("Mobile Number");
+  localStorage.removeItem("Location");
 };
 
 const authSlice = createSlice({
@@ -19,7 +42,7 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
+      clearUserFromLocalStorage();
     },
     updateDiamonds(state, action) {
       if (state.user) state.user.diamonds = action.payload;
@@ -28,6 +51,7 @@ const authSlice = createSlice({
       // Merge updated user fields into existing state (keeps token intact)
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
+        saveUserToLocalStorage(state.user, state.token);
       }
     },
   },
@@ -43,7 +67,7 @@ const authSlice = createSlice({
         if (token) {
           state.user = user;
           state.token = token;
-          localStorage.setItem("token", token);
+          saveUserToLocalStorage(user, token);
         }
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -59,7 +83,7 @@ const authSlice = createSlice({
         if (token) {
           state.user = user;
           state.token = token;
-          localStorage.setItem("token", token);
+          saveUserToLocalStorage(user, token);
         }
       })
       .addCase(signupUser.rejected, (state, action) => {
@@ -76,7 +100,7 @@ const authSlice = createSlice({
         if (token) {
           state.user = user;
           state.token = token;
-          localStorage.setItem("token", token);
+          saveUserToLocalStorage(user, token);
         }
       })
       .addCase(verifyOtp.rejected, (state, action) => {
@@ -89,12 +113,13 @@ const authSlice = createSlice({
       .addCase(getMe.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        saveUserToLocalStorage(action.payload, state.token);
       })
       .addCase(getMe.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.token = null;
-        localStorage.removeItem("token");
+        clearUserFromLocalStorage();
       });
   },
 });
