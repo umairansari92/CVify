@@ -128,11 +128,19 @@ const ProfilePage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                Builder Dashboard V5.2
-              </span>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://app-cvifypro.vercel.app"
+                className="flex items-center justify-center w-12 h-12 rounded-full border border-primary/20 bg-primary/5 shadow-lg shadow-primary/10 hover:scale-110 transition-all duration-500 overflow-hidden"
+              >
+                <img src="/CVify Favicon.jpg" alt="CVify" className="w-full h-full object-cover" />
+              </a>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                  Builder Dashboard V5.2
+                </span>
+              </div>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none text-text-main">
               Refine Your{" "}

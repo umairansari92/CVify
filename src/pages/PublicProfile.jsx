@@ -376,19 +376,19 @@ const PublicProfile = () => {
         <div className={`w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
           {/* Brand/Identity (Left) */}
-          <div 
+          <a
+            href="https://app-cvifypro.vercel.app"
             className="flex items-center gap-3 cursor-pointer group"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500">
-               <span className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">C</span>
+            <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500 overflow-hidden">
+               <img src="/CVify Favicon.jpg" alt="CVify" className="w-full h-full object-cover" />
             </div>
             <div className="hidden sm:block">
               <span className="text-lg font-black tracking-tighter text-[var(--text-primary)]">
                 CVify <span className="text-[var(--primary-color)]">Pro</span>
               </span>
             </div>
-          </div>
+          </a>
 
           <div className="hidden lg:flex justify-center" />
 
