@@ -6,11 +6,11 @@ import { toast } from "react-hot-toast";
 
 const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
   return (
-    <section id="expertise" className="py-32 border-b border-white/5 bg-white/[0.01]">
+    <section id="expertise" className="py-20 md:py-32 border-b border-white/5 bg-white/[0.01]">
       <div className="max-w-6xl mx-auto px-6 space-y-20">
         <div className="text-center space-y-4">
           <p className="text-xs font-black text-[var(--primary-color)] uppercase tracking-[0.5em] opacity-40">Expertise & Skills</p>
-          <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+          <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
             <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.skills} onSave={(v) => handleLiveUpdate({ "sectionNames.skills": v })}>
                 {displayValue(user.sectionNames?.skills, "Technical & Professional Skills")}
             </InlineEdit>
@@ -40,7 +40,7 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
                 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className="px-6 py-3 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center gap-3 cursor-default group transition-all"
+                className="px-4 py-2 md:px-6 md:py-3 bg-white/[0.03] border border-white/5 rounded-xl md:rounded-2xl flex items-center gap-2 md:gap-3 cursor-default group transition-all"
               >
                 <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] opacity-40 group-hover:opacity-100 group-hover:scale-125 transition-all" />
                 <span className="text-sm md:text-base font-bold text-[var(--text-primary)] tracking-wide">

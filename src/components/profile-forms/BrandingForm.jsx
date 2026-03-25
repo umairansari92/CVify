@@ -81,10 +81,11 @@ const BrandingForm = () => {
         <div className="space-y-2">
           <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Custom Username (URL)</label>
           <div className="relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted opacity-40 text-[10px] font-black uppercase tracking-tight">app-cvifypro.vercel.app/p/</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40 text-[9px] font-black uppercase tracking-tight hidden sm:block">app-cvifypro.vercel.app/p/</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40 text-[9px] font-black uppercase tracking-tight sm:hidden">cvify.pro/p/</span>
             <input
               {...register('username')}
-              className={`w-full pl-24 pr-16 py-4 rounded-2xl border ${errors.username ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
+              className={`w-full pl-20 sm:pl-44 pr-12 py-4 rounded-2xl border ${errors.username ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
             />
             <button
                 type="button"
@@ -146,7 +147,7 @@ const BrandingForm = () => {
       <button
         type="submit"
         disabled={saving || !isDirty}
-        className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+        className="w-full sm:w-auto px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Updating Branding..." : "Save Branding"}
       </button>

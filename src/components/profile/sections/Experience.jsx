@@ -7,15 +7,15 @@ import { toast } from "react-hot-toast";
 
 const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
   return (
-    <section id="journey" className="py-32 border-b border-white/5 bg-white/[0.01]">
+    <section id="journey" className="py-20 md:py-32 border-b border-white/5 bg-white/[0.01]">
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center space-y-4 mb-20"
+          className="text-center space-y-4 mb-12 md:mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter flex items-center justify-center gap-4">
+          <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter flex items-center justify-center gap-4">
              <FaHistory className="text-[var(--primary-color)]" />
              <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.experience} onSave={(v) => handleLiveUpdate({ "sectionNames.experience": v })}>
                 {displayValue(user.sectionNames?.experience, "Professional Journey")}
@@ -48,7 +48,7 @@ const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, 
                   backgroundColor: "rgba(255, 255, 255, 0.04)"
                 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="w-full bg-[var(--card-bg)] border-l-0 border-t border-b border-r border-[var(--card-border)] hover:border-l-4 hover:border-[var(--primary-color)] rounded-2xl p-8 md:p-10 text-center md:text-left shadow-xl backdrop-blur-sm transition-all duration-300 relative overflow-hidden group/card"
+                className="w-full bg-[var(--card-bg)] border-l-0 border-t border-b border-r border-[var(--card-border)] hover:border-l-4 hover:border-[var(--primary-color)] rounded-2xl p-6 sm:p-8 md:p-10 text-center md:text-left shadow-xl backdrop-blur-sm transition-all duration-300 relative overflow-hidden group/card"
               >
                 <div className="absolute top-0 left-0 w-0 h-1 bg-[var(--primary-color)] group-hover/card:w-full transition-all duration-700" />
                 
@@ -71,11 +71,11 @@ const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, 
                   </InlineEdit>
                 </div>
 
-                <h3 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mb-1 tracking-tight">
-                  <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role}</InlineEdit>
+                <h3 className="text-xl md:text-3xl font-black text-[var(--text-primary)] mb-1 tracking-tight">
+                  <InlineEdit isOwner={isOwner} label="Role" value={exp.role} onSave={(v) => handleArrayUpdate("experience", index, { role: v })}>{exp.role || "Role"}</InlineEdit>
                 </h3>
-                <h4 className="text-lg md:text-xl font-bold text-[var(--primary-color)] mb-6 opacity-90">
-                  <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company}</InlineEdit>
+                <h4 className="text-lg md:text-xl font-bold text-[var(--primary-color)] mb-4 md:mb-6 opacity-90">
+                  <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company || "Company"}</InlineEdit>
                 </h4>
 
                 <div className="text-base text-[var(--text-secondary)] leading-relaxed relative pl-4 border-l border-white/10 group-hover:border-[var(--primary-color)]/30 transition-colors">

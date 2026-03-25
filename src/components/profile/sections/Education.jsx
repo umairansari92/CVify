@@ -7,15 +7,15 @@ import { toast } from "react-hot-toast";
 
 const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
   return (
-    <section id="education" className="py-32 border-b border-white/5">
+    <section id="education" className="py-20 md:py-32 border-b border-white/5">
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center space-y-4 mb-20"
+          className="text-center space-y-4 mb-12 md:mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+          <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
              <InlineEdit isOwner={isOwner} label="Section Name" value={user.sectionNames?.education} onSave={(v) => handleLiveUpdate({ "sectionNames.education": v })}>
                 {displayValue(user.sectionNames?.education, "Academic Foundation")}
              </InlineEdit>
@@ -32,7 +32,7 @@ const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, delay: index * 0.2, ease: "easeOut" }}
-              className="relative flex flex-col items-center group mb-20 last:mb-0 w-full"
+              className="relative flex flex-col items-center group mb-12 md:mb-20 last:mb-0 w-full"
             >
               <motion.div 
                 whileHover={{ rotate: 360, scale: 1.3 }}
@@ -50,7 +50,7 @@ const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
                   rotateY: -2,
                 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[3rem] p-10 md:p-14 text-center shadow-2xl backdrop-blur-xl hover:border-[var(--primary-color)]/60 hover:bg-[var(--primary-color)]/[0.05] hover:shadow-[0_40px_80px_rgba(255,255,255,0.3)] transition-all duration-500 perspective-2000"
+                className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2rem] md:rounded-[3rem] p-6 sm:p-10 md:p-14 text-center shadow-2xl backdrop-blur-xl hover:border-[var(--primary-color)]/60 hover:bg-[var(--primary-color)]/[0.05] hover:shadow-[0_40px_80px_rgba(255,255,255,0.3)] transition-all duration-500 perspective-2000"
               >
                 <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-black text-[var(--primary-color)] tracking-[0.2em] uppercase mb-6 opacity-60 group-hover:opacity-100 transition-opacity">
                   <InlineEdit isOwner={isOwner} label="Period" value={`${edu.startDate} - ${edu.endDate || 'Present'}`} onSave={(v) => {
@@ -65,12 +65,12 @@ const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
                   </InlineEdit>
                 </div>
 
-                <h3 className="text-3xl md:text-4xl font-black text-[var(--text-primary)] leading-tight mb-3 tracking-tighter">
-                  <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree}</InlineEdit>
+                <h3 className="text-2xl md:text-4xl font-black text-[var(--text-primary)] leading-tight mb-3 tracking-tighter">
+                  <InlineEdit isOwner={isOwner} label="Degree" value={edu.degree} onSave={(v) => handleArrayUpdate("education", index, { degree: v })}>{edu.degree || "Degree"}</InlineEdit>
                 </h3>
                 
-                <h4 className="text-xl md:text-2xl font-bold text-[var(--text-secondary)] mb-8 opacity-80 decoration-[var(--primary-color)]/30 underline-offset-8">
-                  <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution}</InlineEdit>
+                <h4 className="text-lg md:text-2xl font-bold text-[var(--text-secondary)] mb-6 md:mb-8 opacity-80 decoration-[var(--primary-color)]/30 underline-offset-8">
+                  <InlineEdit isOwner={isOwner} label="Institution" value={edu.institution} onSave={(v) => handleArrayUpdate("education", index, { institution: v })}>{edu.institution || "Institution"}</InlineEdit>
                 </h4>
 
                 {edu.description && (

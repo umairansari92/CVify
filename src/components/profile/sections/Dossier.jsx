@@ -11,12 +11,12 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
   if (!isOwner && achievements.length === 0 && certifications.length === 0 && languages.length === 0) return null;
 
   return (
-    <section id="journey" className="py-32 border-b border-white/5 bg-white/[0.02]">
-      <div className="max-w-6xl mx-auto px-6 space-y-24">
+    <section id="journey" className="py-20 md:py-32 border-b border-white/5 bg-white/[0.02]">
+      <div className="max-w-6xl mx-auto px-6 space-y-16 md:space-y-24">
         
         {/* Certifications & Achievements Title */}
-        <div className="text-center space-y-4">
-          <h2 className="text-4xl md:text-6xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+        <div className="text-center space-y-4 mb-12 md:mb-20">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
             The Credential Dossier
           </h2>
           <div className="h-1.5 w-24 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
@@ -38,7 +38,7 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all group"
+                  className="p-6 md:p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] md:rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all group"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="space-y-1">
@@ -74,7 +74,7 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all"
+                  className="p-6 md:p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] md:rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="space-y-1">

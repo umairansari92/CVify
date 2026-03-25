@@ -80,14 +80,14 @@ const ProfilePage = () => {
       <ThreeBackground />
       
       {/* --- DASHBOARD HEADER --- */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 pb-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
               <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Builder Dashboard V5.2</span>
             </div>
-            <h1 className="text-5xl font-black tracking-tight leading-none text-text-main">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none text-text-main">
               Refine Your <span className="text-gradient italic">Digital Identity</span>.
             </h1>
             <p className="text-text-muted max-w-xl text-lg font-bold leading-relaxed opacity-70">
@@ -135,13 +135,13 @@ const ProfilePage = () => {
       </div>
 
       {/* --- CONTENT AREA --- */}
-      <div className="max-w-4xl mx-auto px-6 pb-24 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-24 relative z-10">
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="premium-card p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden"
+          className="premium-card p-6 sm:p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden"
         >
           {activeTab === 'identity' && <PersonalInfoForm />}
           {activeTab === 'branding' && (

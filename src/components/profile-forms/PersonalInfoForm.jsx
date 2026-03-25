@@ -157,7 +157,7 @@ const PersonalInfoForm = () => {
       <button
         type="submit"
         disabled={saving || (!isDirty && !imageFile)}
-        className="px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
+        className="w-full sm:w-auto px-10 py-4 bg-primary hover:bg-primary/80 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-50"
       >
         {saving ? "Syncing..." : "Save Identity"}
       </button>

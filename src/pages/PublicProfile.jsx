@@ -372,16 +372,16 @@ const PublicProfile = () => {
       )}
 
       {/* --- PREMIUM FLOATING NAVBAR --- */}
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 flex justify-center ${scrolled ? 'pt-4' : 'pt-8'}`}>
-        <div className={`w-full max-w-7xl px-8 h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 flex justify-center ${scrolled ? 'pt-2 sm:pt-4' : 'pt-6 sm:pt-8'}`}>
+        <div className={`w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
           {/* Brand/Identity (Left) */}
           <div 
             className="flex items-center gap-3 cursor-pointer group"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500">
-               <span className="text-2xl font-black text-[var(--text-primary)]">C</span>
+            <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500">
+               <span className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">C</span>
             </div>
             <div className="hidden sm:block">
               <span className="text-lg font-black tracking-tighter text-[var(--text-primary)]">
@@ -439,7 +439,7 @@ const PublicProfile = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed top-32 left-6 right-6 z-[90] p-8 bg-[var(--bg-primary)]/95 backdrop-blur-2xl border border-[var(--card-border)] rounded-[3rem] shadow-2xl lg:hidden flex flex-col gap-6"
+              className="fixed top-24 sm:top-32 left-4 right-4 sm:left-6 sm:right-6 z-[90] p-6 sm:p-8 bg-[var(--bg-primary)]/95 backdrop-blur-2xl border border-[var(--card-border)] rounded-[2rem] sm:rounded-[3rem] shadow-2xl lg:hidden flex flex-col gap-4 sm:gap-6"
             >
               {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
                 <a 

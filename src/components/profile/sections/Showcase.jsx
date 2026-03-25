@@ -6,15 +6,15 @@ import InlineEdit from "../InlineEdit";
 
 const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArrayUpdate, dispatch, deleteProjectThunk, openProjectModalThunk }) => {
   return (
-    <section id="showcase" className="py-32 border-b border-white/5">
+    <section id="showcase" className="py-20 md:py-32 border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20 space-y-4"
+          className="text-center mb-12 md:mb-20 space-y-4"
         >
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter flex items-center justify-center gap-4">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter flex items-center justify-center gap-4">
             <FaBriefcase className="text-[var(--primary-color)]" />
             <span className="text-[var(--text-primary)]">Featured </span>
             <span className="text-[var(--primary-color)]">Showcase</span>

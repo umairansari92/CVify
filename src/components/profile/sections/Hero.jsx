@@ -71,7 +71,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
   };
 
   return (
-    <section id="home" className="relative min-h-[100vh] flex flex-col justify-center pt-36 lg:pt-48 pb-40 outline-none bg-gradient-to-b from-[var(--bg-color)] to-[var(--card-bg)]" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5vw))' }}>
+    <section id="home" className="relative min-h-[100vh] flex flex-col justify-center pt-28 sm:pt-36 lg:pt-48 pb-24 lg:pb-40 outline-none bg-gradient-to-b from-[var(--bg-color)] to-[var(--card-bg)]" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5vw))' }}>
       {/* Background Glow */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-full max-w-3xl h-[600px] bg-[var(--primary-color)]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -143,9 +143,9 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
         </motion.div>
 
         {/* RIGHT COLUMN: PORTRAIT */}
-        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-5 flex justify-center lg:justify-end relative mt-16 lg:mt-0">
+        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-5 flex justify-center lg:justify-end relative mt-16 mx-auto lg:mt-0 lg:mx-0 w-full">
            {personalInfo.image && (
-             <div className="w-full max-w-sm md:max-w-md lg:w-[420px] lg:h-[550px] rounded-[2rem] border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20">
+             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-[2rem] border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20">
                <img src={personalInfo.image} alt="Profile" className="w-full h-full object-cover rounded-[1.5rem]" />
                
                {/* Floating Badges */}

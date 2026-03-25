@@ -27,7 +27,7 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
   };
 
   return (
-    <section id="contact" className="relative py-32 border-b border-[var(--card-border)] overflow-hidden bg-[var(--bg-primary)]/50">
+    <section id="contact" className="relative py-20 md:py-32 border-b border-[var(--card-border)] overflow-hidden bg-[var(--bg-primary)]/50">
       <div className="absolute top-10 left-0 w-full text-center pointer-events-none select-none overflow-hidden flex justify-center">
         <h2 className="text-[10vw] font-black text-[var(--text-primary)] opacity-[0.03] uppercase tracking-tighter whitespace-nowrap">
           For Assistance
@@ -35,8 +35,8 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex justify-center gap-3">
+        <div className="text-center mb-12 md:mb-20">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex justify-center gap-3">
             Contact <span className="text-[var(--primary-color)]">Me</span>
           </h2>
         </div>
@@ -107,7 +107,7 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
             </div>
           </div>
 
-          <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
+          <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-sm">
             <form className="space-y-6" onSubmit={handleContactSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input 
