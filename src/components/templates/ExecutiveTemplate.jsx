@@ -1,4 +1,5 @@
 import React from "react";
+import { getDynamicWhatsAppLink } from "../../utils/whatsappUtils";
 import {
   FaLinkedin,
   FaGithub,
@@ -76,7 +77,7 @@ const ExecutiveTemplate = ({ data }) => {
           )}
           {personalInfo?.phone && (
             <a
-              href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}`}
+              href={getDynamicWhatsAppLink(personalInfo?.fullName, personalInfo?.phone)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 uppercase tracking-tighter mx-5 mb-4 hover:underline text-green-600 font-black"

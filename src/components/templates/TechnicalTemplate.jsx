@@ -1,4 +1,5 @@
 import React from "react";
+import { getDynamicWhatsAppLink } from "../../utils/whatsappUtils";
 import ResumeSection from "../common/ResumeSection";
 import {
   FaLinkedin,
@@ -92,12 +93,12 @@ const TechnicalTemplate = ({ data }) => {
           )}
           {personalInfo?.phone && (
             <a
-              href={`https://wa.me/${personalInfo.phone.replace(/\D/g, "")}`}
+              href={getDynamicWhatsAppLink(personalInfo?.fullName, personalInfo?.phone)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center mr-6 mb-2 hover:text-green-400 text-green-500 transition-colors"
+              className="flex items-center gap-2 group-hover:underline text-green-600 font-bold"
             >
-              <FaWhatsapp className="text-slate-600 mr-1.5" /> WhatsApp
+              <FaWhatsapp /> WhatsApp
             </a>
           )}
           {personalInfo?.location && (

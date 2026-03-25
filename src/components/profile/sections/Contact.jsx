@@ -1,4 +1,5 @@
 import React from "react";
+import { getDynamicWhatsAppLink } from "../../../utils/whatsappUtils";
 import { MapPin, Mail, Phone, Send } from "lucide-react";
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaWhatsapp } from "react-icons/fa";
 import InlineEdit from "../InlineEdit";
@@ -91,12 +92,12 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
                 {['linkedin', 'github', 'whatsapp', 'twitter', 'portfolio'].map((platform) => {
                   let link = user.socialLinks?.[platform];
                   
-                  // WhatsApp Logic: Use phone number if platform is whatsapp
+                  // WhatsApp Logic: Use dynamic link
                   if (platform === 'whatsapp') {
                     const phone = user.phoneNumber || user.personalInfo?.phoneNumber;
+                    const ownerName = personalInfo.fullName || user.firstName;
                     if (!phone) return null;
-                    const cleanPhone = phone.replace(/\D/g, ''); // Remove all non-digits
-                    link = `https://wa.me/${cleanPhone}`;
+                    link = getDynamicWhatsAppLink(ownerName, phone);
                   }
 
                   if (!link && !isOwner) return null;
