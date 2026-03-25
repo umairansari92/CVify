@@ -4,7 +4,15 @@ import { Download } from "lucide-react";
 import InlineEdit from "../InlineEdit";
 
 const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setShowResumeModal }) => {
-  const personalInfo = user?.personalInfo || {};
+  const personalInfo = user?.personalInfo || {
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+    image: user?.profileImage,
+    jobTitle: user?.headline,
+    objective: user?.bio,
+    location: user?.location,
+    email: user?.email,
+    phone: user?.phoneNumber
+  };
 
   return (
     <section id="about" className="py-40 relative overflow-hidden">

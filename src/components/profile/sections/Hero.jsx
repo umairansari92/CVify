@@ -6,7 +6,15 @@ import { TypeAnimation } from "react-type-animation";
 import InlineEdit from "../InlineEdit";
 
 const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate }) => {
-  const personalInfo = user?.personalInfo || {};
+  const personalInfo = user?.personalInfo || {
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+    image: user?.profileImage,
+    jobTitle: user?.headline,
+    objective: user?.bio,
+    location: user?.location,
+    email: user?.email,
+    phone: user?.phoneNumber
+  };
   const branding = user?.branding || {};
   const slogans = user?.heroSlogans || [];
 

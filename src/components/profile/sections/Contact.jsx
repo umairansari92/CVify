@@ -4,7 +4,15 @@ import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaFacebook, FaGlobe } fro
 import InlineEdit from "../InlineEdit";
 
 const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handleContactSubmit, isSending, handleLiveUpdate, ensureAbsoluteUrl }) => {
-  const personalInfo = user?.personalInfo || {};
+  const personalInfo = user?.personalInfo || {
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+    image: user?.profileImage,
+    jobTitle: user?.headline,
+    objective: user?.bio,
+    location: user?.location,
+    email: user?.email,
+    phone: user?.phoneNumber
+  };
 
   const getIcon = (platform) => {
     switch(platform) {
