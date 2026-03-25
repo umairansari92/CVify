@@ -375,20 +375,28 @@ const PublicProfile = () => {
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 flex justify-center ${scrolled ? 'pt-2 sm:pt-4' : 'pt-6 sm:pt-8'}`}>
         <div className={`w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
-          {/* Brand/Identity (Left) */}
-          <a
-            href="https://app-cvifypro.vercel.app"
-            className="flex items-center gap-3 cursor-pointer group"
+          {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}
+          <div 
+            className="flex items-center gap-3 w-1/3 cursor-pointer group" 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[0_0_15px_var(--primary-color)]/20 group-hover:scale-110 transition-all duration-500 overflow-hidden">
-               <img src="/CVify Favicon.jpg" alt="CVify" className="w-full h-full object-cover" />
+            {/* Glowing App Icon */}
+            <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-blue-600 shadow-[0_0_20px_var(--primary-color)]/40 overflow-hidden border border-white/10 transition-transform duration-300 group-hover:scale-105">
+              {/* Shine Animation overlay */}
+              <div className="absolute inset-0 bg-white/30 w-[150%] h-full transform -skew-x-12 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-out z-0"></div>
+              <span className="text-white font-black text-2xl tracking-tighter relative z-10">CV</span>
             </div>
-            <div className="hidden sm:block">
-              <span className="text-lg font-black tracking-tighter text-[var(--text-primary)]">
-                CVify <span className="text-[var(--primary-color)]">Pro</span>
+            
+            {/* Logo Text */}
+            <div className="hidden sm:flex flex-col justify-center">
+              <span className="text-xl font-black tracking-tight text-[var(--text-primary)] leading-none mb-0.5">
+                CVify<span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400">Pro</span>
+              </span>
+              <span className="text-[9px] text-[var(--text-secondary)] font-bold tracking-[0.2em] uppercase">
+                Portfolio Engine
               </span>
             </div>
-          </a>
+          </div>
 
           <div className="hidden lg:flex justify-center" />
 
