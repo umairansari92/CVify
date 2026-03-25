@@ -37,20 +37,20 @@ const ThemePanel = ({ isOpen, onClose, theme, onUpdate, isUpdating, presets }) =
               <label className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] flex items-center gap-2">
                  <FaFillDrip className="text-blue-500" /> Style Presets
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {presets.map((p) => (
                   <button
                     key={p.name}
                     onClick={() => onUpdate({ ...theme, ...p })}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all ${
+                    className={`flex flex-col items-center gap-3 p-5 rounded-[2rem] border-2 transition-all ${
                       theme.headerBg === p.headerBg
-                        ? "bg-blue-500/10 border-blue-500 ring-4 ring-blue-500/5 text-blue-400"
+                        ? "bg-blue-500/10 border-blue-500 text-blue-400 shadow-lg shadow-blue-500/5"
                         : "bg-white/5 border-transparent hover:border-white/10 text-slate-400 hover:text-white"
                     }`}
                   >
-                    <span className="text-2xl">{p.icon}</span>
-                    <span className="text-[8px] font-black uppercase leading-tight tracking-tighter">
-                      {p.name.split(" ")[0]}
+                    <span className="text-3xl filter drop-shadow-md">{p.icon}</span>
+                    <span className="text-[9px] font-black uppercase leading-none tracking-tighter text-center">
+                      {p.name}
                     </span>
                   </button>
                 ))}
