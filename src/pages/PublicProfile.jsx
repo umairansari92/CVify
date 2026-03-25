@@ -396,7 +396,7 @@ const PublicProfile = () => {
               <span className="text-xl font-black tracking-tight text-[var(--text-primary)] leading-none mb-0.5">
                 CVify<span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400">Pro</span>
               </span>
-              <span className="text-[9px] text-[var(--text-secondary)] font-bold tracking-[0.2em] uppercase">
+              <span className="text-[9px] text-[var(--text-secondary)] font-bold tracking-[0.1em] uppercase">
                 Portfolio Engine
               </span>
             </div>
