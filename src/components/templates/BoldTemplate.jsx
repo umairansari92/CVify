@@ -14,9 +14,11 @@ const BoldTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
+    technicalSkills, // fallback
+    skills,          // new unified structure
     interests,
-    projects,
+    competencies,
+    softwareProficiency,
     customSections,
     themeColor = "#111827",
     fontFamily = "Inter",
@@ -234,7 +236,7 @@ const BoldTemplate = ({ data }) => {
             )}
 
             {/* Technical Skills - Improved */}
-            {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
+            {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
                 <div
                   className="bg-gray-50 p-5 rounded mb-8"
                   style={{ pageBreakInside: "avoid" }}
@@ -272,13 +274,13 @@ const BoldTemplate = ({ data }) => {
                     )}
 
                     {/* Legacy Fallback */}
-                    {data.technicalSkills?.frontend?.length > 0 && (
+                    {technicalSkills?.frontend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Frontend
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {data.technicalSkills.frontend.map((s, i) => (
+                          {technicalSkills.frontend.map((s, i) => (
                             <span
                               key={i}
                               className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -289,13 +291,13 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills?.backend?.length > 0 && (
+                    {technicalSkills?.backend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Backend
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {data.technicalSkills.backend.map((s, i) => (
+                          {technicalSkills.backend.map((s, i) => (
                             <span
                               key={i}
                               className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -306,13 +308,13 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills?.database?.length > 0 && (
+                    {technicalSkills?.database?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Database
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {data.technicalSkills.database.map((s, i) => (
+                          {technicalSkills.database.map((s, i) => (
                             <span
                               key={i}
                               className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -323,13 +325,13 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills?.aiDevOps?.length > 0 && (
+                    {technicalSkills?.aiDevOps?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           AI & DevOps
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {data.technicalSkills.aiDevOps.map((s, i) => (
+                          {technicalSkills.aiDevOps.map((s, i) => (
                             <span
                               key={i}
                               className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -340,13 +342,13 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
-                    {data.technicalSkills?.tools?.length > 0 && (
+                    {technicalSkills?.tools?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
                           Tools/Others
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {data.technicalSkills.tools.map((s, i) => (
+                          {technicalSkills.tools.map((s, i) => (
                             <span
                               key={i}
                               className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -362,7 +364,7 @@ const BoldTemplate = ({ data }) => {
               )}
 
             {/* Competencies */}
-            {data.competencies?.length > 0 && (
+            {competencies?.length > 0 && (
               <div
                 className="bg-gray-50 p-5 rounded mb-8"
                 style={{ pageBreakInside: "avoid" }}
@@ -371,7 +373,7 @@ const BoldTemplate = ({ data }) => {
                   Core Competencies
                 </h3>
                 <ul className="list-disc list-inside text-sm text-gray-700">
-                  {data.competencies.map((c, i) => (
+                  {competencies.map((c, i) => (
                     <li key={i} className="mb-1">
                       {c}
                     </li>
@@ -381,7 +383,7 @@ const BoldTemplate = ({ data }) => {
             )}
 
             {/* Software Proficiency */}
-            {data.softwareProficiency?.length > 0 && (
+            {softwareProficiency?.length > 0 && (
               <div
                 className="bg-gray-50 p-5 rounded mb-8"
                 style={{ pageBreakInside: "avoid" }}
@@ -390,7 +392,7 @@ const BoldTemplate = ({ data }) => {
                   Software
                 </h3>
                 <div className="flex flex-wrap">
-                  {data.softwareProficiency.map((s, i) => (
+                  {softwareProficiency.map((s, i) => (
                     <span
                       key={i}
                       className="bg-gray-200 px-2 py-1 text-xs rounded text-gray-800 mr-2 mb-2"

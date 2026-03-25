@@ -16,6 +16,9 @@ const ProfessionalTemplate = ({ data }) => {
     experience,
     skills,
     interests,
+    technicalSkills, // fallback
+    competencies,
+    softwareProficiency,
     projects,
     customSections,
     themeColor = "#2563eb",
@@ -179,7 +182,7 @@ const ProfessionalTemplate = ({ data }) => {
         )}
 
         {/* Skills (Sidebar) - Improved */}
-        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
+        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
             <div className="mt-8">
               <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 border-b border-slate-600 pb-2 mb-4">
                 Technical Expertise
@@ -208,13 +211,13 @@ const ProfessionalTemplate = ({ data }) => {
                 )}
 
                 {/* Legacy Fallback */}
-                {data.technicalSkills?.frontend?.length > 0 && (
+                {technicalSkills?.frontend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">
                       Frontend
                     </div>
                     <div className="flex flex-wrap">
-                      {data.technicalSkills.frontend.map((s, i) => (
+                      {technicalSkills.frontend.map((s, i) => (
                         <span
                           key={i}
                           className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight"
@@ -225,13 +228,13 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {data.technicalSkills?.backend?.length > 0 && (
+                {technicalSkills?.backend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">
                       Backend
                     </div>
                     <div className="flex flex-wrap">
-                      {data.technicalSkills.backend.map((s, i) => (
+                      {technicalSkills.backend.map((s, i) => (
                         <span
                           key={i}
                           className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight"
@@ -242,11 +245,11 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {data.technicalSkills?.database?.length > 0 && (
+                {technicalSkills?.database?.length > 0 && (
                    <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">Database</div>
                     <div className="flex flex-wrap">
-                      {data.technicalSkills.database.map((s, i) => (
+                      {technicalSkills.database.map((s, i) => (
                         <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
                       ))}
                     </div>

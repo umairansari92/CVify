@@ -172,13 +172,13 @@ const ModernTemplate = ({ data }) => {
                   </span>
                 </div>
               )}
-              {data.competencies?.length > 0 && (
+              {competencies?.length > 0 && (
                 <div className="mt-3">
                   <h4 className="text-xs font-bold uppercase text-gray-500 mb-1">
                     Competencies
                   </h4>
                   <div className="flex flex-wrap">
-                    {data.competencies.map((c, i) => (
+                    {competencies.map((c, i) => (
                       <span
                         key={i}
                         className="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-xs mr-2 mb-2"
@@ -193,7 +193,7 @@ const ModernTemplate = ({ data }) => {
           </div>
         )}
 
-        {data.softwareProficiency?.length > 0 && (
+        {softwareProficiency?.length > 0 && (
           <div
             style={{
               display: "inline-block",
@@ -205,7 +205,7 @@ const ModernTemplate = ({ data }) => {
               Software Proficiency
             </h3>
             <div className="flex flex-wrap gap-2">
-              {data.softwareProficiency.map((skill, index) => (
+              {softwareProficiency.map((skill, index) => (
                 <span
                   key={index}
                   className="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm mr-2 mb-2"

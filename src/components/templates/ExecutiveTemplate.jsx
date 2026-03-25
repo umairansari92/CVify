@@ -13,7 +13,10 @@ const ExecutiveTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
+    skills,          // new unified structure
+    interests,
+    competencies,
+    softwareProficiency,
     projects,
     customSections,
     themeColor = "#0f172a",
@@ -222,10 +225,7 @@ const ExecutiveTemplate = ({ data }) => {
 
           {/* Competencies Box */}
           {/* Technical Skills Box */}
-          {data.technicalSkills &&
-            Object.values(data.technicalSkills).some(
-              (arr) => arr?.length > 0,
-            ) && (
+          {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
               <div
                 className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
                 style={{ pageBreakInside: "avoid" }}
@@ -234,28 +234,43 @@ const ExecutiveTemplate = ({ data }) => {
                   Technical Expertise
                 </h3>
                 <div className="text-sm text-gray-800">
-                  {data.technicalSkills.frontend?.length > 0 && (
+                  {/* New Structure */}
+                  {skills?.technical?.length > 0 && (
+                    <div className="mb-3">
+                      <span className="font-bold underline">Skills:</span>{" "}
+                      {skills.technical.join(", ")}
+                    </div>
+                  )}
+                  {skills?.strategic?.length > 0 && (
+                    <div className="mb-3">
+                      <span className="font-bold underline">Strategic:</span>{" "}
+                      {skills.strategic.join(", ")}
+                    </div>
+                  )}
+
+                  {/* Legacy Fallback */}
+                  {technicalSkills?.frontend?.length > 0 && (
                     <div className="mb-3">
                       <span className="font-bold underline">Frontend:</span>{" "}
-                      {data.technicalSkills.frontend.join(", ")}
+                      {technicalSkills.frontend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.backend?.length > 0 && (
+                  {technicalSkills?.backend?.length > 0 && (
                     <div className="mb-3">
                       <span className="font-bold underline">Backend:</span>{" "}
-                      {data.technicalSkills.backend.join(", ")}
+                      {technicalSkills.backend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.database?.length > 0 && (
+                  {technicalSkills?.database?.length > 0 && (
                     <div className="mb-3">
                       <span className="font-bold underline">Database:</span>{" "}
-                      {data.technicalSkills.database.join(", ")}
+                      {technicalSkills.database.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.aiDevOps?.length > 0 && (
+                  {technicalSkills?.aiDevOps?.length > 0 && (
                     <div className="mb-3">
                       <span className="font-bold underline">AI/DevOps:</span>{" "}
-                      {data.technicalSkills.aiDevOps.join(", ")}
+                      {technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
                 </div>
@@ -263,7 +278,7 @@ const ExecutiveTemplate = ({ data }) => {
             )}
 
           {/* Competencies Box */}
-          {data.competencies?.length > 0 && (
+          {competencies?.length > 0 && (
             <div
               className="bg-gray-100 p-6 border-l-4 border-gray-900 mb-10"
               style={{ pageBreakInside: "avoid" }}
@@ -272,7 +287,7 @@ const ExecutiveTemplate = ({ data }) => {
                 Core Competencies
               </h3>
               <ul className="">
-                {data.competencies.map((skill, index) => (
+                {competencies.map((skill, index) => (
                   <li
                     key={index}
                     className="text-sm text-gray-800 font-semibold border-b border-gray-300 pb-2 mb-2 last:border-0"
@@ -285,13 +300,13 @@ const ExecutiveTemplate = ({ data }) => {
           )}
 
           {/* Software Box */}
-          {data.softwareProficiency?.length > 0 && (
+          {softwareProficiency?.length > 0 && (
             <div className="bg-gray-100 p-6 border-l-4 border-gray-900">
               <h3 className="text-base font-bold uppercase mb-4 text-gray-900">
                 Software
               </h3>
               <div className="flex flex-wrap gap-2 text-sm text-gray-800 font-medium">
-                {data.softwareProficiency.join(" • ")}
+                {softwareProficiency.join(" • ")}
               </div>
             </div>
           )}

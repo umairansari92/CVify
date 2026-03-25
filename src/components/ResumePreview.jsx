@@ -59,7 +59,7 @@ const ResumePreview = ({ resume, templateId, isExporting = false }) => {
       case "elegant":
         return <ElegantTemplate data={resume} />;
       case "technical":
-        return <TechnicalPDF data={resume} />;
+        return <TechnicalTemplate data={resume} />;
       case "executive":
         return <ExecutiveTemplate data={resume} />;
       case "global":

@@ -13,7 +13,11 @@ const MinimalTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
+    technicalSkills, // fallback
+    skills,          // new unified structure
+    interests,
+    competencies,
+    softwareProficiency,
     projects,
     customSections,
     themeColor = "#0f172a",
@@ -216,66 +220,77 @@ const MinimalTemplate = ({ data }) => {
           </div>
         )}
 
-        {((data.technicalSkills &&
-          Object.values(data.technicalSkills).some((arr) => arr?.length > 0)) ||
-          data.competencies?.length > 0) && (
+        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0)) ||
+          competencies?.length > 0) && (
           <div>
             <h2 className="text-xs font-bold tracking-widest text-center mb-6 text-black">
               Skills & Competencies
             </h2>
 
             {/* Technical Skills */}
-            {data.technicalSkills &&
-              Object.values(data.technicalSkills).some(
-                (arr) => arr?.length > 0,
-              ) && (
+            {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
                 <div className="text-center text-sm text-gray-700 leading-7 mb-4">
-                  {data.technicalSkills.frontend?.length > 0 && (
+                  {/* New Structure */}
+                  {skills?.technical?.length > 0 && (
+                    <div className="mb-1">
+                      <span className="font-semibold">Skills:</span>{" "}
+                      {skills.technical.join(", ")}
+                    </div>
+                  )}
+                  {skills?.strategic?.length > 0 && (
+                    <div className="mb-1">
+                      <span className="font-semibold">Strategic:</span>{" "}
+                      {skills.strategic.join(", ")}
+                    </div>
+                  )}
+
+                  {/* Legacy Fallback */}
+                  {technicalSkills?.frontend?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Frontend:</span>{" "}
-                      {data.technicalSkills.frontend.join(", ")}
+                      {technicalSkills.frontend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.backend?.length > 0 && (
+                  {technicalSkills?.backend?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Backend:</span>{" "}
-                      {data.technicalSkills.backend.join(", ")}
+                      {technicalSkills.backend.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.database?.length > 0 && (
+                  {technicalSkills?.database?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Database:</span>{" "}
-                      {data.technicalSkills.database.join(", ")}
+                      {technicalSkills.database.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.aiDevOps?.length > 0 && (
+                  {technicalSkills?.aiDevOps?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">AI/DevOps:</span>{" "}
-                      {data.technicalSkills.aiDevOps.join(", ")}
+                      {technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
-                  {data.technicalSkills.tools?.length > 0 && (
+                  {technicalSkills?.tools?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Tools:</span>{" "}
-                      {data.technicalSkills.tools.join(", ")}
+                      {technicalSkills.tools.join(", ")}
                     </div>
                   )}
                 </div>
               )}
 
             {/* Competencies */}
-            {data.competencies?.length > 0 && (
+            {competencies?.length > 0 && (
               <div className="text-center text-sm text-gray-700 leading-7 mb-4">
                 <span className="font-semibold block mb-1">Competencies</span>
-                {data.competencies.join(" • ")}
+                {competencies.join(" • ")}
               </div>
             )}
 
             {/* Software */}
-            {data.softwareProficiency?.length > 0 && (
+            {softwareProficiency?.length > 0 && (
               <div className="text-center text-sm text-gray-700 leading-7">
                 <span className="font-semibold block mb-1">Software</span>
-                {data.softwareProficiency.join(" • ")}
+                {softwareProficiency.join(" • ")}
               </div>
             )}
           </div>

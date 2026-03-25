@@ -13,7 +13,11 @@ const ClearTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
+    technicalSkills, // fallback
+    skills,          // new unified structure
+    interests,
+    competencies,
+    softwareProficiency,
     projects,
     customSections,
     themeColor = "#1e293b",
@@ -112,22 +116,42 @@ const ClearTemplate = ({ data }) => {
 
         {/* Skills */}
         {/* Technical Skills */}
-        {data.technicalSkills &&
-          Object.values(data.technicalSkills).some(
-            (arr) => arr?.length > 0,
-          ) && (
+        {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
             <div className="mb-8" style={{ pageBreakInside: "avoid" }}>
               <h3 className="text-lg font-bold border-b border-slate-600 pb-1 mb-3">
                 Technical Skills
               </h3>
               <div className="">
-                {data.technicalSkills.frontend?.length > 0 && (
+                {/* New Structure */}
+                {skills?.technical?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs uppercase text-slate-400 mb-1">Technical</div>
+                    <div className="flex flex-wrap gap-1">
+                      {skills.technical.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {skills?.strategic?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs uppercase text-slate-400 mb-1">Strategic</div>
+                    <div className="flex flex-wrap gap-1">
+                      {skills.strategic.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Legacy Fallback */}
+                {technicalSkills?.frontend?.length > 0 && (
                   <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       Frontend
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {data.technicalSkills.frontend.map((s, i) => (
+                      {technicalSkills.frontend.map((s, i) => (
                         <span
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -142,13 +166,13 @@ const ClearTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {data.technicalSkills.backend?.length > 0 && (
+                {technicalSkills?.backend?.length > 0 && (
                   <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       Backend
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {data.technicalSkills.backend.map((s, i) => (
+                      {technicalSkills.backend.map((s, i) => (
                         <span
                           key={i}
                           className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -159,13 +183,13 @@ const ClearTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {data.technicalSkills.aiDevOps?.length > 0 && (
+                {technicalSkills?.aiDevOps?.length > 0 && (
                   <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       AI & DevOps
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {data.technicalSkills.aiDevOps.map((s, i) => (
+                      {technicalSkills.aiDevOps.map((s, i) => (
                         <span
                           key={i}
                           className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
@@ -176,17 +200,16 @@ const ClearTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
-                {/* Combine others if needed or show all */}
-                {(data.technicalSkills.database?.length > 0 ||
-                  data.technicalSkills.tools?.length > 0) && (
+                {(technicalSkills?.database?.length > 0 ||
+                  technicalSkills?.tools?.length > 0) && (
                   <div>
                     <div className="text-xs uppercase text-slate-400 mb-1">
                       Tools & DB
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {[
-                        ...(data.technicalSkills.database || []),
-                        ...(data.technicalSkills.tools || []),
+                        ...(technicalSkills?.database || []),
+                        ...(technicalSkills?.tools || []),
                       ].map((s, i) => (
                         <span
                           key={i}
@@ -203,13 +226,13 @@ const ClearTemplate = ({ data }) => {
           )}
 
         {/* Competencies */}
-        {data.competencies?.length > 0 && (
+        {competencies?.length > 0 && (
           <div className="mb-8">
             <h3 className="text-lg font-bold border-b border-slate-600 pb-1 mb-3">
               Competencies
             </h3>
             <div className="flex flex-wrap gap-2">
-              {data.competencies.map((skill, index) => (
+              {competencies.map((skill, index) => (
                 <span
                   key={index}
                   className="bg-slate-700 px-2 py-1 text-xs rounded mr-2 mb-2"
@@ -222,13 +245,13 @@ const ClearTemplate = ({ data }) => {
         )}
 
         {/* Software */}
-        {data.softwareProficiency?.length > 0 && (
+        {softwareProficiency?.length > 0 && (
           <div className="mb-8">
             <h3 className="text-lg font-bold border-b border-slate-600 pb-1 mb-3">
               Software
             </h3>
             <div className="flex flex-wrap gap-2">
-              {data.softwareProficiency.map((skill, index) => (
+              {softwareProficiency.map((skill, index) => (
                 <span
                   key={index}
                   className="bg-slate-700 px-2 py-1 text-xs rounded mr-2 mb-2"

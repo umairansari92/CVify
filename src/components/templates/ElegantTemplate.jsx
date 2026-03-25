@@ -14,8 +14,11 @@ const ElegantTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
+    technicalSkills, // fallback
+    skills,          // new unified structure
     interests,
+    competencies,
+    softwareProficiency,
     projects,
     customSections,
     themeColor = "#2c3e50",
@@ -258,7 +261,7 @@ const ElegantTemplate = ({ data }) => {
           )}
 
           {/* Technical Skills - Improved */}
-          {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (data.technicalSkills && Object.values(data.technicalSkills).some((arr) => arr?.length > 0))) && (
+          {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
               <section>
                 <h2
                   className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
@@ -317,7 +320,7 @@ const ElegantTemplate = ({ data }) => {
             )}
 
           {/* Competencies */}
-          {data.competencies?.length > 0 && (
+          {competencies?.length > 0 && (
             <section>
               <h2
                 className="text-center text-xl uppercase tracking-widest border-t border-b border-gray-200 py-2 mb-6"
@@ -326,7 +329,7 @@ const ElegantTemplate = ({ data }) => {
                 Core Competencies
               </h2>
               <div className="flex flex-wrap justify-center">
-                {data.competencies.map((skill, index) => (
+                {competencies.map((skill, index) => (
                   <span
                     key={index}
                     className="border border-gray-300 px-3 py-1 rounded-full text-sm text-gray-600 italic mr-3 mb-3"
