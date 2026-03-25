@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
+import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
 import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode } from 'react-icons/fa';
 import { awardSchema, certificationSchema, languageSchema } from '../../utils/validationSchemas';
@@ -92,6 +93,7 @@ const CredentialsManager = () => {
       });
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
+        dispatch(updateActiveProfileLocally(res.data.user));
         toast.success("🔐 Credentials synchronized!");
       }
     } catch (err) {

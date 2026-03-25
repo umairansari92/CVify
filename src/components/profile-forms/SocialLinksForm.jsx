@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
+import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
 import { FaLinkedin, FaGithub, FaTwitter, FaGlobe, FaLink } from 'react-icons/fa';
 import { socialLinksSchema } from '../../utils/validationSchemas';
@@ -45,6 +46,7 @@ const SocialLinksForm = () => {
       const res = await api.patch("/auth/profile", { socialLinks: data });
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
+        dispatch(updateActiveProfileLocally(res.data.user));
         toast.success("🔗 Links synchronized!");
       }
     } catch (err) {

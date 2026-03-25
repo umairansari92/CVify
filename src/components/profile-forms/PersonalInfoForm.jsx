@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
+import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { personalInfoSchema } from '../../utils/validationSchemas';
@@ -67,6 +68,7 @@ const PersonalInfoForm = () => {
       const res = await api.patch("/auth/profile", fd);
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
+        dispatch(updateActiveProfileLocally(res.data.user));
         setImgFile(null);
         toast.success("✅ Personal info updated!");
       }
