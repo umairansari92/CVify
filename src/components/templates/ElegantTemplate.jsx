@@ -15,12 +15,12 @@ const ElegantTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    technicalSkills, // fallback
-    skills,          // new unified structure
+    projects,
+    skills,
+    technicalSkills,
     interests,
     competencies,
     softwareProficiency,
-    projects,
     customSections,
     themeColor = "#2c3e50",
     fontFamily = "Playfair Display",

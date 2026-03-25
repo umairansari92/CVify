@@ -16,9 +16,9 @@ const TechnicalTemplate = ({ data }) => {
     education,
     experience,
     projects,
-    technicalSkills, // fallback
-    skills,          // new unified structure
-    interests,       // new unified structure
+    skills,
+    technicalSkills,
+    interests,
     competencies,
     softwareProficiency,
     customSections,

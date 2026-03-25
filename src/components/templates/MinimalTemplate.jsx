@@ -14,12 +14,12 @@ const MinimalTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    technicalSkills, // fallback
-    skills,          // new unified structure
+    projects,
+    skills,
+    technicalSkills,
     interests,
     competencies,
     softwareProficiency,
-    projects,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Inter",

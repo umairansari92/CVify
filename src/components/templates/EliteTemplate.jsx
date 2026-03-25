@@ -14,16 +14,16 @@ const EliteTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
-    interests,
-    technicalSkills,
     projects,
+    skills,
+    technicalSkills,
+    interests,
     competencies,
     softwareProficiency,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Playfair Display",
-  } = (data || {});
+  } = data || {};
 
   const getFontFamily = (font) => {
     switch (font) {

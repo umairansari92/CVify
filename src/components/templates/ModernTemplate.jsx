@@ -15,14 +15,14 @@ const ModernTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,
-    technicalSkills, // fallback
     projects,
+    skills,
+    technicalSkills,
     interests,
     competencies,
     softwareProficiency,
     customSections,
-    themeColor = "#2563eb", // Modern defaults to Blue
+    themeColor = "#2563eb",
     fontFamily = "Inter",
   } = data || {};
 

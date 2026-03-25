@@ -14,15 +14,15 @@ const ExecutiveTemplate = ({ data }) => {
     personalInfo,
     education,
     experience,
-    skills,          // new unified structure
+    projects,
+    skills,
+    technicalSkills,
     interests,
     competencies,
     softwareProficiency,
-    projects,
     customSections,
     themeColor = "#0f172a",
     fontFamily = "Inter",
-    technicalSkills,
   } = data || {};
 
   const getFontFamily = (font) => {
