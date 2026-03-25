@@ -263,17 +263,24 @@ const PublicProfile = () => {
 
   return (
     <div
-      className="min-h-screen transition-colors duration-500 selection:bg-[var(--primary-color)] selection:text-white overflow-x-hidden"
+      className="min-h-screen transition-colors duration-500 selection:bg-[var(--primary)] selection:text-white overflow-x-hidden"
       style={{
         backgroundColor: theme.bodyBg,
         fontFamily: `'${theme.fontPrimary}', sans-serif`,
+        "--primary": theme.accentColor || "#2563eb",
         "--primary-color": theme.accentColor || "#2563eb",
+        "--background": theme.bodyBg || "#0f172a",
         "--bg-primary": theme.bodyBg || "#0f172a",
+        "--bg-color": theme.bodyBg || "#0f172a",
+        "--text-main": theme.textPrimary || "#ffffff",
         "--text-primary": theme.textPrimary || "#ffffff",
+        "--text-muted": theme.textSecondary || "#94a3b8",
         "--text-secondary": theme.textSecondary || "#94a3b8",
-        "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(255,255,255,0.02)",
-        "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255,255,255,0.08)",
-        color: "var(--text-primary)",
+        "--header-from": theme.headerBg || "#2563eb",
+        "--header-to": theme.headerBgSecondary || "#9333ea",
+        "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(15, 23, 42, 0.4)",
+        "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)",
+        color: "var(--text-main)",
       }}
     >
       <Helmet>

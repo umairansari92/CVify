@@ -121,8 +121,25 @@ const ProfilePage = () => {
 
   const strength = calculateStrength();
 
+  const theme = user?.themeSettings || {};
+
   return (
-    <div className="min-h-screen relative bg-background transition-colors duration-500 overflow-y-auto custom-scrollbar no-scrollbar">
+    <div 
+      className="min-h-screen relative bg-background transition-colors duration-500 overflow-y-auto custom-scrollbar no-scrollbar"
+      style={{
+        "--primary": theme.accentColor || "#2563eb",
+        "--primary-color": theme.accentColor || "#2563eb",
+        "--background": theme.bodyBg || "#0f172a",
+        "--bg-primary": theme.bodyBg || "#0f172a",
+        "--bg-color": theme.bodyBg || "#0f172a",
+        "--text-main": theme.textPrimary || "#ffffff",
+        "--text-primary": theme.textPrimary || "#ffffff",
+        "--text-muted": theme.textSecondary || "#94a3b8",
+        "--text-secondary": theme.textSecondary || "#94a3b8",
+        "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(15, 23, 42, 0.4)",
+        "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)",
+      }}
+    >
       <ThreeBackground />
 
       {/* --- DASHBOARD HEADER --- */}
