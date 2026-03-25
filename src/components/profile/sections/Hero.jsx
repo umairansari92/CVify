@@ -111,7 +111,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             className="text-6xl md:text-8xl lg:text-9xl font-black text-[var(--text-primary)] tracking-tighter leading-[0.9] uppercase"
           >
             <InlineEdit isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-              {displayValue(personalInfo.fullName, "Architect")}
+              {displayValue(personalInfo.fullName, "User Name")}
             </InlineEdit>
           </motion.h1>
           
