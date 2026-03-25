@@ -384,7 +384,11 @@ const PublicProfile = () => {
             <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--primary-color)] to-blue-600 shadow-[0_0_20px_var(--primary-color)]/40 overflow-hidden border border-white/10 transition-transform duration-300 group-hover:scale-105">
               {/* Shine Animation overlay */}
               <div className="absolute inset-0 bg-white/30 w-[150%] h-full transform -skew-x-12 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-out z-0"></div>
-              <span className="text-white font-black text-2xl tracking-tighter relative z-10">CV</span>
+              <img 
+                src="/CVify Favicon.jpg" 
+                alt="CVify Logo" 
+                className="w-10 h-10 object-contain relative z-10 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" 
+              />
             </div>
             
             {/* Logo Text */}
