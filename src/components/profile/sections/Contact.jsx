@@ -23,7 +23,7 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
       case 'facebook': return <FaFacebook size={20} />;
       case 'portfolio': return <FaGlobe size={20} />;
       case 'whatsapp': return <FaWhatsapp size={20} />;
-      default: return <Globe size={20} />;
+      default: return <FaGlobb size={20} />;
     }
   };
 
