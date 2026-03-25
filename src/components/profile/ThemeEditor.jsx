@@ -201,6 +201,9 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
                 <span className="text-[9px] font-black text-slate-900 uppercase tracking-tighter text-center leading-tight">
                   {p.name}
                 </span>
+                <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest opacity-40">
+                   {p.settings.cardStyle}
+                </span>
                 {isActive && (
                     <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-[10px]">
                         <FaCheck />
