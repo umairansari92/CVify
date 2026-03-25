@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaPalette,
   FaFont,
   FaFillDrip,
   FaImage,
   FaLayerGroup,
+  FaMagic,
+  FaCheck,
+  FaChevronDown,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
@@ -25,7 +28,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
   );
 
   // Sync local settings if prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (settings) setLocalSettings(settings);
   }, [settings]);
 
@@ -39,8 +42,6 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     setLocalSettings(updated);
     onUpdate(updated, bannerFile);
   };
-
-  // Removed manual apply for global sync flow
 
   const handleBannerFileChange = (e) => {
     const file = e.target.files[0];
@@ -76,6 +77,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#0f172a",
       textSecondary: "#64748b",
       accentColor: "#2563eb",
+      gradient: "from-blue-600 to-purple-600",
     },
     {
       name: "Midnight Dev",
@@ -88,6 +90,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#f8fafc",
       textSecondary: "#94a3b8",
       accentColor: "#38bdf8",
+      gradient: "from-slate-900 to-slate-800",
     },
     {
       name: "Corporate Gold",
@@ -100,6 +103,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#1e293b",
       textSecondary: "#475569",
       accentColor: "#d97706",
+      gradient: "from-blue-900 to-indigo-900",
     },
     {
       name: "Creative Sunset",
@@ -112,6 +116,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#431407",
       textSecondary: "#9a3412",
       accentColor: "#e11d48",
+      gradient: "from-orange-500 to-pink-600",
     },
     {
       name: "Slate Minimalist",
@@ -124,6 +129,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#334155",
       textSecondary: "#64748b",
       accentColor: "#0f172a",
+      gradient: "from-slate-600 to-slate-500",
     },
     {
       name: "Emerald Leader",
@@ -136,6 +142,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       textPrimary: "#064e3b",
       textSecondary: "#065f46",
       accentColor: "#059669",
+      gradient: "from-emerald-600 to-teal-500",
     },
   ];
 
@@ -157,344 +164,369 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
   };
 
   const styleOptions = [
-    { id: "minimal", name: "Minimalist", desc: "Clean, flat backgrounds" },
-    { id: "glass", name: "Glassmorphism", desc: "Frosted glass effects" },
-    { id: "classic", name: "Classic", desc: "Solid cards with shadows" },
+    { id: "minimal", name: "Minimalist", desc: "Clean & Flat", icon: <FaPalette /> },
+    { id: "glass", name: "Glassmorphism", desc: "Frosted Effects", icon: <FaMagic /> },
+    { id: "classic", name: "Classic", desc: "Solid Shadows", icon: <FaLayerGroup /> },
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* ── One-Click Presets ── */}
-      <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
-          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
-            <FaFillDrip className="text-action text-[10px]" />
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* --- Visual Header --- */}
+      <div className="flex items-center justify-between gap-4 pb-6 border-b border-border-subtle">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+            <FaMagic className="text-indigo-500 text-lg" />
           </div>
-          One-Click Theme Presets
-        </label>
+          <div>
+            <h2 className="text-lg font-black text-text-main tracking-tight italic">Visual Builder V4.1</h2>
+            <p className="text-[10px] font-black text-text-muted uppercase tracking-widest opacity-50">Real-time design engine</p>
+          </div>
+        </div>
+        {saving && (
+           <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Syncing Design</span>
+          </div>
+        )}
+      </div>
+
+      {/* ── One-Click Presets ── */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.25em]">One-Click Presets</span>
+            <div className="h-[1px] flex-1 bg-border-subtle opacity-30" />
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {presets.map((p) => (
-            <button
-              key={p.name}
-              onClick={() => applyPreset(p)}
-              className={`group p-4 bg-white dark:bg-black/20 rounded-3xl border-2 transition-all flex flex-col items-center justify-center text-center gap-2 hover:shadow-xl hover:shadow-action/5 ${
-                localSettings.name === p.name
-                  ? "border-action bg-action/5"
-                  : "border-border-subtle hover:border-action/30"
-              }`}
-            >
-              <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                {p.icon}
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-tight text-text-primary">
-                {p.name}
-              </span>
-            </button>
-          ))}
+          {presets.map((p) => {
+            const isActive = localSettings.headerBg === p.headerBg && localSettings.bodyBg === p.bodyBg;
+            return (
+              <button
+                key={p.name}
+                onClick={() => applyPreset(p)}
+                className={`group relative p-5 bg-foreground/5 rounded-[2rem] border-2 transition-all duration-500 flex flex-col items-center justify-center text-center gap-3 hover:scale-[1.02] hover:shadow-2xl hover:shadow-action/10 ${
+                  isActive
+                    ? "border-primary bg-primary/5 shadow-xl shadow-primary/5"
+                    : "border-border-subtle hover:border-text-muted/30"
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl shadow-lg shadow-black/10 transition-transform duration-500 group-hover:rotate-6`}>
+                  <span className="filter drop-shadow-md">{p.icon}</span>
+                </div>
+                <div className="space-y-1">
+                    <span className="text-[9px] font-black uppercase tracking-tight text-text-main block">
+                    {p.name}
+                    </span>
+                    <span className="text-[8px] font-bold text-text-muted uppercase opacity-40">Preset</span>
+                </div>
+                {isActive && (
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-[10px] shadow-lg animate-in zoom-in-50 duration-300">
+                        <FaCheck />
+                    </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Colors Section */}
-        <div className="space-y-4">
-          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
-            <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
-              <FaPalette className="text-action text-[10px]" />
-            </div>
-            Brand Identity Colors
-          </label>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Colors Palette */}
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.25em]">Global Palette</span>
+            <div className="h-[1px] flex-1 bg-border-subtle opacity-30" />
+          </div>
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
-              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Hero Gradient Primary
-              </span>
+            {/* Gradient Primary */}
+            <div className="p-5 bg-foreground/5 rounded-[2rem] border border-border-subtle space-y-4 hover:border-text-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest opacity-60">Hero Gradient (A)</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-glow shadow-blue-500/50" />
+              </div>
               <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-inner-xl group">
                   <input
                     type="color"
                     value={localSettings.headerBg}
                     onChange={(e) => handleChange("headerBg", e.target.value)}
-                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                    className="absolute inset-x-[-100%] inset-y-[-100%] w-[300%] h-[300%] cursor-pointer scale-[2]"
                   />
+                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-2xl" />
                 </div>
-                <input
-                  type="text"
-                  value={localSettings.headerBg}
-                  onChange={(e) => handleChange("headerBg", e.target.value)}
-                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
-                />
+                <div className="flex-1">
+                    <input
+                    type="text"
+                    value={localSettings.headerBg}
+                    onChange={(e) => handleChange("headerBg", e.target.value)}
+                    className="text-sm font-black bg-transparent border-b border-border-subtle focus:border-primary outline-none w-full py-1 uppercase tracking-tighter text-text-main"
+                    />
+                    <span className="text-[8px] font-black text-text-muted uppercase opacity-40">Primary HEX</span>
+                </div>
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
-              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Hero Gradient Secondary
-              </span>
+            {/* Gradient Secondary */}
+            <div className="p-5 bg-foreground/5 rounded-[2rem] border border-border-subtle space-y-4 hover:border-text-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest opacity-60">Hero Gradient (B)</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-glow shadow-purple-500/50" />
+              </div>
               <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-inner-xl">
                   <input
                     type="color"
                     value={localSettings.headerBgSecondary}
                     onChange={(e) =>
                       handleChange("headerBgSecondary", e.target.value)
                     }
-                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                    className="absolute inset-x-[-100%] inset-y-[-100%] w-[300%] h-[300%] cursor-pointer scale-[2]"
                   />
+                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-2xl" />
                 </div>
-                <input
-                  type="text"
-                  value={localSettings.headerBgSecondary}
-                  onChange={(e) =>
-                    handleChange("headerBgSecondary", e.target.value)
-                  }
-                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
-                />
+                <div className="flex-1">
+                    <input
+                    type="text"
+                    value={localSettings.headerBgSecondary}
+                    onChange={(e) => handleChange("headerBgSecondary", e.target.value)}
+                    className="text-sm font-black bg-transparent border-b border-border-subtle focus:border-primary outline-none w-full py-1 uppercase tracking-tighter text-text-main"
+                    />
+                    <span className="text-[8px] font-black text-text-muted uppercase opacity-40">Secondary HEX</span>
+                </div>
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
-              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Primary Accent
-              </span>
+            {/* Accent Color */}
+            <div className="p-5 bg-foreground/5 rounded-[2rem] border border-border-subtle space-y-4 hover:border-text-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest opacity-60">Brand Accent</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-glow shadow-amber-500/50" />
+              </div>
               <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-inner-xl">
                   <input
                     type="color"
                     value={localSettings.accentColor || "#2563eb"}
-                    onChange={(e) =>
-                      handleChange("accentColor", e.target.value)
-                    }
-                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                    onChange={(e) => handleChange("accentColor", e.target.value)}
+                    className="absolute inset-x-[-100%] inset-y-[-100%] w-[300%] h-[300%] cursor-pointer scale-[2]"
                   />
+                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-2xl" />
                 </div>
-                <input
-                  type="text"
-                  value={localSettings.accentColor || "#2563eb"}
-                  onChange={(e) => handleChange("accentColor", e.target.value)}
-                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
-                />
+                <div className="flex-1">
+                    <input
+                    type="text"
+                    value={localSettings.accentColor || "#2563eb"}
+                    onChange={(e) => handleChange("accentColor", e.target.value)}
+                    className="text-sm font-black bg-transparent border-b border-border-subtle focus:border-primary outline-none w-full py-1 uppercase tracking-tighter text-text-main"
+                    />
+                    <span className="text-[8px] font-black text-text-muted uppercase opacity-40">Action HEX</span>
+                </div>
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
-              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Main Text (Heading)
-              </span>
+             {/* Text Primary */}
+             <div className="p-5 bg-foreground/5 rounded-[2rem] border border-border-subtle space-y-4 hover:border-text-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest opacity-60">Text Colors</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-text-main shadow-glow shadow-text-main/50" />
+              </div>
               <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-inner-xl border border-border-subtle/20">
                   <input
                     type="color"
                     value={localSettings.textPrimary || "#ffffff"}
-                    onChange={(e) =>
-                      handleChange("textPrimary", e.target.value)
-                    }
-                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
+                    onChange={(e) => handleChange("textPrimary", e.target.value)}
+                    className="absolute inset-x-[-100%] inset-y-[-100%] w-[300%] h-[300%] cursor-pointer scale-[2]"
                   />
+                  <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-2xl" />
                 </div>
-                <input
-                  type="text"
-                  value={localSettings.textPrimary || "#ffffff"}
-                  onChange={(e) => handleChange("textPrimary", e.target.value)}
-                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
-                />
-              </div>
-            </div>
-
-            <div className="p-4 bg-white dark:bg-black/20 rounded-[2rem] border-2 border-border-subtle flex flex-col gap-2">
-              <span className="text-[9px] font-black text-text-muted uppercase tracking-tight">
-                Muted Text (Body)
-              </span>
-              <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-border-subtle">
-                  <input
-                    type="color"
-                    value={localSettings.textSecondary || "#94a3b8"}
-                    onChange={(e) =>
-                      handleChange("textSecondary", e.target.value)
-                    }
-                    className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer"
-                  />
+                <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                        <input
+                        type="color"
+                        value={localSettings.textSecondary || "#94a3b8"}
+                        onChange={(e) => handleChange("textSecondary", e.target.value)}
+                        className="w-4 h-4 rounded-full border border-border-subtle cursor-pointer overflow-hidden"
+                        />
+                        <input
+                        type="text"
+                        value={localSettings.textPrimary}
+                        onChange={(e) => handleChange("textPrimary", e.target.value)}
+                        className="text-sm font-black bg-transparent border-b border-border-subtle focus:border-primary outline-none w-full py-1 uppercase tracking-tighter text-text-main"
+                        />
+                    </div>
+                    <span className="text-[8px] font-black text-text-muted uppercase opacity-40">Heading HEX</span>
                 </div>
-                <input
-                  type="text"
-                  value={localSettings.textSecondary || "#94a3b8"}
-                  onChange={(e) =>
-                    handleChange("textSecondary", e.target.value)
-                  }
-                  className="text-xs font-black bg-transparent border-b-2 border-border-subtle focus:border-action outline-none w-20 py-1"
-                />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Typography Section */}
-        <div className="space-y-4">
-          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
-            <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
-              <FaFont className="text-violet-500 text-[10px]" />
+        {/* Typography & Background */}
+        <div className="space-y-12">
+           {/* Typography Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.25em]">Typography</span>
+                <div className="h-[1px] flex-1 bg-border-subtle opacity-30" />
             </div>
-            Typography Style
-          </label>
-          <div className="p-8 bg-white dark:bg-black/20 rounded-[2.5rem] border-2 border-border-subtle h-fit min-h-[180px] flex flex-col justify-center gap-4">
-            <div className="relative">
-              <select
-                value={localSettings.fontPrimary}
-                onChange={(e) => handleChange("fontPrimary", e.target.value)}
-                className="w-full bg-foreground/5 p-4 rounded-2xl text-lg font-black outline-none cursor-pointer appearance-none border-2 border-transparent focus:border-action"
-              >
-                {fontOptions.map((f) => (
-                  <option key={f} value={f}>
-                    {f}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
-                ▼
-              </div>
+            <div className="p-6 bg-foreground/5 rounded-[2rem] border border-border-subtle space-y-4 hover:border-text-muted/30 transition-colors">
+                <div className="relative group">
+                    <select
+                        value={localSettings.fontPrimary}
+                        onChange={(e) => handleChange("fontPrimary", e.target.value)}
+                        className="w-full bg-white dark:bg-midground/50 p-6 rounded-2xl text-xl font-black outline-none cursor-pointer appearance-none border-2 border-border-subtle focus:border-primary transition-all pr-12 text-text-main"
+                        style={{ fontFamily: localSettings.fontPrimary }}
+                    >
+                        {fontOptions.map((f) => (
+                        <option key={f} value={f} style={{ fontFamily: f }} className="bg-midground">
+                            {f}
+                        </option>
+                        ))}
+                    </select>
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-primary transition-colors">
+                        <FaChevronDown />
+                    </div>
+                </div>
+                <p className="text-[10px] text-text-muted font-bold tracking-tight px-2 flex items-center gap-2">
+                    <FaFont className="text-primary opacity-50" />
+                    Preview: "The quick brown fox jumps over the lazy dog."
+                </p>
             </div>
-            <p className="text-[10px] text-text-muted font-bold tracking-tight">
-              This font will be applied to headings and body text.
-            </p>
+          </div>
+
+          {/* Background Banner */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.25em]">Background Banner</span>
+                <div className="h-[1px] flex-1 bg-border-subtle opacity-30" />
+            </div>
+            <div className="p-6 bg-foreground/5 rounded-[2.5rem] border-2 border-dashed border-border-subtle group hover:border-primary/50 transition-all duration-500">
+                <div className="flex flex-col items-center justify-center text-center">
+                    {bannerPreview ? (
+                    <div className="relative w-full h-32 rounded-[2rem] overflow-hidden mb-6 border border-border-subtle group">
+                        <img
+                        src={bannerPreview}
+                        alt="Banner Preview"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        style={{ opacity: localSettings.bannerOpacity / 100 }}
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                             <button
+                                onClick={() => {
+                                    setBannerPreview("");
+                                    setBannerFile(null);
+                                    handleChange("bannerUrl", "");
+                                }}
+                                className="bg-red-500 text-white px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
+                                >
+                                Remove Banner
+                            </button>
+                        </div>
+                    </div>
+                    ) : (
+                    <div className="py-6 w-full">
+                        <label className="cursor-pointer block group">
+                            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-glow shadow-primary/20">
+                                <FaImage size={24} />
+                            </div>
+                            <h4 className="text-xs font-black text-text-main uppercase tracking-tighter mb-1">Upload Brand Banner</h4>
+                            <p className="text-[9px] font-bold text-text-muted uppercase opacity-40">Dimensions 1920x480 Recommended</p>
+                            <input
+                                type="file"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleBannerFileChange}
+                            />
+                        </label>
+                    </div>
+                    )}
+
+                    {bannerPreview && (
+                        <div className="w-full space-y-4 px-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest opacity-60">Opacity Control</span>
+                                <span className="text-xs font-black text-primary">{localSettings.bannerOpacity}%</span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={localSettings.bannerOpacity}
+                                onChange={(e) => handleChange("bannerOpacity", parseInt(e.target.value))}
+                                className="w-full h-1.5 bg-foreground/10 rounded-full appearance-none cursor-pointer accent-primary"
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Component Aesthetics */}
-      <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
-          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
-            <FaLayerGroup className="text-amber-500 text-[10px]" />
-          </div>
-          Component Aesthetics
-        </label>
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.25em]">Component Aesthetics</span>
+            <div className="h-[1px] flex-1 bg-border-subtle opacity-30" />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {styleOptions.map((style) => (
-            <button
-              key={style.id}
-              onClick={() => handleChange("cardStyle", style.id)}
-              className={`p-6 rounded-[2.5rem] border-2 text-left transition-all relative overflow-hidden ${
-                localSettings.cardStyle === style.id
-                  ? "border-action bg-white dark:bg-black/20 ring-4 ring-action/5 shadow-2xl"
-                  : "border-border-subtle bg-foreground/5 hover:border-action/30"
-              }`}
-            >
-              <h5 className="text-sm font-black text-text-primary mb-1">
-                {style.name}
-              </h5>
-              <p className="text-[10px] text-text-muted font-black leading-tight opacity-70">
-                {style.desc}
-              </p>
-              {localSettings.cardStyle === style.id && (
-                <div className="absolute top-4 right-6 w-2 h-2 rounded-full bg-action animate-pulse" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Banner Upload Section */}
-      <div className="space-y-4">
-        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.15em] flex items-center gap-2 mb-4">
-          <div className="w-5 h-5 bg-action/10 rounded-lg flex items-center justify-center">
-            <FaImage className="text-emerald-500 text-[10px]" />
-          </div>
-          Custom Background Banner
-        </label>
-        <div className="p-8 bg-white dark:bg-black/20 rounded-[2.5rem] border-2 border-dashed border-border-subtle group hover:border-action/50 transition-all">
-          <div className="flex flex-col items-center justify-center text-center">
-            {bannerPreview ? (
-              <div className="relative w-full max-w-2xl h-48 rounded-[2.5rem] overflow-hidden mb-6 border-2 border-border-subtle shadow-2xl">
-                <img
-                  src={bannerPreview}
-                  alt="Banner Preview"
-                  className="w-full h-full object-cover"
-                  style={{ opacity: localSettings.bannerOpacity / 100 }}
-                />
+          {styleOptions.map((style) => {
+            const isActive = localSettings.cardStyle === style.id;
+            return (
                 <button
-                  onClick={() => {
-                    setBannerPreview("");
-                    setBannerFile(null);
-                    handleChange("bannerUrl", "");
-                  }}
-                  className="absolute top-4 right-4 bg-red-500/90 backdrop-blur-md text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                key={style.id}
+                onClick={() => handleChange("cardStyle", style.id)}
+                className={`group p-6 rounded-[2.5rem] border-2 text-left transition-all duration-500 relative overflow-hidden flex items-start gap-4 ${
+                    isActive
+                    ? "border-primary bg-white dark:bg-primary/5 shadow-2xl shadow-primary/10 ring-4 ring-primary/5"
+                    : "border-border-subtle bg-foreground/5 hover:border-primary/40"
+                }`}
                 >
-                  Remove
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all duration-500 ${
+                        isActive ? "bg-primary text-white shadow-glow shadow-primary/40" : "bg-foreground/10 text-text-muted opacity-50 group-hover:scale-110"
+                    }`}>
+                        {style.icon}
+                    </div>
+                    <div className="flex-1">
+                        <h5 className={`text-sm font-black tracking-tight mb-1 transition-colors ${isActive ? "text-primary" : "text-text-main"}`}>
+                            {style.name}
+                        </h5>
+                        <p className="text-[10px] text-text-muted font-bold leading-tight opacity-50">
+                            {style.desc}
+                        </p>
+                    </div>
+                    {isActive && (
+                        <div className="absolute top-4 right-6 w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
+                    )}
                 </button>
-              </div>
-            ) : (
-              <div className="mb-6 w-full py-10">
-                <label className="cursor-pointer block">
-                  <div className="w-16 h-16 bg-action/10 rounded-3xl flex items-center justify-center text-action mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <FaImage size={24} />
-                  </div>
-                  <h4 className="text-xs font-black text-text-primary uppercase tracking-tighter mb-1">
-                    Click to upload banner
-                  </h4>
-                  <p className="text-[9px] font-bold text-text-muted uppercase opacity-60">
-                    Recommended: 1920x480 (Under 5MB)
-                  </p>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleBannerFileChange}
-                  />
-                </label>
-              </div>
-            )}
-
-            {!bannerFile && (
-              <div className="w-full max-w-md relative group">
-                <input
-                  type="text"
-                  placeholder="Or paste image URL"
-                  value={
-                    localSettings.bannerUrl === "PREVIEW"
-                      ? ""
-                      : localSettings.bannerUrl
-                  }
-                  onChange={(e) => {
-                    setBannerPreview(e.target.value);
-                    handleChange("bannerUrl", e.target.value);
-                  }}
-                  className="w-full px-6 py-4 bg-foreground/5 rounded-2xl border-2 border-transparent focus:border-action text-xs font-bold outline-none transition-all pr-12"
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40">
-                  🔗
-                </div>
-              </div>
-            )}
-          </div>
-
-          {bannerPreview && (
-            <div className="mt-8 space-y-4 max-w-xl mx-auto">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
-                  Banner Opacity
-                </span>
-                <span className="text-sm font-black text-action">
-                  {localSettings.bannerOpacity}%
-                </span>
-              </div>
-              <div className="relative pt-1">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={localSettings.bannerOpacity}
-                  onChange={(e) =>
-                    handleChange("bannerOpacity", parseInt(e.target.value))
-                  }
-                  className="w-full h-2 bg-foreground/10 rounded-full appearance-none cursor-pointer accent-action"
-                />
-              </div>
-            </div>
-          )}
+            )
+          })}
         </div>
       </div>
 
-      {/* Removed Apply button for unified save flow */}
+       {/* Security/Access Status - Read Only Visual */}
+       <div className="p-8 glass rounded-[2.5rem] border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-5 text-center sm:text-left">
+                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-2xl shadow-glow shadow-primary/20">
+                    <FaMagic className="animate-pulse" />
+                </div>
+                <div>
+                     <h4 className="text-base font-black text-text-main italic">Real-time Designer Engine</h4>
+                     <p className="text-[10px] font-black text-text-muted uppercase tracking-widest opacity-50 max-w-xs">All branding changes are synchronized instantly with your public profile.</p>
+                </div>
+            </div>
+            <div className="flex items-center gap-3">
+                 <div className="flex -space-x-2">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="w-8 h-8 rounded-full border-2 border-background bg-foreground/10 flex items-center justify-center text-[10px] font-black" style={{ transform: `scale(${1 - i/10})` }}>
+                            {i}
+                        </div>
+                    ))}
+                 </div>
+                 <span className="text-[9px] font-black text-primary uppercase tracking-widest">Multi-Device Sync Active</span>
+            </div>
+       </div>
 
     </div>
   );
