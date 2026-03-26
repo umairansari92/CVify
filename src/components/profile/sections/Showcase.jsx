@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaBriefcase, FaGithub, FaPlus } from "react-icons/fa";
-import { ExternalLink, Trash, Image as ImageIcon } from "lucide-react";
+import { ExternalLink, Trash, Image as ImageIcon, Star } from "lucide-react";
 import InlineEdit from "../InlineEdit";
 
 const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArrayUpdate, dispatch, deleteProjectThunk, openProjectModalThunk }) => {
@@ -57,9 +57,16 @@ const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArra
                       {project.title || 'Project Title'}
                     </InlineEdit>
                   </h3>
-                  {(project.featured || project.isFeatured) && (
-                    <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-1 bg-orange-500/20 text-orange-400 rounded">Featured</span>
-                  )}
+                  <div className="flex flex-col items-end gap-2">
+                    {(project.featured || project.isFeatured) && (
+                      <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-1 bg-orange-500/20 text-orange-400 rounded">Featured</span>
+                    )}
+                    {project.githubStars > 0 && (
+                      <div className="flex items-center gap-1 text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded text-[10px] font-bold">
+                        <Star size={10} fill="currentColor" /> {project.githubStars} Stars
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="text-sm text-[var(--text-secondary)] leading-relaxed mb-6 flex-1 line-clamp-3 group-hover:line-clamp-none transition-all">

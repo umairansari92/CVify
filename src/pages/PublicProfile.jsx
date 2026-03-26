@@ -76,6 +76,9 @@ const Showcase = lazy(() => import("../components/profile/sections/Showcase"));
 const Skills = lazy(() => import("../components/profile/sections/Skills"));
 const Dossier = lazy(() => import("../components/profile/sections/Dossier"));
 const Interests = lazy(() => import("../components/profile/sections/Interests"));
+const Certifications = lazy(() => import("../components/profile/sections/Certifications"));
+const Testimonials = lazy(() => import("../components/profile/sections/Testimonials"));
+const Brands = lazy(() => import("../components/profile/sections/Brands"));
 const Contact = lazy(() => import("../components/profile/sections/Contact"));
 const Footer = lazy(() => import("../components/profile/sections/Footer"));
 
@@ -489,6 +492,10 @@ const PublicProfile = () => {
         handleLiveUpdate={handleLiveUpdate} 
       />
 
+      <Suspense fallback={null}>
+        <Brands user={user} isOwner={isOwner} />
+      </Suspense>
+
       <About 
         user={user} 
         isOwner={isOwner} 
@@ -504,16 +511,6 @@ const PublicProfile = () => {
       }>
         {(isOwner || (user.experience?.length > 0)) && (
           <Experience 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
-        )}
-
-        {(isOwner || (user.education?.length > 0)) && (
-          <Education 
             user={user} 
             isOwner={isOwner} 
             displayValue={displayValue} 
@@ -545,7 +542,21 @@ const PublicProfile = () => {
           />
         )}
 
-        {(isOwner || (user.certifications?.length > 0) || (user.achievements?.length > 0)) && (
+        {(isOwner || (user.education?.length > 0)) && (
+          <Education 
+            user={user} 
+            isOwner={isOwner} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            handleArrayUpdate={handleArrayUpdate} 
+          />
+        )}
+
+        {(isOwner || (user.certifications?.length > 0)) && (
+          <Certifications user={user} isOwner={isOwner} />
+        )}
+
+        {(isOwner || (user.achievements?.length > 0) || (user.languages?.length > 0)) && (
           <Dossier 
             user={user} 
             isOwner={isOwner} 
@@ -553,6 +564,10 @@ const PublicProfile = () => {
             handleLiveUpdate={handleLiveUpdate} 
             handleArrayUpdate={handleArrayUpdate} 
           />
+        )}
+
+        {(isOwner || (user.testimonials?.length > 0)) && (
+          <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
         )}
 
         {(isOwner || (user.interests?.length > 0)) && (
