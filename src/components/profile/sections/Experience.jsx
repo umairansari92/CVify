@@ -87,11 +87,6 @@ const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, 
             </motion.div>
           ))}
         </div>
-        {isOwner && (
-          <button onClick={() => toast.error("Please add via Dashboard for full validation.")} className="mt-12 px-6 py-2 bg-[var(--card-bg)] hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] text-sm font-medium transition-all flex items-center gap-2 z-10">
-            <FaPlus size={16} /> Add Experience
-          </button>
-        )}
       </div>
     </section>
   );

@@ -176,17 +176,6 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
             </motion.div>
           ))}
         </div>
-
-        {isOwner && (
-          <div className="pt-12 text-center">
-            <button 
-              onClick={() => toast.error("Manage content in Command Center.")}
-              className="px-10 py-4 bg-white/5 border border-white/10 hover:border-[var(--primary-color)]/40 rounded-2xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all font-black text-[10px] uppercase tracking-widest flex items-center gap-3 mx-auto active:scale-95"
-            >
-              <FaPlus size={10} /> Add Tech Category
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );

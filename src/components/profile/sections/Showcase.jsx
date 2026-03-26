@@ -100,13 +100,7 @@ const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArra
           ))}
         </div>
 
-        {isOwner && (
-          <div className="mt-16 text-center">
-            <button onClick={() => dispatch(openProjectModalThunk())} className="px-8 py-3 bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 border border-[var(--primary-color)]/30 rounded-full text-[var(--primary-color)] font-medium transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-              <FaPlus size={18} /> Add New Project
-            </button>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
