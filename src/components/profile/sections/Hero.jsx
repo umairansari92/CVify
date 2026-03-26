@@ -122,10 +122,10 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-6 pt-6">
              <a href="#showcase" className="px-8 py-4 bg-[var(--primary-color)] text-[var(--bg-color)] rounded-full font-black text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_var(--primary-color)]/30 flex items-center gap-2">
-               🚀 Journey
+               🚀 View My Journey
              </a>
              <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 transition-all flex items-center gap-2">
-               📩 Contact
+               🤝 Let's Work Together
              </button>
           </motion.div>
 
@@ -140,6 +140,14 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
                {/* Floating Badges */}
                <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -right-4 top-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">
                  <FaCheckCircle size={20} />
+               </motion.div>
+               <motion.div 
+                 initial={{ x: 20, opacity: 0 }}
+                 animate={{ x: 0, opacity: 1 }}
+                 transition={{ delay: 1.2 }}
+                 className="absolute -right-8 bottom-1/3 bg-[var(--primary-color)] text-[var(--bg-color)] px-4 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-2xl rotate-12 z-40 hidden sm:block border-2 border-[var(--bg-color)]"
+               >
+                 Available for Hire ⚡
                </motion.div>
                <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity, delay: 1 }} className="absolute -left-4 bottom-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">
                  <FaLayerGroup size={20} />

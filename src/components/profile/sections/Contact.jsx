@@ -32,14 +32,15 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
     <section id="contact" className="relative py-20 md:py-32 border-b border-[var(--card-border)] overflow-hidden bg-[var(--bg-primary)]/50">
       <div className="absolute top-10 left-0 w-full text-center pointer-events-none select-none overflow-hidden flex justify-center">
         <h2 className="text-[10vw] font-black text-[var(--text-primary)] opacity-[0.03] uppercase tracking-tighter whitespace-nowrap">
-          For Assistance
+          Available for Hire
         </h2>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12 md:mb-20">
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex justify-center gap-3">
-            Contact <span className="text-[var(--primary-color)]">Me</span>
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] flex flex-col items-center gap-1">
+            <span className="text-[var(--primary-color)] text-xs tracking-[0.5em] mb-2 opacity-60">Ready for the next step?</span>
+            Let's Work <span className="text-[var(--primary-color)] underline decoration-wavy decoration-2 underline-offset-8">Together</span>
           </h2>
         </div>
 
