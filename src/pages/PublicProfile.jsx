@@ -79,6 +79,7 @@ const Interests = lazy(() => import("../components/profile/sections/Interests"))
 const Certifications = lazy(() => import("../components/profile/sections/Certifications"));
 const Testimonials = lazy(() => import("../components/profile/sections/Testimonials"));
 const Brands = lazy(() => import("../components/profile/sections/Brands"));
+const GithubStats = lazy(() => import("../components/profile/sections/GithubStats"));
 const Contact = lazy(() => import("../components/profile/sections/Contact"));
 const Footer = lazy(() => import("../components/profile/sections/Footer"));
 
@@ -491,6 +492,10 @@ const PublicProfile = () => {
         displayValue={displayValue} 
         handleLiveUpdate={handleLiveUpdate} 
       />
+
+      <Suspense fallback={null}>
+        <GithubStats githubUrl={user?.socialLinks?.github} userSkills={user?.skills?.technical || user?.skills || []} />
+      </Suspense>
 
       <Suspense fallback={null}>
         <Brands user={user} isOwner={isOwner} />
