@@ -7,13 +7,29 @@ import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
-import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode } from 'react-icons/fa';
+import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode, FaEye } from 'react-icons/fa';
 import { awardSchema, certificationSchema, languageSchema } from '../../utils/validationSchemas';
+import Certifications from '../profile/sections/Certifications';
+
+import Brands from '../profile/sections/Brands';
+import Testimonials from '../profile/sections/Testimonials';
 
 const credentialsSchema = yup.object().shape({
   achievements: yup.array().of(awardSchema),
   certifications: yup.array().of(certificationSchema),
   languages: yup.array().of(languageSchema),
+  testimonials: yup.array().of(yup.object().shape({
+    name: yup.string().required('Required'),
+    role: yup.string().required('Required'),
+    company: yup.string(),
+    content: yup.string().required('Required'),
+    rating: yup.number().min(1).max(5).default(5)
+  })),
+  clients: yup.array().of(yup.object().shape({
+    name: yup.string().required('Required'),
+    logo: yup.string().required('URL required'),
+    link: yup.string()
+  })),
   interests: yup.array().of(yup.string().required()),
   sectionNames: yup.object().shape({
     achievements: yup.string().required(),
@@ -31,6 +47,7 @@ const CredentialsManager = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isDirty }
   } = useForm({
     resolver: yupResolver(credentialsSchema),
@@ -38,6 +55,8 @@ const CredentialsManager = () => {
       achievements: user?.achievements || [],
       certifications: user?.certifications || [],
       languages: user?.languages || [],
+      testimonials: user?.testimonials || [],
+      clients: user?.clients || [],
       interests: user?.interests || [],
       sectionNames: {
         achievements: user?.sectionNames?.achievements || 'Honors & Awards',
@@ -61,6 +80,16 @@ const CredentialsManager = () => {
     name: "languages",
   });
 
+  const { fields: testimonialFields, append: appendTestimonial, remove: removeTestimonial } = useFieldArray({
+    control,
+    name: "testimonials",
+  });
+
+  const { fields: clientFields, append: appendClient, remove: removeClient } = useFieldArray({
+    control,
+    name: "clients",
+  });
+
   const { fields: interestFields, append: appendInterest, remove: removeInterest } = useFieldArray({
     control,
     name: "interests",
@@ -72,6 +101,8 @@ const CredentialsManager = () => {
         achievements: user.achievements || [],
         certifications: user.certifications || [],
         languages: user.languages || [],
+        testimonials: user.testimonials || [],
+        clients: user.clients || [],
         interests: user.interests || [],
         sectionNames: {
           achievements: user.sectionNames?.achievements || 'Honors & Awards',
@@ -88,6 +119,8 @@ const CredentialsManager = () => {
         achievements: data.achievements,
         certifications: data.certifications,
         languages: data.languages,
+        testimonials: data.testimonials,
+        clients: data.clients,
         interests: data.interests,
         sectionNames: { ...user.sectionNames, ...data.sectionNames }
       });
@@ -245,6 +278,129 @@ const CredentialsManager = () => {
         </div>
       </div>
 
+      {/* --- CLIENTS/BRANDS SECTION --- */}
+      <div className="space-y-8">
+        <div className="flex items-center justify-between pb-6 border-b border-border-subtle">
+          <div className="space-y-1">
+              <h3 className="text-xl font-black text-text-main flex items-center gap-3">
+                  <FaAward className="text-orange-500" /> Trusted Brands
+              </h3>
+              <p className="text-[10px] text-text-muted font-black uppercase tracking-widest leading-loose opacity-60">
+                  Companies you've collaborated with. Logo URLs for social proof.
+              </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => appendClient({ name: '', logo: '', link: '' })}
+            className="px-6 py-2 bg-orange-500/10 hover:bg-orange-500/20 text-orange-600 dark:text-orange-400 font-black text-[10px] uppercase tracking-widest rounded-full border border-orange-500/20 transition-all flex items-center gap-2"
+          >
+            <FaPlus size={10} /> Add Client
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {clientFields.map((field, idx) => (
+            <div key={field.id} className="p-8 bg-midground border border-border-subtle rounded-[2.5rem] space-y-4 hover:border-orange-500/20 transition-all relative group shadow-sm">
+              <button type="button" onClick={() => removeClient(idx)} className="absolute right-6 top-6 text-text-muted opacity-10 hover:text-red-500 transition-all group-hover:opacity-40">
+                <FaTrash size={12} />
+              </button>
+              
+              <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                      <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Client/Company Name</label>
+                      <input
+                          {...register(`clients.${idx}.name`)}
+                          placeholder="e.g. Google"
+                          className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-orange-500/50 outline-none transition-all font-bold text-sm"
+                      />
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Logo URL</label>
+                      <input
+                          {...register(`clients.${idx}.logo`)}
+                          placeholder="https://..."
+                          className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-orange-500/50 outline-none transition-all font-semibold text-xs"
+                      />
+                  </div>
+              </div>
+            </div>
+          ))}
+          {clientFields.length === 0 && <p className="col-span-full text-center text-text-muted text-xs italic opacity-30">No brands added.</p>}
+        </div>
+      </div>
+
+      {/* --- TESTIMONIALS SECTION --- */}
+      <div className="space-y-8">
+        <div className="flex items-center justify-between pb-6 border-b border-border-subtle">
+          <div className="space-y-1">
+              <h3 className="text-xl font-black text-text-main flex items-center gap-3">
+                  <FaUser className="text-rose-500" /> Testimonials
+              </h3>
+              <p className="text-[10px] text-text-muted font-black uppercase tracking-widest leading-loose opacity-60">
+                  Social proof from colleagues and clients.
+              </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => appendTestimonial({ name: '', role: '', content: '', rating: 5 })}
+            className="px-6 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-black text-[10px] uppercase tracking-widest rounded-full border border-rose-500/20 transition-all flex items-center gap-2"
+          >
+            <FaPlus size={10} /> Add Testimonial
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {testimonialFields.map((field, idx) => (
+            <div key={field.id} className="p-8 bg-midground border border-border-subtle rounded-[2.5rem] space-y-4 hover:border-rose-500/20 transition-all relative group shadow-sm">
+              <button type="button" onClick={() => removeTestimonial(idx)} className="absolute right-6 top-6 text-text-muted opacity-10 hover:text-red-500 transition-all group-hover:opacity-40">
+                <FaTrash size={12} />
+              </button>
+              
+              <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                          <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Reviewer Name</label>
+                          <input
+                              {...register(`testimonials.${idx}.name`)}
+                              placeholder="John Doe"
+                              className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-rose-500/50 outline-none transition-all font-bold text-sm"
+                          />
+                      </div>
+                      <div className="space-y-2">
+                          <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Role/Title</label>
+                          <input
+                              {...register(`testimonials.${idx}.role`)}
+                              placeholder="CTO at Tech"
+                              className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-rose-500/50 outline-none transition-all font-semibold text-xs"
+                          />
+                      </div>
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">The Quote</label>
+                      <textarea
+                          {...register(`testimonials.${idx}.content`)}
+                          placeholder="What did they say?"
+                          className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-rose-500/50 outline-none transition-all font-medium text-xs h-24 resize-none"
+                      />
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-1 opacity-40">Star Rating</label>
+                      <select
+                          {...register(`testimonials.${idx}.rating`, { valueAsNumber: true })}
+                          className="w-full px-5 py-3 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-rose-500/50 outline-none transition-all font-black text-xs uppercase"
+                      >
+                          <option value="5">5 Stars - Perfection</option>
+                          <option value="4">4 Stars - Excellence</option>
+                          <option value="3">3 Stars - Good</option>
+                      </select>
+                  </div>
+              </div>
+            </div>
+          ))}
+          {testimonialFields.length === 0 && <p className="col-span-full text-center text-text-muted text-xs italic opacity-30">No testimonials yet.</p>}
+        </div>
+      </div>
+
       {/* --- LANGUAGES SECTION --- */}
       <div className="space-y-8">
         <div className="flex items-center justify-between pb-6 border-b border-border-subtle">
@@ -339,6 +495,43 @@ const CredentialsManager = () => {
           {saving ? "Deploying Dossier..." : "Save All Credentials"}
         </button>
       </div>
+
+  {/* --- LIVE PREVIEW AREA --- */}
+  <div className="pt-20 space-y-20 pb-20">
+    <div className="flex items-center gap-4 opacity-30">
+      <div className="h-px flex-1 bg-border-subtle" />
+      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em]">
+        <FaEye /> Live Portfolio Preview
+      </div>
+      <div className="h-px flex-1 bg-border-subtle" />
+    </div>
+
+    <div className="space-y-10 rounded-[3rem] overflow-hidden border border-border-subtle bg-background/50 scale-[0.9] origin-top">
+      <div className="pointer-events-none scale-[0.9] origin-top">
+        <Brands 
+          user={{ 
+            ...user, 
+            clients: watch("clients") 
+          }} 
+          isOwner={false} 
+        />
+        <Certifications 
+          user={{ 
+            ...user, 
+            certifications: watch("certifications") 
+          }} 
+          isOwner={false} 
+        />
+        <Testimonials 
+          user={{ 
+            ...user, 
+            testimonials: watch("testimonials") 
+          }} 
+          isOwner={false} 
+        />
+      </div>
+    </div>
+  </div>
     </form>
   );
 };
