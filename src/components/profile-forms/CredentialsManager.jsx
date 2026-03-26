@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { updateUser } from '../../features/auth/authSlice';
 import { updateActiveProfileLocally } from '../../features/profile/profileSlice';
 import api from '../../api/axios';
-import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode, FaEye } from 'react-icons/fa';
+import { FaTrophy, FaPlus, FaTrash, FaAward, FaGlobe, FaCertificate, FaMedal, FaExternalLinkAlt, FaLaptopCode, FaEye, FaUser, FaLayerGroup } from 'react-icons/fa';
 import { awardSchema, certificationSchema, languageSchema } from '../../utils/validationSchemas';
 import Certifications from '../profile/sections/Certifications';
 
