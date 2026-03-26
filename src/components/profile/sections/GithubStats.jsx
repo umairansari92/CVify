@@ -1,7 +1,9 @@
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, Package, Activity, ExternalLink, Code2, Users } from "lucide-react";
+
 const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) => {
   const error = !data && !loading && githubUrl;
-
-  // Extract username from URL: https://github.com/username
   const githubUsername = githubUrl?.split("github.com/")[1]?.split("/")[0];
 
   if (!githubUsername) return null;
