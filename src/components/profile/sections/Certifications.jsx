@@ -46,14 +46,19 @@ const Certifications = React.memo(({ user, isOwner }) => {
                 <Award size={32} />
               </div>
               
-              <h4 className="text-lg font-black text-[var(--text-primary)] uppercase tracking-tight mb-2 leading-tight">
-                {cert.name}
+              <h4 className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.2em] mb-3 opacity-60">
+                Certified in
               </h4>
-              <p className="text-[10px] font-black uppercase tracking-widest text-[var(--primary-color)] mb-4">
-                {cert.issuer} • {cert.date}
+              
+              <h5 className="text-xl font-black text-[var(--text-primary)] uppercase tracking-tight mb-4 leading-tight group-hover:text-[var(--primary-color)] transition-colors">
+                {cert.name}
+              </h5>
+
+              <p className="text-[10px] font-black uppercase tracking-widest text-[var(--primary-color)] mb-6 flex items-center gap-2">
+                <span className="opacity-40 text-[var(--text-secondary)]">by</span> {cert.issuer} <span className="w-1 h-1 rounded-full bg-[var(--card-border)]" /> {cert.date}
               </p>
               
-              <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed mb-8 line-clamp-2">
+              <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed mb-10 line-clamp-2 opacity-70">
                 {cert.description}
               </p>
 
@@ -62,9 +67,9 @@ const Certifications = React.memo(({ user, isOwner }) => {
                   href={cert.link} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="mt-auto flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)] opacity-40 hover:opacity-100 hover:text-[var(--primary-color)] transition-all"
+                  className="mt-auto w-full py-4 bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--bg-color)] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[var(--primary-color)]/30 group/btn"
                 >
-                  Verify Credentials <ExternalLink size={12} />
+                  View Certificate <ExternalLink size={12} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                 </a>
               )}
             </motion.div>
