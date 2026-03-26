@@ -1,38 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Star, Package, Activity, ExternalLink, Code2, Users } from "lucide-react";
-import api from "../../../api/axios";
-
-const GithubStats = React.memo(({ githubUrl, userSkills = [] }) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) => {
+  const error = !data && !loading && githubUrl;
 
   // Extract username from URL: https://github.com/username
   const githubUsername = githubUrl?.split("github.com/")[1]?.split("/")[0];
-
-  useEffect(() => {
-    if (!githubUsername) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchGithubData = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get(`/portfolio/github/${githubUsername}`);
-        setData(res.data);
-        setError(false);
-      } catch (err) {
-        console.error("GitHub Fetch Error:", err);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGithubData();
-  }, [githubUsername]);
 
   if (!githubUsername) return null;
 

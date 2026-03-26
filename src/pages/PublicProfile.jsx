@@ -138,6 +138,8 @@ const PublicProfile = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [isSending, setIsSending] = useState(false);
+  const [githubData, setGithubData] = useState(null);
+  const [githubLoading, setGithubLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -169,6 +171,31 @@ const PublicProfile = () => {
       dispatch(fetchProfileAnalytics());
     }
   }, [dispatch, user?.isOwner]);
+
+  useEffect(() => {
+    const githubUrl = user?.socialLinks?.github;
+    const githubUsername = githubUrl?.split("github.com/")[1]?.split("/")[0];
+
+    if (!githubUsername) {
+      setGithubData(null);
+      return;
+    }
+
+    const fetchGithub = async () => {
+      setGithubLoading(true);
+      try {
+        const res = await api.get(`/portfolio/github/${githubUsername}`);
+        setGithubData(res.data);
+      } catch (err) {
+        console.error("GitHub Fetch Error:", err);
+        setGithubData(null);
+      } finally {
+        setGithubLoading(false);
+      }
+    };
+
+    fetchGithub();
+  }, [user?.socialLinks?.github]);
 
   const displayValue = useCallback((value, placeholder) => {
     if (value && value.trim() !== "") return value;
@@ -494,7 +521,12 @@ const PublicProfile = () => {
       />
 
       <Suspense fallback={null}>
-        <GithubStats githubUrl={user?.socialLinks?.github} userSkills={user?.skills?.technical || user?.skills || []} />
+        <GithubStats 
+          githubUrl={user?.socialLinks?.github} 
+          userSkills={user?.skills?.technical || user?.skills || []} 
+          data={githubData}
+          loading={githubLoading}
+        />
       </Suspense>
 
       <Suspense fallback={null}>
@@ -544,6 +576,8 @@ const PublicProfile = () => {
             displayValue={displayValue} 
             handleLiveUpdate={handleLiveUpdate} 
             handleArrayUpdate={handleArrayUpdate} 
+            githubStats={githubData}
+            projectsCount={projects.length}
           />
         )}
 

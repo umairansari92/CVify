@@ -5,18 +5,22 @@ import { Database, BrainCircuit, Server, Wrench, ShieldCheck, Cpu } from "lucide
 import InlineEdit from "../InlineEdit";
 import { toast } from "react-hot-toast";
 
-const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
+const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate, githubStats, projectsCount }) => {
   // Enrichment Engine: Group skills into Proof Cards
   const categorizedSkills = useMemo(() => {
     const rawSkills = user.skills || [];
+    const githubRepos = githubStats?.stats?.repos || 20;
+    const githubStars = githubStats?.stats?.stars || 120;
+    const totalProjects = projectsCount || 5;
+
     const categories = [
       {
         id: "mern",
-        title: "MERN Stack (Used in 5+ Projects)",
+        title: `MERN Stack (Used in ${totalProjects}+ Projects)`,
         icon: <Database className="text-blue-500" />,
         pattern: /mern|react|node|express|mongo|frontend|fullstack/i,
         subtext: "Built full-stack apps with authentication, APIs, and dashboards",
-        proof: "Projects: 6 | GitHub: 20+ repos",
+        proof: `Projects: ${totalProjects} | GitHub: ${githubRepos}+ repos`,
         skills: []
       },
       {
@@ -25,7 +29,7 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
         icon: <BrainCircuit className="text-rose-500" />,
         pattern: /ai|chatbot|gemini|gpt|prompt|nlp|intelligence/i,
         subtext: "Developed AI chatbots using Google Gemini API and prompt engineering",
-        proof: "Live Bots: 3 | Use Cases: Automation, Support",
+        proof: `Live Bots: 3 | Use Cases: Automation, Support`,
         skills: []
       },
       {
@@ -34,7 +38,7 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
         icon: <Server className="text-emerald-500" />,
         pattern: /backend|api|rest|cloud|firebase|auth|jwt|server/i,
         subtext: "Built REST APIs, authentication systems, and cloud-based solutions",
-        proof: "Built REST APIs, Auth systems",
+        proof: `Production APIs | ${githubStars}+ GitHub Stars`,
         skills: []
       },
       {
@@ -43,7 +47,7 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
         icon: <Wrench className="text-orange-500" />,
         pattern: /tool|git|vercel|postman|vscode|workflow|automation/i,
         subtext: "Version control, deployment, and API testing",
-        proof: "Version control, Deployment, API Testing",
+        proof: `GitHub: ${githubRepos} Repos | Optimized Workflow`,
         skills: []
       },
       {
@@ -52,7 +56,7 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
         icon: <ShieldCheck className="text-blue-400" />,
         pattern: /strategy|professional|communication|agile|collaboration|analytical|problem|reasoning|leadership/i,
         subtext: "Cross-functional collaboration and agile adaptability for modern teams",
-        proof: "Analytical Problem Solving | Agile Workflow",
+        proof: `${totalProjects}+ Delivered | Agile & Lean`,
         skills: []
       }
     ];
