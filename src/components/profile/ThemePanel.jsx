@@ -1,6 +1,17 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaPalette, FaTimes, FaFillDrip, FaLayerGroup, FaCog, FaCheckCircle } from "react-icons/fa";
+import { FaPalette, FaTimes, FaFillDrip, FaLayerGroup, FaCog, FaCheckCircle, FaChevronDown, FaFont } from "react-icons/fa";
+
+const fontOptions = [
+  "Inter",
+  "Roboto",
+  "Outfit",
+  "Poppins",
+  "Montserrat",
+  "JetBrains Mono",
+  "Space Grotesk",
+  "Playfair Display",
+];
 
 const ThemePanel = ({ isOpen, onClose, theme, onUpdate, isUpdating, presets }) => {
   return (
@@ -114,6 +125,35 @@ const ThemePanel = ({ isOpen, onClose, theme, onUpdate, isUpdating, presets }) =
                     {theme.cardStyle === style.id && <FaCheckCircle className="text-blue-500" />}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Typography */}
+            <div className="pt-6 border-t border-white/5 space-y-4">
+              <label className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] flex items-center gap-2">
+                 <FaFont className="text-blue-500" /> Typography System
+              </label>
+              <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5 flex flex-col items-center justify-center space-y-4 hover:border-blue-500/30 transition-all">
+                  <div className="relative w-full group">
+                    <select
+                        value={theme.fontPrimary}
+                        onChange={(e) => onUpdate({ ...theme, fontPrimary: e.target.value })}
+                        className="w-full bg-white/5 p-4 rounded-2xl text-xl font-black outline-none cursor-pointer appearance-none border border-white/5 focus:border-blue-500/50 transition-all text-white text-center pr-10"
+                        style={{ fontFamily: theme.fontPrimary }}
+                    >
+                        {fontOptions.map((f) => (
+                        <option key={f} value={f} className="text-slate-900" style={{ fontFamily: f }}>
+                            {f}
+                        </option>
+                        ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-white transition-colors">
+                        <FaChevronDown size={10} />
+                    </div>
+                  </div>
+                  <p className="text-[8px] text-slate-500 font-bold text-center leading-relaxed px-4 opacity-60">
+                      Standardizing interface fonts across all heading and body elements.
+                  </p>
               </div>
             </div>
 
