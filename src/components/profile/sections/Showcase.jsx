@@ -99,8 +99,6 @@ const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArra
             </motion.div>
           ))}
         </div>
-
-        </div>
       </div>
     </section>
   );
