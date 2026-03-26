@@ -95,7 +95,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
             </span>
           </h1>
 
-          <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
+          <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
             <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
               <div className="w-full break-words leading-snug">
                 <TypeAnimation
