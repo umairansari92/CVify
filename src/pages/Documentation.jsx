@@ -5,7 +5,7 @@ import {
   FileText, Globe, ArrowLeft, Users, Sparkles, Eye,
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
-  BarChart3, GitBranch, TrendingUp
+  BarChart3, GitBranch, TrendingUp, Heart
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
@@ -313,6 +313,13 @@ const Documentation = () => {
           </p>
         </div>
 
+        {/* Tagline Blockquote */}
+        <div className="border-l-4 border-emerald-500 pl-5 py-3 my-6 bg-emerald-500/5 rounded-r-2xl">
+          <p className="text-text-primary font-black text-[15px] italic">
+            "Giant platforms sell you a Template. CVify Pro sells you Verifiable Proof and AI-driven Mentorship."
+          </p>
+        </div>
+
         {/* The Answer */}
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
           Because the giants solve <em>one piece</em> of the puzzle. LinkedIn is a network, not an ATS auditor. Canva makes pretty resumes that 
@@ -331,6 +338,10 @@ const Documentation = () => {
             desc="Our Anti-Hallucination Engine has 6 strict rules. Every feedback quotes YOUR actual resume. If your score is 45, we say 45 — then we show you HOW to make it 85." />
           <InfoCard icon={<Sparkles size={16} />} color="amber" title="Complete Career Ecosystem" 
             desc="ATS Scanner + AI Cover Letters + Live Portfolio + GitHub Integration + SEO + Theme Customization — all in one place. No switching between 5 different tools." />
+          <InfoCard icon={<Heart size={16} />} color="red" title="Empathy-First Coaching" 
+            desc="We highlight your STRENGTHS first, then suggest improvements with rewritten examples. You'll never feel crushed — you'll feel guided, like having a personal career coach." />
+          <InfoCard icon={<Globe size={16} />} color="blue" title="Globally Inclusive" 
+            desc="Optimized for English, Urdu, and Dutch. Market-specific scoring for Pakistani HR, European Remote, Freelance, and Standard modes. Not western-centric — built for the world." />
         </div>
 
         {/* For Recruiters */}
@@ -389,6 +400,9 @@ const Documentation = () => {
                 ["Universal Agency", "✅ Peon to CEO", "❌ Tech Only", "❌ Tech Only"],
                 ["Score Justification", "✅ WHY per metric", "❌ No", "❌ No"],
                 ["Resume Coaching Tone", "✅ Empathetic + Strict", "❌ N/A", "❌ Generic"],
+                ["Recruiter Trust", "✅ API-Verified Proof", "❌ Self-Reported Only", "❌ Self-Reported Only"],
+                ["Digital Presence", "✅ Live SEO Web Profile", "❌ Dead PDF Only", "❌ Dead PDF Only"],
+                ["Global / Local Markets", "✅ EN, UR, NL + 4 Modes", "❌ Western Only", "❌ Western Only"],
               ].map(([feature, cvify, canva, rezi], i) => (
                 <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
                   <td className="py-3.5 px-5 text-text-primary font-bold">{feature}</td>
@@ -404,10 +418,13 @@ const Documentation = () => {
         {/* Bottom Line */}
         <div className="mt-8 p-6 bg-primary/5 border border-primary/10 rounded-2xl text-center">
           <p className="text-text-primary font-black text-lg mb-2">The Bottom Line</p>
-          <p className="text-text-secondary text-[14px] leading-relaxed max-w-2xl mx-auto">
+          <p className="text-text-secondary text-[14px] leading-relaxed max-w-2xl mx-auto mb-4">
             Giants build platforms. We build <strong className="text-primary">precision</strong>. They give you templates — we give you 
             intelligence. They count keywords — we understand careers. If you want a pretty PDF, use Canva. 
             If you want to <strong className="text-primary">actually get hired</strong>, use CVify Pro.
+          </p>
+          <p className="text-text-muted text-[12px] italic">
+            Giants are reliable. CVify Pro is reliable <strong className="text-primary">AND</strong> empathetic, context-aware, proof-based, recruiter-ready, and globally inclusive.
           </p>
         </div>
       </>
