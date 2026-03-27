@@ -23,7 +23,7 @@ const BrandingFooter = ({ themeColor = "#2563eb" }) => {
   return (
     <View style={styles.footer}>
       <Text style={styles.footerText}>
-        {"Designed and developed by CVify | https://cvifypro.vercel.app"}
+        {"Designed and developed by CVify | https://cvifypro.vercel.app | LinkedIn: /company/cvifypro"}
       </Text>
     </View>
   );

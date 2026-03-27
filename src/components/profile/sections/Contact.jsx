@@ -115,6 +115,20 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
                     </a>
                   );
                 })}
+                
+                {/* CVify Official LinkedIn */}
+                <a 
+                  href="https://www.linkedin.com/company/cvifypro/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title="Follow CVify Official"
+                  className="w-12 h-12 rounded-full border border-blue-500/50 bg-blue-500/10 text-blue-500 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-12 hover:bg-blue-500 hover:text-white hover:shadow-[0_0_15px_rgba(0,119,181,0.5)]"
+                >
+                  <div className="flex flex-col items-center leading-none">
+                    <FaLinkedin size={18} />
+                    <span className="text-[6px] font-black uppercase tracking-tighter mt-0.5">Brand</span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
