@@ -422,16 +422,42 @@ const PublicProfile = () => {
 
       {/* ── Owner Analytics Bar (HUD Dock) ── */}
       {user.isOwner && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] w-full max-w-lg px-4 flex items-center justify-center pointer-events-none">
-          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto">
+        <div className="fixed bottom-10 left-0 right-0 z-[110] flex items-center justify-center pointer-events-none">
+          <motion.div 
+            drag
+            dragMomentum={false}
+            initial={{ y: 50, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            whileDrag={{ scale: 1.05, cursor: "grabbing" }}
+            className="backdrop-blur-3xl border rounded-[2rem] p-4 flex items-center justify-between gap-10 shadow-2xl pointer-events-auto cursor-grab active:shadow-[0_0_30px_rgba(37,99,235,0.2)] transition-shadow"
+            style={{
+              background: "var(--card-bg)",
+              borderColor: "var(--card-border)",
+              color: "var(--text-primary)"
+            }}
+          >
             <div className="flex items-center gap-2 px-4 border-r border-white/5">
               <FaChartBar className="text-[var(--primary-color)] text-sm" />
               <span className="text-[8px] font-black uppercase tracking-widest opacity-60">HUD Intelligence</span>
             </div>
             <div className="flex gap-8 px-4">
-              <div className="text-center"><p className="text-sm font-black text-white">{analytics.views || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Views</p></div>
-              <div className="text-center"><p className="text-sm font-black text-white">{analytics.resumeDownloads || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Pulse</p></div>
-              <div className="text-center"><p className="text-sm font-black text-white">{analytics.contactClicks || 0}</p><p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter">Interests</p></div>
+              <div className="text-center">
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.views || 0}</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Views</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.resumeDownloads || 0}</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Pulse</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.contactClicks || 0}</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Interests</p>
+              </div>
+            </div>
+            
+            {/* Drag Handle Indicator */}
+            <div className="pr-2 opacity-20 group-hover:opacity-100 transition-opacity">
+              <div className="w-1 h-8 bg-white/20 rounded-full" />
             </div>
           </motion.div>
         </div>
