@@ -19,6 +19,7 @@ import {
   FaGem,
   FaHistory,
   FaCog,
+  FaBook,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -79,6 +80,12 @@ const Sidebar = ({ onClose }) => {
       label: "My Profile",
       icon: <FaUser />,
       color: "from-violet-500 to-purple-600",
+    },
+    {
+      path: "/documentation",
+      label: "Documentation",
+      icon: <FaBook />,
+      color: "from-slate-500 to-gray-600",
     },
     // Admin item is conditionally added below
   ];

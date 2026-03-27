@@ -38,7 +38,14 @@ const Login = () => {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
 
-      <div className="absolute top-6 right-6 z-20 text-text-primary">
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-6">
+        <Link 
+          to="/documentation" 
+          className="text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-2"
+        >
+          <Logo className="w-6 opacity-40 group-hover:opacity-100" />
+          Documentation
+        </Link>
         <ThemeToggle />
       </div>
 

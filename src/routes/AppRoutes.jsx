@@ -25,6 +25,7 @@ import AdminLogs from "../pages/AdminLogs";
 import AdminSettings from "../pages/AdminSettings";
 import NotFound from "../pages/NotFound";
 import Maintenance from "../pages/Maintenance";
+import Documentation from "../pages/Documentation";
 import Layout from "../components/common/Layout";
 
 const ProtectedRoute = ({ children }) => {
@@ -177,6 +178,7 @@ const AppRoutes = () => {
       </Route>
 
       <Route path="/p/:username" element={<PublicProfile />} />
+      <Route path="/documentation" element={<Documentation />} />
       <Route path="/maintenance" element={<Maintenance />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
