@@ -294,25 +294,57 @@ const PublicProfile = () => {
   );
 
   const theme = localTheme || themePresets[0];
+  const themeStyles = {
+    backgroundColor: theme.bodyBg,
+    fontFamily: `'${theme.fontPrimary}', sans-serif`,
+    "--primary-color": theme.accentColor || "#2563eb",
+    "--bg-primary": theme.bodyBg || "#0f172a",
+    "--text-primary": theme.textPrimary || "#ffffff",
+    "--text-secondary": theme.textSecondary || "#94a3b8",
+    "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(255,255,255,0.02)",
+    "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255,255,255,0.08)",
+    color: "var(--text-primary)",
+  };
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-500 selection:bg-[var(--primary-color)] selection:text-white overflow-x-hidden"
-      style={{
-        backgroundColor: theme.bodyBg,
-        fontFamily: `'${theme.fontPrimary}', sans-serif`,
-        "--primary-color": theme.accentColor || "#2563eb",
-        "--bg-primary": theme.bodyBg || "#0f172a",
-        "--text-primary": theme.textPrimary || "#ffffff",
-        "--text-secondary": theme.textSecondary || "#94a3b8",
-        "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(255,255,255,0.02)",
-        "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255,255,255,0.08)",
-        color: "var(--text-primary)",
-      }}
-    >
+    <div className="min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900" style={themeStyles}>
       <Helmet>
-        <title>{`${personalInfo.fullName} | ${branding.siteTitle || "Career Intelligence"}`}</title>
+        {/* Dynamic SEO Tags */}
+        <title>{`${personalInfo.fullName} | ${personalInfo.jobTitle || 'Expert Portfolio'} | CVify Pro`}</title>
+        <meta name="description" content={personalInfo.objective?.substring(0, 160) || "Explore my professional portfolio, projects, and career journey built on CVify Pro."} />
+        <link rel="canonical" href={`https://app-cvifypro.vercel.app/p/${username}`} />
         <link href={`https://fonts.googleapis.com/css2?family=${theme.fontPrimary.replace(/\s+/g, "+")}:wght@300;400;500;600;700;800;900&display=swap`} rel="stylesheet" />
+
+        {/* Open Graph / Facebook / LinkedIn */}
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={`${personalInfo.fullName} - ${personalInfo.jobTitle || 'Professional Portfolio'}`} />
+        <meta property="og:description" content={personalInfo.objective?.substring(0, 160) || "Check out my latest projects and professional expertise."} />
+        <meta property="og:image" content={personalInfo.image || "https://cvifypro.vercel.app/og-image.png"} />
+        <meta property="og:url" content={`https://app-cvifypro.vercel.app/p/${username}`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${personalInfo.fullName} | ${personalInfo.jobTitle}`} />
+        <meta name="twitter:description" content={personalInfo.objective?.substring(0, 160)} />
+        <meta name="twitter:image" content={personalInfo.image} />
+
+        {/* JSON-LD Structured Data for Search Engines */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": personalInfo.fullName,
+            "jobTitle": personalInfo.jobTitle,
+            "url": `https://app-cvifypro.vercel.app/p/${username}`,
+            "image": personalInfo.image,
+            "description": personalInfo.objective,
+            "sameAs": [
+              user?.socialLinks?.linkedin,
+              user?.socialLinks?.github,
+              user?.socialLinks?.twitter
+            ].filter(Boolean)
+          })}
+        </script>
         <style>{`html { scroll-behavior: smooth; }`}</style>
       </Helmet>
 
