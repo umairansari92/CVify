@@ -9,9 +9,11 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, hand
   // Enrichment Engine: Group skills into Proof Cards
   const categorizedSkills = useMemo(() => {
     const rawSkills = user.skills || [];
-    const githubRepos = githubStats?.stats?.repos || 20;
-    const githubStars = githubStats?.stats?.stars || 120;
     const totalProjects = projectsCount || 5;
+    
+    // Smarter fallbacks: If GitHub is missing, use the absolute count of portfolio projects.
+    const githubRepos = githubStats?.stats?.repos || totalProjects;
+    const githubStars = githubStats?.stats?.stars || (totalProjects * 10) + 20; 
 
     const categories = [
       {
