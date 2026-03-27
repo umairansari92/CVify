@@ -301,11 +301,70 @@ const Documentation = () => {
 
     competitors: (
       <>
-        <DocHeader title="Why CVify Pro Stands Out" badge="Comparison" />
+        <DocHeader title="Why Choose CVify Pro?" badge="The Honest Truth" />
+        
+        {/* The Honest Acknowledgement */}
+        <div className="p-6 bg-amber-500/5 border border-amber-500/10 rounded-2xl mb-8">
+          <h4 className="font-black text-amber-400 text-sm mb-3 flex items-center gap-2"><Award size={16} /> Let's Be Real</h4>
+          <p className="text-text-secondary text-[14px] leading-relaxed">
+            Giants like <strong className="text-text-primary">LinkedIn</strong>, <strong className="text-text-primary">Indeed</strong>, <strong className="text-text-primary">Canva</strong>, <strong className="text-text-primary">Zety</strong>, <strong className="text-text-primary">Jobscan</strong>, and <strong className="text-text-primary">Rezi</strong> exist — 
+            they're reliable, credible, trustworthy, and backed by billions. We respect them. They've shaped the industry. 
+            <strong className="text-primary"> So why should you choose us?</strong>
+          </p>
+        </div>
+
+        {/* The Answer */}
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          CVify Pro isn't just another resume builder. Here's how it compares:
+          Because the giants solve <em>one piece</em> of the puzzle. LinkedIn is a network, not an ATS auditor. Canva makes pretty resumes that 
+          <strong className="text-red-400"> fail ATS parsing</strong> (75% rejection before human eyes). Jobscan matches keywords but doesn't know if you're a fresher 
+          or a senior. <strong className="text-text-primary">No single platform combines all of these — except CVify Pro.</strong>
         </p>
-        {/* Premium Comparison Table */}
+
+        {/* For Job Seekers */}
+        <SectionTitle>Why Job Seekers Choose Us</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Brain size={16} />} color="emerald" title="Your Resume Gets UNDERSTOOD" 
+            desc="We don't just count keywords. Our 3-Layer Engine understands context — a fresher missing AWS gets encouragement, a senior gets a critical alert. No other tool does this." />
+          <InfoCard icon={<Eye size={16} />} color="blue" title="You See What Recruiters See" 
+            desc="6-Second Recruiter Impression, strong bullet highlights, and exact before→after rewrites. You don't guess what's wrong — you KNOW and you get the fix." />
+          <InfoCard icon={<Shield size={16} />} color="purple" title="No Lies, No Inflation" 
+            desc="Our Anti-Hallucination Engine has 6 strict rules. Every feedback quotes YOUR actual resume. If your score is 45, we say 45 — then we show you HOW to make it 85." />
+          <InfoCard icon={<Sparkles size={16} />} color="amber" title="Complete Career Ecosystem" 
+            desc="ATS Scanner + AI Cover Letters + Live Portfolio + GitHub Integration + SEO + Theme Customization — all in one place. No switching between 5 different tools." />
+        </div>
+
+        {/* For Recruiters */}
+        <SectionTitle>Why Recruiters Trust Us</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Award size={16} />} color="emerald" title="Proof-Based Candidates" 
+            desc="Skills aren't just text — they're backed by live GitHub repos, project counts, and ATS audit scores. You see PROOF, not promises." />
+          <InfoCard icon={<Target size={16} />} color="blue" title="Pre-Screened Resumes" 
+            desc="Candidates who use CVify Pro have already passed a 3-layer AI audit and optimized for YOUR JD. Less screening time, better matches." />
+          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="Transparent Scoring" 
+            desc="Every score comes with a justification. You know WHY a candidate scored 85 in keywords and 60 in quantification — no black boxes." />
+          <InfoCard icon={<Rocket size={16} />} color="amber" title="One-Click Discovery" 
+            desc="10 seconds: repos, projects, ATS score, experience timeline, contact buttons — all on one HUD dashboard. No PDF downloading needed." />
+        </div>
+
+        {/* The Real Differentiator */}
+        <SectionTitle>What We Do That NOBODY Else Does</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { title: "Context-Aware Scoring", desc: "Only platform that scores differently for a fresher vs senior. A 22-year-old missing Docker is okay. A 35-year-old missing Docker is a red flag.", color: "text-emerald-400" },
+            { title: "Hybrid Score Calibration", desc: "AI Score × 0.6 + Server NLP × 0.4. When AI tries to inflate your score, the server catches it. When AI lowballs, the server corrects. Mathematical honesty.", color: "text-blue-400" },
+            { title: "Before → After Bullet Rewrites", desc: "Not just 'fix this' — we rewrite your weakest line using the Google XYZ formula and tell you exactly WHERE to paste it in your resume.", color: "text-purple-400" },
+            { title: "Universal Professional Agency", desc: "Teacher, banker, receptionist, CEO — the AI adapts for ALL professions. Not just tech. Not just white-collar. Everyone.", color: "text-amber-400" },
+            { title: "Live SEO-Optimized Portfolio", desc: "Your profile appears on Google with JSON-LD structured data. Share on LinkedIn and it auto-generates a rich preview card. No coding, no hosting.", color: "text-red-400" },
+          ].map((item, i) => (
+            <div key={i} className="p-5 glass rounded-2xl border border-white/5">
+              <p className={`font-black text-sm mb-1 ${item.color}`}>{item.title}</p>
+              <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Comparison Table */}
+        <SectionTitle>Feature-by-Feature Comparison</SectionTitle>
         <div className="overflow-x-auto rounded-2xl border border-white/5">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -328,6 +387,8 @@ const Documentation = () => {
                 ["Recruiter Impression", "✅ 6-Second Verdict", "❌ No", "❌ No"],
                 ["Before→After Bullets", "✅ AI Rewrite + Tips", "❌ No", "❌ No"],
                 ["Universal Agency", "✅ Peon to CEO", "❌ Tech Only", "❌ Tech Only"],
+                ["Score Justification", "✅ WHY per metric", "❌ No", "❌ No"],
+                ["Resume Coaching Tone", "✅ Empathetic + Strict", "❌ N/A", "❌ Generic"],
               ].map(([feature, cvify, canva, rezi], i) => (
                 <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
                   <td className="py-3.5 px-5 text-text-primary font-bold">{feature}</td>
@@ -338,6 +399,16 @@ const Documentation = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Bottom Line */}
+        <div className="mt-8 p-6 bg-primary/5 border border-primary/10 rounded-2xl text-center">
+          <p className="text-text-primary font-black text-lg mb-2">The Bottom Line</p>
+          <p className="text-text-secondary text-[14px] leading-relaxed max-w-2xl mx-auto">
+            Giants build platforms. We build <strong className="text-primary">precision</strong>. They give you templates — we give you 
+            intelligence. They count keywords — we understand careers. If you want a pretty PDF, use Canva. 
+            If you want to <strong className="text-primary">actually get hired</strong>, use CVify Pro.
+          </p>
         </div>
       </>
     ),
