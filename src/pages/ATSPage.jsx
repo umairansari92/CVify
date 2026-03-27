@@ -34,6 +34,7 @@ const ATSPage = () => {
   const [file, setFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [marketMode, setMarketMode] = useState("Standard");
+  const [experienceLevel, setExperienceLevel] = useState("Mid-Level");
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -56,6 +57,7 @@ const ATSPage = () => {
     formData.append("resume", file);
     formData.append("jobDescription", jobDescription);
     formData.append("marketMode", marketMode);
+    formData.append("experienceLevel", experienceLevel);
 
     const action = await dispatch(analyzeResumeV3Async(formData));
     
@@ -145,12 +147,47 @@ const ATSPage = () => {
                 placeholder="Paste the target job description here for accurate matching..."
                 className="w-full bg-background border border-border-subtle p-5 rounded-[2rem] focus:ring-4 ring-primary/10 transition-all font-medium text-sm h-48 resize-none leading-relaxed"
               />
+              {!jobDescription.trim() && (
+                <div className="flex items-center gap-2 px-4 py-2.5 mt-2 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
+                  <FaExclamationTriangle className="text-amber-500 text-xs flex-shrink-0" />
+                  <p className="text-[10px] font-bold text-amber-500/80 leading-relaxed">
+                    No JD provided. Audit will use general industry standards for <span className="font-black text-amber-400">{experienceLevel}</span> level.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Experience Level */}
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
+                Step 3: Experience Level
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: "Entry-Level", label: "Fresher (0-1 yr)" },
+                  { value: "Junior", label: "Junior (1-2 yrs)" },
+                  { value: "Mid-Level", label: "Mid-Level (3-5 yrs)" },
+                  { value: "Senior", label: "Senior (5+ yrs)" },
+                ].map((level) => (
+                  <button
+                    key={level.value}
+                    onClick={() => setExperienceLevel(level.value)}
+                    className={`py-3 px-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      experienceLevel === level.value
+                        ? "bg-primary text-white shadow-lg"
+                        : "bg-white/5 text-text-secondary hover:bg-white/10"
+                    }`}
+                  >
+                    {level.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Market Mode */}
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
-                Step 3: Market Mode
+                Step 4: Market Mode
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {["Standard", "Pakistan HR", "Freelance", "Remote"].map(
