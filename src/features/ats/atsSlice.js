@@ -51,7 +51,8 @@ const atsSlice = createSlice({
       })
       .addCase(analyzeResumeV3Async.fulfilled, (state, action) => {
         state.loading = false;
-        state.latestResult = action.payload;
+        // Store only the scan data, not the whole response
+        state.latestResult = action.payload.scan || action.payload;
       })
       .addCase(analyzeResumeV3Async.rejected, (state, action) => {
         state.loading = false;
