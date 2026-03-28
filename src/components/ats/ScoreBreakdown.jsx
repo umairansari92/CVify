@@ -34,7 +34,7 @@ const ScoreBreakdown = ({ scores, justifications = {} }) => {
               />
             </div>
             {justification && (
-              <p className="text-[10px] font-medium text-text-muted leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-[10px] font-medium text-text-muted/80 leading-relaxed mt-2 pt-2 border-t border-white/5">
                 {justification}
               </p>
             )}
