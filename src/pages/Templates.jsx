@@ -157,54 +157,57 @@ const Templates = () => {
           {templates.map((tpl) => (
             <div
               key={tpl.id}
-              className="group bg-white dark:bg-slate-blue rounded-[2rem] shadow-premium border border-slate-100 dark:border-white/5 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+              className="group bg-white dark:bg-slate-blue rounded-[2.5rem] shadow-premium border border-slate-100 dark:border-white/5 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
             >
-              <div className="relative h-80 overflow-hidden bg-slate-100 dark:bg-midnight/50">
+              <div className="relative h-[450px] overflow-hidden bg-slate-50 dark:bg-midnight/30">
                 {/* Template Preview with Scale */}
-                <div className="absolute inset-x-0 top-4 flex justify-center scale-[0.35] origin-top transition-transform duration-500 group-hover:scale-[0.38]">
+                <div className="absolute inset-x-0 top-0 flex justify-center scale-[0.55] origin-top transition-all duration-700 ease-out group-hover:scale-[0.6] group-hover:translate-y-[-10px]">
                   <ResumePreview resume={dummyResume} templateId={tpl.id} />
                 </div>
 
+                {/* Bottom Fade Effect */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white dark:from-slate-blue to-transparent z-10 pointer-events-none" />
+
                 {/* Overlay actions */}
-                <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4">
+                <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 z-20">
                   <button
                     onClick={() => handleUseTemplate(tpl.id)}
-                    className="bg-white text-primary px-6 py-2 rounded-xl font-bold shadow-xl hover:bg-action hover:text-white transition-all transform hover:scale-105"
+                    className="bg-primary text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl hover:bg-action transition-all transform hover:scale-105"
                   >
-                    Edit This Design
+                    Select Design
                   </button>
                   <div className="flex gap-4">
                     <button
                       onClick={() => handleDownloadPDF(dummyResume, tpl.id)}
-                      className="p-3 bg-success text-white rounded-full shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-110"
+                      className="p-4 bg-emerald-500 text-white rounded-2xl shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-110"
                       title="Download Sample PDF"
                     >
-                      <FaFileDownload size={18} />
+                      <FaFileDownload size={20} />
                     </button>
                     <button
-                      className="p-3 bg-slate-100 text-primary rounded-full shadow-lg hover:bg-white transition-all transform hover:scale-110"
+                      className="p-4 bg-white text-primary rounded-2xl shadow-lg hover:bg-slate-50 transition-all transform hover:scale-110"
                       onClick={() =>
                         setSelectedTemplate({ ...tpl, data: dummyResume })
                       }
                       title="Zoom View"
                     >
-                      <FaEye size={18} />
+                      <FaEye size={20} />
                     </button>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 flex justify-between items-center decoration-slate-200">
+              <div className="p-8 flex justify-between items-center decoration-slate-200 bg-white/50 dark:bg-slate-blue/50 backdrop-blur-sm border-t border-slate-100 dark:border-white/5 relative z-30">
                 <div>
-                  <h3 className="text-xl font-bold text-primary dark:text-white uppercase tracking-tight">
+                  <h3 className="text-xl font-black text-primary dark:text-white uppercase tracking-tight">
                     {tpl.name}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 font-mono">
-                    ID: {tpl.id}
+                  <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">
+                    AI-Optimized Layout
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-midnight flex items-center justify-center border border-slate-100 dark:border-white/5">
-                  <div className="w-2 h-2 rounded-full bg-action animate-pulse"></div>
+                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-midnight flex items-center justify-center border border-slate-100 dark:border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-action animate-pulse"></div>
                 </div>
               </div>
             </div>
