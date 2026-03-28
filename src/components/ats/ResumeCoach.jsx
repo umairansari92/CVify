@@ -507,78 +507,105 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
     }
     const doc = new (jsPDF.jsPDF || jsPDF)();
     const primaryColor = '#3b82f6';
+    const secondaryColor = '#1f2937';
+    const roseColor = '#ef4444';
+    const margin = 20;
+    const pageWidth = 210;
+    const contentWidth = pageWidth - (margin * 2);
     
+    // Helper for wrapped text and yPos update
+    const addWrappedText = (text, x, y, size, font = 'normal', color = secondaryColor, lineSpacing = 6) => {
+      doc.setFont('helvetica', font);
+      doc.setFontSize(size);
+      doc.setTextColor(color);
+      const lines = doc.splitTextToSize(text, contentWidth - (x - margin));
+      doc.text(lines, x, y);
+      return y + (lines.length * lineSpacing);
+    };
+
     // Header
     doc.setFillColor(primaryColor);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, pageWidth, 40, 'F');
     doc.setTextColor('#ffffff');
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text('CVify Pro — AI Resume Strategy', 20, 25);
+    doc.text('CVify Pro — AI Resume Strategy', margin, 25);
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Generated on ${new Date().toLocaleDateString()} | Scan ID: ${scanId}`, 20, 32);
+    doc.text(`Generated on ${new Date().toLocaleDateString()} | Scan ID: ${scanId}`, margin, 32);
 
     let yPos = 55;
 
-    // 1. Overall Metrics
-    doc.setTextColor('#1f2937');
+    // 1. Strategic Overview
+    doc.setTextColor(secondaryColor);
     doc.setFontSize(16);
-    doc.text('1. Strategic Overview', 20, yPos);
-    yPos += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.text('1. Strategic Overview', margin, yPos);
+    yPos += 12;
     
-    doc.setFontSize(12);
-    doc.text(`Start Score: ${currentScore}%`, 25, yPos);
-    doc.text(`Potential Score: ${potentialTotalScore}%`, 100, yPos);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Start Score: ${currentScore}%`, margin + 5, yPos);
+    doc.text(`Potential Score: ${potentialTotalScore}%`, margin + 80, yPos);
     yPos += 8;
-    doc.text(`Job Alignment: ${alignmentMeter?.level || 'N/A'}`, 25, yPos);
+    doc.text(`Job Alignment: ${alignmentMeter?.level || 'N/A'}`, margin + 5, yPos);
     yPos += 15;
 
     // 2. Dealbreakers
     if (dealbreakers?.length > 0) {
-      doc.setTextColor('#ef4444');
+      doc.setTextColor(roseColor);
       doc.setFontSize(14);
-      doc.text('! Critical Dealbreakers', 20, yPos);
-      yPos += 8;
-      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('! Critical Dealbreakers', margin, yPos);
+      yPos += 10;
+      
       dealbreakers.forEach(db => {
-        doc.text(`• ${db.requirement}: ${db.advice}`, 25, yPos, { maxWidth: 160 });
-        yPos += 12;
+        if (yPos > 270) { doc.addPage(); yPos = 20; }
+        yPos = addWrappedText(`• ${db.requirement}: ${db.advice}`, margin + 5, yPos, 10, 'normal', '#4b5563', 5);
+        yPos += 4;
       });
-      yPos += 5;
+      yPos += 8;
     }
 
     // 3. Section Loopholes
-    doc.setTextColor('#1f2937');
+    doc.setTextColor(secondaryColor);
     doc.setFontSize(14);
-    doc.text('2. Section Optimization Checklist', 20, yPos);
-    yPos += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.text('2. Section Optimization Checklist', margin, yPos);
+    yPos += 12;
 
     sectionLoopholes?.forEach((item, index) => {
-      if (yPos > 270) { doc.addPage(); yPos = 20; }
+      if (yPos > 250) { doc.addPage(); yPos = 20; }
+      
+      // Section Header
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
-      doc.text(`${index + 1}. ${item.section} (${item.severity})`, 25, yPos);
-      yPos += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.text(`Issue: ${item.issue}`, 30, yPos, { maxWidth: 155 });
-      yPos += 8;
-      doc.setTextColor(primaryColor);
-      doc.text(`Suggested Change: ${item.suggestedFix}`, 30, yPos, { maxWidth: 155 });
-      doc.setTextColor('#1f2937');
-      yPos += 15;
+      doc.setTextColor(secondaryColor);
+      doc.text(`${index + 1}. ${item.section} (${item.severity})`, margin + 5, yPos);
+      yPos += 7;
+
+      // Issue Text
+      yPos = addWrappedText(`Issue: ${item.issue}`, margin + 10, yPos, 10, 'normal', '#4b5563', 5);
+      yPos += 2;
+
+      // Suggested Fix
+      yPos = addWrappedText(`Suggested Change: ${item.suggestedFix}`, margin + 10, yPos, 10, 'bold', primaryColor, 5);
+      yPos += 12;
     });
 
-    // Strategy
-    if (yPos > 250) { doc.addPage(); yPos = 20; }
-    doc.setFillColor('#f3f4f6');
-    doc.rect(15, yPos, 180, 25, 'F');
+    // 4. Final Action Strategy
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
+    doc.setFillColor('#f8fafc');
+    doc.setDrawColor('#e2e8f0');
+    doc.roundedRect(margin - 5, yPos, contentWidth + 10, 35, 5, 5, 'FD');
+    
     doc.setFont('helvetica', 'bold');
-    doc.text('Final Action Strategy:', 20, yPos + 10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(overallStrategy || '', 20, yPos + 18, { maxWidth: 170 });
+    doc.setFontSize(12);
+    doc.setTextColor(primaryColor);
+    doc.text('Final Action Strategy:', margin, yPos + 12);
+    
+    yPos = addWrappedText(overallStrategy || 'Follow the checklist above to maximize your reach.', margin, yPos + 22, 10, 'normal', '#334155', 5);
 
     doc.save(`CVify_Strategy_${scanId.slice(0, 8)}.pdf`);
   };
