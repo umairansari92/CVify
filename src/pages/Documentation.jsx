@@ -27,6 +27,7 @@ const Documentation = () => {
       label: "Core Features",
       items: [
         { id: "ats", icon: <Target size={16} />, label: "ATS v4.0 Precision Engine" },
+        { id: "coach", icon: <Brain size={16} />, label: "AI Resume Coach PRO" },
         { id: "cover-letter", icon: <MessageSquare size={16} />, label: "AI Cover Letters" },
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
@@ -140,6 +141,40 @@ const Documentation = () => {
             <strong> "Real Bullet Quotes"</strong> (direct copy-paste from resume, never paraphrased).
           </p>
         </div>
+      </>
+    ),
+
+    coach: (
+      <>
+        <DocHeader title="AI Resume Coach PRO" badge="Premium Intelligence" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          The AI Resume Coach is your **Interactive Career Strategist**. It doesn't just scan; it guides you through a personalized "Healing Plan" to optimize your resume scientifically.
+        </p>
+
+        <SectionTitle>Key Optimization Metrics</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Potential Score Meter" 
+            desc="Gemini calculates your 'Actual' vs 'Potential' score. Implement all fixes to reach your scientific goal (e.g., 68% -> 92%)." />
+          <InfoCard icon={<ShieldCheck size={18} />} color="blue" title="Reality & Dealbreaker Check" 
+            desc="6 strict rules prevent lying. If a job has a hard requirement (Visa/Language/Exp) you lack, the AI flags it as a Dealbreaker." />
+          <InfoCard icon={<GitBranch size={18} />} color="purple" title="Interactive Checklist" 
+            desc="Every loophole and win is a checkable task. Progress is saved in LocalStorage per scan so you never lose your flow." />
+          <InfoCard icon={<Eye size={18} />} color="amber" title="Recruiter First Impression" 
+            desc="A psychological simulation of what a hiring manager thinks after seeing the 'Fixed' version of your resume." />
+        </div>
+
+        <SectionTitle>The Strategy Report (PDF)</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Download a branded **Coaching Bible** (PDF) that includes all your section rewrites, quick wins, and the overall game plan. Perfect for offline reference while editing.
+        </p>
+
+        <SectionTitle>How to Use the Coach</SectionTitle>
+        <Steps items={[
+          { step: "1", title: "Run ATS Scan", desc: "Coaching hints are generated automatically with every scan (0 extra diamond cost)." },
+          { step: "2", title: "Review Reality Checks", desc: "Check for Dealbreakers first — if it's a hard 'No', don't waste time on the resume." },
+          { step: "3", title: "Implementation Cycle", desc: "Check off items in the HUD. Watch your Potential Score bar reach the goal." },
+          { step: "4", title: "Jump to Builder", desc: "Click 'Fix in Builder' on any hint to jump to that specific resume section instantly." },
+        ]} />
       </>
     ),
 
