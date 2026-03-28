@@ -451,7 +451,7 @@ const QuickWins = ({ wins }) => {
       </div>
 
       <div className="space-y-3">
-        {wins
+        {[...wins]
           .sort((a, b) => (a.rank || 0) - (b.rank || 0))
           .map((win, i) => {
             const impactLevel = getImpactLevel(win.impact);
