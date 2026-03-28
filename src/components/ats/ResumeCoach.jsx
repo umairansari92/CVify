@@ -506,9 +506,10 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
        return;
     }
     const doc = new (jsPDF.jsPDF || jsPDF)();
-    const primaryColor = '#3b82f6';
-    const secondaryColor = '#1f2937';
-    const roseColor = '#ef4444';
+    const primaryColor = '#2563eb';
+    const secondaryColor = '#1e293b';
+    const roseColor = '#e11d48';
+    const purpleColor = '#7c3aed';
     const margin = 20;
     const pageWidth = 210;
     const contentWidth = pageWidth - (margin * 2);
@@ -525,35 +526,54 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
 
     // Header
     doc.setFillColor(primaryColor);
-    doc.rect(0, 0, pageWidth, 40, 'F');
+    doc.rect(0, 0, pageWidth, 45, 'F');
     doc.setTextColor('#ffffff');
-    doc.setFontSize(24);
+    doc.setFontSize(26);
     doc.setFont('helvetica', 'bold');
-    doc.text('CVify Pro — AI Resume Strategy', margin, 25);
+    doc.text('CVify Pro — Career Intelligence HUD', margin, 25);
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Generated on ${new Date().toLocaleDateString()} | Scan ID: ${scanId}`, margin, 32);
+    doc.text(`Strategic Coaching Report | Scan ID: ${scanId}`, margin, 32);
+    doc.text(`Generated on ${new Date().toLocaleDateString()}`, margin, 37);
 
-    let yPos = 55;
+    let yPos = 60;
 
-    // 1. Strategic Overview
+    // 1. Executive Summary & Scores
     doc.setTextColor(secondaryColor);
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('1. Strategic Overview', margin, yPos);
+    doc.text('1. Executive Summary', margin, yPos);
     yPos += 12;
     
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Start Score: ${currentScore}%`, margin + 5, yPos);
-    doc.text(`Potential Score: ${potentialTotalScore}%`, margin + 80, yPos);
+    doc.text(`Current ATS Score: ${currentScore}%`, margin + 5, yPos);
+    doc.text(`Target Potential: ${potentialTotalScore}%`, margin + 80, yPos);
     yPos += 8;
     doc.text(`Job Alignment: ${alignmentMeter?.level || 'N/A'}`, margin + 5, yPos);
-    yPos += 15;
+    yPos += 12;
 
-    // 2. Dealbreakers
+    // Alignment Summary
+    yPos = addWrappedText(alignmentMeter?.summary || '', margin + 5, yPos, 10, 'normal', '#475569', 5);
+    yPos += 10;
+
+    // 2. Recruiter Impression (Crucial Insight)
+    if (recruiterImpression) {
+      if (yPos > 250) { doc.addPage(); yPos = 20; }
+      doc.setFillColor('#f5f3ff');
+      doc.rect(margin, yPos, contentWidth, 25, 'F');
+      doc.setTextColor(purpleColor);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('RECRUITER FIRST IMPRESSION:', margin + 5, yPos + 8);
+      yPos = addWrappedText(`"${recruiterImpression}"`, margin + 5, yPos + 16, 10, 'italic', purpleColor, 5);
+      yPos += 15;
+    }
+
+    // 3. Dealbreakers (Hard Requirements)
     if (dealbreakers?.length > 0) {
+      if (yPos > 250) { doc.addPage(); yPos = 20; }
       doc.setTextColor(roseColor);
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
@@ -562,52 +582,97 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
       
       dealbreakers.forEach(db => {
         if (yPos > 270) { doc.addPage(); yPos = 20; }
-        yPos = addWrappedText(`• ${db.requirement}: ${db.advice}`, margin + 5, yPos, 10, 'normal', '#4b5563', 5);
+        yPos = addWrappedText(`• ${db.requirement}`, margin + 5, yPos, 10, 'bold', roseColor, 5);
+        yPos = addWrappedText(`  Advice: ${db.advice}`, margin + 5, yPos, 10, 'normal', '#4b5563', 5);
         yPos += 4;
       });
       yPos += 8;
     }
 
-    // 3. Section Loopholes
+    // 4. Experience Gap Analysis
+    if (experienceGap && experienceGap.gapSeverity !== 'None') {
+      if (yPos > 250) { doc.addPage(); yPos = 20; }
+      doc.setTextColor(secondaryColor);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('3. Experience Gap Strategy', margin, yPos);
+      yPos += 10;
+      
+      doc.setFontSize(10);
+      doc.text(`JD Requires: ${experienceGap.jdRequires || experienceGap.jdRequirement}`, margin + 5, yPos);
+      yPos += 6;
+      doc.text(`Your Resume: ${experienceGap.resumeShows || experienceGap.resumeValue}`, margin + 5, yPos);
+      yPos += 8;
+      
+      if (experienceGap.strategies?.length > 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Bridge Strategies:', margin + 5, yPos);
+        yPos += 6;
+        experienceGap.strategies.forEach(s => {
+          yPos = addWrappedText(`• ${s}`, margin + 8, yPos, 9, 'normal', '#4b5563', 5);
+          yPos += 2;
+        });
+      }
+      yPos += 10;
+    }
+
+    // 5. Section Optimization Checklist
+    if (yPos > 240) { doc.addPage(); yPos = 20; }
     doc.setTextColor(secondaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text('2. Section Optimization Checklist', margin, yPos);
+    doc.text('4. Detailed Loophole Checklist', margin, yPos);
     yPos += 12;
 
     sectionLoopholes?.forEach((item, index) => {
       if (yPos > 250) { doc.addPage(); yPos = 20; }
-      
-      // Section Header
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(secondaryColor);
-      doc.text(`${index + 1}. ${item.section} (${item.severity})`, margin + 5, yPos);
+      doc.text(`${index + 1}. ${item.section} [${item.severity}]`, margin + 5, yPos);
       yPos += 7;
 
-      // Issue Text
       yPos = addWrappedText(`Issue: ${item.issue}`, margin + 10, yPos, 10, 'normal', '#4b5563', 5);
       yPos += 2;
-
-      // Suggested Fix
-      yPos = addWrappedText(`Suggested Change: ${item.suggestedFix}`, margin + 10, yPos, 10, 'bold', primaryColor, 5);
-      yPos += 12;
+      yPos = addWrappedText(`Suggested Fix: ${item.suggestedFix}`, margin + 10, yPos, 10, 'bold', primaryColor, 5);
+      yPos += 10;
     });
 
-    // 4. Final Action Strategy
+    // 6. Quick Wins (Low Effort / High Impact)
+    if (quickWins?.length > 0) {
+      if (yPos > 240) { doc.addPage(); yPos = 20; }
+      doc.setTextColor('#059669');
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('5. Quick Win Fixes', margin, yPos);
+      yPos += 10;
+      
+      quickWins.forEach(win => {
+        if (yPos > 270) { doc.addPage(); yPos = 20; }
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.text(`• ${win.action}`, margin + 5, yPos);
+        yPos += 6;
+        yPos = addWrappedText(`  Instruction: ${win.howTo}`, margin + 5, yPos, 9, 'normal', '#4b5563', 5);
+        yPos += 5;
+      });
+      yPos += 10;
+    }
+
+    // 7. Overall Action Plan
     if (yPos > 240) { doc.addPage(); yPos = 20; }
-    doc.setFillColor('#f8fafc');
-    doc.setDrawColor('#e2e8f0');
-    doc.roundedRect(margin - 5, yPos, contentWidth + 10, 35, 5, 5, 'FD');
+    doc.setFillColor('#eff6ff');
+    doc.setDrawColor(primaryColor);
+    doc.roundedRect(margin - 5, yPos, contentWidth + 10, 35, 3, 3, 'FD');
     
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.setTextColor(primaryColor);
-    doc.text('Final Action Strategy:', margin, yPos + 12);
+    doc.text('FINAL ACTION STRATEGY:', margin, yPos + 12);
     
-    yPos = addWrappedText(overallStrategy || 'Follow the checklist above to maximize your reach.', margin, yPos + 22, 10, 'normal', '#334155', 5);
+    yPos = addWrappedText(overallStrategy || 'Apply the fixes above to scientifically maximize your interview chances.', margin, yPos + 22, 10, 'normal', secondaryColor, 5);
 
-    doc.save(`CVify_Strategy_${scanId.slice(0, 8)}.pdf`);
+    doc.save(`CVify_Full_Strategy_${scanId.slice(0, 8)}.pdf`);
   };
 
   return (
