@@ -3,6 +3,7 @@ import ScoreCard from './ScoreCard';
 import ScoreBreakdown from './ScoreBreakdown';
 import KeywordGapAnalyzer from './KeywordGapAnalyzer';
 import SuggestionsList from './SuggestionsList';
+import ResumeCoach from './ResumeCoach';
 import { motion } from 'framer-motion';
 import { 
   CheckCircle2, 
@@ -34,6 +35,7 @@ const ATSResult = ({ data }) => {
   const weakBullets = data.weakBullets || feedback.weakBullets || [];
   const scoreJustifications = data.scoreJustifications || {};
   const detailedMetrics = data.detailedMetrics || {};
+  const coachingHints = data.coachingHints || null;
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom duration-1000 pb-20">
@@ -168,7 +170,14 @@ const ATSResult = ({ data }) => {
           <KeywordGapAnalyzer missingKeywords={data.missingKeywords || feedback.missingKeywords} />
         </div>
 
-        {/* --- SECTION 5: SUGGESTIONS --- */}
+        {/* --- SECTION 5: AI RESUME COACH --- */}
+        {coachingHints && (
+          <div className="lg:col-span-12">
+            <ResumeCoach coachingHints={coachingHints} />
+          </div>
+        )}
+
+        {/* --- SECTION 6: SUGGESTIONS --- */}
         <div className="lg:col-span-12">
           <SuggestionsList suggestions={data.suggestions} />
         </div>
