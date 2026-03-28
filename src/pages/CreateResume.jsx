@@ -12,7 +12,7 @@ import CustomSectionsForm from "../components/forms/CustomSectionsForm";
 import PDFPreviewPanel from "../components/PDFPreviewPanel";
 import { handleDownloadPDF } from "../utils/pdfExport";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   createResume,
@@ -25,6 +25,17 @@ const CreateResume = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentResume, loading } = useSelector((state) => state.resume);
+  
+  const tabs = [
+    { id: "personal", label: "Personal" },
+    { id: "experience", label: "Experience" },
+    { id: "education", label: "Education" },
+    { id: "projects", label: "Projects" },
+    { id: "skills", label: "Skills" },
+    { id: "custom", label: "Custom" },
+    { id: "style", label: "Style" },
+  ];
+
   const [activeTab, setActiveTab] = useState("personal");
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
 
@@ -39,6 +50,8 @@ const CreateResume = () => {
     };
   }, [mobilePreviewOpen]);
 
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     if (id) {
       dispatch(getResumeById(id));
@@ -46,6 +59,17 @@ const CreateResume = () => {
       dispatch(initNewResume());
     }
   }, [dispatch, id]);
+
+  // Handle section jumping via query param
+  useEffect(() => {
+    const step = searchParams.get("step");
+    if (step) {
+      const validTabs = tabs.map(t => t.id);
+      if (validTabs.includes(step.toLowerCase())) {
+        setActiveTab(step.toLowerCase());
+      }
+    }
+  }, [searchParams]);
 
   const handleSave = async (useDiamonds = false) => {
     let result;
@@ -82,15 +106,6 @@ const CreateResume = () => {
     }
   };
 
-  const tabs = [
-    { id: "personal", label: "Personal" },
-    { id: "experience", label: "Experience" },
-    { id: "education", label: "Education" },
-    { id: "projects", label: "Projects" },
-    { id: "skills", label: "Skills" },
-    { id: "custom", label: "Custom" },
-    { id: "style", label: "Style" },
-  ];
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-background overflow-hidden transition-colors duration-300 relative">

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMyResumes } from '../../features/resume/resumeThunk';
+import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
 import {
   Shield,
   ShieldAlert,
@@ -310,17 +314,85 @@ const CopyButton = ({ text }) => {
   );
 };
 
-const FixInBuilderButton = ({ config }) => {
-  const navigate = useNavigate();
+const FixInBuilderButton = ({ config, onClick }) => {
   if (!config) return null;
-  const handleNavigate = (e) => {
+  
+  const handleAction = (e) => {
     e.stopPropagation();
-    navigate(`/create?step=${config.step || 'summary'}`);
+    onClick(config.step || 'summary');
   };
+
   return (
-    <button onClick={handleNavigate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all text-[9px] font-black uppercase tracking-widest border border-primary/20">
+    <button 
+      onClick={handleAction} 
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all text-[9px] font-black uppercase tracking-widest border border-primary/20 cursor-pointer"
+    >
       <ExternalLink size={10} /> Fix in Builder
     </button>
+  );
+};
+
+// ─── Selection Modal ────────────────────────────────────────
+const ResumeSelectorModal = ({ isOpen, onClose, resumes, onSelect, onStartNew }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
+      />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="relative w-full max-w-md glass border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden bg-slate-900/40"
+      >
+        <div className="p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto text-primary mb-4">
+              <FileWarning size={32} />
+            </div>
+            <h3 className="text-2xl font-black text-white tracking-tight">Select Resume to Edit</h3>
+            <p className="text-sm font-medium text-slate-400">Choose which resume you want to optimize in a new tab.</p>
+          </div>
+
+          <div className="max-h-64 overflow-y-auto pr-2 space-y-3 no-scrollbar">
+            {resumes.map((resume) => (
+              <button
+                key={resume._id}
+                onClick={() => onSelect(resume._id)}
+                className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+              >
+                <div>
+                  <p className="font-black text-white text-sm group-hover:text-primary transition-colors">{resume.title || 'Untitled Resume'}</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Template: {resume.templateId || 'Classic'}</p>
+                </div>
+                <ArrowRight size={16} className="text-slate-600 group-hover:text-primary transition-all group-hover:translate-x-1" />
+              </button>
+            ))}
+          </div>
+
+          <div className="pt-4 flex flex-col gap-3">
+            <button
+               onClick={onStartNew}
+               className="w-full py-4 rounded-2xl bg-primary text-white font-black uppercase tracking-widest text-[11px] hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+            >
+              Start New Resume & Fix
+            </button>
+            <button
+              onClick={onClose}
+              className="w-full py-2 text-slate-500 font-black uppercase tracking-[0.2em] text-[9px] hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
@@ -344,15 +416,68 @@ const Checkbox = ({ id, checked, onChange }) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
 const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) => {
+  const dispatch = useDispatch();
+  const { resumes, loading: resumesLoading } = useSelector((state) => state.resume);
+  
   const [checkedItems, setCheckedItems] = useState(() => {
     const saved = localStorage.getItem(`cvify_coach_v4_${scanId}`);
     return saved ? JSON.parse(saved) : [];
   });
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [showSelector, setShowSelector] = useState(false);
+  const [pendingStep, setPendingStep] = useState(null);
+
+  useEffect(() => {
+    dispatch(getMyResumes());
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem(`cvify_coach_v4_${scanId}`, JSON.stringify(checkedItems));
   }, [checkedItems, scanId]);
+
+  const handleFixAction = (step) => {
+    if (resumesLoading) return;
+
+    if (!resumes || resumes.length === 0) {
+      // No resumes - show choice
+      Swal.fire({
+        title: 'No Resumes Found',
+        text: 'Build your resume on CVify to use interactive hints, or download the strategic report for offline editing.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Build on CVify',
+        cancelButtonText: 'Download Report',
+        background: '#0f172a',
+        color: '#f1f5f9',
+        customClass: {
+          popup: 'rounded-[2rem] border border-white/10 glass',
+          confirmButton: 'bg-primary px-6 py-3 rounded-xl font-bold',
+          cancelButton: 'bg-white/5 px-6 py-3 rounded-xl font-bold border border-white/10'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open(`/create?step=${step}`, '_blank');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          handleDownloadPDF();
+        }
+      });
+      return;
+    }
+
+    if (resumes.length === 1) {
+      // Direct access for single resume
+      window.open(`/edit/${resumes[0]._id}?step=${step}`, '_blank');
+    } else {
+      // Multiple resumes - show selector
+      setPendingStep(step);
+      setShowSelector(true);
+    }
+  };
+
+  const handleSelectResume = (id) => {
+    window.open(`/edit/${id}?step=${pendingStep}`, '_blank');
+    setShowSelector(false);
+  };
 
   if (!coachingHints) return null;
 
@@ -375,7 +500,12 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
   const progressPercentage = allItemsCount > 0 ? (checkedItems.length / allItemsCount) * 100 : 0;
 
   const handleDownloadPDF = () => {
-    const doc = new jsPDF();
+    if (typeof jsPDF === 'undefined') {
+       console.error("jsPDF is not loaded properly.");
+       Swal.fire('Error', 'PDF Generator failed to initialize. Please refresh.', 'error');
+       return;
+    }
+    const doc = new (jsPDF.jsPDF || jsPDF)();
     const primaryColor = '#3b82f6';
     
     // Header
@@ -552,7 +682,7 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
                                       </div>
                                       <div className="flex flex-col gap-2 items-end">
                                          <CopyButton text={item.suggestedFix} />
-                                         <FixInBuilderButton config={item.fixInBuilder} />
+                                         <FixInBuilderButton config={item.fixInBuilder} onClick={handleFixAction} />
                                       </div>
                                    </div>
                                 </div>
@@ -604,7 +734,7 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
                                        <span className="text-primary text-[7px] uppercase tracking-widest">Instruction</span>
                                        <div className="flex gap-2">
                                           <CopyButton text={win.howTo} />
-                                          <FixInBuilderButton config={win.fixInBuilder} />
+                                          <FixInBuilderButton config={win.fixInBuilder} onClick={handleFixAction} />
                                        </div>
                                     </div>
                                     {win.howTo}
@@ -621,6 +751,20 @@ const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) =>
 
       {/* 7. Overall Strategy Final Verdict */}
       <OverallStrategy strategy={overallStrategy} />
+
+      {/* 8. Selection Modal */}
+      <AnimatePresence>
+        <ResumeSelectorModal 
+          isOpen={showSelector}
+          onClose={() => setShowSelector(false)}
+          resumes={resumes}
+          onSelect={handleSelectResume}
+          onStartNew={() => {
+            window.open(`/create?step=${pendingStep}`, '_blank');
+            setShowSelector(false);
+          }}
+        />
+      </AnimatePresence>
     </div>
   );
 };
