@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   Shield,
   ShieldAlert,
@@ -23,7 +24,55 @@ import {
   Info,
   FileWarning,
   Sparkles,
+  Download,
+  ExternalLink,
 } from 'lucide-react';
+
+// ─── Score Meter Component ──────────────────────────────────
+const PotentialScoreMeter = ({ currentScore, potentialScore, progressPercentage }) => {
+  return (
+    <div className="glass p-6 rounded-[2.5rem] border border-primary/20 bg-primary/5 shadow-xl shadow-primary/5 space-y-4">
+      <div className="flex justify-between items-end">
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-1">
+            Optimization Progress
+          </p>
+          <h3 className="text-xl font-black text-text-primary">Road to {potentialScore}%</h3>
+        </div>
+        <div className="text-right">
+          <span className="text-2xl font-black text-primary">{Math.round(currentScore + (potentialScore - currentScore) * (progressPercentage / 100))}%</span>
+          <span className="text-[10px] font-bold text-text-muted ml-2 uppercase">Estimated</span>
+        </div>
+      </div>
+
+      {/* Progress Bar Container */}
+      <div className="relative h-4 bg-white/5 rounded-full overflow-hidden border border-white/5">
+        {/* Potential Target (Ghost Bar) */}
+        <div 
+          className="absolute inset-0 bg-primary/10 transition-all duration-1000"
+          style={{ width: `${potentialScore}%` }}
+        />
+        {/* Actual Progress Bar */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${currentScore + (potentialScore - currentScore) * (progressPercentage / 100)}%` }}
+          transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+          className="absolute inset-x-0 h-full bg-linear-to-r from-primary to-blue-500 shadow-glow rounded-full"
+        />
+        {/* Marker for Current Start */}
+        <div 
+          className="absolute h-full w-0.5 bg-white/30 z-10"
+          style={{ left: `${currentScore}%` }}
+        />
+      </div>
+
+      <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-text-muted px-1">
+        <span>Current: {currentScore}%</span>
+        <span>Goal: {potentialScore}%</span>
+      </div>
+    </div>
+  );
+};
 
 // ─── Alignment Meter ────────────────────────────────────────
 const AlignmentMeter = ({ alignment }) => {
@@ -142,8 +191,7 @@ const DealbreakerAlerts = ({ dealbreakers }) => {
           transition={{ delay: 0.15 + i * 0.1 }}
           className="glass p-6 rounded-[2rem] border-2 border-rose-500/30 bg-rose-500/5 relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/5 rounded-full blur-2xl" />
-          <div className="flex items-start gap-4">
+          <div className="flex items-start gap-4 text-left">
             <Ban size={18} className="text-rose-500 flex-shrink-0 mt-1" />
             <div className="space-y-2">
               <h4 className="text-sm font-black text-rose-400">
@@ -183,7 +231,7 @@ const ExperienceGapDetector = ({ gap }) => {
       transition={{ delay: 0.2 }}
       className="space-y-4"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 text-left">
         <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
           <TrendingUp size={20} />
         </div>
@@ -193,16 +241,16 @@ const ExperienceGapDetector = ({ gap }) => {
         </div>
       </div>
 
-      <div className="glass p-6 rounded-[2rem] border border-white/5 space-y-5">
+      <div className="glass p-6 rounded-[2rem] border border-white/5 space-y-5 text-left">
         {/* Visual Comparison */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-2">JD Requires</p>
-            <p className="text-sm font-black text-text-primary">{gap.jdRequires}</p>
+            <p className="text-sm font-black text-text-primary">{gap.jdRequires || gap.jdRequirement}</p>
           </div>
           <div className={`p-4 rounded-2xl ${config.bg} border ${config.border}`}>
             <p className={`text-[9px] font-black uppercase tracking-[0.3em] ${config.color} mb-2`}>Your Resume Shows</p>
-            <p className="text-sm font-black text-text-primary">{gap.resumeShows}</p>
+            <p className="text-sm font-black text-text-primary">{gap.resumeShows || gap.resumeValue}</p>
           </div>
         </div>
 
@@ -243,368 +291,355 @@ const ExperienceGapDetector = ({ gap }) => {
   );
 };
 
-// ─── Copy Button Helper ─────────────────────────────────────
+// ─── Helper Components ──────────────────────────────────────
 const CopyButton = ({ text }) => {
   const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
+  const handleCopy = async (e) => {
+    e.stopPropagation();
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch { /* ignore */ }
   };
-
   return (
-    <button
-      onClick={handleCopy}
-      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 hover:bg-primary/10 text-text-muted hover:text-primary transition-all text-[9px] font-bold uppercase tracking-wider"
-    >
+    <button onClick={handleCopy} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 hover:bg-primary/10 text-text-muted hover:text-primary transition-all text-[9px] font-bold uppercase tracking-wider">
       {copied ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
       {copied ? 'Copied!' : 'Copy'}
     </button>
   );
 };
 
-// ─── Section Loopholes ──────────────────────────────────────
-const SectionLoopholes = ({ loopholes }) => {
-  const [expandedIndex, setExpandedIndex] = useState(null);
-
-  if (!loopholes || loopholes.length === 0) return null;
-
-  const sectionIcons = {
-    Summary: Brain,
-    Experience: Crosshair,
-    Skills: Zap,
-    Education: Sparkles,
-    Projects: Rocket,
+const FixInBuilderButton = ({ config }) => {
+  const navigate = useNavigate();
+  if (!config) return null;
+  const handleNavigate = (e) => {
+    e.stopPropagation();
+    navigate(`/create?step=${config.step || 'summary'}`);
   };
-
-  const severityConfig = {
-    High: { badge: 'bg-rose-500/10 text-rose-400 border-rose-500/20', dot: 'bg-rose-500' },
-    Medium: { badge: 'bg-amber-500/10 text-amber-400 border-amber-500/20', dot: 'bg-amber-500' },
-    Low: { badge: 'bg-blue-500/10 text-blue-400 border-blue-500/20', dot: 'bg-blue-500' },
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-      className="space-y-4"
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500">
-          <FileWarning size={20} />
-        </div>
-        <div>
-          <h3 className="text-xl font-black text-text-primary tracking-tight">Section Loopholes</h3>
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
-            Issues found in your resume sections — with copy-paste fixes
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        {loopholes.map((loophole, i) => {
-          const SectionIcon = sectionIcons[loophole.section] || Target;
-          const severity = severityConfig[loophole.severity] || severityConfig.Medium;
-          const isExpanded = expandedIndex === i;
-
-          return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 + i * 0.08 }}
-              className="glass rounded-[2rem] border border-white/5 overflow-hidden hover:border-white/10 transition-all"
-            >
-              {/* Header (always visible) */}
-              <button
-                onClick={() => setExpandedIndex(isExpanded ? null : i)}
-                className="w-full p-5 flex items-center gap-4 text-left"
-              >
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <SectionIcon size={18} className="text-text-secondary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-sm font-black text-text-primary">{loophole.section}</h4>
-                    <span className={`px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-wider border ${severity.badge}`}>
-                      {loophole.severity}
-                    </span>
-                    {loophole.expectedImpact && (
-                      <span className="px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        {loophole.expectedImpact}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[11px] font-medium text-text-muted truncate">{loophole.issue}</p>
-                </div>
-                <div className="flex-shrink-0 text-text-muted">
-                  {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </div>
-              </button>
-
-              {/* Expanded Content */}
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-5 pb-5 space-y-4">
-                      {/* Before */}
-                      {loophole.currentText && (
-                        <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/10">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="px-2 py-0.5 bg-rose-500/10 text-rose-400 text-[8px] font-black uppercase rounded-full">
-                              Current
-                            </span>
-                          </div>
-                          <p className="text-[11px] font-medium text-text-secondary leading-relaxed line-through opacity-70">
-                            {loophole.currentText}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* After */}
-                      {loophole.suggestedFix && (
-                        <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase rounded-full">
-                              Suggested Fix
-                            </span>
-                            <CopyButton text={loophole.suggestedFix} />
-                          </div>
-                          <p className="text-[11px] font-bold text-text-primary leading-relaxed">
-                            {loophole.suggestedFix}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Reality Check */}
-                      {loophole.realityCheck && (
-                        <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Shield size={12} className="text-amber-400" />
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-400">
-                              Reality Check
-                            </span>
-                          </div>
-                          <p className="text-[11px] font-medium text-amber-400/80 leading-relaxed">
-                            {loophole.realityCheck}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
-      </div>
-    </motion.div>
+    <button onClick={handleNavigate} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all text-[9px] font-black uppercase tracking-widest border border-primary/20">
+      <ExternalLink size={10} /> Fix in Builder
+    </button>
   );
 };
 
-// ─── Quick Wins ─────────────────────────────────────────────
-const QuickWins = ({ wins }) => {
-  if (!wins || wins.length === 0) return null;
-
-  const impactColors = {
-    High: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    Medium: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    Low: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  };
-
-  // Extract base impact level from strings like "High (+5-8 points)"
-  const getImpactLevel = (impact) => {
-    if (!impact) return 'Medium';
-    const str = typeof impact === 'string' ? impact : '';
-    if (str.toLowerCase().startsWith('high')) return 'High';
-    if (str.toLowerCase().startsWith('low')) return 'Low';
-    return 'Medium';
-  };
-
+const Checkbox = ({ id, checked, onChange }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4 }}
-      className="space-y-4"
+    <div 
+      className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+        checked ? 'bg-primary border-primary shadow-glow' : 'border-white/10 bg-white/5 hover:border-primary/30'
+      }`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange(!checked);
+      }}
     >
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
-          <Zap size={20} />
-        </div>
-        <div>
-          <h3 className="text-xl font-black text-text-primary tracking-tight">Quick Wins</h3>
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
-            Fastest fixes ranked by impact — do these first
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        {[...wins]
-          .sort((a, b) => (a.rank || 0) - (b.rank || 0))
-          .map((win, i) => {
-            const impactLevel = getImpactLevel(win.impact);
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -15 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.45 + i * 0.08 }}
-                className="glass p-5 rounded-[2rem] border border-white/5 hover:border-primary/20 transition-all group relative overflow-hidden"
-              >
-                <div className="flex items-start gap-4">
-                  {/* Rank Number */}
-                  <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg font-black text-primary">{win.rank || i + 1}</span>
-                  </div>
-
-                  <div className="flex-1 space-y-3">
-                    {/* Action */}
-                    <p className="text-sm font-black text-text-primary leading-relaxed">{win.action}</p>
-
-                    {/* Badges */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className={`px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-wider border ${impactColors[impactLevel]}`}>
-                        {win.impact}
-                      </span>
-                      {win.effort && (
-                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-wider bg-white/5 text-text-muted border border-white/5">
-                          <Clock size={9} /> {win.effort}
-                        </span>
-                      )}
-                      {win.where && (
-                        <span className="px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-wider bg-primary/5 text-primary/70 border border-primary/10">
-                          📍 {win.where}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* How To */}
-                    {win.howTo && (
-                      <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 group-hover:bg-primary/10 transition-colors">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="flex items-center gap-2">
-                            <ArrowRight size={10} className="text-primary" />
-                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">How to do it</span>
-                          </div>
-                          <CopyButton text={win.howTo} />
-                        </div>
-                        <p className="text-[11px] font-bold text-text-primary leading-relaxed">
-                          {win.howTo}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Shine Effect */}
-                <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/5 opacity-40 group-hover:animate-shine" />
-              </motion.div>
-            );
-          })}
-      </div>
-    </motion.div>
-  );
-};
-
-// ─── Overall Strategy Banner ────────────────────────────────
-const OverallStrategy = ({ strategy }) => {
-  if (!strategy) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      className="glass p-6 rounded-[2rem] border border-primary/20 bg-primary/5"
-    >
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-          <Gauge size={22} className="text-primary" />
-        </div>
-        <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-1">
-            Your Game Plan
-          </p>
-          <p className="text-base font-bold text-text-primary leading-relaxed">
-            {strategy}
-          </p>
-        </div>
-      </div>
-    </motion.div>
+      {checked && <Check size={14} className="text-white" />}
+    </div>
   );
 };
 
 // ═══════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
-const ResumeCoach = ({ coachingHints }) => {
+const ResumeCoach = ({ coachingHints, currentScore = 0, scanId = 'default' }) => {
+  const [checkedItems, setCheckedItems] = useState(() => {
+    const saved = localStorage.getItem(`cvify_coach_v4_${scanId}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem(`cvify_coach_v4_${scanId}`, JSON.stringify(checkedItems));
+  }, [checkedItems, scanId]);
+
   if (!coachingHints) return null;
 
   const {
-    alignmentMeter,
-    dealbreakers,
-    experienceGap,
-    sectionLoopholes,
-    quickWins,
-    overallStrategy,
+      alignmentMeter,
+      dealbreakers,
+      experienceGap,
+      sectionLoopholes,
+      quickWins,
+      overallStrategy,
+      potentialTotalScore,
+      recruiterImpression,
   } = coachingHints;
 
-  // Check if there's any coaching content to show
-  const hasContent =
-    alignmentMeter ||
-    (dealbreakers && dealbreakers.length > 0) ||
-    (experienceGap && experienceGap.gapSeverity !== 'None') ||
-    (sectionLoopholes && sectionLoopholes.length > 0) ||
-    (quickWins && quickWins.length > 0) ||
-    overallStrategy;
+  const toggleItem = (id) => {
+    setCheckedItems(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
 
-  if (!hasContent) return null;
+  const allItemsCount = (sectionLoopholes?.length || 0) + (quickWins?.length || 0);
+  const progressPercentage = allItemsCount > 0 ? (checkedItems.length / allItemsCount) * 100 : 0;
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    const primaryColor = '#3b82f6';
+    
+    // Header
+    doc.setFillColor(primaryColor);
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor('#ffffff');
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CVify Pro — AI Resume Strategy', 20, 25);
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated on ${new Date().toLocaleDateString()} | Scan ID: ${scanId}`, 20, 32);
+
+    let yPos = 55;
+
+    // 1. Overall Metrics
+    doc.setTextColor('#1f2937');
+    doc.setFontSize(16);
+    doc.text('1. Strategic Overview', 20, yPos);
+    yPos += 10;
+    
+    doc.setFontSize(12);
+    doc.text(`Start Score: ${currentScore}%`, 25, yPos);
+    doc.text(`Potential Score: ${potentialTotalScore}%`, 100, yPos);
+    yPos += 8;
+    doc.text(`Job Alignment: ${alignmentMeter?.level || 'N/A'}`, 25, yPos);
+    yPos += 15;
+
+    // 2. Dealbreakers
+    if (dealbreakers?.length > 0) {
+      doc.setTextColor('#ef4444');
+      doc.setFontSize(14);
+      doc.text('! Critical Dealbreakers', 20, yPos);
+      yPos += 8;
+      doc.setFontSize(10);
+      dealbreakers.forEach(db => {
+        doc.text(`• ${db.requirement}: ${db.advice}`, 25, yPos, { maxWidth: 160 });
+        yPos += 12;
+      });
+      yPos += 5;
+    }
+
+    // 3. Section Loopholes
+    doc.setTextColor('#1f2937');
+    doc.setFontSize(14);
+    doc.text('2. Section Optimization Checklist', 20, yPos);
+    yPos += 10;
+
+    sectionLoopholes?.forEach((item, index) => {
+      if (yPos > 270) { doc.addPage(); yPos = 20; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(`${index + 1}. ${item.section} (${item.severity})`, 25, yPos);
+      yPos += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(`Issue: ${item.issue}`, 30, yPos, { maxWidth: 155 });
+      yPos += 8;
+      doc.setTextColor(primaryColor);
+      doc.text(`Suggested Change: ${item.suggestedFix}`, 30, yPos, { maxWidth: 155 });
+      doc.setTextColor('#1f2937');
+      yPos += 15;
+    });
+
+    // Strategy
+    if (yPos > 250) { doc.addPage(); yPos = 20; }
+    doc.setFillColor('#f3f4f6');
+    doc.rect(15, yPos, 180, 25, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.text('Final Action Strategy:', 20, yPos + 10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(overallStrategy || '', 20, yPos + 18, { maxWidth: 170 });
+
+    doc.save(`CVify_Strategy_${scanId.slice(0, 8)}.pdf`);
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Section Header */}
-      <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/30">
-          <Brain size={20} />
+    <div className="space-y-8 pb-20 overflow-visible text-left">
+      {/* 1. Header & Section Intro */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-linear-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/30">
+            <Brain size={24} />
+          </div>
+          <div>
+            <h3 className="text-2xl font-black text-text-primary tracking-tight">AI Resume Coach <span className="text-primary tracking-normal ml-2">PRO</span></h3>
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-[0.2em]">Scientific Alignment & Optimization Engine</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-xl font-black text-text-primary tracking-tight">AI Resume Coach</h3>
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
-            Personalized action plan to optimize your resume
-          </p>
-        </div>
+        <button 
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 px-5 py-3 glass rounded-2xl border border-white/10 hover:border-primary/30 transition-all text-[10px] font-black uppercase tracking-widest text-text-primary group"
+        >
+          <Download size={14} className="group-hover:translate-y-0.5 transition-transform" /> Download PDF Report
+        </button>
       </div>
 
-      {/* 1. Alignment Meter — always first */}
-      <AlignmentMeter alignment={alignmentMeter} />
+      {/* 2. Scientific Metrics (Alignment + Potential Score) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        <AlignmentMeter alignment={alignmentMeter} />
+        <PotentialScoreMeter 
+          currentScore={currentScore} 
+          potentialScore={potentialTotalScore || currentScore + 15} 
+          progressPercentage={progressPercentage}
+        />
+      </div>
 
-      {/* 2. Dealbreakers — critical, show early */}
-      <DealbreakerAlerts dealbreakers={dealbreakers} />
+      {/* 3. Recruiter Impression - The "Human" Insight */}
+      {recruiterImpression && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass p-6 rounded-[2rem] border-2 border-dashed border-purple-500/20 bg-purple-500/5 relative overflow-hidden group">
+            <div className="flex items-start gap-4">
+               <div className="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Sparkles size={18} className="text-purple-400" />
+               </div>
+               <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-purple-400 mb-1">Recruiter First Impression (Fixed Version)</p>
+                  <p className="text-sm font-bold text-text-primary leading-relaxed">{recruiterImpression}</p>
+               </div>
+            </div>
+            {/* Shine effect */}
+            <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/5 opacity-40 group-hover:animate-shine" />
+        </motion.div>
+      )}
 
-      {/* 3. Experience Gap */}
-      <ExperienceGapDetector gap={experienceGap} />
+      {/* 4. Dealbreakers & Gap Detection */}
+      {(dealbreakers?.length > 0 || (experienceGap && experienceGap.gapSeverity !== 'None')) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <DealbreakerAlerts dealbreakers={dealbreakers} />
+            <ExperienceGapDetector gap={experienceGap} />
+        </div>
+      )}
 
-      {/* 4. Section Loopholes */}
-      <SectionLoopholes loopholes={sectionLoopholes} />
+      {/* 5. Section Loopholes (Checklist) */}
+      {sectionLoopholes?.length > 0 && (
+         <div className="space-y-4">
+            <div className="flex items-center gap-3">
+               <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500">
+                  <FileWarning size={20} />
+               </div>
+               <div>
+                  <h3 className="text-xl font-black text-text-primary tracking-tight">Loophole Checklist</h3>
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Mark as fixed to see your score grow</p>
+               </div>
+            </div>
+            <div className="space-y-3">
+               {sectionLoopholes.map((item, i) => {
+                  const id = `loophole_${i}`;
+                  const checked = checkedItems.includes(id);
+                  const isExpanded = expandedIndex === id;
+                  return (
+                    <motion.div key={id} className={`glass rounded-[2rem] border transition-all ${checked ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5 bg-white/5 hover:border-white/10'}`}>
+                        <div className="p-5 flex items-center gap-4 cursor-pointer" onClick={() => setExpandedIndex(isExpanded ? null : id)}>
+                           <Checkbox id={id} checked={checked} onChange={() => toggleItem(id)} />
+                           <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                 <h4 className={`text-sm font-black transition-all ${checked ? 'text-emerald-400 line-through opacity-50' : 'text-text-primary'}`}>{item.section}</h4>
+                                 <span className="px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-wider bg-white/5 text-text-muted border border-white/5">{item.severity}</span>
+                                 {item.expectedImpact && <span className="text-[8px] font-black text-emerald-400">{item.expectedImpact}</span>}
+                              </div>
+                              <p className={`text-[11px] font-medium truncate ${checked ? 'text-emerald-400/50' : 'text-text-muted'}`}>{item.issue}</p>
+                           </div>
+                           <div className="text-text-muted">{isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</div>
+                        </div>
+                        <AnimatePresence>
+                           {isExpanded && (
+                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden px-5 pb-5 space-y-4">
+                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-3">
+                                   <div className="flex gap-2"><span className="text-rose-400 text-[8px] font-black tracking-widest uppercase">Issue</span><p className="text-[11px] font-medium text-text-secondary">{item.currentText}</p></div>
+                                   <div className="flex justify-between items-start gap-3">
+                                      <div className="flex flex-col gap-2">
+                                         <span className="text-emerald-400 text-[8px] font-black tracking-widest uppercase">AI Rewrite</span>
+                                         <p className="text-[11px] font-bold text-text-primary leading-relaxed">{item.suggestedFix}</p>
+                                      </div>
+                                      <div className="flex flex-col gap-2 items-end">
+                                         <CopyButton text={item.suggestedFix} />
+                                         <FixInBuilderButton config={item.fixInBuilder} />
+                                      </div>
+                                   </div>
+                                </div>
+                                {item.realityCheck && (
+                                   <div className="p-3 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-3 text-left">
+                                      <Shield size={12} className="text-amber-400 flex-shrink-0 mt-0.5" />
+                                      <p className="text-[10px] font-medium text-amber-400/80 italic">{item.realityCheck}</p>
+                                   </div>
+                                )}
+                             </motion.div>
+                           )}
+                        </AnimatePresence>
+                    </motion.div>
+                  );
+               })}
+            </div>
+         </div>
+      )}
 
-      {/* 5. Quick Wins */}
-      <QuickWins wins={quickWins} />
+      {/* 6. Quick Wins Checklist */}
+      {quickWins?.length > 0 && (
+         <div className="space-y-4">
+            <div className="flex items-center gap-3">
+               <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+                  <Zap size={20} />
+               </div>
+               <div>
+                  <h3 className="text-xl font-black text-text-primary tracking-tight">Quick Wins</h3>
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Low effort, high impact fixes</p>
+               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {quickWins.map((win, i) => {
+                  const id = `win_${i}`;
+                  const checked = checkedItems.includes(id);
+                  return (
+                    <div key={id} className={`glass p-5 rounded-[3rem] border transition-all relative overflow-hidden group ${checked ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5 bg-white/5 hover:border-primary/20'}`}>
+                        <div className="flex items-start gap-4">
+                           <Checkbox id={id} checked={checked} onChange={() => toggleItem(id)} />
+                           <div className="space-y-3 flex-1 min-w-0">
+                               <p className={`text-sm font-black leading-tight ${checked ? 'text-emerald-400/50 line-through' : 'text-text-primary'}`}>{win.action}</p>
+                               <div className="flex flex-wrap gap-2">
+                                  <span className="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400">{win.impact}</span>
+                                  <span className="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-white/5 text-text-muted flex items-center gap-1"><Clock size={9}/> {win.effort}</span>
+                               </div>
+                               {!checked && win.howTo && (
+                                 <div className="p-3 rounded-2xl bg-white/5 border border-white/5 text-[10px] font-bold text-text-secondary leading-relaxed group-hover:bg-white/10 transition-colors">
+                                    <div className="flex justify-between items-center mb-1">
+                                       <span className="text-primary text-[7px] uppercase tracking-widest">Instruction</span>
+                                       <div className="flex gap-2">
+                                          <CopyButton text={win.howTo} />
+                                          <FixInBuilderButton config={win.fixInBuilder} />
+                                       </div>
+                                    </div>
+                                    {win.howTo}
+                                 </div>
+                               )}
+                           </div>
+                        </div>
+                    </div>
+                  );
+               })}
+            </div>
+         </div>
+      )}
 
-      {/* 6. Overall Strategy — always last */}
+      {/* 7. Overall Strategy Final Verdict */}
       <OverallStrategy strategy={overallStrategy} />
     </div>
+  );
+};
+
+const OverallStrategy = ({ strategy }) => {
+  if (!strategy) return null;
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass p-8 rounded-[3rem] border border-primary/20 bg-primary/5 shadow-2xl shadow-primary/10 relative overflow-hidden group">
+      <div className="flex items-start gap-5">
+        <div className="w-14 h-14 bg-primary/10 rounded-[1.5rem] flex items-center justify-center flex-shrink-0 animate-pulse">
+          <Target size={26} className="text-primary" />
+        </div>
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">Final Strategic Verdict</p>
+          <p className="text-lg font-black text-text-primary leading-relaxed">{strategy}</p>
+        </div>
+      </div>
+      <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/5 opacity-40 group-hover:animate-shine" />
+    </motion.div>
   );
 };
 

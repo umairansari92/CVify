@@ -173,7 +173,11 @@ const ATSResult = ({ data }) => {
         {/* --- SECTION 5: AI RESUME COACH --- */}
         {coachingHints && (
           <div className="lg:col-span-12">
-            <ResumeCoach coachingHints={coachingHints} />
+            <ResumeCoach 
+              coachingHints={coachingHints} 
+              currentScore={overall} 
+              scanId={data._id || 'temp-scan'} 
+            />
           </div>
         )}
 
