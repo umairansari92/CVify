@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 export default function ParticleBackground() {
   const points = useRef();
-  const particlesCount = 1500;
+  const particlesCount = 500;
 
   // Create a more structured particle system
   const positions = useMemo(() => {

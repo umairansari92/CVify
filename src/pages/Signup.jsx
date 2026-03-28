@@ -7,6 +7,7 @@ import Logo from "../components/common/Logo";
 import ThemeToggle from "../components/common/ThemeToggle";
 import { isDisposableEmail } from "../utils/blockedDomains";
 import { toast } from "react-hot-toast";
+import { formatAuthError } from "../utils/formatAuthError";
 import { AtSign, Edit3, CheckCircle2, XCircle } from "lucide-react";
 
 const Signup = () => {
@@ -150,7 +151,7 @@ const Signup = () => {
 
           {error && (
             <div className="bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 p-4 rounded-2xl text-xs font-bold mb-6 border border-red-100 dark:border-red-900/50 animate-shake">
-              {error}
+              {formatAuthError(error)}
             </div>
           )}
 

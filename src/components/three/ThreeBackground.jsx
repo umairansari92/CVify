@@ -23,13 +23,13 @@ export default function ThreeBackground() {
           depth: false,
           preserveDrawingBuffer: false, // Optimization
         }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         onCreated={({ gl }) => {
           gl.domElement.addEventListener("webglcontextlost", (event) => {
             event.preventDefault();
             console.warn("CVify: WebGL Context Lost. Attempting recovery...");
             setTimeout(() => {
-              setRetryKey((prev) => prev + 1);
+              setRetryKey((prev) => (prev < 3 ? prev + 1 : prev));
             }, 1000);
           });
           gl.domElement.addEventListener("webglcontextrestored", () => {

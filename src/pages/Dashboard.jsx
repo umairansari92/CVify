@@ -23,6 +23,7 @@ import { TypeAnimation } from "react-type-animation";
 import api from "../api/axios";
 import { handleDownloadLetter } from "../utils/pdfExport";
 import { toast } from "react-hot-toast";
+import { formatAuthError } from "../utils/formatAuthError";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes } from "react-icons/fa";
 
 const Dashboard = () => {
@@ -216,7 +217,9 @@ const Dashboard = () => {
                 <p className="font-black text-primary uppercase text-xs tracking-[0.2em] mb-1">
                   System Notice
                 </p>
-                <p className="font-bold text-text-primary text-lg">{error}</p>
+                <p className="font-bold text-text-primary text-lg">
+                  {formatAuthError(error)}
+                </p>
               </div>
             </div>
             <button

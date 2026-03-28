@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunk";
+import { clearAuthError } from "../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
 import ThemeToggle from "../components/common/ThemeToggle";
@@ -24,6 +25,7 @@ const Login = () => {
     if (loginUser.rejected.match(result)) {
       const payload = result.payload;
       if (typeof payload === "object" && payload?.email) {
+        dispatch(clearAuthError());
         navigate("/verify-otp", {
           state: { email: payload.email },
           replace: true,
