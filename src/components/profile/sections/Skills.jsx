@@ -4,7 +4,7 @@ import {
   FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaNpm, FaGitAlt, FaGithub, FaFire, FaServer, FaCode, FaLaptopCode
 } from "react-icons/fa";
 import { 
-  SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiGithub, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVisualstudiocode, SiVercel, SiTypescript, SiPython
+  SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiGithub, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVisualstudio, SiVercel, SiTypescript, SiPython
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 

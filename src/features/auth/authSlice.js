@@ -52,6 +52,9 @@ const authSlice = createSlice({
         saveUserToLocalStorage(state.user, state.token);
       }
     },
+    clearAuthError(state) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -122,5 +125,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, updateDiamonds, updateUser } = authSlice.actions;
+export const { logout, updateDiamonds, updateUser, clearAuthError } = authSlice.actions;
 export default authSlice.reducer;
