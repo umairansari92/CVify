@@ -5,7 +5,7 @@ import {
 } from "react-icons/fa";
 import { 
   SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVisualstudio, SiVercel, SiTypescript, SiPython,
-  SiVuedotjs, SiAngular, SiSvelte, SiAlpinemjs, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
+  SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiAmazonwebservices, SiGooglecloud, SiMicrosoftazure, SiNetlify, SiDigitalocean, SiDocker, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab,
   SiPhp, SiRust, SiGo, SiCplusplus, SiCsharp, SiRuby, SiSwift, SiKotlin, SiOpenai, SiTensorflow, SiPytorch, SiFigma, SiArduino
 } from "react-icons/si";
@@ -19,7 +19,6 @@ const ICON_MAP = {
   vue: <SiVuedotjs className="text-[#4FC08D]" />,
   angular: <SiAngular className="text-[#DD0031]" />,
   svelte: <SiSvelte className="text-[#FF3E00]" />,
-  alpine: <SiAlpinemjs className="text-[#2D3341]" />,
   jquery: <SiJquery className="text-[#0769AD]" />,
   htmx: <SiHtmx className="text-[#3366CC]" />,
   // Styling
