@@ -1,13 +1,12 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
-  FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaNpm, FaGitAlt, FaGithub, FaFire, FaServer, FaCode, FaLaptopCode, FaLink, FaJava, FaLayerGroup, FaServicestack
+  FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaNpm, FaGitAlt, FaGithub, FaFire, FaServer, FaCode, FaLaptopCode, FaLink, FaJava, FaLayerGroup, FaServicestack, FaAws, FaDocker, FaPython, FaPhp, FaRust, FaFigma, FaSwift, FaGem, FaBrain, FaTerminal
 } from "react-icons/fa";
 import { 
-  SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVisualstudio, SiVercel, SiTypescript, SiPython,
+  SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVercel, SiTypescript,
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
-  SiPostgresql, SiMysql, SiRedis, SiSqlite, SiAmazonwebservices, SiGooglecloud, SiMicrosoftazure, SiNetlify, SiDigitalocean, SiDocker, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab,
-  SiPhp, SiRust, SiGo, SiCplusplus, SiCsharp, SiRuby, SiSwift, SiKotlin, SiOpenai, SiTensorflow, SiPytorch, SiFigma, SiArduino
+  SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
@@ -47,14 +46,13 @@ const ICON_MAP = {
   firebase: <SiFirebase className="text-[#FFCA28]" />,
   supabase: <SiSupabase className="text-[#3ECF8E]" />,
   // Cloud
-  aws: <SiAmazonwebservices className="text-[#FF9900]" />,
-  googlecloud: <SiGooglecloud className="text-[#4285F4]" />,
-  azure: <SiMicrosoftazure className="text-[#0078D4]" />,
+  aws: <FaAws className="text-[#FF9900]" />,
+  googlecloud: <FaServer className="text-[#4285F4]" />,
   vercel: <SiVercel className="text-white" />,
   netlify: <SiNetlify className="text-[#00C7B7]" />,
   digitalocean: <SiDigitalocean className="text-[#0080FF]" />,
   // DevOps
-  docker: <SiDocker className="text-[#2496ED]" />,
+  docker: <FaDocker className="text-[#2496ED]" />,
   kubernetes: <SiKubernetes className="text-[#326CE5]" />,
   jenkins: <SiJenkins className="text-[#D24939]" />,
   terraform: <SiTerraform className="text-[#7B42BC]" />,
@@ -66,25 +64,25 @@ const ICON_MAP = {
   js: <FaJs className="text-[#F7DF1E]" />,
   typescript: <SiTypescript className="text-[#3178C6]" />,
   ts: <SiTypescript className="text-[#3178C6]" />,
-  python: <SiPython className="text-[#3776AB]" />,
+  python: <FaPython className="text-[#3776AB]" />,
   java: <FaJava className="text-[#007396]" />,
-  php: <SiPhp className="text-[#777BB4]" />,
-  rust: <SiRust className="text-white" />,
-  go: <SiGo className="text-[#00ADD8]" />,
-  cpp: <SiCplusplus className="text-[#00599C]" />,
-  csharp: <SiCsharp className="text-[#239120]" />,
-  ruby: <SiRuby className="text-[#CC342D]" />,
-  swift: <SiSwift className="text-[#F05138]" />,
-  kotlin: <SiKotlin className="text-[#7F52FF]" />,
+  php: <FaPhp className="text-[#777BB4]" />,
+  rust: <FaRust className="text-white" />,
+  go: <FaTerminal className="text-[#00ADD8]" />,
+  cpp: <FaCode className="text-[#00599C]" />,
+  csharp: <FaCode className="text-[#239120]" />,
+  ruby: <FaGem className="text-[#CC342D]" />,
+  swift: <FaSwift className="text-[#F05138]" />,
+  kotlin: <FaCode className="text-[#7F52FF]" />,
   // AI
-  openai: <SiOpenai className="text-[#412991]" />,
+  openai: <FaBrain className="text-[#412991]" />,
   linkchain: <FaLink className="text-[#2D3341]" />,
-  tensorflow: <SiTensorflow className="text-[#FF6F00]" />,
-  pytorch: <SiPytorch className="text-[#EE4C2C]" />,
+  tensorflow: <FaBrain className="text-[#FF6F00]" />,
+  pytorch: <FaBrain className="text-[#EE4C2C]" />,
   // Specialty
-  figma: <SiFigma className="text-[#F24E1E]" />,
+  figma: <FaFigma className="text-[#F24E1E]" />,
   arduino: <SiArduino className="text-[#00979D]" />,
-  vscode: <SiVisualstudio className="text-[#007ACC]" />,
+  vscode: <FaLaptopCode className="text-[#007ACC]" />,
 };
 
 const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate }) => {
