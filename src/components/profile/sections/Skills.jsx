@@ -86,12 +86,42 @@ const ICON_MAP = {
 };
 
 const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate }) => {
-  // CORRECT DATA HANDLING: Extract and normalize skills
-  const technicalSkills = useMemo(() => user.skills?.technical || [], [user.skills?.technical]);
-  const strategicSkills = useMemo(() => user.skills?.strategic || [], [user.skills?.strategic]);
-  const services = useMemo(() => user.services || [], [user.services]);
+  // ROBUST DATA NORMALIZATION: Handle both Object {technical, strategic} and Array [{name, category}] formats
+  const normalizedData = useMemo(() => {
+    let tech = [];
+    let strat = [];
+
+    // 1. Handle Object format (new dashboard structure)
+    if (user.skills && !Array.isArray(user.skills)) {
+      tech = user.skills.technical || [];
+      strat = user.skills.strategic || [];
+    } 
+    // 2. Handle Array format (legacy / Mongoose schema default)
+    else if (Array.isArray(user.skills)) {
+      user.skills.forEach(skill => {
+        const name = typeof skill === 'string' ? skill : (skill.name || "");
+        const category = skill.category?.toLowerCase() || "";
+        
+        if (category === 'strategic' || category === 'soft skills' || category === 'administrative') {
+          strat.push(name);
+        } else {
+          tech.push(name);
+        }
+      });
+    }
+
+    return { tech, strat };
+  }, [user.skills]);
+
+  const technicalSkills = normalizedData.tech;
+  const strategicSkills = normalizedData.strat;
+  const services = useMemo(() => {
+    const rawServices = user.services || [];
+    return Array.isArray(rawServices) ? rawServices : [];
+  }, [user.services]);
 
   const getSkillIcon = (name) => {
+    if (!name || typeof name !== 'string') return <FaCode className="text-gray-400" />;
     const rawName = name.toLowerCase().replace(/[\s\-_.]/g, "");
     
     // Exact or partial match in ICON_MAP

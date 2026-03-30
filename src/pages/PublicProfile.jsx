@@ -627,7 +627,7 @@ const PublicProfile = () => {
           />
         )}
 
-        {(isOwner || (user.skills?.length > 0)) && (
+        {(isOwner || (Array.isArray(user.skills) ? user.skills.length > 0 : (user.skills?.technical?.length > 0)) || (user.services?.length > 0)) && (
           <Skills 
             user={user} 
             isOwner={isOwner} 

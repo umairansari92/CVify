@@ -35,8 +35,12 @@ const SkillsServicesManager = () => {
   } = useForm({
     resolver: yupResolver(skillsServicesSchema),
     defaultValues: {
-      technicalSkills: user?.skills?.technical || [],
-      strategicSkills: user?.skills?.strategic || [],
+      technicalSkills: Array.isArray(user?.skills) 
+        ? user.skills.filter(s => s.category === 'Technical').map(s => s.name)
+        : (user?.skills?.technical || []),
+      strategicSkills: Array.isArray(user?.skills) 
+        ? user.skills.filter(s => s.category === 'Strategic').map(s => s.name)
+        : (user?.skills?.strategic || []),
       services: user?.services || [],
       sectionNames: {
         skills: user?.sectionNames?.skills || 'Expertise & Capabilities',
@@ -63,8 +67,12 @@ const SkillsServicesManager = () => {
   useEffect(() => {
     if (user) {
       reset({
-        technicalSkills: user.skills?.technical || [],
-        strategicSkills: user.skills?.strategic || [],
+        technicalSkills: Array.isArray(user.skills) 
+          ? user.skills.filter(s => s.category === 'Technical').map(s => s.name)
+          : (user.skills?.technical || []),
+        strategicSkills: Array.isArray(user.skills) 
+          ? user.skills.filter(s => s.category === 'Strategic').map(s => s.name)
+          : (user.skills?.strategic || []),
         services: user.services || [],
         sectionNames: {
           skills: user.sectionNames?.skills || 'Expertise & Capabilities',
@@ -77,11 +85,14 @@ const SkillsServicesManager = () => {
   const onSubmit = async (data) => {
     setSaving(true);
     try {
+      // Transform the categorized inputs into a single array of categorized objects for the Mongoose schema
+      const formattedSkills = [
+        ...data.technicalSkills.map(name => ({ name, category: 'Technical' })),
+        ...data.strategicSkills.map(name => ({ name, category: 'Strategic' }))
+      ];
+
       const res = await api.patch("/auth/profile", { 
-        skills: {
-          technical: data.technicalSkills,
-          strategic: data.strategicSkills,
-        },
+        skills: formattedSkills,
         services: data.services,
         sectionNames: {
           ...user.sectionNames,
