@@ -36,10 +36,10 @@ const SkillsServicesManager = () => {
     resolver: yupResolver(skillsServicesSchema),
     defaultValues: {
       technicalSkills: Array.isArray(user?.skills) 
-        ? user.skills.filter(s => s.category === 'Technical').map(s => s.name)
+        ? user.skills.filter(s => s.category?.toLowerCase() === 'technical').map(s => s.name)
         : (user?.skills?.technical || []),
       strategicSkills: Array.isArray(user?.skills) 
-        ? user.skills.filter(s => s.category === 'Strategic').map(s => s.name)
+        ? user.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name)
         : (user?.skills?.strategic || []),
       services: user?.services || [],
       sectionNames: {
@@ -68,10 +68,10 @@ const SkillsServicesManager = () => {
     if (user) {
       reset({
         technicalSkills: Array.isArray(user.skills) 
-          ? user.skills.filter(s => s.category === 'Technical').map(s => s.name)
+          ? user.skills.filter(s => s.category?.toLowerCase() === 'technical').map(s => s.name)
           : (user.skills?.technical || []),
         strategicSkills: Array.isArray(user.skills) 
-          ? user.skills.filter(s => s.category === 'Strategic').map(s => s.name)
+          ? user.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name)
           : (user.skills?.strategic || []),
         services: user.services || [],
         sectionNames: {
