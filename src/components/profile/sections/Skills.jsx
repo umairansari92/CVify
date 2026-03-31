@@ -9,15 +9,8 @@ import {
   SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVercel, SiTypescript,
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
-  SiNuxt, SiRemix, SiGatsby, SiAstro, SiPreact, SiEmber, SiBackbone, SiLit, SiStencil,
-  SiMobx, SiZustand, SiVite, SiWebpack, SiBabel, SiRollup, SiEsbuild, SiParcel, SiPostcss, SiTestinglibrary, SiJest, SiVitest, SiCypress, SiPlaywright, SiSelenium, SiPuppeteer,
-  SiRuby, SiSwift, SiKotlin, SiPhp, SiPython, SiTypescript as SiTS, SiJavascript, SiR, SiDart, SiHaskell, SiLua, SiPerl, SiScala, SiSolidity,
-  SiMariadb, SiCockroachdb, SiCassandra, SiCouchbase, SiCouchdb, SiNeo4j, SiPrisma, SiTypeorm, SiSequelize, SiDrizzle, SiMongoose,
-  SiGooglecloud, SiHeroku, SiCloudflare, SiRailway, SiRender, SiFlydotio, SiSupabase as SiSupabaseBrand, SiPocketbase, SiAppwrite,
-  SiCircleci, SiTravisci, SiGithubactions, SiBitbucket, SiAnsible as SiAnsibleBrand, SiChef, SiPuppet, SiPrometheus, SiGrafana, SiElasticstack, SiDatadog, SiNewrelic,
-  SiOpenai, SiTensorflow, SiPytorch, SiKeras, SiScikitlearn, SiLangchain, SiHuggingface, SiPandas, SiNumpy,
-  SiVim, SiNeovim, SiGnubash, SiPowershell, SiFramer, SiAdobecreativecloud, SiAdobephotoshop, SiAdobeillustrator, SiAdobexd, SiAdobepremierepro, SiAdobeaftereffects, SiCanva,
-  SiWordpress, SiShopify, SiStrapi, SiGhost, SiContentful, SiMagento, SiWoo, SiWeb3Dotjs, SiEthers, SiEthereum, SiSolana, SiMetamask
+  SiTypescript as SiTS, SiJavascript, SiSolidity, SiPrisma, SiMongoose, SiSequelize, SiTypeorm,
+  SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi, SiWeb3Dotjs
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
@@ -37,24 +30,24 @@ const ICON_MAP = {
   angular: <SiAngular className="text-[#DD0031]" />,
   svelte: <SiSvelte className="text-[#FF3E00]" />,
   sveltekit: <SiSvelte className="text-[#FF3E00]" />,
-  nuxt: <SiNuxt className="text-[#00DC82]" />,
+  nuxt: <FaCode className="text-[#00DC82]" />,
   solid: <FaCode className="text-[#2C4F7C]" />,
   qwik: <FaCode className="text-[#161616]" />,
-  preact: <SiPreact className="text-[#673AB8]" />,
-  remix: <SiRemix className="text-white" />,
-  astro: <SiAstro className="text-[#FF5D01]" />,
-  gatsby: <SiGatsby className="text-[#663399]" />,
+  preact: <FaCode className="text-[#673AB8]" />,
+  remix: <FaCode className="text-white" />,
+  astro: <FaCode className="text-[#FF5D01]" />,
+  gatsby: <FaCode className="text-[#663399]" />,
   jquery: <SiJquery className="text-[#0769AD]" />,
   htmx: <SiHtmx className="text-[#3366CC]" />,
-  backbone: <SiBackbone className="text-[#0071B5]" />,
-  ember: <SiEmber className="text-[#E04E39]" />,
-  lit: <SiLit className="text-[#324FFF]" />,
-  stencil: <SiStencil className="text-[#4C48FF]" />,
+  backbone: <FaCode className="text-[#0071B5]" />,
+  ember: <FaCode className="text-[#E04E39]" />,
+  lit: <FaCode className="text-[#324FFF]" />,
+  stencil: <FaCode className="text-[#4C48FF]" />,
 
   // --- STATE & DATA ---
   redux: <SiRedux className="text-[#764ABC]" />,
-  mobx: <SiMobx className="text-[#FF0995]" />,
-  zustand: <SiZustand className="text-[#434343]" />,
+  mobx: <FaLayerGroup className="text-[#FF0995]" />,
+  zustand: <FaLayerGroup className="text-[#434343]" />,
   recoil: <FaLayerGroup className="text-[#3578E5]" />, // No Si icon, fallback
   jotai: <FaLayerGroup className="text-white" />,
   pinia: <FaLayerGroup className="text-[#FFE485]" />,
@@ -95,7 +88,7 @@ const ICON_MAP = {
   python: <FaPython className="text-[#3776AB]" />,
   kotlin: <FaCode className="text-[#7F52FF]" />,
   swift: <FaSwift className="text-[#F05138]" />,
-  dart: <SiDart className="text-[#0175C2]" />,
+  dart: <FaCode className="text-[#0175C2]" />,
   solidity: <SiSolidity className="text-[#363636]" />,
 
   // --- DATABASES ---
