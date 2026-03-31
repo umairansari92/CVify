@@ -9,7 +9,7 @@ import {
   SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVercel, SiTypescript,
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
-  SiNuxtdotjs, SiSveltekit, SiRemix, SiGatsby, SiAstro, SiSolid, SiQwik, SiPreact, SiEmberdotjs, SiBackbonedotjs, SiLit, SiStencil,
+  SiNuxt, SiRemix, SiGatsby, SiAstro, SiSolid, SiQwik, SiPreact, SiEmber, SiBackbone, SiLit, SiStencil,
   SiMobx, SiZustand, SiVite, SiWebpack, SiBabel, SiRollup, SiEsbuild, SiParcel, SiPostcss, SiTestinglibrary, SiJest, SiVitest, SiCypress, SiPlaywright, SiSelenium, SiPuppeteer,
   SiC, SiCplusplus, SiCsharp, SiGo, SiRust, SiRuby, SiSwift, SiKotlin, SiPhp, SiPython, SiTypescript as SiTS, SiJavascript, SiR, SiDart, SiHaskell, SiLua, SiPerl, SiScala, SiSolidity,
   SiMariadb, SiCockroachdb, SiCassandra, SiCouchbase, SiCouchdb, SiNeo4j, SiPrisma, SiTypeorm, SiSequelize, SiDrizzle, SiMongoose,
@@ -17,7 +17,7 @@ import {
   SiCircleci, SiTravisci, SiGithubactions, SiBitbucket, SiAnsible as SiAnsibleBrand, SiChef, SiPuppet, SiPrometheus, SiGrafana, SiElasticstack, SiDatadog, SiNewrelic,
   SiOpenai, SiTensorflow, SiPytorch, SiKeras, SiScikitlearn, SiLangchain, SiHuggingface, SiPandas, SiNumpy,
   SiVim, SiNeovim, SiGnubash, SiPowershell, SiFramer, SiAdobecreativecloud, SiAdobephotoshop, SiAdobeillustrator, SiAdobexd, SiAdobepremierepro, SiAdobeaftereffects, SiCanva,
-  SiWordpress, SiShopify, SiStrapi, SiGhost, SiContentful, SiMagento, SiWoo, SiWeb3dotjs, SiEthers, SiEthereum, SiSolana, SiMetamask
+  SiWordpress, SiShopify, SiStrapi, SiGhost, SiContentful, SiMagento, SiWoo, SiWeb3Dotjs, SiEthers, SiEthereum, SiSolana, SiMetamask
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
@@ -36,8 +36,8 @@ const ICON_MAP = {
   vue: <SiVuedotjs className="text-[#4FC08D]" />,
   angular: <SiAngular className="text-[#DD0031]" />,
   svelte: <SiSvelte className="text-[#FF3E00]" />,
-  sveltekit: <SiSveltekit className="text-[#FF3E00]" />,
-  nuxt: <SiNuxtdotjs className="text-[#00DC82]" />,
+  sveltekit: <SiSvelte className="text-[#FF3E00]" />,
+  nuxt: <SiNuxt className="text-[#00DC82]" />,
   solid: <SiSolid className="text-[#2C4F7C]" />,
   qwik: <SiQwik className="text-[#161616]" />,
   preact: <SiPreact className="text-[#673AB8]" />,
@@ -46,8 +46,8 @@ const ICON_MAP = {
   gatsby: <SiGatsby className="text-[#663399]" />,
   jquery: <SiJquery className="text-[#0769AD]" />,
   htmx: <SiHtmx className="text-[#3366CC]" />,
-  backbone: <SiBackbonedotjs className="text-[#0071B5]" />,
-  ember: <SiEmberdotjs className="text-[#E04E39]" />,
+  backbone: <SiBackbone className="text-[#0071B5]" />,
+  ember: <SiEmber className="text-[#E04E39]" />,
   lit: <SiLit className="text-[#324FFF]" />,
   stencil: <SiStencil className="text-[#4C48FF]" />,
 
@@ -165,7 +165,7 @@ const ICON_MAP = {
   unity: <FaUnity className="text-white" />,
   wordpress: <FaWordpress className="text-[#21759B]" />,
   shopify: <FaShopify className="text-[#96BF48]" />,
-  web3: <FaGlobe className="text-[#627EEA]" />,
+  web3: <SiWeb3Dotjs className="text-[#627EEA]" />,
   solana: <SiSolana className="text-[#14F195]" />,
   ethereum: <SiEthereum className="text-[#3C3C3D]" />,
   bitcoin: <FaBitcoin className="text-[#F7931A]" />,
