@@ -322,18 +322,26 @@ const Skills = React.memo(
           boxShadow: "0 20px 40px -10px rgba(0,0,0,0.3)",
           borderColor: "var(--primary-color)",
         }}
-        className="group relative flex items-center gap-3 px-6 py-4 bg-white/[0.05] dark:bg-white/[0.02] border border-white/10 dark:border-white/5 rounded-2xl cursor-default transition-all duration-500 hover:bg-white dark:hover:bg-white hover:text-slate-900 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
+        className="group relative flex items-center gap-5 px-5 py-4 bg-white/[0.03] dark:bg-white/[0.01] border border-white/10 dark:border-white/5 rounded-2xl cursor-default transition-all duration-500 hover:bg-white dark:hover:bg-white hover:text-slate-900 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
       >
+        {/* Hover Highlight Effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
-        <div className="relative z-10 text-2xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
+
+        {/* Icon Container */}
+        <div className="relative z-10 flex-shrink-0 w-12 h-12 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 group-hover:bg-slate-100 group-hover:border-transparent transition-all duration-500 text-3xl group-hover:scale-110 group-hover:-rotate-3">
           {getSkillIcon(name)}
         </div>
+
+        {/* Separator Line */}
+        <div className="w-px h-8 bg-white/10 group-hover:bg-slate-200 transition-colors duration-500" />
+
+        {/* Text Content */}
         <div className="flex flex-col relative z-10">
-          <span className="text-[11px] md:text-sm font-black text-[var(--text-primary)] group-hover:text-slate-900 uppercase tracking-tighter leading-none transition-colors">
+          <span className="text-[12px] md:text-sm font-black text-[var(--text-primary)] group-hover:text-slate-900 uppercase tracking-tight leading-none transition-colors">
             {name}
           </span>
-          <span className="text-[7px] font-bold text-[var(--primary-color)] uppercase tracking-widest mt-1 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-            Verified
+          <span className="text-[8px] font-bold text-[var(--primary-color)] uppercase tracking-[0.2em] mt-1.5 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+            Expert
           </span>
         </div>
       </motion.div>
