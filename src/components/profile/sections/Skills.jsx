@@ -10,7 +10,8 @@ import {
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
   SiTypescript as SiTS, SiJavascript, SiSolidity, SiPrisma, SiMongoose, SiSequelize, SiTypeorm,
-  SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi, SiWeb3Dotjs
+  SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi, SiWeb3Dotjs,
+  SiPostcss
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
