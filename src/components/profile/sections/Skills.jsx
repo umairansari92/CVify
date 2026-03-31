@@ -11,7 +11,8 @@ import {
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
   SiTypescript as SiTS, SiJavascript, SiSolidity, SiPrisma, SiMongoose, SiSequelize, SiTypeorm,
   SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi, SiWeb3Dotjs,
-  SiPostcss
+  SiPostcss,
+  SiFramer
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
