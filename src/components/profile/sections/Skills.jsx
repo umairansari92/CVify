@@ -77,8 +77,8 @@ import {
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
   SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
   SiJavascript, SiSolidity, SiPrisma, SiMongoose, SiSequelize, SiTypeorm,
-  SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi, SiGhost, SiContentful, SiMagento, SiWoo, SiWeb3Dotjs, SiEthers,
-  SiEthereum, SiSolana, SiMetamask, SiPostcss, SiFramer, SiMariadb, SiApachecassandra, SiNeo4J, SiBitbucket
+  SiGooglecloud, SiHeroku, SiCloudflare, SiOpenai, SiTensorflow, SiPytorch, SiVitest, SiJest, SiWordpress, SiShopify, SiStrapi,
+  SiEthereum, SiSolana, SiPostcss, SiFramer, SiMariadb, SiApachecassandra, SiNeo4J, SiBitbucket
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
@@ -225,12 +225,17 @@ const ICON_MAP = {
   flutter: <FaCode className="text-[#02569B]" />,
   reactnative: <FaReact className="text-[#61DAFB]" />,
   unity: <FaUnity className="text-white" />,
+  ghost: <FaCode className="text-[#3ABBFF]" />,
+  contentful: <FaCode className="text-[#24B47E]" />,
+  magento: <FaCode className="text-[#EE672F]" />,
+  woo: <FaCode className="text-[#96588A]" />,
   wordpress: <FaWordpress className="text-[#21759B]" />,
   shopify: <FaShopify className="text-[#96BF48]" />,
-  web3: <SiWeb3Dotjs className="text-[#627EEA]" />,
+  web3: <FaTerminal className="text-[#627EEA]" />,
+  ethers: <FaTerminal className="text-[#3C3C3D]" />,
+  metamask: <FaCode className="text-[#F6851B]" />,
   solana: <SiSolana className="text-[#14F195]" />,
   ethereum: <SiEthereum className="text-[#3C3C3D]" />,
-  bitcoin: <FaBitcoin className="text-[#F7931A]" />,
 
   // --- STRATEGIC ---
   leadership: <FaShieldAlt className="text-[#FFD700]" />,
