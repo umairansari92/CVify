@@ -1,34 +1,78 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
-  FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaNpm, FaGitAlt, FaGithub, FaFire, FaServer, FaCode, FaLaptopCode, FaLink, FaJava, FaLayerGroup, FaServicestack, FaAws, FaDocker, FaPython, FaPhp, FaRust, FaFigma, FaSwift, FaGem, FaBrain, FaTerminal
+  FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaNpm, FaGitAlt, FaGithub, FaFire, FaServer, FaCode, FaLaptopCode, FaLink, FaJava, FaLayerGroup, FaServicestack, FaAws, FaDocker, FaPython, FaPhp, FaRust, FaFigma, FaSwift, FaGem, FaBrain, FaTerminal,
+  FaWordpress, FaShopify, FaUnity, FaAndroid, FaApple, FaAppStore, FaWindows, FaLinux, FaUbuntu, FaCentos, FaFedora, FaSuse, FaDocker as FaDockerBrand, FaTrello, FaSlack, FaJira, FaConfluence, FaTrello as FaTrelloBrand, FaDropbox, FaGoogleDrive, FaSalesforce, FaHubspot,
+  FaFileCode, FaShieldAlt, FaLock, FaGlobe, FaSearch, FaMobileAlt, FaDesktop, FaTabletAlt, FaMicrochip, FaRobot, FaDatabase as FaDatabaseIcon, FaCloud, FaEnvelope, FaPaperPlane, FaUserShield, FaChartLine, FaMagic, FaBullhorn, FaCreditCard, FaBitcoin, FaLeaf, FaFlask, FaRocket
 } from "react-icons/fa";
 import { 
   SiNextdotjs, SiRedux, SiExpress, SiMongodb, SiPostman, SiTailwindcss, SiBootstrap, SiMui, SiFirebase, SiSupabase, SiReacthookform, SiNodemon, SiVercel, SiTypescript,
   SiVuedotjs, SiAngular, SiSvelte, SiJquery, SiHtmx, SiSass, SiLess, SiChakraui, SiShadcnui, SiNestjs, SiDjango, SiFlask, SiFastapi, SiLaravel, SiSpringboot,
-  SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino
+  SiPostgresql, SiMysql, SiRedis, SiSqlite, SiNetlify, SiDigitalocean, SiKubernetes, SiJenkins, SiTerraform, SiAnsible, SiGitlab, SiArduino,
+  SiNuxtdotjs, SiSveltekit, SiRemix, SiGatsby, SiAstro, SiSolid, SiQwik, SiPreact, SiEmberdotjs, SiBackbonedotjs, SiLit, SiStencil,
+  SiMobx, SiZustand, SiVite, SiWebpack, SiBabel, SiRollup, SiEsbuild, SiParcel, SiPostcss, SiTestinglibrary, SiJest, SiVitest, SiCypress, SiPlaywright, SiSelenium, SiPuppeteer,
+  SiC, SiCplusplus, SiCsharp, SiGo, SiRust, SiRuby, SiSwift, SiKotlin, SiPhp, SiPython, SiTypescript as SiTS, SiJavascript, SiR, SiDart, SiHaskell, SiLua, SiPerl, SiScala, SiSolidity,
+  SiMariadb, SiCockroachdb, SiCassandra, SiCouchbase, SiCouchdb, SiNeo4j, SiPrisma, SiTypeorm, SiSequelize, SiDrizzle, SiMongoose,
+  SiGooglecloud, SiHeroku, SiCloudflare, SiRailway, SiRender, SiFlydotio, SiSupabase as SiSupabaseBrand, SiPocketbase, SiAppwrite,
+  SiCircleci, SiTravisci, SiGithubactions, SiBitbucket, SiAnsible as SiAnsibleBrand, SiChef, SiPuppet, SiPrometheus, SiGrafana, SiElasticstack, SiDatadog, SiNewrelic,
+  SiOpenai, SiTensorflow, SiPytorch, SiKeras, SiScikitlearn, SiLangchain, SiHuggingface, SiPandas, SiNumpy,
+  SiVim, SiNeovim, SiGnubash, SiPowershell, SiFramer, SiAdobecreativecloud, SiAdobephotoshop, SiAdobeillustrator, SiAdobexd, SiAdobepremierepro, SiAdobeaftereffects, SiCanva,
+  SiWordpress, SiShopify, SiStrapi, SiGhost, SiContentful, SiMagento, SiWoo, SiWeb3dotjs, SiEthers, SiEthereum, SiSolana, SiMetamask
 } from "react-icons/si";
 import InlineEdit from "../InlineEdit";
 
 const ICON_MAP = {
-  // Frontend
+  // --- WEB CORE ---
+  html: <FaHtml5 className="text-[#E34F26]" />,
+  css: <FaCss3Alt className="text-[#1572B6]" />,
+  js: <FaJs className="text-[#F7DF1E]" />,
+  javascript: <FaJs className="text-[#F7DF1E]" />,
+  ts: <SiTS className="text-[#3178C6]" />,
+  typescript: <SiTS className="text-[#3178C6]" />,
+  
+  // --- FRONTEND FRAMEWORKS ---
   react: <FaReact className="text-[#61DAFB]" />,
   next: <SiNextdotjs className="text-white" />,
-  redux: <SiRedux className="text-[#764ABC]" />,
   vue: <SiVuedotjs className="text-[#4FC08D]" />,
   angular: <SiAngular className="text-[#DD0031]" />,
   svelte: <SiSvelte className="text-[#FF3E00]" />,
+  sveltekit: <SiSveltekit className="text-[#FF3E00]" />,
+  nuxt: <SiNuxtdotjs className="text-[#00DC82]" />,
+  solid: <SiSolid className="text-[#2C4F7C]" />,
+  qwik: <SiQwik className="text-[#161616]" />,
+  preact: <SiPreact className="text-[#673AB8]" />,
+  remix: <SiRemix className="text-white" />,
+  astro: <SiAstro className="text-[#FF5D01]" />,
+  gatsby: <SiGatsby className="text-[#663399]" />,
   jquery: <SiJquery className="text-[#0769AD]" />,
   htmx: <SiHtmx className="text-[#3366CC]" />,
-  // Styling
+  backbone: <SiBackbonedotjs className="text-[#0071B5]" />,
+  ember: <SiEmberdotjs className="text-[#E04E39]" />,
+  lit: <SiLit className="text-[#324FFF]" />,
+  stencil: <SiStencil className="text-[#4C48FF]" />,
+
+  // --- STATE & DATA ---
+  redux: <SiRedux className="text-[#764ABC]" />,
+  mobx: <SiMobx className="text-[#FF0995]" />,
+  zustand: <SiZustand className="text-[#434343]" />,
+  recoil: <FaLayerGroup className="text-[#3578E5]" />, // No Si icon, fallback
+  jotai: <FaLayerGroup className="text-white" />,
+  pinia: <FaLayerGroup className="text-[#FFE485]" />,
+  
+  // --- STYLING ---
   tailwind: <SiTailwindcss className="text-[#06B6D4]" />,
   bootstrap: <SiBootstrap className="text-[#7952B3]" />,
   sass: <SiSass className="text-[#CC6699]" />,
+  scss: <SiSass className="text-[#CC6699]" />,
   less: <SiLess className="text-[#1D365D]" />,
   mui: <SiMui className="text-[#007FFF]" />,
   chakra: <SiChakraui className="text-[#319795]" />,
   shadcn: <SiShadcnui className="text-white" />,
-  // Backend
+  postcss: <SiPostcss className="text-[#DD3A0A]" />,
+  framer: <SiFramer className="text-white" />,
+  styled: <FaFileCode className="text-[#DB7093]" />,
+  
+  // --- BACKEND ---
   node: <FaNodeJs className="text-[#339933]" />,
   express: <SiExpress className="text-white" />,
   nest: <SiNestjs className="text-[#E0234E]" />,
@@ -36,53 +80,108 @@ const ICON_MAP = {
   flask: <SiFlask className="text-white" />,
   fastapi: <SiFastapi className="text-[#05998B]" />,
   laravel: <SiLaravel className="text-[#FF2D20]" />,
+  symfony: <FaTerminal className="text-white" />,
+  springboot: <SiSpringboot className="text-[#6DB33F]" />,
   spring: <SiSpringboot className="text-[#6DB33F]" />,
-  // Databases
+  ruby: <FaGem className="text-[#CC342D]" />,
+  rails: <FaGem className="text-[#CC342D]" />,
+  php: <FaPhp className="text-[#777BB4]" />,
+  go: <FaTerminal className="text-[#00ADD8]" />,
+  rust: <FaRust className="text-white" />,
+  java: <FaJava className="text-[#007396]" />,
+  csharp: <FaCode className="text-[#239120]" />,
+  cpp: <FaCode className="text-[#00599C]" />,
+  python: <FaPython className="text-[#3776AB]" />,
+  kotlin: <FaCode className="text-[#7F52FF]" />,
+  swift: <FaSwift className="text-[#F05138]" />,
+  dart: <SiDart className="text-[#0175C2]" />,
+  solidity: <SiSolidity className="text-[#363636]" />,
+
+  // --- DATABASES ---
   mongo: <SiMongodb className="text-[#47A248]" />,
+  mongodb: <SiMongodb className="text-[#47A248]" />,
   postgre: <SiPostgresql className="text-[#4169E1]" />,
+  postgresql: <SiPostgresql className="text-[#4169E1]" />,
   mysql: <SiMysql className="text-[#4479A1]" />,
   redis: <SiRedis className="text-[#DC382D]" />,
   sqlite: <SiSqlite className="text-[#003B57]" />,
+  mariadb: <SiMariadb className="text-[#003545]" />,
+  cassandra: <SiCassandra className="text-[#1287B1]" />,
+  neo4j: <SiNeo4j className="text-[#008CC1]" />,
   firebase: <SiFirebase className="text-[#FFCA28]" />,
   supabase: <SiSupabase className="text-[#3ECF8E]" />,
-  // Cloud
+  prisma: <SiPrisma className="text-white" />,
+  mongoose: <SiMongoose className="text-[#880000]" />,
+  sequelize: <SiSequelize className="text-[#52B0E7]" />,
+  typeorm: <SiTypeorm className="text-[#FE0805]" />,
+
+  // --- CLOUD & DEVOPS ---
   aws: <FaAws className="text-[#FF9900]" />,
+  azure: <FaServer className="text-[#0089D6]" />,
   googlecloud: <FaServer className="text-[#4285F4]" />,
+  gcp: <FaServer className="text-[#4285F4]" />,
+  docker: <FaDocker className="text-[#2496ED]" />,
+  kubernetes: <SiKubernetes className="text-[#326CE5]" />,
+  k8s: <SiKubernetes className="text-[#326CE5]" />,
   vercel: <SiVercel className="text-white" />,
   netlify: <SiNetlify className="text-[#00C7B7]" />,
   digitalocean: <SiDigitalocean className="text-[#0080FF]" />,
-  // DevOps
-  docker: <FaDocker className="text-[#2496ED]" />,
-  kubernetes: <SiKubernetes className="text-[#326CE5]" />,
+  cloudflare: <SiCloudflare className="text-[#F38020]" />,
+  heroku: <SiHeroku className="text-[#430098]" />,
   jenkins: <SiJenkins className="text-[#D24939]" />,
   terraform: <SiTerraform className="text-[#7B42BC]" />,
   ansible: <SiAnsible className="text-[#EE0000]" />,
+  git: <FaGitAlt className="text-[#F05032]" />,
   github: <FaGithub className="text-white" />,
   gitlab: <SiGitlab className="text-[#FC6D26]" />,
-  // Languages
-  javascript: <FaJs className="text-[#F7DF1E]" />,
-  js: <FaJs className="text-[#F7DF1E]" />,
-  typescript: <SiTypescript className="text-[#3178C6]" />,
-  ts: <SiTypescript className="text-[#3178C6]" />,
-  python: <FaPython className="text-[#3776AB]" />,
-  java: <FaJava className="text-[#007396]" />,
-  php: <FaPhp className="text-[#777BB4]" />,
-  rust: <FaRust className="text-white" />,
-  go: <FaTerminal className="text-[#00ADD8]" />,
-  cpp: <FaCode className="text-[#00599C]" />,
-  csharp: <FaCode className="text-[#239120]" />,
-  ruby: <FaGem className="text-[#CC342D]" />,
-  swift: <FaSwift className="text-[#F05138]" />,
-  kotlin: <FaCode className="text-[#7F52FF]" />,
-  // AI
+  bitbucket: <SiBitbucket className="text-[#0052CC]" />,
+
+  // --- TOOLS ---
+  postman: <SiPostman className="text-[#FF6C37]" />,
+  vscode: <FaLaptopCode className="text-[#007ACC]" />,
+  figma: <FaFigma className="text-[#F24E1E]" />,
+  photoshop: <SiAdobephotoshop className="text-[#31A8FF]" />,
+  illustrator: <SiAdobeillustrator className="text-[#FF9A00]" />,
+  canva: <SiCanva className="text-[#00C4CC]" />,
+  trello: <FaTrello className="text-[#0052CC]" />,
+  slack: <FaSlack className="text-[#4A154B]" />,
+  jira: <FaJira className="text-[#0052CC]" />,
+  
+  // --- AI & ML ---
   openai: <FaBrain className="text-[#412991]" />,
-  linkchain: <FaLink className="text-[#2D3341]" />,
+  gpt: <FaBrain className="text-[#412991]" />,
   tensorflow: <FaBrain className="text-[#FF6F00]" />,
   pytorch: <FaBrain className="text-[#EE4C2C]" />,
-  // Specialty
-  figma: <FaFigma className="text-[#F24E1E]" />,
-  arduino: <SiArduino className="text-[#00979D]" />,
-  vscode: <FaLaptopCode className="text-[#007ACC]" />,
+  pandas: <SiPandas className="text-[#150458]" />,
+  numpy: <SiNumpy className="text-[#013243]" />,
+  keras: <SiKeras className="text-[#D00000]" />,
+  langchain: <FaLink className="text-white" />,
+  
+  // --- MOBILE & OTHER ---
+  android: <FaAndroid className="text-[#3DDC84]" />,
+  ios: <FaApple className="text-white" />,
+  flutter: <FaCode className="text-[#02569B]" />,
+  reactnative: <FaReact className="text-[#61DAFB]" />,
+  unity: <FaUnity className="text-white" />,
+  wordpress: <FaWordpress className="text-[#21759B]" />,
+  shopify: <FaShopify className="text-[#96BF48]" />,
+  web3: <FaGlobe className="text-[#627EEA]" />,
+  solana: <SiSolana className="text-[#14F195]" />,
+  ethereum: <SiEthereum className="text-[#3C3C3D]" />,
+  bitcoin: <FaBitcoin className="text-[#F7931A]" />,
+  
+  // --- STRATEGIC ---
+  leadership: <FaShieldAlt className="text-[#FFD700]" />,
+  management: <FaUserShield className="text-[#4CAF50]" />,
+  agile: <FaRocket className="text-[#00BCD4]" />,
+  scrum: <FaRocket className="text-[#607D8B]" />,
+  seo: <FaSearch className="text-[#FF5722]" />,
+  marketing: <FaBullhorn className="text-[#E91E63]" />,
+  design: <FaMagic className="text-[#9C27B0]" />,
+  branding: <FaMagic className="text-[#FFEB3B]" />,
+  communication: <FaEnvelope className="text-[#2196F3]" />,
+  problem: <FaLightbulb className="text-[#FFD700]" />,
+  strategy: <FaPaperPlane className="text-[#FF9800]" />,
 };
 
 const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate }) => {
@@ -122,11 +221,21 @@ const Skills = React.memo(({ user, isOwner, displayValue, handleLiveUpdate }) =>
 
   const getSkillIcon = (name) => {
     if (!name || typeof name !== 'string') return <FaCode className="text-gray-400" />;
-    const rawName = name.toLowerCase().replace(/[\s\-_.]/g, "");
     
-    // Exact or partial match in ICON_MAP
-    const matchedKey = Object.keys(ICON_MAP).find(key => rawName.includes(key));
-    if (matchedKey) return ICON_MAP[matchedKey];
+    // Clean the input: lowercase and remove special characters
+    const rawName = name.toLowerCase().replace(/[\s\-_.]/g, "");
+    const keys = Object.keys(ICON_MAP);
+    
+    // 1. Prioritize Exact Match
+    if (ICON_MAP[rawName]) return ICON_MAP[rawName];
+    
+    // 2. Prioritize "Starts With" (e.g., "Postgre" matches "Postgresql")
+    const startMatch = keys.find(key => rawName.startsWith(key) || key.startsWith(rawName));
+    if (startMatch) return ICON_MAP[startMatch];
+    
+    // 3. Fallback to "Includes" (substring match)
+    const includeMatch = keys.find(key => rawName.includes(key));
+    if (includeMatch) return ICON_MAP[includeMatch];
     
     return <FaCode className="text-gray-400" />;
   };
