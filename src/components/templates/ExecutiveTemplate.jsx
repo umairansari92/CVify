@@ -263,7 +263,7 @@ const ExecutiveTemplate = ({ data }) => {
                   {/* Legacy Fallback */}
                   {technicalSkills?.frontend?.length > 0 && (
                     <div className="mb-3">
-                      <span className="font-bold underline">Frontend:</span>{" "}
+                      <span className="font-bold underline">Skills:</span>{" "}
                       {technicalSkills.frontend.join(", ")}
                     </div>
                   )}

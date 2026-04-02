@@ -259,7 +259,7 @@ const MinimalTemplate = ({ data }) => {
                   {/* Legacy Fallback */}
                   {technicalSkills?.frontend?.length > 0 && (
                     <div className="mb-1">
-                      <span className="font-semibold">Frontend:</span>{" "}
+                      <span className="font-semibold">Skills:</span>{" "}
                       {technicalSkills.frontend.join(", ")}
                     </div>
                   )}

@@ -162,7 +162,7 @@ const ModernTemplate = ({ data }) => {
               {/* Legacy Fallback */}
               {technicalSkills?.frontend?.length > 0 && (
                 <div className="text-sm mb-2">
-                  <span className="font-bold text-gray-700">Frontend:</span>{" "}
+                  <span className="font-bold text-gray-700">Skills:</span>{" "}
                   <span className="text-gray-600">
                     {technicalSkills.frontend.join(", ")}
                   </span>

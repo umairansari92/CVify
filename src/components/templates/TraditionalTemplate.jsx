@@ -267,10 +267,11 @@ const TraditionalTemplate = ({ data }) => {
               {/* Legacy Fallback */}
               {technicalSkills?.frontend?.length > 0 && (
                 <div>
-                  <span className="font-bold">Frontend:</span>{" "}
+                  <span className="font-bold">Skills:</span>{" "}
                   {technicalSkills.frontend.join(", ")}
                 </div>
               )}
+
               {technicalSkills?.backend?.length > 0 && (
                 <div>
                   <span className="font-bold">Backend:</span>{" "}
