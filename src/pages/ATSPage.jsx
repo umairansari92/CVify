@@ -87,7 +87,15 @@ const ATSPage = () => {
     
     if (analyzePlatformResumeAsync.fulfilled.match(action) || analyzeResumeV3Async.fulfilled.match(action)) {
       const isFree = action.payload.isFreeRescan;
-      toast.success(isFree ? "Smart Re-scan Complete (Free!)" : "Analysis Complete!");
+      const isDiscounted = action.payload.analysis?.cost === 25;
+      
+      if (isFree) {
+        toast.success("Smart Re-scan Complete (Free!)");
+      } else if (isDiscounted) {
+        toast.success("Re-scan Complete (25 💎 applied)");
+      } else {
+        toast.success("Analysis Complete!");
+      }
       
       const newBalance = action.payload.newDiamondBalance;
       if (newBalance !== undefined) {
