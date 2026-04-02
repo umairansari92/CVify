@@ -60,6 +60,11 @@ const ATSPage = () => {
       toast.error("Please upload a file or select a platform resume");
       return;
     }
+    
+    if (!jobDescription.trim()) {
+      toast.error("Please provide a Job Description for accurate analysis");
+      return;
+    }
 
     let action;
     if (selectedResumeId) {
