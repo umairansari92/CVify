@@ -82,7 +82,7 @@ const atsSlice = createSlice({
       })
       .addCase(analyzePlatformResumeAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.latestResult = action.payload.data || action.payload; // Normalized in controller
+        state.latestResult = action.payload.scan || action.payload; // Unified with upload logic
       })
       .addCase(analyzePlatformResumeAsync.rejected, (state, action) => {
         state.loading = false;

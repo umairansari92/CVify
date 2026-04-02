@@ -86,8 +86,8 @@ const ATSPage = () => {
     }
     
     if (analyzePlatformResumeAsync.fulfilled.match(action) || analyzeResumeV3Async.fulfilled.match(action)) {
-      const isFree = action.payload.isFreeRescan;
-      const isDiscounted = action.payload.analysis?.cost === 25;
+      const isFree = action.payload.scan?.isFreeRescan;
+      const isDiscounted = action.payload.scan?.cost === 25;
       
       if (isFree) {
         toast.success("Smart Re-scan Complete (Free!)");
