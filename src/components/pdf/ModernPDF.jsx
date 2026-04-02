@@ -362,13 +362,13 @@ const ModernPDF = ({ data }) => {
           <View style={{ width: "30%" }}>
             {/* Skills */}
             <View style={styles.section}>
-              <Text style={dynamicStyles.sectionTitle}>Skills</Text>
+              <Text style={dynamicStyles.sectionTitle}>Expertise</Text>
               {technicalSkills &&
                 Object.entries(technicalSkills).map(
                   ([cat, list], i) =>
                     list?.length > 0 && (
                       <View key={i} style={styles.skillGroup}>
-                        <Text style={styles.skillLabel}>{cat}</Text>
+                        <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}</Text>
                         <Text style={styles.skillText}>{list.join(", ")}</Text>
                       </View>
                     ),
@@ -377,6 +377,12 @@ const ModernPDF = ({ data }) => {
                 <View style={styles.skillGroup}>
                   <Text style={styles.skillLabel}>Key Strengths</Text>
                   <Text style={styles.skillText}>{competencies.join(", ")}</Text>
+                </View>
+              )}
+               {interests?.length > 0 && (
+                <View style={styles.skillGroup}>
+                  <Text style={styles.skillLabel}>Interests</Text>
+                  <Text style={styles.skillText}>{interests.join(", ")}</Text>
                 </View>
               )}
             </View>
@@ -396,14 +402,6 @@ const ModernPDF = ({ data }) => {
                     </Text>
                   </View>
                 ))}
-              </View>
-            )}
-
-            {/* Interests */}
-            {interests?.length > 0 && (
-              <View style={styles.section}>
-                <Text style={dynamicStyles.sectionTitle}>Interests</Text>
-                <Text style={styles.skillText}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>

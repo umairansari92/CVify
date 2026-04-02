@@ -371,12 +371,12 @@ const ClearPDF = ({ data }) => {
             {technicalSkills &&
               Object.values(technicalSkills).some((a) => a?.length > 0) && (
                 <View>
-                  <Text style={styles.sideSectionTitle}>SKILLS</Text>
+                  <Text style={styles.sideSectionTitle}>EXPERTSIE</Text>
                   {Object.entries(technicalSkills).map(
                     ([cat, list], i) =>
                       list?.length > 0 && (
                         <View key={i} style={styles.skillGroup} wrap={false}>
-                          <Text style={styles.skillLabel}>{cat}</Text>
+                          <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}</Text>
                           <View
                             style={{ flexDirection: "row", flexWrap: "wrap" }}
                           >

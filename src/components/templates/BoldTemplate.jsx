@@ -290,7 +290,7 @@ const BoldTemplate = ({ data }) => {
                     {technicalSkills?.frontend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">
-                          Frontend
+                          Skills
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {technicalSkills.frontend.map((s, i) => (

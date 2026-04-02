@@ -160,7 +160,7 @@ const ClearTemplate = ({ data }) => {
                 {technicalSkills?.frontend?.length > 0 && (
                   <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">
-                      Frontend
+                      Skills
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {technicalSkills.frontend.map((s, i) => (

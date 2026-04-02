@@ -432,7 +432,7 @@ const ProfessionalPDF = ({ data }) => {
                     ([cat, list], i) =>
                       list?.length > 0 && (
                         <View key={i} style={styles.skillRow} wrap={false}>
-                          <Text style={styles.skillLabel}>{cat}:</Text>
+                          <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}:</Text>
                           <Text style={styles.skillValue}>
                             {list.join(", ")}
                           </Text>

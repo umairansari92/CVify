@@ -60,7 +60,7 @@ const dummyResume = {
     },
   ],
   technicalSkills: {
-    frontend: [
+    technical: [
       "React",
       "Next.js",
       "TypeScript",

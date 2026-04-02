@@ -388,30 +388,30 @@ const GlobalPDF = ({ data }) => {
 
         {/* Skills */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills</Text>
+          <Text style={styles.sectionTitle}>Expertise</Text>
           <View style={styles.skillsGrid}>
             {technicalSkills &&
               Object.entries(technicalSkills).map(
                 ([cat, list], i) =>
                   list?.length > 0 && (
                     <View key={i} style={styles.skillCategory}>
-                      <Text style={styles.skillLabel}>{cat}</Text>
+                      <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}</Text>
                       <Text style={styles.skillValue}>{list.join(", ")}</Text>
                     </View>
                   ),
               )}
-            {interests?.length > 0 && (
-              <View style={styles.skillCategory}>
-                <Text style={styles.skillLabel}>Interests</Text>
-                <Text style={styles.skillValue}>{interests.join(", ")}</Text>
-              </View>
-            )}
             {softwareProficiency?.length > 0 && (
               <View style={styles.skillCategory}>
                 <Text style={styles.skillLabel}>Software & Systems</Text>
                 <Text style={styles.skillValue}>
                   {softwareProficiency.join(", ")}
                 </Text>
+              </View>
+            )}
+            {interests?.length > 0 && (
+              <View style={styles.skillCategory}>
+                <Text style={styles.skillLabel}>Interests</Text>
+                <Text style={styles.skillValue}>{interests.join(", ")}</Text>
               </View>
             )}
           </View>

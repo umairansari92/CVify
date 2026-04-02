@@ -232,7 +232,7 @@ const ProfessionalTemplate = ({ data }) => {
                 {technicalSkills?.frontend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">
-                      Frontend
+                      Skills
                     </div>
                     <div className="flex flex-wrap">
                       {technicalSkills.frontend.map((s, i) => (
