@@ -66,7 +66,7 @@ const Documentation = () => {
     overview: (
       <>
         <DocHeader title="Platform Overview" badge="Introduction" />
-        <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-8">
           CVify Pro is not just a resume builder — it is a <strong className="text-text-primary">Career Intelligence Ecosystem</strong>. 
           The platform solves the "Black Box" problem of Applicant Tracking Systems by giving users a real-time, AI-backed auditor 
           that mimics Fortune 500 hiring pipelines. The architecture prioritizes <em>Aesthetics, Agency, and Authority</em>.
@@ -405,7 +405,7 @@ const Documentation = () => {
           ].map((item, i) => (
             <div key={i} className="p-5 glass rounded-2xl border border-white/5">
               <p className={`font-black text-sm mb-1 ${item.color}`}>{item.title}</p>
-              <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
+              <p className="text-slate-300 text-[12px] font-medium leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -592,7 +592,7 @@ const Documentation = () => {
   return (
     <div className="min-h-screen bg-background text-text-main">
       {/* ── TOP BAR ── */}
-      <nav className="fixed top-0 left-0 w-full z-50 p-4 backdrop-blur-xl border-b border-border-subtle bg-background/80 flex justify-between items-center px-4 lg:px-8">
+      <nav className="fixed top-0 left-0 w-full z-50 p-4 glass border-b border-border-subtle bg-background/80 flex justify-between items-center px-4 lg:px-8">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate(-1)} className="p-2 hover:bg-white/5 rounded-full transition-colors">
             <ArrowLeft size={18} />
@@ -607,7 +607,7 @@ const Documentation = () => {
 
       <div className="flex pt-16">
         {/* ── SIDEBAR (Desktop) ── */}
-        <aside className="hidden lg:block w-72 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto border-r border-border-subtle p-4 space-y-6 bg-background">
+        <aside className="hidden lg:block w-72 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto border-r border-border-subtle p-4 space-y-6 glass bg-background/40">
           {navGroups.map((group) => (
             <div key={group.label}>
               <p className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted mb-2 px-4">{group.label}</p>
