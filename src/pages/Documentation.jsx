@@ -105,11 +105,11 @@ const Documentation = () => {
 
         <SectionTitle>How to Scan</SectionTitle>
         <Steps items={[
-          { step: "1", title: "Upload Resume", desc: "Go to ATS Scanner in your dashboard. Upload a PDF or DOCX (Max 5MB)." },
+          { step: "1", title: "Select Resume Source", desc: "Choose a Platform-Generated resume or upload a PDF/DOCX file (Max 5MB)." },
           { step: "2", title: "Paste Job Description", desc: "Paste the target JD. If left empty, the AI audits against general industry standards for your level." },
           { step: "3", title: "Select Experience Level", desc: "Choose Fresher (0-1 yr), Junior (1-2 yrs), Mid-Level (3-5 yrs), or Senior (5+ yrs)." },
           { step: "4", title: "Select Market Mode", desc: "Choose Standard, Pakistan HR, Freelance, or Remote — each adjusts scoring weights." },
-          { step: "5", title: "Start Scan", desc: "Click \"Start ATS Scan\" (Costs 50 💎). Results appear in under 30 seconds." },
+          { step: "5", title: "Start Scan", desc: "Click \"Start ATS Scan\". (Fresh Scans: 50 💎 | Re-scans: See pricing section)." },
         ]} />
 
         <SectionTitle>What You Get</SectionTitle>
@@ -323,9 +323,10 @@ const Documentation = () => {
           Diamonds power CVify Pro's AI features. We charge <strong className="text-text-primary">post-success only</strong> — you're never billed for failed requests. Atomic operations ensure integrity.
         </p>
         <ComparisonTable items={[
-          { left: "Deep ATS Audit (v4.0)", right: "50 💎" },
+          { left: "Fresh Deep Scan", right: "50 💎 (One-time)" },
+          { left: "24h Re-scan (Same)", right: "0 💎 (FREE)" },
+          { left: "24h Re-scan (Improved)", right: "25 💎 (50% Off)" },
           { left: "AI Cover Letter", right: "20 💎" },
-          { left: "Extra Storage Slots", right: "30 💎" },
           { left: "Signup Bonus", right: "100 💎 free" },
         ]} />
         <p className="text-text-muted text-[12px] leading-relaxed mt-4 italic">
