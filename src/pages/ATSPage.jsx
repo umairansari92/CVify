@@ -227,10 +227,10 @@ const ATSPage = () => {
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: "Entry-Level", label: "Fresher (0-1 yr)" },
-                  { value: "Junior", label: "Junior (1-2 yrs)" },
-                  { value: "Mid-Level", label: "Mid-Level (3-5 yrs)" },
-                  { value: "Senior", label: "Senior (5+ yrs)" },
+                  { value: "Entry-Level", label: "Entry-Level (0-2y)" },
+                  { value: "Mid-Level", label: "Mid-Level (3-5y)" },
+                  { value: "Senior-Level", label: "Senior (5-10y)" },
+                  { value: "Executive", label: "Executive (10y+)" },
                 ].map((level) => (
                   <button
                     key={level.value}
