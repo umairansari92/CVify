@@ -8,9 +8,15 @@ import {
   cloneResume,
 } from "../features/resume/resumeThunk";
 import { clearCurrentResume } from "../features/resume/resumeSlice";
-import { handleDownloadPDF } from "../utils/pdfExport";
+import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaRobot, FaSearchPlus, FaChartLine } from "react-icons/fa";
 import { FiEdit2, FiTrash2, FiDownload, FiEye, FiPlus, FiCopy, FiZap } from "react-icons/fi";
+import ThreeBackground from "../components/three/ThreeBackground";
+import Swal from "sweetalert2";
+import { TypeAnimation } from "react-type-animation";
+import api from "../api/axios";
+import { toast } from "react-hot-toast";
+import { formatAuthError } from "../utils/formatAuthError";
 
 const Dashboard = () => {
   const navigate = useNavigate();
