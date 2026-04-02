@@ -56,7 +56,7 @@ export const updateResume = createAsyncThunk(
   "resume/update",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const res = await api.put(`/resumes/${id}`, data);
+      const res = await api.patch(`/resumes/${id}`, data);
       return res.data;
     } catch (err) {
       return rejectWithValue(
