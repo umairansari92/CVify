@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { 
   analyzeResumeV3Async, 
+  analyzePlatformResumeAsync,
   fetchLatestAnalysis, 
   clearAtsResult 
 } from "../features/ats/atsSlice";
+import { useLocation } from "react-router-dom";
 import { updateDiamonds } from "../features/auth/authSlice";
 import api from "../api/axios";
 import {
@@ -35,6 +37,12 @@ const ATSPage = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [marketMode, setMarketMode] = useState("Standard");
   const [experienceLevel, setExperienceLevel] = useState("Mid-Level");
+  
+  // V2 Improvements
+  const location = useLocation();
+  const [userResumes, setUserResumes] = useState([]);
+  const [selectedResumeId, setSelectedResumeId] = useState(location.state?.preSelectedResumeId || "");
+  const [fetchingResumes, setFetchingResumes] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -48,23 +56,37 @@ const ATSPage = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!file) {
-      toast.error("Please upload a resume file (PDF or DOCX)");
+    if (!file && !selectedResumeId) {
+      toast.error("Please upload a file or select a platform resume");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("resume", file);
-    formData.append("jobDescription", jobDescription);
-    formData.append("marketMode", marketMode);
-    formData.append("experienceLevel", experienceLevel);
-
-    const action = await dispatch(analyzeResumeV3Async(formData));
+    let action;
+    if (selectedResumeId) {
+      // Platform Resume Analysis
+      action = await dispatch(analyzePlatformResumeAsync({
+        resumeId: selectedResumeId,
+        jobDescription,
+        marketMode,
+        experienceLevel
+      }));
+    } else {
+      // File Upload Analysis
+      const formData = new FormData();
+      formData.append("resume", file);
+      formData.append("jobDescription", jobDescription);
+      formData.append("marketMode", marketMode);
+      formData.append("experienceLevel", experienceLevel);
+      action = await dispatch(analyzeResumeV3Async(formData));
+    }
     
-    if (analyzeResumeV3Async.fulfilled.match(action)) {
-      toast.success("Analysis Complete!");
-      if (action.payload.newDiamondBalance !== undefined) {
-        dispatch(updateDiamonds(action.payload.newDiamondBalance));
+    if (analyzePlatformResumeAsync.fulfilled.match(action) || analyzeResumeV3Async.fulfilled.match(action)) {
+      const isFree = action.payload.isFreeRescan;
+      toast.success(isFree ? "Smart Re-scan Complete (Free!)" : "Analysis Complete!");
+      
+      const newBalance = action.payload.newDiamondBalance;
+      if (newBalance !== undefined) {
+        dispatch(updateDiamonds(newBalance));
       }
       dispatch(fetchLatestAnalysis());
     } else {
@@ -74,6 +96,18 @@ const ATSPage = () => {
   };
 
   useEffect(() => {
+    const fetchResumes = async () => {
+      setFetchingResumes(true);
+      try {
+        const res = await api.get("/resumes");
+        setUserResumes(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch resumes:", err);
+      } finally {
+        setFetchingResumes(false);
+      }
+    };
+    fetchResumes();
     dispatch(fetchLatestAnalysis());
     return () => dispatch(clearAtsResult());
   }, [dispatch]);
@@ -102,35 +136,59 @@ const ATSPage = () => {
         {/* LEFT: Input Section */}
         <div className="lg:col-span-5 space-y-6">
           <div className="glass p-8 rounded-[2.5rem] border border-white/10 shadow-2xl space-y-6">
-            {/* File Upload */}
-            <div className="space-y-3">
+            {/* Resume Input - Selective */}
+            <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
-                Step 1: Upload Resume
+                Step 1: Select or Upload Resume
               </label>
-              <div className="relative group">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".pdf,.docx"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                />
-                <div
-                  className={`p-10 border-2 border-dashed rounded-[2rem] transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-white/10 hover:border-primary/20 bg-white/5"}`}
+              
+              <div className="grid grid-cols-1 gap-4">
+                {/* Platform Resume Selector */}
+                <select
+                  value={selectedResumeId}
+                  onChange={(e) => {
+                    setSelectedResumeId(e.target.value);
+                    if (e.target.value) setFile(null); // Clear file if resume selected
+                  }}
+                  className="w-full bg-background border border-border-subtle p-4 rounded-2xl font-bold text-sm outline-hidden focus:ring-2 ring-primary/20 transition-all cursor-pointer"
                 >
+                  <option value="">-- Choose from your built resumes --</option>
+                  {userResumes.map(r => (
+                    <option key={r._id} value={r._id}>
+                      {r.personalInfo?.fullName || "Untitled"} ({r.personalInfo?.jobTitle || "No Title"})
+                    </option>
+                  ))}
+                </select>
+
+                <div className="relative flex items-center justify-center py-2">
+                  <div className="border-t border-white/5 w-full"></div>
+                  <span className="absolute px-4 bg-midground text-[9px] font-black uppercase text-text-muted/40 tracking-widest">OR</span>
+                </div>
+
+                {/* File Upload */}
+                <div className="relative group">
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      handleFileChange(e);
+                      if (e.target.files[0]) setSelectedResumeId(""); // Clear selection if file uploaded
+                    }}
+                    accept=".pdf,.docx"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
                   <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${file ? "bg-primary text-white shadow-glow" : "bg-white/5 text-slate-400"}`}
+                    className={`p-10 border-2 border-dashed rounded-[2rem] transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-white/10 hover:border-primary/20 bg-white/5"} ${selectedResumeId ? "opacity-30" : ""}`}
                   >
-                    <FaUpload size={24} />
-                  </div>
-                  <div>
-                    <p className="font-black text-sm text-text-primary">
-                      {file ? file.name : "Choose PDF or DOCX"}
-                    </p>
-                    <p className="text-[10px] text-text-muted mt-1 font-bold">
-                      {file
-                        ? `${(file.size / 1024).toFixed(1)} KB`
-                        : "Maximum 5MB"}
-                    </p>
+                    <div
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${file ? "bg-primary text-white shadow-glow" : "bg-white/5 text-slate-400"}`}
+                    >
+                      <FaUpload size={20} />
+                    </div>
+                    <div>
+                      <p className="font-black text-xs text-text-primary">
+                        {file ? file.name : "Upload New File"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

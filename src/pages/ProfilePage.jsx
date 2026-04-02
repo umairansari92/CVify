@@ -28,6 +28,7 @@ import CredentialsManager from "../components/profile-forms/CredentialsManager";
 import ProjectsManager from "../components/profile-forms/ProjectsManager";
 import SecuritySettings from "../components/profile-forms/SecuritySettings";
 import ThemeEditor from "../components/profile/ThemeEditor";
+import CareerAnalytics from "../components/profile/CareerAnalytics";
 
 import ThreeBackground from "../components/three/ThreeBackground";
 
@@ -98,6 +99,12 @@ const ProfilePage = () => {
       label: "Theme Designer",
       icon: <FaPalette />,
       color: "indigo",
+    },
+    {
+      id: "intelligence",
+      label: "Career Intelligence",
+      icon: <FaChartLine />,
+      color: "violet",
     },
   ];
 
@@ -248,6 +255,7 @@ const ProfilePage = () => {
               saving={savingTheme}
             />
           )}
+          {activeTab === "intelligence" && <CareerAnalytics />}
 
           <AnimatePresence>
             {!tabs.find((t) => t.id === activeTab) && (

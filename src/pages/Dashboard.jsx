@@ -9,22 +9,8 @@ import {
 } from "../features/resume/resumeThunk";
 import { clearCurrentResume } from "../features/resume/resumeSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
-import {
-  FiEdit2,
-  FiTrash2,
-  FiDownload,
-  FiEye,
-  FiPlus,
-  FiCopy,
-} from "react-icons/fi";
-import ThreeBackground from "../components/three/ThreeBackground";
-import Swal from "sweetalert2";
-import { TypeAnimation } from "react-type-animation";
-import api from "../api/axios";
-import { handleDownloadLetter } from "../utils/pdfExport";
-import { toast } from "react-hot-toast";
-import { formatAuthError } from "../utils/formatAuthError";
-import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes } from "react-icons/fa";
+import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaRobot, FaSearchPlus, FaChartLine } from "react-icons/fa";
+import { FiEdit2, FiTrash2, FiDownload, FiEye, FiPlus, FiCopy, FiZap } from "react-icons/fi";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -168,6 +154,36 @@ const Dashboard = () => {
     navigate("/create");
   };
 
+  const handleScan = (id) => {
+    navigate("/ats", { state: { preSelectedResumeId: id } });
+  };
+
+  const handleImprove = (id) => {
+    navigate("/ats", { state: { preSelectedResumeId: id, autoImprove: true } });
+  };
+
+  const renderAtsBadge = (score) => {
+    if (!score && score !== 0) return null;
+    
+    let colorClass = "bg-red-500/10 text-red-500 border-red-500/20";
+    let icon = "⚠️";
+    
+    if (score >= 80) {
+      colorClass = "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
+      icon = "🔥";
+    } else if (score >= 60) {
+      colorClass = "bg-amber-500/10 text-amber-500 border-amber-500/20";
+      icon = "⚡";
+    }
+
+    return (
+      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${colorClass} font-black text-[10px] animate-pulse shadow-sm`}>
+        <span>{icon}</span>
+        <span className="tracking-tighter">ATS: {score}%</span>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen relative bg-background p-6 md:p-12 transition-colors duration-500 overflow-y-auto custom-scrollbar">
       <ThreeBackground />
@@ -257,6 +273,7 @@ const Dashboard = () => {
                         {resume.templateId || "Modern"}
                       </p>
                     </div>
+                    {renderAtsBadge(resume.atsScore)}
                     <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-[9px] px-2.5 py-1 rounded-full italic tracking-tight shadow-lg shadow-emerald-500/20">
                       Pro
                     </span>
@@ -293,6 +310,23 @@ const Dashboard = () => {
                   </div>
 
                   {/* Actions Grid */}
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <button
+                      onClick={() => handleScan(resume._id)}
+                      className="btn-glass flex items-center justify-center gap-2 py-3 !border-primary/20 hover:!bg-primary/10 group/scan"
+                    >
+                      <FaSearchPlus className="text-primary group-hover/scan:scale-110 transition-transform" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Scan Now</span>
+                    </button>
+                    <button
+                      onClick={() => handleImprove(resume._id)}
+                      className="btn-glass flex items-center justify-center gap-2 py-3 !border-amber-500/20 hover:!bg-amber-500/10 group/improve"
+                    >
+                      <FiZap className="text-amber-500 group-hover/improve:animate-bounce" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Improve</span>
+                    </button>
+                  </div>
+
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => handleEdit(resume._id)}
