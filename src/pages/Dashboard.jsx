@@ -3,47 +3,44 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import {
-  getMyResumes,
-  deleteResume,
-  cloneResume,
-} from "../features/resume/resumeThunk";
-import { clearCurrentResume } from "../features/resume/resumeSlice";
+  fetchDashboardData,
+} from "../features/dashboard/dashboardThunk";
+import { 
+  selectDashboardData, 
+  selectDashboardLoading, 
+  selectIsRefreshing 
+} from "../features/dashboard/dashboardSlice";
 import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
-import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaRobot, FaSearchPlus, FaChartLine } from "react-icons/fa";
-import { FiEdit2, FiTrash2, FiDownload, FiEye, FiPlus, FiCopy, FiZap } from "react-icons/fi";
+import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaSearchPlus } from "react-icons/fa";
+import { FiEdit2, FiTrash2, FiDownload, FiEye, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
 import ThreeBackground from "../components/three/ThreeBackground";
 import Swal from "sweetalert2";
 import { TypeAnimation } from "react-type-animation";
 import api from "../api/axios";
 import { toast } from "react-hot-toast";
 import { formatAuthError } from "../utils/formatAuthError";
+import { 
+  deleteResume, 
+  cloneResume 
+} from "../features/resume/resumeThunk";
+import { clearCurrentResume } from "../features/resume/resumeSlice";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { resumes, loading, error } = useSelector((state) => state.resume);
-  const { user } = useSelector((state) => state.auth);
-  const [coverLetters, setCoverLetters] = useState([]);
-  const [loadingLetters, setLoadingLetters] = useState(false);
+  
+  const dashboard = useSelector(selectDashboardData);
+  const loading = useSelector(selectDashboardLoading);
+  const isRefreshing = useSelector(selectIsRefreshing);
+  
+  const { user, resumes, economy, stats, meta } = dashboard;
+
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getMyResumes());
-    fetchCoverLetters();
+    dispatch(fetchDashboardData());
   }, [dispatch]);
-
-  const fetchCoverLetters = async () => {
-    setLoadingLetters(true);
-    try {
-      const res = await api.get("/cover-letters");
-      setCoverLetters(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingLetters(false);
-    }
-  };
 
   const handleDeleteLetter = async (id, e) => {
     e.stopPropagation();
@@ -62,7 +59,7 @@ const Dashboard = () => {
     if (result.isConfirmed) {
       try {
         await api.delete(`/cover-letters/${id}`);
-        fetchCoverLetters();
+        dispatch(fetchDashboardData());
         toast.success("Deleted");
       } catch (err) {
         toast.error("Failed to delete");
@@ -97,6 +94,7 @@ const Dashboard = () => {
 
     if (result.isConfirmed) {
       await dispatch(deleteResume(id));
+      dispatch(fetchDashboardData()); // Refresh dashboard after delete
       Swal.fire({
         title: "Deleted!",
         text: "Your resume has been deleted successfully.",
@@ -120,6 +118,7 @@ const Dashboard = () => {
     if (e) e.stopPropagation();
     const result = await dispatch(cloneResume({ id, useDiamonds }));
     if (result.type.includes("fulfilled")) {
+      dispatch(fetchDashboardData()); // Refresh dashboard after clone
       Swal.fire({
         title: "Cloned!",
         text: "Resume has been duplicated successfully.",
@@ -198,9 +197,9 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-16 gap-8 animate-fadeIn">
           <div className="w-full md:w-auto">
             <h1 className="text-4xl lg:text-5xl text-gradient font-black tracking-tighter flex flex-wrap items-center gap-4">
-              Welcome Back
-              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-[10px] px-3 py-1.5 rounded-full italic tracking-tight shadow-sm shadow-emerald-500/20">
-                PRO PLAN
+              Welcome Back, {user?.name?.split(" ")[0]}
+              <span className={`bg-gradient-to-r ${economy?.tier === "Elite" ? "from-amber-400 to-orange-600" : "from-emerald-500 to-teal-600"} text-white font-bold text-[10px] px-3 py-1.5 rounded-full italic tracking-tight shadow-sm shadow-emerald-500/20`}>
+                {economy?.tier || "BASIC"} MEMBER
               </span>
             </h1>
 
@@ -231,25 +230,23 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-12 p-6 glass border-l-8 border-red-500 rounded-3xl flex justify-between items-center shadow-xl animate-shake">
-            <div className="flex items-center gap-4">
-              <span className="text-3xl">🚀</span>
+        {meta?.partial && (
+          <div className="mb-12 p-4 glass border-l-4 border-amber-500 rounded-2xl flex justify-between items-center shadow-lg animate-fadeIn">
+            <div className="flex items-center gap-3">
+              <FiAlertCircle className="text-amber-500 text-xl" />
               <div>
-                <p className="font-black text-primary uppercase text-xs tracking-[0.2em] mb-1">
-                  System Notice
-                </p>
-                <p className="font-bold text-text-primary text-lg">
-                  {formatAuthError(error)}
+                <p className="font-bold text-text-primary text-sm">
+                  Partial Sync: {meta.missing?.join(", ")} logic unavailable.
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => dispatch(getMyResumes())}
-              className="btn-glass text-primary hover:scale-105"
-            >
-              Retry Connection
-            </button>
+          </div>
+        )}
+
+        {isRefreshing && (
+          <div className="fixed bottom-8 right-8 z-[100] glass px-6 py-3 rounded-full border border-primary/20 flex items-center gap-3 shadow-2xl animate-bounce">
+            <FiRefreshCw className="animate-spin text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Syncing...</span>
           </div>
         )}
 
@@ -263,11 +260,11 @@ const Dashboard = () => {
               ></div>
             ))}
           </div>
-        ) : resumes.length > 0 ? (
+        ) : resumes?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {resumes.map((resume) => (
               <div
-                key={resume._id}
+                key={resume.id}
                 className="premium-card group h-full flex flex-col p-8"
               >
                 {/* Visual Header */}
@@ -276,13 +273,19 @@ const Dashboard = () => {
                   <div className="absolute top-4 right-4 flex items-center gap-2">
                     <div className="bg-white/90 dark:bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/20 shadow-sm">
                       <p className="text-[9px] font-black uppercase tracking-widest text-primary">
-                        {resume.templateId || "Modern"}
+                        Modern
                       </p>
                     </div>
                     {renderAtsBadge(resume.atsScore)}
                     <span className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-[9px] px-2.5 py-1 rounded-full italic tracking-tight shadow-lg shadow-emerald-500/20">
                       Pro
                     </span>
+                    <div className="bg-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-primary/30">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                      <span className="text-[9px] font-black text-primary uppercase tracking-tighter">
+                        {resume.status}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -290,10 +293,10 @@ const Dashboard = () => {
                   <div className="flex justify-between items-start mb-6">
                     <div>
                       <h3 className="text-2xl font-black text-text-main leading-tight mb-2 truncate max-w-[220px]">
-                        {resume.personalInfo?.fullName || "Untitled Resume"}
+                        {resume.title}
                       </h3>
                       <p className="text-xs font-black text-primary uppercase tracking-[0.15em] opacity-80 mb-4 ml-0.5">
-                        {resume.personalInfo?.jobTitle || "Resume Builder"}
+                        Resume Builder
                       </p>
                     </div>
                   </div>
@@ -307,7 +310,7 @@ const Dashboard = () => {
                         Last Modified
                       </span>
                       <span>
-                        {new Date(resume.updatedAt).toLocaleDateString(
+                        {new Date(resume.lastUpdated).toLocaleDateString(
                           undefined,
                           { month: "short", day: "numeric" },
                         )}
@@ -318,14 +321,14 @@ const Dashboard = () => {
                   {/* Actions Grid */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <button
-                      onClick={() => handleScan(resume._id)}
+                      onClick={() => handleScan(resume.id)}
                       className="btn-glass flex items-center justify-center gap-2 py-3 !border-primary/20 hover:!bg-primary/10 group/scan"
                     >
                       <FaSearchPlus className="text-primary group-hover/scan:scale-110 transition-transform" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Scan Now</span>
                     </button>
                     <button
-                      onClick={() => handleImprove(resume._id)}
+                      onClick={() => handleImprove(resume.id)}
                       className="btn-glass flex items-center justify-center gap-2 py-3 !border-amber-500/20 hover:!bg-amber-500/10 group/improve"
                     >
                       <FiZap className="text-amber-500 group-hover/improve:animate-bounce" />
@@ -335,7 +338,7 @@ const Dashboard = () => {
 
                   <div className="grid grid-cols-3 gap-3">
                     <button
-                      onClick={() => handleEdit(resume._id)}
+                      onClick={() => handleEdit(resume.id)}
                       className="btn-primary px-4 bg-primary/10 !text-text-main border border-primary/20 hover:!bg-primary hover:!text-white flex items-center justify-center group/btn"
                     >
                       <FiEdit2 className="group-hover/btn:rotate-12 transition-transform" />
@@ -343,7 +346,7 @@ const Dashboard = () => {
                     </button>
                     <button
                       onClick={() =>
-                        handleDownloadPDF(resume, resume.templateId)
+                        handleDownloadPDF(resume, "Modern")
                       }
                       className="btn-primary !px-0 !bg-success/10 !text-success border border-success/20 hover:!bg-success hover:!text-white flex items-center justify-center group/btn"
                     >
@@ -351,14 +354,14 @@ const Dashboard = () => {
                     </button>
                     <div className="flex gap-2">
                       <button
-                        onClick={(e) => handleClone(resume._id, e)}
+                        onClick={(e) => handleClone(resume.id, e)}
                         className="flex-1 bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-white rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Duplicate"
                       >
                         <FiCopy />
                       </button>
                       <button
-                        onClick={(e) => handleDelete(resume._id, e)}
+                        onClick={(e) => handleDelete(resume.id, e)}
                         className="flex-1 bg-red-500/10 text-red-500 border border-red-500/10 hover:bg-red-500 hover:text-white rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Delete"
                       >
@@ -397,78 +400,23 @@ const Dashboard = () => {
             <h2 className="text-4xl font-black text-text-primary tracking-tight flex items-center gap-4">
               My Cover Letters
               <span className="text-xs font-black text-secondary bg-secondary/10 px-4 py-2 rounded-2xl border border-secondary/20 shadow-sm">
-                {coverLetters.length} Letters
+                {stats?.hasCoverLetters ? "LETTERS STORED" : "0 Letters"}
               </span>
             </h2>
           </div>
 
-          {loadingLetters ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 opacity-50">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-48 glass rounded-[2.5rem] animate-pulse"
-                ></div>
-              ))}
-            </div>
-          ) : coverLetters.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {coverLetters.map((letter) => (
-                <div
-                  key={letter._id}
-                  className="premium-card group p-6 space-y-4"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="w-12 h-12 glass rounded-2xl flex items-center justify-center text-secondary shadow-sm">
-                      <FaFileAlt size={20} />
-                    </div>
-                    <div className="px-3 py-1 bg-secondary/10 border border-secondary/20 rounded-lg">
-                      <span className="text-[9px] font-black uppercase text-secondary tracking-widest">
-                        {letter.type === "ai" ? "AI Optimized" : "Standard"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-black text-text-primary truncate">
-                      {letter.jobTitle}
-                    </h3>
-                    <p className="text-sm text-text-muted font-bold opacity-60 italic">
-                      {letter.companyName || "No Company"}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 flex gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedLetter(letter);
-                        setIsPreviewOpen(true);
-                      }}
-                      className="flex-1 btn-glass text-[10px] font-black uppercase py-2 hover:bg-white/10"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDownloadLetter(letter, user)}
-                      className="flex-1 btn-glass bg-primary/10! text-primary! border-primary/20! text-[10px] font-black uppercase py-2 hover:bg-primary! hover:text-white!"
-                    >
-                      PDF
-                    </button>
-                    <button
-                      onClick={(e) => handleDeleteLetter(letter._id, e)}
-                      className="w-10 btn-glass bg-red-500/10! text-red-500! border-red-500/20! flex items-center justify-center hover:bg-red-500! hover:text-white!"
-                    >
-                      <FaTrash size={12} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
+          {!stats?.hasCoverLetters ? (
             <div className="glass p-12 text-center rounded-[2.5rem] border-2 border-dashed border-white/5 opacity-50">
               <p className="font-bold text-text-muted text-lg italic">
                 You haven't generated any cover letters yet.
               </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-40 grayscale pointer-events-none">
+              <div className="premium-card p-12 text-center flex flex-col items-center justify-center border-dashed">
+                <FiZap className="text-4xl text-primary mb-4" />
+                <p className="font-bold text-sm text-text-muted">Letter aggregation coming soon in next v1.1</p>
+              </div>
             </div>
           )}
         </div>

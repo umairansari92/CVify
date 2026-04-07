@@ -4,6 +4,7 @@ import resumeReducer from "../features/resume/resumeSlice";
 import profileReducer from "../features/profile/profileSlice";
 import atsReducer from "../features/ats/atsSlice";
 import globalSkillsReducer from "../features/skills/globalSkillsSlice";
+import dashboardReducer from "../features/dashboard/dashboardSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     profile: profileReducer,
     ats: atsReducer,
     globalSkills: globalSkillsReducer,
+    dashboard: dashboardReducer,
   },
 });
