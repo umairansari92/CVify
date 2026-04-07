@@ -37,6 +37,7 @@ const Documentation = () => {
       label: "Intelligence",
       items: [
         { id: "engine", icon: <Brain size={16} />, label: "3-Layer ATS Engine" },
+        { id: "bff", icon: <GitBranch size={16} />, label: "BFF v1 Architecture" },
         { id: "architecture", icon: <Layers size={16} />, label: "System Architecture" },
         { id: "security", icon: <Shield size={16} />, label: "Security & Privacy" },
       ]
@@ -276,6 +277,42 @@ const Documentation = () => {
           { left: "Junior", right: "Keywords 30% | Formatting 25% | Quantification 15% | Impact 15% | X-Factor 15%" },
           { left: "Mid-Level", right: "Keywords 25% | Formatting 20% | Quantification 25% | Impact 20% | X-Factor 10%" },
           { left: "Senior", right: "Keywords 20% | Formatting 15% | Quantification 30% | Impact 30% | X-Factor 5%" },
+        ]} />
+      </>
+    ),
+    
+    bff: (
+      <>
+        <DocHeader title="BFF v1: High-Performance Architecture" badge="Major Update" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          In April 2026, we successfully transitioned CVify Pro from a fragmented API model to a <strong className="text-text-primary">Backend For Frontend (BFF)</strong> architecture. This is a senior-grade system design that prioritizes user experience above all else.
+        </p>
+
+        <SectionTitle>The Problem (Before v1.0)</SectionTitle>
+        <div className="p-5 bg-red-500/5 border border-red-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed italic">
+            "Previously, the dashboard had to hit 5 alag-alag APIs (Profile, Resumes, Letters, Stats, Economy) to render a single screen. This caused 'Network Waterfalls', where if one service was slow, the whole UI felt broken or 'jiggly' due to constant layout shifts."
+          </p>
+        </div>
+
+        <SectionTitle>The Solution (BFF v1.0)</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Unified v1 Endpoint" 
+            desc="One single request (/api/v1/bff/dashboard) now returns a custom-pruned View Model containing everything your screen needs." />
+          <InfoCard icon={<Heart size={18} />} color="red" title="Heart vs Makeup Resilience" 
+            desc="The system distinguishes between 'Heart' services (Resumes/Profile) and 'Makeup' services (Stats). If Stats fail, your dashboard still loads instantly." />
+          <InfoCard icon={<Cpu size={18} />} color="blue" title="SWR Strategy" 
+            desc="Stale-While-Revalidate logic allows the UI to show cached data instantly while refreshing in the background — Zero waiting." />
+          <InfoCard icon={<Layers size={18} />} color="purple" title="Section-Aware Caching" 
+            desc="Advanced caching keys ensure that editing one resume doesn't wipe your entire dashboard cache. Only relevant segments refresh." />
+        </div>
+
+        <SectionTitle>Performance Impact</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Network Requests", right: "Reduced from 5+ to exactly 1" },
+          { left: "Payload Size", right: "70% smaller (Data Pruning removed 100+ unused fields)" },
+          { left: "Loading State", right: "Shifted from 'Multiple Spinners' to 'Instant-Render'" },
+          { left: "Reliability", right: "Service-level isolation prevents platform-wide crashes" },
         ]} />
       </>
     ),
