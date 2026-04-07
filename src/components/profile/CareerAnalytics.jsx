@@ -8,7 +8,8 @@ import {
   FaGem,
   FaCheckCircle,
   FaExclamationCircle,
-  FaRocket
+  FaRocket,
+  FaSearch
 } from "react-icons/fa";
 import { FiZap, FiArrowUpRight, FiSearch } from "react-icons/fi";
 import api from "../../api/axios";
