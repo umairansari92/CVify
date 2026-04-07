@@ -12,6 +12,7 @@ import {
   FaGem,
   FaCheckCircle,
   FaRocket,
+  FaChartLine,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";

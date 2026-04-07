@@ -11,16 +11,12 @@ import { updateDiamonds } from "../features/auth/authSlice";
 import api from "../api/axios";
 import {
   FaUpload,
-  FaCheckCircle,
   FaExclamationTriangle,
   FaSearch,
-  FaHistory,
   FaSpinner,
   FaGem,
-  FaChartLine,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import ATSGauge from "../components/common/ATSGauge";
 import ATSResult from "../components/ats/ATSResult"; // [V3]
 
 const ATSPage = () => {

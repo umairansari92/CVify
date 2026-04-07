@@ -1,5 +1,6 @@
 import React from "react";
 import { pdf } from "@react-pdf/renderer";
+import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
 import { toast } from "react-hot-toast";
 import ModernPDF from "../components/pdf/ModernPDF";
 import StandardPDF from "../components/pdf/StandardPDF";
@@ -111,7 +112,6 @@ export const handleDownloadPDF = async (data, templateId) => {
 /**
  * Handles Cover Letter PDF generation
  */
-import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
 
 export const handleDownloadLetter = async (letter, user) => {
   if (!letter) {
