@@ -22,6 +22,7 @@ import {
   FaClock,
   FaGlobe,
   FaExternalLinkAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 const AdminUserDetail = () => {
@@ -218,18 +219,27 @@ const AdminUserDetail = () => {
             </div>
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${
-                  user?.role === 'superadmin' ? 'bg-amber-500/15 text-amber-400 border-amber-400/30' :
-                  user?.role === 'admin' ? 'bg-blue-500/15 text-blue-400 border-blue-400/30' :
-                  'bg-slate-500/15 text-slate-400 border-slate-400/30'
-                }`}>
-                  {user?.role}
-                </span>
-                {user?.isBlocked && (
-                  <span className="px-3 py-1 bg-red-500/15 text-red-400 border border-red-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                    Suspended
+                  <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${
+                    user?.role === 'superadmin' ? 'bg-amber-500/15 text-amber-400 border-amber-400/30' :
+                    user?.role === 'admin' ? 'bg-blue-500/15 text-blue-400 border-blue-400/30' :
+                    'bg-slate-500/15 text-slate-400 border-slate-400/30'
+                  }`}>
+                    {user?.role}
                   </span>
-                )}
+                  {user?.isVerified ? (
+                    <span className="px-3 py-1 bg-green-500/15 text-green-400 border border-green-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                      <FaCheckCircle className="text-[8px]" /> Verified
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 bg-amber-500/15 text-amber-400 border border-amber-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                      Unverified
+                    </span>
+                  )}
+                  {user?.isBlocked && (
+                    <span className="px-3 py-1 bg-red-500/15 text-red-400 border border-red-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                      Suspended
+                    </span>
+                  ) || null}
                 {user?.isFrozen && (
                   <span className="px-3 py-1 bg-blue-500/15 text-blue-400 border border-blue-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
                     <FaSnowflake className="text-[8px]" /> Frozen

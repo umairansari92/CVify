@@ -602,6 +602,9 @@ const AdminDashboard = () => {
                     Diamonds
                   </th>
                   <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
+                    Verified
+                  </th>
+                  <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
                     Status
                   </th>
                   <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
@@ -623,7 +626,7 @@ const AdminDashboard = () => {
                 ) : users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={6}
+                      colSpan={7}
                       className="px-6 py-16 text-center text-text-muted font-bold text-lg"
                     >
                       No users found matching &quot;{search}&quot;
@@ -684,6 +687,17 @@ const AdminDashboard = () => {
                           <span className="font-black text-purple-400 text-sm">
                             💎 {u.diamonds ?? 0}
                           </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {u.isVerified ? (
+                            <span className="px-3 py-1 bg-green-500/15 text-green-400 border border-green-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1 mx-auto w-fit">
+                              <FaCheckCircle className="text-[8px]" /> Verified
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 bg-amber-500/15 text-amber-400 border border-amber-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1 mx-auto w-fit">
+                              Unverified
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-center">
                           {u.isBlocked ? (
