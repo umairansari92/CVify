@@ -740,8 +740,9 @@ const AdminDashboard = () => {
                   <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
                 </div>
                 <div className="h-[300px] min-h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0} aspect={2.5}>
                     <AreaChart data={stats.charts.userGrowth}>
+
                       <defs>
                         <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>

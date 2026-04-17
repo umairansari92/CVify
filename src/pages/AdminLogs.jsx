@@ -10,6 +10,7 @@ const AdminLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
+  const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
   const [selectedLog, setSelectedLog] = useState(null);
 

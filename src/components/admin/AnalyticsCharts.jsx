@@ -49,8 +49,9 @@ const AnalyticsCharts = ({ smartAnalytics }) => {
         </div>
 
         <div className="h-[280px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" aspect={1.5}>
             <BarChart data={funnelData}>
+
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
               <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
@@ -87,8 +88,9 @@ const AnalyticsCharts = ({ smartAnalytics }) => {
         </div>
 
         <div className="h-[280px] w-full flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" aspect={1.5}>
             <PieChart>
+
               <Pie
                 data={diamondData}
                 cx="50%"
