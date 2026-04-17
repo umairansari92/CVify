@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
-import { FaHistory, FaSearch, FaUser, FaShieldAlt, FaTerminal, FaBug, FaInfoCircle } from "react-icons/fa";
+import { FaHistory, FaSearch, FaUser, FaShieldAlt, FaTerminal, FaBug, FaInfoCircle, FaSearchPlus } from "react-icons/fa";
+import AuditViewerModal from "../components/admin/AuditViewerModal";
+import { AnimatePresence } from "framer-motion";
+import Swal from "sweetalert2";
+
 
 const AdminLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
-  const [page, setPage] = useState(1);
-
   const [pagination, setPagination] = useState({});
+  const [selectedLog, setSelectedLog] = useState(null);
+
 
   useEffect(() => {
     fetchLogs();
@@ -102,8 +106,10 @@ const AdminLogs = () => {
                   <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-text-muted">Details</th>
                   <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-text-muted">Performed By</th>
                   <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-text-muted">Date</th>
+                  <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-text-muted text-right">Action</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-white/5">
                 {loading ? (
                   [1,2,3,4,5].map(i => (
@@ -157,14 +163,19 @@ const AdminLogs = () => {
                             </div>
                          ) : <span className="text-xs text-text-muted">—</span>}
                       </td>
-                      <td className="px-6 py-5">
-                        <p className="text-xs text-text-muted font-bold whitespace-nowrap">{new Date(log.createdAt).toLocaleDateString()}</p>
-                        <p className="text-[9px] text-text-muted opacity-40 uppercase tracking-tighter">{new Date(log.createdAt).toLocaleTimeString()}</p>
+                      <td className="px-6 py-5 text-right">
+                        <button 
+                          onClick={() => setSelectedLog(log)}
+                          className="p-2 hover:bg-primary/20 hover:text-primary rounded-xl transition-all text-text-muted group"
+                        >
+                          <FaSearchPlus className="group-hover:scale-110 transition-transform" />
+                        </button>
                       </td>
                     </tr>
                   ))
                 )}
               </tbody>
+
             </table>
           </div>
         </div>
@@ -185,9 +196,19 @@ const AdminLogs = () => {
                 ))}
             </div>
         )}
+      <AnimatePresence>
+        {selectedLog && (
+          <AuditViewerModal 
+            log={selectedLog} 
+            onClose={() => setSelectedLog(null)} 
+          />
+        )}
+      </AnimatePresence>
       </div>
     </div>
   );
 };
+
+
 
 export default AdminLogs;

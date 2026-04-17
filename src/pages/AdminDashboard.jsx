@@ -44,6 +44,9 @@ import {
   Legend,
 } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
+import AnalyticsCharts from "../components/admin/AnalyticsCharts";
+import NudgePanel from "../components/admin/NudgePanel";
+
 
 
 const AdminDashboard = () => {
@@ -720,255 +723,49 @@ const AdminDashboard = () => {
         </div>
 
 
-        {/* Intelligence Nudges */}
-        {insights.length > 0 && (
-          <div className="mb-12 animate-fadeInDown">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
-                <FaLightbulb />
+        {/* Intelligence & Analytics Layer */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 animate-fadeIn" style={{ animationDelay: "0.1s" }}>
+          {/* Main Charts Area */}
+          <div className="lg:col-span-3 flex flex-col gap-8">
+            <AnalyticsCharts smartAnalytics={smartAnalytics} />
+            
+            {/* Acquisition Charts Moved Here for better flow */}
+            {stats?.charts && (
+              <div className="premium-card p-6 min-h-[400px]">
+                <div className="flex justify-between items-center mb-10">
+                  <div>
+                    <h3 className="text-xl font-black text-text-primary">User Acquisition</h3>
+                    <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Growth over last 6 months</p>
+                  </div>
+                  <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
+                </div>
+                <div className="h-[300px] min-h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                    <AreaChart data={stats.charts.userGrowth}>
+                      <defs>
+                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                      <XAxis dataKey="_id" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                      <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }} />
+                      <Area type="monotone" dataKey="count" name="New Users" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-black text-text-primary tracking-tight uppercase">Intelligence Hub</h2>
-                <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">AI-lite platform nudges & forensic alerts</p>
-              </div>
-            </div>
-            <div className="flex overflow-x-auto pb-4 gap-4 no-scrollbar">
-              {insights.map((nudge, idx) => (
-                <NudgeCard key={nudge._id || idx} nudge={nudge} />
-              ))}
-            </div>
+            )}
           </div>
-        )}
 
-        {/* Unified Stats Grid */}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-12 animate-fadeIn">
-          <StatCard
-            icon={FaUsers}
-            label="Total Users"
-            value={stats?.totalUsers}
-            gradient="from-blue-500/10 to-cyan-500/10"
-            iconColor="text-blue-400"
-            onClick={() => window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' })}
-          />
-          <StatCard
-            icon={FaGem}
-            label="Diamonds"
-            value={stats?.totalDiamonds}
-            gradient="from-purple-500/10 to-pink-500/10"
-            iconColor="text-purple-400"
-            onClick={() => navigate("/admin/economy")}
-          />
-          <StatCard
-            icon={FaFileAlt}
-            label="Resumes"
-            value={stats?.totalResumes}
-            gradient="from-green-500/10 to-emerald-500/10"
-            iconColor="text-green-400"
-            onClick={() => navigate("/admin/resumes")}
-          />
-          <StatCard
-            icon={FaChartBar}
-            label="ATS Scans"
-            value={stats?.totalATSScans}
-            gradient="from-orange-500/10 to-amber-500/10"
-            iconColor="text-orange-400"
-            onClick={() => navigate("/admin/ats-scans")}
-          />
-          <StatCard
-            icon={FaSnowflake}
-            label="Frozen"
-            value={stats?.frozenUsers}
-            gradient="from-slate-500/10 to-gray-500/10"
-            iconColor="text-slate-400"
-            onClick={() => {
-              setSearch("");
-              setStatusFilter("frozen");
-              window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' });
-            }}
-          />
-          <StatCard
-            icon={FaShieldAlt}
-            label="Admins"
-            value={stats?.adminCount}
-            gradient="from-indigo-500/10 to-blue-500/10"
-            iconColor="text-indigo-400"
-            onClick={() => {
-              setSearch("admin");
-              window.scrollTo({ top: document.querySelector('#users-table')?.offsetTop - 100, behavior: 'smooth' });
-            }}
-          />
+          {/* AI Insights Sidebar */}
+          <div className="lg:col-span-1">
+            <NudgePanel insights={insights} loading={intelLoading} />
+          </div>
         </div>
 
-        {/* Analytics Charts */}
-        {stats?.charts && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {/* User Growth Chart */}
-            <div className="premium-card p-6 min-h-[400px] animate-fadeIn">
-              <div className="flex justify-between items-center mb-10">
-                <div>
-                  <h3 className="text-xl font-black text-text-primary">User Acquisition</h3>
-                  <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Growth over last 6 months</p>
-                </div>
-                <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
-              </div>
-              <div className="h-[300px] min-h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                  <AreaChart data={stats.charts.userGrowth}>
-                    <defs>
-                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                    <XAxis 
-                      dataKey="_id" 
-                      stroke="#64748b" 
-                      fontSize={10} 
-                      tickLine={false} 
-                      axisLine={false}
-                      tickFormatter={(val) => {
-                        const date = new Date(val + "-01");
-                        return date.toLocaleString('default', { month: 'short' });
-                      }}
-                    />
-                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
-                      itemStyle={{ color: "#fff", fontWeight: "bold" }}
-                      cursor={{ stroke: '#3b82f6', strokeWidth: 2 }}
-                    />
-                    <Area type="monotone" dataKey="count" name="New Users" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Feature Usage Chart */}
-            <div className="premium-card p-6 min-h-[400px] animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-              <div className="flex justify-between items-center mb-10">
-                <div>
-                  <h3 className="text-xl font-black text-text-primary">Platform Activity</h3>
-                  <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Resumes vs AI Scans</p>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                    <span className="text-[10px] text-text-muted font-black uppercase tracking-tighter">Resumes</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                    <span className="text-[10px] text-text-muted font-black uppercase tracking-tighter">Scans</span>
-                  </div>
-                </div>
-              </div>
-              <div className="h-[300px] min-h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                  <BarChart data={stats.charts.resumeGrowth.map((val, idx) => ({
-                    month: val._id,
-                    resumes: val.count,
-                    scans: stats.charts.atsGrowth.find(a => a._id === val._id)?.count || 0
-                  }))}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                    <XAxis 
-                      dataKey="month" 
-                      stroke="#64748b" 
-                      fontSize={10} 
-                      tickLine={false} 
-                      axisLine={false}
-                      tickFormatter={(val) => {
-                        const date = new Date(val + "-01");
-                        return date.toLocaleString('default', { month: 'short' });
-                      }}
-                    />
-                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <Tooltip 
-                      cursor={{ fill: "rgba(255,255,255,0.05)" }}
-                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
-                    />
-                    <Bar dataKey="resumes" name="Resumes" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} />
-                    <Bar dataKey="scans" name="Scans" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={12} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        )}        {/* Economy & Health monitor */}
-        {smartAnalytics && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 animate-fadeIn">
-            {/* Health Funnel */}
-            <div className="premium-card p-6 flex flex-col">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
-                  <FaRocket />
-                </div>
-                <div>
-                  <h3 className="text-lg font-black text-text-primary">Health Funnel</h3>
-                  <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">7-Day Engagement Retention</p>
-                </div>
-              </div>
-              
-              <div className="flex-1 flex flex-col justify-between gap-6">
-                {[
-                  { label: "Total Platform", value: smartAnalytics.funnel.total, color: "bg-slate-500" },
-                  { label: "Active Weekly", value: smartAnalytics.funnel.active, color: "bg-blue-500", percent: (smartAnalytics.funnel.active / smartAnalytics.funnel.total * 100).toFixed(1) },
-                  { label: "Completed Profiles", value: smartAnalytics.funnel.completed, color: "bg-emerald-500", percent: (smartAnalytics.funnel.completed / smartAnalytics.funnel.total * 100).toFixed(1) }
-                ].map((row, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between items-end mb-2">
-                       <span className="text-[10px] font-black text-text-secondary uppercase tracking-tighter">{row.label}</span>
-                       <span className="text-sm font-black text-text-primary">
-                          {row.value.toLocaleString()} 
-                          {row.percent && row.percent !== "NaN" && <span className="ml-1 text-[10px] text-text-muted opacity-40">({row.percent}%)</span>}
-                       </span>
-                    </div>
-                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                       <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(row.value / smartAnalytics.funnel.total * 100) || 0}%` }}
-                        className={`h-full ${row.color}`}
-                       />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Diamond Flow Chart */}
-            <div className="lg:col-span-2 premium-card p-6 min-h-[300px]">
-              <div className="flex justify-between items-center mb-10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
-                    <FaGem />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-text-primary">Diamond Economy Flow</h3>
-                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Income vs Expenditures (Last 7 Days)</p>
-                  </div>
-                </div>
-              </div>
-              <div className="h-[200px] w-full mt-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={smartAnalytics.diamondFlow.map(d => ({ name: d._id.toUpperCase(), total: Math.abs(d.total) }))}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
-                      itemStyle={{ color: "#fff", fontWeight: "bold" }}
-                    />
-                    <Bar dataKey="total" radius={[8, 8, 0, 0]}>
-                      {smartAnalytics.diamondFlow.map((entry, index) => (
-                        <motion.rect key={index} fill={entry._id === 'credit' ? '#10b981' : '#f43f5e'} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Users Table Section */}
         <div className="premium-card p-0 overflow-hidden">
