@@ -24,7 +24,11 @@ import {
   FaEdit,
   FaEye,
   FaIdCard,
+  FaLightbulb,
+  FaExclamationTriangle,
+  FaRocket,
 } from "react-icons/fa";
+
 import {
   LineChart,
   Line,
@@ -64,6 +68,12 @@ const AdminDashboard = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [bulkLoading, setBulkLoading] = useState(false);
   const [dateRange, setDateRange] = useState("all");
+  
+  // Intelligence Layer State
+  const [insights, setInsights] = useState([]);
+  const [smartAnalytics, setSmartAnalytics] = useState(null);
+  const [intelLoading, setIntelLoading] = useState(true);
+
 
 
 
@@ -108,10 +118,28 @@ const AdminDashboard = () => {
     [pagination.limit]
   );
 
+  const fetchIntel = useCallback(async () => {
+    setIntelLoading(true);
+    try {
+      const [insRes, anaRes] = await Promise.all([
+        api.get("/admin/insights"),
+        api.get("/admin/smart-analytics")
+      ]);
+      setInsights(insRes.data);
+      setSmartAnalytics(anaRes.data);
+    } catch (err) {
+      console.error("Failed to load platform intelligence:", err);
+    } finally {
+      setIntelLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchStats();
+    fetchIntel();
     fetchUsers(1, search);
-  }, [fetchStats, fetchUsers, search, statusFilter, industryFilter, dateRange]);
+  }, [fetchStats, fetchIntel, fetchUsers, search, statusFilter, industryFilter, dateRange]);
+
 
 
 
@@ -615,6 +643,42 @@ const AdminDashboard = () => {
     );
   };
 
+  const NudgeCard = ({ nudge }) => {
+    const severityConfig = {
+      CRITICAL: "bg-red-500/10 border-red-500/20 text-red-500",
+      HIGH: "bg-rose-500/10 border-rose-500/20 text-rose-500",
+      MEDIUM: "bg-amber-500/10 border-amber-500/20 text-amber-500",
+      LOW: "bg-blue-500/10 border-blue-500/20 text-blue-500",
+      INFO: "bg-emerald-500/10 border-emerald-500/20 text-emerald-500",
+    };
+
+    return (
+      <motion.div 
+        layout
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className={`min-w-[320px] p-5 rounded-2xl border ${severityConfig[nudge.severity] || severityConfig.INFO} flex flex-col gap-3 relative overflow-hidden group`}
+      >
+        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:scale-110 transition-transform">
+          <FaLightbulb className="text-4xl" />
+        </div>
+        <div className="flex items-center gap-2">
+          <FaExclamationTriangle className="text-sm" />
+          <span className="text-[10px] font-black uppercase tracking-widest">{nudge.category.replace(/_/g, ' ')}</span>
+        </div>
+        <div>
+          <h4 className="font-black text-sm leading-tight mb-1">{nudge.title}</h4>
+          <p className="text-xs opacity-70 font-medium line-clamp-2">{nudge.message}</p>
+        </div>
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-current/10">
+          <span className="text-[9px] font-bold opacity-60 italic">{nudge.severity} Priority</span>
+          <button className="text-[9px] font-black uppercase tracking-tighter hover:underline">Investigate &rarr;</button>
+        </div>
+      </motion.div>
+    );
+  };
+
+
 
   // ─── Render ─────────────────────────────────────────────────────────────
   return (
@@ -656,7 +720,28 @@ const AdminDashboard = () => {
         </div>
 
 
+        {/* Intelligence Nudges */}
+        {insights.length > 0 && (
+          <div className="mb-12 animate-fadeInDown">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                <FaLightbulb />
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-text-primary tracking-tight uppercase">Intelligence Hub</h2>
+                <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">AI-lite platform nudges & forensic alerts</p>
+              </div>
+            </div>
+            <div className="flex overflow-x-auto pb-4 gap-4 no-scrollbar">
+              {insights.map((nudge, idx) => (
+                <NudgeCard key={nudge._id || idx} nudge={nudge} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Unified Stats Grid */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-12 animate-fadeIn">
           <StatCard
             icon={FaUsers}
@@ -804,6 +889,80 @@ const AdminDashboard = () => {
                     />
                     <Bar dataKey="resumes" name="Resumes" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} />
                     <Bar dataKey="scans" name="Scans" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={12} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}        {/* Economy & Health monitor */}
+        {smartAnalytics && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 animate-fadeIn">
+            {/* Health Funnel */}
+            <div className="premium-card p-6 flex flex-col">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                  <FaRocket />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-text-primary">Health Funnel</h3>
+                  <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">7-Day Engagement Retention</p>
+                </div>
+              </div>
+              
+              <div className="flex-1 flex flex-col justify-between gap-6">
+                {[
+                  { label: "Total Platform", value: smartAnalytics.funnel.total, color: "bg-slate-500" },
+                  { label: "Active Weekly", value: smartAnalytics.funnel.active, color: "bg-blue-500", percent: (smartAnalytics.funnel.active / smartAnalytics.funnel.total * 100).toFixed(1) },
+                  { label: "Completed Profiles", value: smartAnalytics.funnel.completed, color: "bg-emerald-500", percent: (smartAnalytics.funnel.completed / smartAnalytics.funnel.total * 100).toFixed(1) }
+                ].map((row, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between items-end mb-2">
+                       <span className="text-[10px] font-black text-text-secondary uppercase tracking-tighter">{row.label}</span>
+                       <span className="text-sm font-black text-text-primary">
+                          {row.value.toLocaleString()} 
+                          {row.percent && row.percent !== "NaN" && <span className="ml-1 text-[10px] text-text-muted opacity-40">({row.percent}%)</span>}
+                       </span>
+                    </div>
+                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                       <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(row.value / smartAnalytics.funnel.total * 100) || 0}%` }}
+                        className={`h-full ${row.color}`}
+                       />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Diamond Flow Chart */}
+            <div className="lg:col-span-2 premium-card p-6 min-h-[300px]">
+              <div className="flex justify-between items-center mb-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <FaGem />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-text-primary">Diamond Economy Flow</h3>
+                    <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Income vs Expenditures (Last 7 Days)</p>
+                  </div>
+                </div>
+              </div>
+              <div className="h-[200px] w-full mt-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={smartAnalytics.diamondFlow.map(d => ({ name: d._id.toUpperCase(), total: Math.abs(d.total) }))}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                      itemStyle={{ color: "#fff", fontWeight: "bold" }}
+                    />
+                    <Bar dataKey="total" radius={[8, 8, 0, 0]}>
+                      {smartAnalytics.diamondFlow.map((entry, index) => (
+                        <motion.rect key={index} fill={entry._id === 'credit' ? '#10b981' : '#f43f5e'} />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
