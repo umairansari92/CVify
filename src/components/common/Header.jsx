@@ -2,7 +2,9 @@ import React from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
 import { FaUserCircle, FaCrown, FaStar, FaGem, FaBars, FaDownload } from "react-icons/fa";
+import NotificationCenter from "./NotificationCenter";
 import Logo from "./Logo";
+
 
 const Header = ({ onMenuClick }) => {
   const { user } = useSelector((state) => state.auth);
@@ -42,8 +44,10 @@ const Header = ({ onMenuClick }) => {
             </span>
           </div>
         </div>
-
+        
+        <NotificationCenter />
         <ThemeToggle />
+
 
         <div className="flex items-center gap-2 lg:gap-4 pl-4 lg:pl-8 border-l border-border-subtle">
           <div className="flex flex-col items-end hidden md:flex group cursor-pointer">

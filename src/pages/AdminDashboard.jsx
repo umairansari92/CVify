@@ -36,6 +36,9 @@ import LoadingScreen from "../components/common/LoadingScreen";
 const AnalyticsCharts = lazy(() => import("../components/admin/AnalyticsCharts"));
 const NudgePanel = lazy(() => import("../components/admin/NudgePanel"));
 const AcquisitionChart = lazy(() => import("../components/admin/AcquisitionChart"));
+import AdminBroadcastModal from "../components/admin/AdminBroadcastModal";
+import { FiSend } from "react-icons/fi";
+
 
 
 
@@ -68,6 +71,8 @@ const AdminDashboard = () => {
   const [smartAnalytics, setSmartAnalytics] = useState(null);
   const [intelLoading, setIntelLoading] = useState(true);
   const [showHeavyUI, setShowHeavyUI] = useState(false);
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+
 
 
 
@@ -704,7 +709,29 @@ const AdminDashboard = () => {
             <h1 className="text-4xl md:text-5xl text-gradient font-extrabold tracking-tight">
               Command Center
             </h1>
-            <p className="text-text-muted mt-        {/* Intelligence & Analytics Layer */}
+            <p className="text-text-muted mt-2 font-bold text-lg">
+              Manage users, platform health, and AI insights
+            </p>
+          </div>
+          <div className="flex gap-3">
+             <button
+               onClick={() => setShowBroadcastModal(true)}
+               className="flex items-center gap-2 px-6 py-3 bg-primary/10 border border-primary/20 text-primary rounded-xl font-black text-sm uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/10"
+            >
+              <FiSend />
+              Send Broadcast
+            </button>
+            <button
+               onClick={handleExport}
+               className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-text-primary rounded-xl font-black text-sm uppercase tracking-widest hover:bg-white/10 transition-all"
+            >
+              <FaDownload />
+              Export Data
+            </button>
+          </div>
+        </div>
+
+        {/* Intelligence & Analytics Layer */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 animate-fadeIn" style={{ animationDelay: "0.1s" }}>
           {/* Main Charts Area */}
           <div className="lg:col-span-3 flex flex-col gap-8">
@@ -1139,10 +1166,15 @@ se} />
             </motion.div>
           )}
         </AnimatePresence>
+        <AdminBroadcastModal 
+          isOpen={showBroadcastModal} 
+          onClose={() => setShowBroadcastModal(false)} 
+        />
       </div>
     </div>
   );
 };
+
 
 export default AdminDashboard;
 
