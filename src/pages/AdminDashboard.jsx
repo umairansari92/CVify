@@ -39,6 +39,8 @@ import {
   Bar,
   Legend,
 } from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -57,6 +59,13 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [industryFilter, setIndustryFilter] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [dateRange, setDateRange] = useState("all");
+
+
 
   // ─── Data Fetching ──────────────────────────────────────────────────────
   const fetchStats = useCallback(async () => {
@@ -76,11 +85,21 @@ const AdminDashboard = () => {
       setLoading(true);
       try {
         const res = await api.get("/admin/users", {
-          params: { page, limit: pagination.limit, search: searchQuery },
+          params: { 
+            page, 
+            limit: pagination.limit, 
+            search: searchQuery,
+            status: statusFilter !== "all" ? statusFilter : undefined,
+            industry: industryFilter || undefined,
+            dateRange: dateRange !== "all" ? dateRange : undefined
+          },
         });
+
         setUsers(res.data.users);
         setPagination(res.data.pagination);
+        setStats(prev => ({ ...prev, ...res.data.stats }));
       } catch (err) {
+
         console.error("Failed to load users:", err);
       } finally {
         setLoading(false);
@@ -91,16 +110,16 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchStats();
-    fetchUsers();
-  }, [fetchStats, fetchUsers]);
+    fetchUsers(1, search);
+  }, [fetchStats, fetchUsers, search, statusFilter, industryFilter, dateRange]);
+
+
 
   // Debounced search
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      fetchUsers(1, search);
-    }, 400);
-    return () => clearTimeout(timeout);
-  }, [search, fetchUsers]);
+    setPagination(prev => ({ ...prev, page: 1 }));
+  }, [search, statusFilter, industryFilter]);
+
 
   // ─── Actions ────────────────────────────────────────────────────────────
   const handleBan = async (userId, userName, isCurrentlyBlocked) => {
@@ -336,7 +355,131 @@ const AdminDashboard = () => {
     }
   };
 
-  // ─── Stat Card Component ────────────────────────────────────────────────
+  const handleBulkAction = async (actionType) => {
+    if (selectedUsers.length === 0) return;
+
+    const result = await Swal.fire({
+      title: `${actionType.charAt(0).toUpperCase() + actionType.slice(1)} ${selectedUsers.length} Users?`,
+      text: `Are you sure you want to perform this bulk action?`,
+      icon: actionType === "delete" ? "error" : "warning",
+      showCancelButton: true,
+      confirmButtonColor: actionType === "delete" ? "#ef4444" : "#2563eb",
+      confirmButtonText: "Yes, Proceed",
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+    });
+
+    if (result.isConfirmed) {
+      setBulkLoading(true);
+      try {
+        const res = await api.post("/admin/bulk-action", {
+          userIds: selectedUsers,
+          actionType
+        });
+        
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: res.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        
+        setSelectedUsers([]);
+        fetchUsers(pagination.page, search);
+        fetchStats();
+      } catch (err) {
+        Swal.fire("Error", err.response?.data?.message || "Bulk action failed", "error");
+      } finally {
+        setBulkLoading(false);
+      }
+    }
+  };
+
+  const handleBulkDiamonds = async () => {
+    if (selectedUsers.length === 0) return;
+
+    const { value: amount } = await Swal.fire({
+      title: `Give Diamonds to ${selectedUsers.length} Users`,
+      input: "number",
+      inputLabel: "Enter amount (positive or negative)",
+      inputPlaceholder: "e.g., 50",
+      showCancelButton: true,
+      background: "var(--midground)",
+      color: "var(--text-main)",
+      customClass: { popup: "glass" },
+      inputValidator: (value) => {
+        if (!value) return "Please enter an amount!";
+      }
+    });
+
+    if (amount) {
+      setBulkLoading(true);
+      try {
+        await api.post("/admin/bulk-action", {
+          userIds: selectedUsers,
+          actionType: "adjustment",
+          amount: parseInt(amount)
+        });
+        
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: `Diamonds adjusted for ${selectedUsers.length} users.`,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        
+        setSelectedUsers([]);
+        fetchUsers(pagination.page, search);
+        fetchStats();
+      } catch (err) {
+        Swal.fire("Error", "Bulk diamond adjustment failed", "error");
+      } finally {
+        setBulkLoading(false);
+      }
+    }
+  };
+
+  const handleExport = async () => {
+
+    setIsExporting(true);
+    try {
+      const response = await api.get("/admin/export-all", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `CVify_Users_Export_${new Date().toISOString().split('T')[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Export failed:", err);
+      Swal.fire("Error", "Failed to export users", "error");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleSelectUser = (id) => {
+    setSelectedUsers(prev => 
+      prev.includes(id) ? prev.filter(uid => uid !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedUsers(users.map(u => u._id));
+    } else {
+      setSelectedUsers([]);
+    }
+  };
+
   const StatCard = ({ icon: Icon, label, value, gradient, iconColor, onClick }) => (
     <div 
       onClick={onClick}
@@ -376,12 +519,35 @@ const AdminDashboard = () => {
     };
     return (
       <span
-        className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${config[role] || config.user}`}
+        className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${config[role] || config.user}`}
       >
         {role}
       </span>
     );
   };
+
+  const CompletionBar = ({ score }) => {
+    const color = score > 80 ? "text-green-400" : score > 50 ? "text-blue-400" : "text-amber-400";
+    return (
+      <div className="flex flex-col items-center gap-1">
+        <div className="relative w-10 h-10 flex items-center justify-center">
+          <svg className="w-full h-full -rotate-90">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
+            <circle 
+              cx="20" cy="20" r="16" fill="none" 
+              stroke="currentColor" strokeWidth="4" 
+              className={color}
+              strokeDasharray={100}
+              strokeDashoffset={100 - score}
+              strokeLinecap="round"
+            />
+          </svg>
+          <span className="absolute text-[9px] font-black">{score}%</span>
+        </div>
+      </div>
+    );
+  };
+
 
   // ─── Render ─────────────────────────────────────────────────────────────
   return (
@@ -400,10 +566,21 @@ const AdminDashboard = () => {
               Command Center
             </h1>
             <p className="text-text-muted mt-2 font-bold text-lg">
-              Manage users, diamonds, and platform analytics
+              Manage users, platform health, and AI insights
             </p>
           </div>
+          <div className="flex gap-3">
+            <button
+               onClick={handleExport}
+               disabled={isExporting}
+               className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
+            >
+              {isExporting ? <FaSpinner className="animate-spin" /> : <FaFileAlt />}
+              Export Data
+            </button>
+          </div>
         </div>
+
 
         {/* Unified Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-12 animate-fadeIn">
@@ -572,37 +749,66 @@ const AdminDashboard = () => {
                 {pagination.total} users total
               </p>
             </div>
-            <div className="relative w-full md:w-80">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40" />
-              <input
-                type="text"
-                placeholder="Search by name, email, or username..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary font-bold placeholder:text-text-muted placeholder:opacity-40 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all"
-              />
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+              <select 
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-text-primary focus:outline-none"
+              >
+                <option value="all">Any Time</option>
+                <option value="today">Today</option>
+                <option value="7days">Last 7 Days</option>
+                <option value="30days">This Month</option>
+              </select>
+              <select 
+                value={statusFilter}
+
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-text-primary focus:outline-none"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active Only</option>
+                <option value="banned">Suspended</option>
+                <option value="frozen">Frozen</option>
+              </select>
+              <div className="relative w-full md:w-80">
+                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted opacity-40" />
+                <input
+                  type="text"
+                  placeholder="Filter users..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary font-bold placeholder:text-text-muted placeholder:opacity-40 focus:outline-none focus:border-primary/50 transition-all"
+                />
+              </div>
             </div>
           </div>
+
 
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5">
+                  <th className="px-6 py-4 text-left">
+                    <input 
+                      type="checkbox" 
+                      onChange={handleSelectAll}
+                      checked={selectedUsers.length === users.length && users.length > 0}
+                      className="w-4 h-4 rounded border-white/10 bg-white/5 accent-primary"
+                    />
+                  </th>
                   <th className="text-left px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
                     User
                   </th>
                   <th className="text-left px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
-                    Email
+                    SaaS Insights
                   </th>
                   <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
-                    Role
+                    Score
                   </th>
                   <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
-                    Diamonds
-                  </th>
-                  <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
-                    Verified
+                    Wealth
                   </th>
                   <th className="text-center px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary opacity-50">
                     Status
@@ -611,6 +817,7 @@ const AdminDashboard = () => {
                     Actions
                   </th>
                 </tr>
+
               </thead>
               <tbody>
                 {loading ? (
@@ -648,6 +855,15 @@ const AdminDashboard = () => {
                         }`}
                       >
                         <td className="px-6 py-4">
+                          <input 
+                            type="checkbox" 
+                            checked={selectedUsers.includes(u._id)}
+                            onChange={() => handleSelectUser(u._id)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-4 h-4 rounded border-white/10 bg-white/5 accent-primary"
+                          />
+                        </td>
+                        <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-sm font-black text-primary uppercase overflow-hidden shrink-0">
                               {u.profileImage ? (
@@ -665,55 +881,50 @@ const AdminDashboard = () => {
                                 {u.firstName} {u.lastName}
                                 {isSelf && (
                                   <span className="ml-2 text-[9px] text-primary opacity-70">
-                                    (You)
+                                    (Self)
                                   </span>
                                 )}
                               </p>
-                              <p className="text-[11px] text-text-muted font-bold opacity-50 truncate">
-                                @{u.username}
+                              <p className="text-[10px] text-text-muted font-bold opacity-50 truncate">
+                                {u.email}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="text-sm font-bold text-text-secondary truncate max-w-[200px]">
-                            {u.email}
-                          </p>
+                           <div className="flex flex-col gap-1">
+                              <RoleBadge role={u.role || "user"} />
+                              <span className="text-[9px] text-text-muted font-bold opacity-40 uppercase">
+                                {u.industry || "General"}
+                              </span>
+                           </div>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <RoleBadge role={u.role || "user"} />
+                           <CompletionBar score={u.completionScore || 0} />
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <span className="font-black text-purple-400 text-sm">
-                            💎 {u.diamonds ?? 0}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {u.isVerified ? (
-                            <span className="px-3 py-1 bg-green-500/15 text-green-400 border border-green-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1 mx-auto w-fit">
-                              <FaCheckCircle className="text-[8px]" /> Verified
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-black text-purple-400 text-sm">
+                              💎 {u.diamonds ?? 0}
                             </span>
-                          ) : (
-                            <span className="px-3 py-1 bg-amber-500/15 text-amber-400 border border-amber-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1 mx-auto w-fit">
-                              Unverified
+                            <span className="text-[9px] text-text-muted font-bold opacity-30">
+                              Ref: {u.totalReferrals || 0}
                             </span>
-                          )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-center">
                           {u.isBlocked ? (
-                            <span className="px-3 py-1 bg-red-500/15 text-red-400 border border-red-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                              Suspended
-                            </span>
+                            <span className="px-2 py-1 bg-red-500/10 text-red-500 rounded text-[9px] font-black uppercase">Suspended</span>
                           ) : u.isFrozen ? (
-                            <span className="px-3 py-1 bg-blue-500/15 text-blue-400 border border-blue-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1">
-                              <FaSnowflake className="text-[8px]" /> Frozen
-                            </span>
+                            <span className="px-2 py-1 bg-blue-500/10 text-blue-500 rounded text-[9px] font-black uppercase">Frozen</span>
                           ) : (
-                            <span className="px-3 py-1 bg-green-500/15 text-green-400 border border-green-400/30 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                              Active
-                            </span>
+                            <span className="px-2 py-1 bg-green-500/10 text-green-500 rounded text-[9px] font-black uppercase">Active</span>
+                          )}
+                          {!u.isVerified && (
+                            <p className="text-[8px] text-amber-500/60 font-black uppercase mt-1">Pending Verify</p>
                           )}
                         </td>
+
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-center gap-1.5 flex-wrap max-w-[180px]">
                             {/* View Detail */}
@@ -860,8 +1071,66 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+        {/* Floating Bulk Action Bar */}
+        <AnimatePresence>
+          {selectedUsers.length > 0 && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-4"
+            >
+              <div className="glass p-4 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                    <span className="text-primary font-black">{selectedUsers.length}</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-text-primary uppercase tracking-tight">Users Selected</p>
+                    <p className="text-[10px] text-text-muted font-bold">Apply bulk changes</p>
+                  </div>
+                </div>
+                  <button 
+                    onClick={handleBulkDiamonds}
+                    className="p-3 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white transition-all" title="Give Diamonds">
+                    <FaGem />
+                  </button>
+                  <button 
+                    onClick={() => handleBulkAction("verify")}
+
+                    className="p-3 rounded-xl bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white transition-all" title="Verify All">
+                    <FaCheckCircle />
+                  </button>
+                  <button 
+                    onClick={() => handleBulkAction("freeze")}
+                    className="p-3 rounded-xl bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-all" title="Freeze All">
+                    <FaSnowflake />
+                  </button>
+                  <button 
+                    onClick={() => handleBulkAction("block")}
+                    className="p-3 rounded-xl bg-orange-500/10 text-orange-400 hover:bg-orange-500 hover:text-white transition-all" title="Suspend All">
+                    <FaBan />
+                  </button>
+                  {currentUser?.role === "superadmin" && (
+                    <button 
+                      onClick={() => handleBulkAction("delete")}
+                      className="p-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all" title="Delete All">
+                      <FaTrash />
+                    </button>
+                  )}
+                  <div className="w-px h-6 bg-white/10 mx-2" />
+                  <button 
+                    onClick={() => setSelectedUsers([])}
+                    className="text-xs font-black text-text-muted hover:text-text-primary uppercase tracking-widest px-2">Cancel</button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
 
 export default AdminDashboard;
+
