@@ -1070,7 +1070,7 @@ const AdminDashboard = () => {
             </div>
           )}
         </div>
-      </div>
+
         {/* Floating Bulk Action Bar */}
         <AnimatePresence>
           {selectedUsers.length > 0 && (
@@ -1090,6 +1090,7 @@ const AdminDashboard = () => {
                     <p className="text-[10px] text-text-muted font-bold">Apply bulk changes</p>
                   </div>
                 </div>
+                <div className="flex items-center gap-2">
                   <button 
                     onClick={handleBulkDiamonds}
                     className="p-3 rounded-xl bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white transition-all" title="Give Diamonds">
@@ -1097,7 +1098,6 @@ const AdminDashboard = () => {
                   </button>
                   <button 
                     onClick={() => handleBulkAction("verify")}
-
                     className="p-3 rounded-xl bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white transition-all" title="Verify All">
                     <FaCheckCircle />
                   </button>
@@ -1133,4 +1133,5 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
 
