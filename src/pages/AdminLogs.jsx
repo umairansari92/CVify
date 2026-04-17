@@ -5,7 +5,9 @@ import { FaHistory, FaSearch, FaUser, FaShieldAlt, FaTerminal, FaBug, FaInfoCirc
 const AdminLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState(false);
   const [page, setPage] = useState(1);
+
   const [pagination, setPagination] = useState({});
 
   useEffect(() => {
@@ -24,6 +26,38 @@ const AdminLogs = () => {
     }
   };
 
+  const handleVerifyIntegrity = async () => {
+    setVerifying(true);
+    try {
+      const res = await api.get("/admin/logs/verify");
+      if (res.data.isValid) {
+        Swal.fire({
+          icon: "success",
+          title: "Chain Verified",
+          text: res.data.message,
+          background: "var(--midground)",
+          color: "var(--text-main)",
+          customClass: { popup: "glass" },
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "TAMPERING DETECTED",
+          text: res.data.message,
+          footer: "Investigate immediately: Logs have been modified or deleted manually.",
+          background: "var(--midground)",
+          color: "var(--text-main)",
+          customClass: { popup: "glass" },
+        });
+      }
+    } catch (err) {
+      Swal.fire("Scan Failed", err.response?.data?.message || "Integrity scan could not be completed.", "error");
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+
   const getLogIcon = (action) => {
     if (action.includes('admin')) return <FaShieldAlt className="text-amber-400" />;
     if (action.includes('error')) return <FaBug className="text-red-400" />;
@@ -38,11 +72,24 @@ const AdminLogs = () => {
             <h1 className="text-4xl font-black text-text-primary tracking-tight">Activity Logs</h1>
             <p className="text-text-muted font-bold mt-1">Platform-wide audit trail for users and administrators</p>
           </div>
-          <div className="flex items-center gap-3 px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
-             <FaTerminal className="text-blue-400" />
-             <span className="text-blue-400 font-black uppercase tracking-widest text-xs">System Events</span>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <button
+              onClick={handleVerifyIntegrity}
+              disabled={verifying}
+              className="flex items-center gap-3 px-6 py-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl hover:bg-amber-500 hover:text-white transition-all disabled:opacity-50 group"
+            >
+              <FaShieldAlt className={`text-amber-400 group-hover:text-white ${verifying ? "animate-spin" : ""}`} />
+              <span className="text-amber-400 group-hover:text-white font-black uppercase tracking-widest text-xs">
+                {verifying ? "Scanning Chain..." : "Verify Integrity"}
+              </span>
+            </button>
+            <div className="flex items-center gap-3 px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl">
+              <FaTerminal className="text-blue-400" />
+              <span className="text-blue-400 font-black uppercase tracking-widest text-xs">System Events</span>
+            </div>
           </div>
         </div>
+
 
         <div className="premium-card overflow-hidden">
           <div className="overflow-x-auto">
