@@ -78,19 +78,30 @@ const AdminLogs = () => {
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                         {log.user ? (
+                         {log.targetUser ? (
                             <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[9px] text-primary"><FaUser /></div>
-                                <span className="text-xs font-black text-text-primary truncate max-w-[150px]">@{log.user.username}</span>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-black text-text-primary truncate max-w-[150px]">
+                                    {log.targetUser.firstName} {log.targetUser.lastName}
+                                  </span>
+                                  <span className="text-[9px] text-text-muted font-bold opacity-40">@{log.targetUser.username || "user"}</span>
+                                </div>
                             </div>
-                         ) : <span className="text-xs text-text-muted">System</span>}
+                         ) : <span className="text-xs text-text-muted opacity-30">SYSTEM_ENTITY</span>}
                       </td>
                       <td className="px-6 py-5">
-                         <p className="text-xs font-bold text-text-muted max-w-sm">{log.details}</p>
-                         {log.metadata && (
-                            <button className="text-[9px] font-black uppercase text-primary mt-1 hover:underline">View Metadata</button>
+                         <p className="text-xs font-bold text-text-muted max-w-sm">
+                           {log.reason || log.details || "Administrative state transition triggered."}
+                         </p>
+                         {(log.previousState || log.newState) && (
+                            <div className="flex gap-2 mt-1">
+                              <span className="text-[8px] font-black uppercase text-amber-500/60 bg-amber-500/5 px-2 py-0.5 rounded border border-amber-500/10">Diff Captured</span>
+                              <span className="text-[8px] font-black uppercase text-blue-500/60 bg-blue-500/5 px-2 py-0.5 rounded border border-blue-500/10">Forensic ID: {log._id.slice(-6)}</span>
+                            </div>
                          )}
                       </td>
+
                       <td className="px-6 py-5">
                          {log.performedBy ? (
                             <div className="flex items-center gap-2">
