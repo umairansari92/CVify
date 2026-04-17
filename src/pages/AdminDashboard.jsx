@@ -124,27 +124,34 @@ const AdminDashboard = () => {
   // ─── Actions ────────────────────────────────────────────────────────────
   const handleBan = async (userId, userName, isCurrentlyBlocked) => {
     const action = isCurrentlyBlocked ? "Unsuspend" : "Suspend";
-    const result = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: `${action} ${userName}?`,
       text: isCurrentlyBlocked
         ? "This user will regain access to their account."
         : "This user will be blocked from logging in.",
+      input: "text",
+      inputLabel: "Mandatory Reason for Suspension:",
+      inputPlaceholder: "e.g., TOS violation / Spam behavior",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: isCurrentlyBlocked ? "#22c55e" : "#ef4444",
       confirmButtonText: `Yes, ${action}`,
+      footer: '<span style="color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase;">⚡ FORENSIC GUARD: THIS ACTION IS PERMANENTLY LOGGED</span>',
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass" },
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 5) {
+          return "Please provide a valid reason (min 5 chars) for accountability.";
+        }
+      }
     });
 
-    if (result.isConfirmed) {
+    if (reason) {
       try {
-        const res = await api.put(`/admin/users/${userId}/ban`);
+        const res = await api.put(`/admin/users/${userId}/ban`, { reason });
         setUsers((prev) =>
-          prev.map((u) =>
-            u._id === userId ? { ...u, isBlocked: res.data.isBlocked } : u
-          )
+          prev.map((u) => u._id === userId ? { ...u, isBlocked: res.data.isBlocked } : u)
         );
         fetchStats();
         Swal.fire({
@@ -156,34 +163,42 @@ const AdminDashboard = () => {
           timer: 3000,
         });
       } catch (err) {
-        /* handled */
+        Swal.fire("Error", err.response?.data?.message || "Action failed", "error");
       }
     }
   };
 
+
   const handleFreeze = async (userId, userName, isCurrentlyFrozen) => {
     const action = isCurrentlyFrozen ? "Unfreeze" : "Freeze";
-    const result = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: `${action} ${userName}?`,
       text: isCurrentlyFrozen
         ? "User will be able to modify their data again."
         : "User will be able to login but NOT modify or create any data.",
+      input: "text",
+      inputLabel: "Why are you performing this action? (Mandatory for Audit)",
+      inputPlaceholder: "e.g., Investigation required",
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: isCurrentlyFrozen ? "#22c55e" : "#3b82f6",
       confirmButtonText: `Yes, ${action}`,
+      footer: '<span style="color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase;">⚠️ ACTION LOGGED: FORENSIC AUDIT ACTIVE</span>',
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass" },
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 5) {
+          return "Please provide a proper reason (min 5 characters) for accountability.";
+        }
+      }
     });
 
-    if (result.isConfirmed) {
+    if (reason) {
       try {
-        const res = await api.put(`/admin/users/${userId}/freeze`);
+        const res = await api.put(`/admin/users/${userId}/freeze`, { reason });
         setUsers((prev) =>
-          prev.map((u) =>
-            u._id === userId ? { ...u, isFrozen: res.data.isFrozen } : u
-          )
+          prev.map((u) => u._id === userId ? { ...u, isFrozen: res.data.isFrozen } : u)
         );
         fetchStats();
         Swal.fire({
@@ -195,47 +210,46 @@ const AdminDashboard = () => {
           timer: 3000,
         });
       } catch (err) {
-        /* handled */
+        Swal.fire("Error", err.response?.data?.message || "Action failed", "error");
       }
     }
   };
 
+
   const handleDelete = async (userId, userName, userEmail) => {
-    const result = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: "EXTREME CAUTION",
       html: `
         <div class="text-left">
           <p class="text-red-500 font-bold mb-4">You are about to PERMANENTLY DELETE <strong>${userName}</strong> (${userEmail}).</p>
-          <p class="text-sm opacity-80 mb-4">This will cascade delete all:</p>
-          <ul class="text-xs list-disc pl-5 opacity-70 mb-4">
-            <li>Resumes & Profiles</li>
-            <li>ATS Scans & History</li>
-            <li>Cover Letters</li>
-            <li>Diamond Transactions</li>
-            <li>Activity Logs</li>
-          </ul>
-          <p class="text-xs font-bold uppercase tracking-widest text-red-400">This action CANNOT be undone.</p>
+          <p class="text-xs opacity-80 mb-4 font-bold">This is a Soft-Delete. Data will be hidden but remains in database for audit.</p>
         </div>
       `,
+      input: "text",
+      inputLabel: "Mandatory Deletion Reason:",
+      inputPlaceholder: "e.g., Requested by user / Spam account",
       icon: "error",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
-      confirmButtonText: "YES, DELETE EVERYTHING",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "PROCEED WITH DELETION",
+      footer: '<span style="color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase;">🔴 FORENSIC ALERT: THIS ACTION IS LOGGED PERMANENTLY</span>',
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass border-2 border-red-500/50" },
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 5) return "Deletion reason required!";
+      }
     });
 
-    if (result.isConfirmed) {
+    if (reason) {
       const { value: confirmEmail } = await Swal.fire({
         title: "Final Confirmation",
-        text: `Type the user's email "${userEmail}" to confirm deletion:`,
+        text: `Type "${userEmail}" to confirm:`,
         input: "text",
         inputPlaceholder: userEmail,
         showCancelButton: true,
         confirmButtonColor: "#ef4444",
-        confirmButtonText: "DELETE PERMANENTLY",
+        confirmButtonText: "DELETE ACCOUNT",
         background: "var(--midground)",
         color: "var(--text-main)",
         customClass: { popup: "glass" },
@@ -250,16 +264,17 @@ const AdminDashboard = () => {
 
       if (confirmEmail) {
         try {
-          await api.delete(`/admin/users/${userId}`);
+          await api.delete(`/admin/users/${userId}`, { data: { reason } });
           setUsers((prev) => prev.filter((u) => u._id !== userId));
           fetchStats();
-          Swal.fire("Deleted!", "User and all associated data wiped.", "success");
+          Swal.fire("Deleted!", "User account successfully soft-deleted.", "success");
         } catch (err) {
-          /* handled */
+          Swal.fire("Error", err.response?.data?.message || "Deletion failed", "error");
         }
       }
     }
   };
+
 
   const handleDiamonds = async (userId, userName) => {
     const { value: formValues } = await Swal.fire({
@@ -271,8 +286,10 @@ const AdminDashboard = () => {
             <option value="deduct">➖ Deduct Diamonds</option>
           </select>
           <input id="swal-amount" type="number" min="1" class="swal2-input" placeholder="Amount" style="margin:0;border-radius:12px;font-weight:700" />
+          <textarea id="swal-reason" class="swal2-textarea" placeholder="Why are you adjusting diamonds?" style="margin:0;border-radius:12px;background:rgba(255,255,255,0.05);color:inherit;font-size:14px;border:1px solid rgba(255,255,255,0.1)"></textarea>
         </div>
       `,
+
       showCancelButton: true,
       confirmButtonText: "Confirm",
       confirmButtonColor: "#2563eb",
@@ -282,22 +299,30 @@ const AdminDashboard = () => {
       preConfirm: () => {
         const type = document.getElementById("swal-type").value;
         const amount = document.getElementById("swal-amount").value;
+        const reason = document.getElementById("swal-reason").value;
         if (!amount || parseInt(amount) <= 0) {
           Swal.showValidationMessage("Enter a valid positive amount");
           return false;
         }
-        return { type, amount: parseInt(amount) };
+        if (!reason || reason.trim().length < 5) {
+          Swal.showValidationMessage("Reason required (min 5 chars)");
+          return false;
+        }
+        return { type, amount: parseInt(amount), reason };
       },
     });
 
+
     if (formValues) {
       try {
-        const res = await api.post(`/admin/users/${userId}/diamonds`, formValues);
+        const res = await api.post(`/admin/users/${userId}/diamonds`, {
+          ...formValues,
+          reason: formValues.reason
+        });
         setUsers((prev) =>
-          prev.map((u) =>
-            u._id === userId ? { ...u, diamonds: res.data.diamonds } : u
-          )
+          prev.map((u) => u._id === userId ? { ...u, diamonds: res.data.diamonds } : u)
         );
+
         fetchStats();
         Swal.fire({
           toast: true,
@@ -314,32 +339,45 @@ const AdminDashboard = () => {
   };
 
   const handleRoleChange = async (userId, userName, currentRole) => {
-    const roles = ["user", "admin", "superadmin"].filter(
-      (r) => r !== currentRole
-    );
-    const { value: newRole } = await Swal.fire({
+    if (currentUser.role !== "superadmin") {
+      return Swal.fire("Access Denied", "Only SuperAdmins can change roles to maintain hierarchy security.", "error");
+    }
+
+    const roles = ["user", "admin", "superadmin"].filter((r) => r !== currentRole);
+    const { value: formValues } = await Swal.fire({
       title: `Change Role for ${userName}`,
-      text: `Current role: ${currentRole}`,
-      input: "select",
-      inputOptions: Object.fromEntries(roles.map((r) => [r, r.charAt(0).toUpperCase() + r.slice(1)])),
-      inputPlaceholder: "Select new role",
+      html: `
+        <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+          <p class="text-xs text-amber-500 font-black uppercase mb-2">Hierarchy Lock: ON</p>
+          <select id="swal-role" class="swal2-select" style="margin:0;border-radius:12px;background:rgba(255,255,255,0.05);color:inherit">
+            ${roles.map(r => `<option value="${r}">${r.charAt(0).toUpperCase() + r.slice(1)}</option>`).join('')}
+          </select>
+          <input id="swal-reason" class="swal2-input" placeholder="Action Reason" style="margin:0;border-radius:12px" />
+        </div>
+      `,
       showCancelButton: true,
       confirmButtonText: "Update Role",
       confirmButtonColor: "#2563eb",
+      footer: '<span style="color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase;">⚠️ SENSITIVE OPERATION: LOGGED BY SYSTEM</span>',
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass" },
+      preConfirm: () => {
+        const role = document.getElementById("swal-role").value;
+        const reason = document.getElementById("swal-reason").value;
+        if (!reason || reason.trim().length < 5) {
+          Swal.showValidationMessage("Proper reason required (min 5 chars)");
+          return false;
+        }
+        return { role, reason };
+      }
     });
 
-    if (newRole) {
+    if (formValues) {
       try {
-        const res = await api.put(`/admin/users/${userId}/role`, {
-          role: newRole,
-        });
+        const res = await api.put(`/admin/users/${userId}/role`, formValues);
         setUsers((prev) =>
-          prev.map((u) =>
-            u._id === userId ? { ...u, role: res.data.role } : u
-          )
+          prev.map((u) => u._id === userId ? { ...u, role: res.data.role } : u)
         );
         Swal.fire({
           toast: true,
@@ -350,32 +388,45 @@ const AdminDashboard = () => {
           timer: 3000,
         });
       } catch (err) {
-        /* handled */
+        Swal.fire("Error", err.response?.data?.message || "Role update failed", "error");
       }
     }
   };
 
+
   const handleBulkAction = async (actionType) => {
     if (selectedUsers.length === 0) return;
 
-    const result = await Swal.fire({
+    if (actionType === "delete" && currentUser.role !== "superadmin") {
+      return Swal.fire("Restricted", "Only SuperAdmins can bulk delete users.", "error");
+    }
+
+    const { value: reason } = await Swal.fire({
       title: `${actionType.charAt(0).toUpperCase() + actionType.slice(1)} ${selectedUsers.length} Users?`,
-      text: `Are you sure you want to perform this bulk action?`,
+      text: `Every user in this batch will be affected. Hierarchy checks will be verified individually.`,
+      input: "text",
+      inputLabel: "Mandatory Reason for Bulk Action:",
+      inputPlaceholder: "e.g., Spam cleanup / Batch verification",
       icon: actionType === "delete" ? "error" : "warning",
       showCancelButton: true,
       confirmButtonColor: actionType === "delete" ? "#ef4444" : "#2563eb",
-      confirmButtonText: "Yes, Proceed",
+      confirmButtonText: "Yes, Execute Batch",
+      footer: '<span style="color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase;">⚡ BULK OPERATION LOGGED: FORENSIC HUB ACTIVE</span>',
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass" },
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 5) return "Reason required for bulk audit!";
+      }
     });
 
-    if (result.isConfirmed) {
+    if (reason) {
       setBulkLoading(true);
       try {
         const res = await api.post("/admin/bulk-action", {
           userIds: selectedUsers,
-          actionType
+          actionType,
+          reason
         });
         
         Swal.fire({
@@ -391,37 +442,52 @@ const AdminDashboard = () => {
         fetchUsers(pagination.page, search);
         fetchStats();
       } catch (err) {
-        Swal.fire("Error", err.response?.data?.message || "Bulk action failed", "error");
+        Swal.fire("Hierarchy/RBAC Violation", err.response?.data?.message || "Bulk action failed", "error");
       } finally {
         setBulkLoading(false);
       }
     }
   };
 
+
   const handleBulkDiamonds = async () => {
     if (selectedUsers.length === 0) return;
 
-    const { value: amount } = await Swal.fire({
-      title: `Give Diamonds to ${selectedUsers.length} Users`,
-      input: "number",
-      inputLabel: "Enter amount (positive or negative)",
-      inputPlaceholder: "e.g., 50",
+    const { value: formValues } = await Swal.fire({
+      title: `Bulk Diamonds: ${selectedUsers.length} Users`,
+      html: `
+        <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+          <input id="swal-amount" type="number" class="swal2-input" placeholder="Amount (e.g. 100 or -50)" style="margin:0;border-radius:12px" />
+          <input id="swal-reason" class="swal2-input" placeholder="Adjustment Reason" style="margin:0;border-radius:12px" />
+        </div>
+      `,
       showCancelButton: true,
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: { popup: "glass" },
-      inputValidator: (value) => {
-        if (!value) return "Please enter an amount!";
+      preConfirm: () => {
+        const amount = document.getElementById("swal-amount").value;
+        const reason = document.getElementById("swal-reason").value;
+        if (!amount) {
+          Swal.showValidationMessage("Enter an amount!");
+          return false;
+        }
+        if (!reason || reason.trim().length < 5) {
+          Swal.showValidationMessage("Reason required (min 5 chars)");
+          return false;
+        }
+        return { amount: parseInt(amount), reason };
       }
     });
 
-    if (amount) {
+    if (formValues) {
       setBulkLoading(true);
       try {
         await api.post("/admin/bulk-action", {
           userIds: selectedUsers,
           actionType: "adjustment",
-          amount: parseInt(amount)
+          amount: formValues.amount,
+          reason: formValues.reason
         });
         
         Swal.fire({
@@ -437,12 +503,13 @@ const AdminDashboard = () => {
         fetchUsers(pagination.page, search);
         fetchStats();
       } catch (err) {
-        Swal.fire("Error", "Bulk diamond adjustment failed", "error");
+        Swal.fire("Error", err.response?.data?.message || "Bulk diamond adjustment failed", "error");
       } finally {
         setBulkLoading(false);
       }
     }
   };
+
 
   const handleExport = async () => {
 
@@ -558,10 +625,17 @@ const AdminDashboard = () => {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <FaShieldAlt className="text-primary text-2xl animate-pulse" />
-              <span className="text-xs font-black text-primary bg-primary/10 px-4 py-1.5 rounded-xl border border-primary/20 uppercase tracking-[0.2em]">
-                Admin Panel
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-primary bg-primary/10 px-4 py-1.5 rounded-xl border border-primary/20 uppercase tracking-[0.2em]">
+                  Admin Panel
+                </span>
+                <span className="flex items-center gap-1.5 text-[8px] font-black text-red-500 bg-red-500/10 px-3 py-1.5 rounded-xl border border-red-500/20 uppercase tracking-widest animate-pulse">
+                  <div className="w-1 h-1 rounded-full bg-red-500 animate-ping" />
+                  Forensic Audit Active
+                </span>
+              </div>
             </div>
+
             <h1 className="text-4xl md:text-5xl text-gradient font-extrabold tracking-tight">
               Command Center
             </h1>
