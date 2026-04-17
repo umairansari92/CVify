@@ -62,8 +62,12 @@ const Header = ({ onMenuClick }) => {
               <img
                 src={user.profileImage}
                 alt="Profile"
+                width={44}
+                height={44}
+                loading="lazy"
                 className="w-9 h-9 lg:w-11 lg:h-11 rounded-xl object-cover border-2 border-border-subtle relative z-10 shadow-lg group-hover:border-primary/50 transition-all"
               />
+
             </div>
           ) : (
             <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-xl bg-foreground/20 text-text-muted flex items-center justify-center border-2 border-border-subtle group hover:bg-primary hover:text-white transition-all cursor-pointer">

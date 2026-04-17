@@ -29,23 +29,14 @@ import {
   FaRocket,
 } from "react-icons/fa";
 
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
-import { motion, AnimatePresence } from "framer-motion";
-import AnalyticsCharts from "../components/admin/AnalyticsCharts";
-import NudgePanel from "../components/admin/NudgePanel";
+import { lazy, Suspense } from "react";
+import LoadingScreen from "../components/common/LoadingScreen";
+
+// Lazy loading heavy analytics suite
+const AnalyticsCharts = lazy(() => import("../components/admin/AnalyticsCharts"));
+const NudgePanel = lazy(() => import("../components/admin/NudgePanel"));
+const AcquisitionChart = lazy(() => import("../components/admin/AcquisitionChart"));
+
 
 
 
@@ -76,6 +67,8 @@ const AdminDashboard = () => {
   const [insights, setInsights] = useState([]);
   const [smartAnalytics, setSmartAnalytics] = useState(null);
   const [intelLoading, setIntelLoading] = useState(true);
+  const [showHeavyUI, setShowHeavyUI] = useState(false);
+
 
 
 
@@ -141,7 +134,12 @@ const AdminDashboard = () => {
     fetchStats();
     fetchIntel();
     fetchUsers(1, search);
+
+    // Delayed load of heavy visualizations to clear the main thread for initial hydrate
+    const timer = setTimeout(() => setShowHeavyUI(true), 1000);
+    return () => clearTimeout(timer);
   }, [fetchStats, fetchIntel, fetchUsers, search, statusFilter, industryFilter, dateRange]);
+
 
 
 
@@ -706,52 +704,28 @@ const AdminDashboard = () => {
             <h1 className="text-4xl md:text-5xl text-gradient font-extrabold tracking-tight">
               Command Center
             </h1>
-            <p className="text-text-muted mt-2 font-bold text-lg">
-              Manage users, platform health, and AI insights
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-               onClick={handleExport}
-               disabled={isExporting}
-               className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
-            >
-              {isExporting ? <FaSpinner className="animate-spin" /> : <FaFileAlt />}
-              Export Data
-            </button>
-          </div>
-        </div>
-
-
-        {/* Intelligence & Analytics Layer */}
+            <p className="text-text-muted mt-        {/* Intelligence & Analytics Layer */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 animate-fadeIn" style={{ animationDelay: "0.1s" }}>
           {/* Main Charts Area */}
           <div className="lg:col-span-3 flex flex-col gap-8">
-            <AnalyticsCharts smartAnalytics={smartAnalytics} />
-            
-            {/* Acquisition Charts Moved Here for better flow */}
-            {stats?.charts && (
-              <div className="premium-card p-6 min-h-[400px]">
-                <div className="flex justify-between items-center mb-10">
-                  <div>
-                    <h3 className="text-xl font-black text-text-primary">User Acquisition</h3>
-                    <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-1">Growth over last 6 months</p>
-                  </div>
-                  <div className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-[10px] font-black tracking-widest uppercase border border-blue-500/20">Real-time</div>
-                </div>
-                <div className="h-[300px] min-h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%" minWidth={0} aspect={2.5}>
-                    <AreaChart data={stats.charts.userGrowth}>
+            {showHeavyUI && (
+              <Suspense fallback={<div className="h-[400px] glass rounded-3xl animate-pulse" />}>
+                <AnalyticsCharts smartAnalytics={smartAnalytics} />
+                <AcquisitionChart data={stats?.charts} />
+              </Suspense>
+            )}
+          </div>
 
-                      <defs>
-                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                      <XAxis dataKey="_id" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
+          {/* AI Insights Sidebar */}
+          <div className="lg:col-span-1">
+            {showHeavyUI && (
+              <Suspense fallback={<div className="h-[500px] glass rounded-3xl animate-pulse" />}>
+                <NudgePanel insights={insights} loading={intelLoading} />
+              </Suspense>
+            )}
+          </div>
+        </div>
+se} />
                       <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }} />
                       <Area type="monotone" dataKey="count" name="New Users" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
                     </AreaChart>
@@ -978,6 +952,7 @@ const AdminDashboard = () => {
                               }}
                               disabled={u.role !== "user" && currentUser.role !== "superadmin"}
                               title={u.role !== "user" && currentUser.role !== "superadmin" ? "SuperAdmin required" : "Adjust Diamonds"}
+                              aria-label="Adjust Diamonds"
                               className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
                                 u.role !== "user" && currentUser.role !== "superadmin"
                                   ? "bg-slate-500/5 text-slate-500 border-slate-500/10 cursor-not-allowed opacity-50"
@@ -1023,6 +998,7 @@ const AdminDashboard = () => {
                                 }}
                                 disabled={u.role !== "user" && currentUser.role !== "superadmin"}
                                 title={u.role !== "user" && currentUser.role !== "superadmin" ? "SuperAdmin required" : (u.isBlocked ? "Unsuspend" : "Suspend")}
+                                aria-label={u.isBlocked ? "Unsuspend User" : "Suspend User"}
                                 className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:scale-110 active:scale-95 ${
                                   u.role !== "user" && currentUser.role !== "superadmin"
                                     ? "bg-slate-500/5 text-slate-500 border-slate-500/10 cursor-not-allowed opacity-50"
@@ -1037,6 +1013,7 @@ const AdminDashboard = () => {
                                   <FaBan className="text-[10px]" />
                                 )}
                               </button>
+
                             )}
 
                             {/* Role Change */}
@@ -1050,10 +1027,12 @@ const AdminDashboard = () => {
                                   )
                                 }
                                 title="Change Role"
+                                aria-label="Change User Role"
                                 className="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-400/20 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all hover:scale-110 active:scale-95"
                               >
                                 <FaUserShield className="text-[10px]" />
                               </button>
+
                             )}
 
                             {/* Delete */}
@@ -1061,10 +1040,12 @@ const AdminDashboard = () => {
                               <button
                                 onClick={() => handleDelete(u._id, u.firstName, u.email)}
                                 title="Permanently Delete"
+                                aria-label="Delete User Permanently"
                                 className="w-8 h-8 rounded-lg bg-red-600/10 text-red-600 border border-red-600/20 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all hover:scale-110 active:scale-95"
                               >
                                 <FaTrash className="text-[10px]" />
                               </button>
+
                             )}
                           </div>
                         </td>

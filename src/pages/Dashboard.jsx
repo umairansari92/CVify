@@ -13,8 +13,10 @@ import {
 import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaSearchPlus } from "react-icons/fa";
 import { FiEdit2, FiTrash2, FiDownload, FiEye, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
-import ThreeBackground from "../components/three/ThreeBackground";
+import { lazy, Suspense } from "react";
+const ThreeBackground = lazy(() => import("../components/three/ThreeBackground"));
 import Swal from "sweetalert2";
+
 import { TypeAnimation } from "react-type-animation";
 import api from "../api/axios";
 import { toast } from "react-hot-toast";
@@ -191,8 +193,11 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen relative bg-background p-6 md:p-12 transition-colors duration-500 overflow-y-auto custom-scrollbar">
-      <ThreeBackground />
+      <Suspense fallback={<div className="fixed inset-0 bg-background" />}>
+        <ThreeBackground />
+      </Suspense>
       <div className="max-w-7xl mx-auto relative z-10">
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-16 gap-8 animate-fadeIn">
           <div className="w-full md:w-auto">
@@ -223,10 +228,12 @@ const Dashboard = () => {
             <button
               onClick={handleCreateNew}
               className="btn-primary flex items-center gap-3 px-10 py-4 text-lg"
+              aria-label="Create New Resume"
             >
               <FiPlus className="text-2xl" />
               <span>Create New CV</span>
             </button>
+
           </div>
         </div>
 
@@ -323,6 +330,7 @@ const Dashboard = () => {
                     <button
                       onClick={() => handleScan(resume.id)}
                       className="btn-glass flex items-center justify-center gap-2 py-3 !border-primary/20 hover:!bg-primary/10 group/scan"
+                      aria-label="Scan Resume with ATS"
                     >
                       <FaSearchPlus className="text-primary group-hover/scan:scale-110 transition-transform" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Scan Now</span>
@@ -330,16 +338,19 @@ const Dashboard = () => {
                     <button
                       onClick={() => handleImprove(resume.id)}
                       className="btn-glass flex items-center justify-center gap-2 py-3 !border-amber-500/20 hover:!bg-amber-500/10 group/improve"
+                      aria-label="Improve Resume with AI"
                     >
                       <FiZap className="text-amber-500 group-hover/improve:animate-bounce" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Improve</span>
                     </button>
+
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => handleEdit(resume.id)}
                       className="btn-primary px-4 bg-primary/10 !text-text-main border border-primary/20 hover:!bg-primary hover:!text-white flex items-center justify-center group/btn"
+                      aria-label="Edit Resume"
                     >
                       <FiEdit2 className="group-hover/btn:rotate-12 transition-transform" />
                       <span className="ml-2 text-xs font-black uppercase tracking-wider">Edit</span>
@@ -349,6 +360,7 @@ const Dashboard = () => {
                         handleDownloadPDF(resume, "Modern")
                       }
                       className="btn-primary !px-0 !bg-success/10 !text-success border border-success/20 hover:!bg-success hover:!text-white flex items-center justify-center group/btn"
+                      aria-label="Download PDF"
                     >
                       <FiDownload className="group-hover/btn:translate-y-1 transition-transform" />
                     </button>
@@ -357,6 +369,7 @@ const Dashboard = () => {
                         onClick={(e) => handleClone(resume.id, e)}
                         className="flex-1 bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-white rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Duplicate"
+                        aria-label="Clone Resume"
                       >
                         <FiCopy />
                       </button>
@@ -364,10 +377,12 @@ const Dashboard = () => {
                         onClick={(e) => handleDelete(resume.id, e)}
                         className="flex-1 bg-red-500/10 text-red-500 border border-red-500/10 hover:bg-red-500 hover:text-white rounded-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                         title="Delete"
+                        aria-label="Delete Resume"
                       >
                         <FiTrash2 />
                       </button>
                     </div>
+
                   </div>
                 </div>
               </div>

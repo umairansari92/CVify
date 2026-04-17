@@ -1,32 +1,37 @@
-import React, { useEffect } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import VerifyOtp from "../pages/VerifyOtp";
-import Dashboard from "../pages/Dashboard";
-import CreateResume from "../pages/CreateResume";
-import Templates from "../pages/Templates";
-import CoverLetterPage from "../pages/CoverLetterPage";
-import ATSPage from "../pages/ATSPage";
-import ReferralPage from "../pages/ReferralPage";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
-import ProfilePage from "../pages/ProfilePage";
-import PublicProfile from "../pages/PublicProfile";
-import AdminDashboard from "../pages/AdminDashboard";
-import AdminUserDetail from "../pages/AdminUserDetail";
-import AdminResumes from "../pages/AdminResumes";
-import AdminATSScans from "../pages/AdminATSScans";
-import AdminCoverLetters from "../pages/AdminCoverLetters";
-import AdminEconomy from "../pages/AdminEconomy";
-import AdminLogs from "../pages/AdminLogs";
-import AdminSettings from "../pages/AdminSettings";
-import NotFound from "../pages/NotFound";
-import Maintenance from "../pages/Maintenance";
-import Documentation from "../pages/Documentation";
+
+// Lazy Loading Pages to shred the 5MB bundle
+const Login = lazy(() => import("../pages/Login"));
+const Signup = lazy(() => import("../pages/Signup"));
+const VerifyOtp = lazy(() => import("../pages/VerifyOtp"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const CreateResume = lazy(() => import("../pages/CreateResume"));
+const Templates = lazy(() => import("../pages/Templates"));
+const CoverLetterPage = lazy(() => import("../pages/CoverLetterPage"));
+const ATSPage = lazy(() => import("../pages/ATSPage"));
+const ReferralPage = lazy(() => import("../pages/ReferralPage"));
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("../pages/ResetPassword"));
+const ProfilePage = lazy(() => import("../pages/ProfilePage"));
+const PublicProfile = lazy(() => import("../pages/PublicProfile"));
+const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
+const AdminUserDetail = lazy(() => import("../pages/AdminUserDetail"));
+const AdminResumes = lazy(() => import("../pages/AdminResumes"));
+const AdminATSScans = lazy(() => import("../pages/AdminATSScans"));
+const AdminCoverLetters = lazy(() => import("../pages/AdminCoverLetters"));
+const AdminEconomy = lazy(() => import("../pages/AdminEconomy"));
+const AdminLogs = lazy(() => import("../pages/AdminLogs"));
+const AdminSettings = lazy(() => import("../pages/AdminSettings"));
+const NotFound = lazy(() => import("../pages/NotFound"));
+const Maintenance = lazy(() => import("../pages/Maintenance"));
+const Documentation = lazy(() => import("../pages/Documentation"));
+
 import Layout from "../components/common/Layout";
+import LoadingScreen from "../components/common/LoadingScreen";
+
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useSelector((state) => state.auth);
@@ -82,7 +87,9 @@ const AppRoutes = () => {
   const { token } = useSelector((state) => state.auth);
 
   return (
-    <Routes>
+    <Suspense fallback={<LoadingScreen />}>
+      <Routes>
+
       <Route
         path="/"
         element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
@@ -182,7 +189,9 @@ const AppRoutes = () => {
       <Route path="/maintenance" element={<Maintenance />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </Suspense>
   );
 };
+
 
 export default AppRoutes;

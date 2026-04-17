@@ -1,94 +1,64 @@
 import React from "react";
-import { pdf } from "@react-pdf/renderer";
-import CoverLetterPDF from "../components/pdf/CoverLetterPDF";
 import { toast } from "react-hot-toast";
-import ModernPDF from "../components/pdf/ModernPDF";
-import StandardPDF from "../components/pdf/StandardPDF";
-import ProfessionalPDF from "../components/pdf/ProfessionalPDF";
-import TechnicalPDF from "../components/pdf/TechnicalPDF";
-import ExecutivePDF from "../components/pdf/ExecutivePDF";
-import MinimalPDF from "../components/pdf/MinimalPDF";
-import TraditionalPDF from "../components/pdf/TraditionalPDF";
-import ClassicPDF from "../components/pdf/ClassicPDF";
-import BoldPDF from "../components/pdf/BoldPDF";
-import ElegantPDF from "../components/pdf/ElegantPDF";
-import ClearPDF from "../components/pdf/ClearPDF";
-import GlobalPDF from "../components/pdf/GlobalPDF";
-import ElitePDF from "../components/pdf/ElitePDF";
 
 /**
- * Handles the PDF export using native @react-pdf/renderer.
- * Maps templateId to specific PDF components.
+ * Handles the PDF export using dynamic imports.
+ * This prevents @react-pdf/renderer (heavy) and templates from bloat the main bundle.
+ * They are only downloaded when the user actually clicks 'Download'.
  */
 export const handleDownloadPDF = async (data, templateId) => {
   if (!data) {
-    console.error("No data provided for PDF export");
     toast.error("No data available for PDF export");
     return;
   }
 
-  console.log("Exporting PDF for Template:", templateId);
+  const toastId = toast.loading("Preparing your professional PDF...");
 
   try {
-    // 1. Map templateId to native PDF components
-    let MyDocument;
+    // 1. Dynamically import the heavy renderer
+    const { pdf } = await import("@react-pdf/renderer");
 
-    switch (templateId) {
-      case "modern":
-        MyDocument = <ModernPDF data={data} />;
-        break;
-      case "professional":
-        MyDocument = <ProfessionalPDF data={data} />;
-        break;
-      case "technical":
-        MyDocument = <TechnicalPDF data={data} />;
-        break;
-      case "executive":
-        MyDocument = <ExecutivePDF data={data} />;
-        break;
-      case "minimal":
-        MyDocument = <MinimalPDF data={data} />;
-        break;
-      case "traditional":
-        MyDocument = <TraditionalPDF data={data} />;
-        break;
-      case "classic":
-        MyDocument = <ClassicPDF data={data} />;
-        break;
-      case "bold":
-        MyDocument = <BoldPDF data={data} />;
-        break;
-      case "elegant":
-        MyDocument = <ElegantPDF data={data} />;
-        break;
-      case "clear":
-        MyDocument = <ClearPDF data={data} />;
-        break;
-      case "global":
-        MyDocument = <GlobalPDF data={data} />;
-        break;
-      case "elite":
-        MyDocument = <ElitePDF data={data} />;
-        break;
-      // All others fallback to a clean StandardPDF
-      default:
-        MyDocument = <StandardPDF data={data} />;
-        break;
+    // 2. Dynamically import the specific template
+    let TemplateComponent;
+    
+    // Capitalize templateId for matching component filename if needed, 
+    // but we'll use a clear switch for safety during this refactor.
+    switch (templateId.toLowerCase()) {
+      case "modern": 
+        TemplateComponent = (await import("../components/pdf/ModernPDF")).default; break;
+      case "professional": 
+        TemplateComponent = (await import("../components/pdf/ProfessionalPDF")).default; break;
+      case "technical": 
+        TemplateComponent = (await import("../components/pdf/TechnicalPDF")).default; break;
+      case "executive": 
+        TemplateComponent = (await import("../components/pdf/ExecutivePDF")).default; break;
+      case "minimal": 
+        TemplateComponent = (await import("../components/pdf/MinimalPDF")).default; break;
+      case "traditional": 
+        TemplateComponent = (await import("../components/pdf/TraditionalPDF")).default; break;
+      case "classic": 
+        TemplateComponent = (await import("../components/pdf/ClassicPDF")).default; break;
+      case "bold": 
+        TemplateComponent = (await import("../components/pdf/BoldPDF")).default; break;
+      case "elegant": 
+        TemplateComponent = (await import("../components/pdf/ElegantPDF")).default; break;
+      case "clear": 
+        TemplateComponent = (await import("../components/pdf/ClearPDF")).default; break;
+      case "global": 
+        TemplateComponent = (await import("../components/pdf/GlobalPDF")).default; break;
+      case "elite": 
+        TemplateComponent = (await import("../components/pdf/ElitePDF")).default; break;
+      default: 
+        TemplateComponent = (await import("../components/pdf/StandardPDF")).default; break;
     }
 
-    // 1.1 Inject theme settings if available
-    if (data.themeColor || data.fontFamily) {
-      console.log("Applying theme to PDF:", { color: data.themeColor, font: data.fontFamily });
-    }
-
-    // 2. Generate the PDF blob using the native renderer
+    // 3. Generate the PDF blob
+    const MyDocument = <TemplateComponent data={data} />;
     const blob = await pdf(MyDocument).toBlob();
 
-    if (!blob) {
-      throw new Error("PDF generation produced an empty result");
-    }
+    if (!blob) throw new Error("PDF generation produced an empty result");
 
-    // 3. Trigger browser download
+    // 4. Trigger browser download
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -98,32 +68,30 @@ export const handleDownloadPDF = async (data, templateId) => {
     link.click();
     document.body.removeChild(link);
 
-    // Clean up
     setTimeout(() => URL.revokeObjectURL(url), 100);
 
-    toast.success("Resume PDF downloaded successfully");
-    console.info("Resume PDF downloaded:", link.download);
+    toast.success("Resume PDF downloaded successfully", { id: toastId });
   } catch (error) {
     console.error("PDF Export Error:", error);
-    toast.error(`PDF generation failed: ${error.message || "Unknown error"}`);
+    toast.error(`PDF generation failed: ${error.message || "Unknown error"}`, { id: toastId });
   }
 };
 
 /**
- * Handles Cover Letter PDF generation
+ * Handles Cover Letter PDF generation with dynamic imports
  */
-
 export const handleDownloadLetter = async (letter, user) => {
   if (!letter) {
-    console.error("Missing letter data for Cover Letter export");
     toast.error("Required data missing for PDF");
     return;
   }
 
-  console.log("Exporting Cover Letter PDF for:", letter.jobTitle);
+  const toastId = toast.loading("Generating Cover Letter...");
 
   try {
-    // Inject theme from user settings if available
+    const { pdf } = await import("@react-pdf/renderer");
+    const CoverLetterPDF = (await import("../components/pdf/CoverLetterPDF")).default;
+
     const pdfData = {
       ...letter,
       themeColor: user?.themeSettings?.accentColor || "#2563eb",
@@ -131,8 +99,6 @@ export const handleDownloadLetter = async (letter, user) => {
     };
 
     const MyDocument = <CoverLetterPDF letter={pdfData} user={user} />;
-
-    // Using the same flow as handleDownloadPDF for consistency
     const blob = await pdf(MyDocument).toBlob();
 
     if (!blob) throw new Error("Generated PDF blob is empty");
@@ -144,16 +110,15 @@ export const handleDownloadLetter = async (letter, user) => {
 
     document.body.appendChild(link);
     link.click();
-
-    // Clean up
+    
     setTimeout(() => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     }, 200);
 
-    console.info("Cover Letter PDF downloaded successfully");
+    toast.success("Cover Letter downloaded", { id: toastId });
   } catch (error) {
     console.error("Cover Letter Export Error:", error);
-    toast.error(`Failed to download PDF: ${error.message}`);
+    toast.error(`Failed to download PDF: ${error.message}`, { id: toastId });
   }
 };
