@@ -752,22 +752,6 @@ const AdminDashboard = () => {
             )}
           </div>
         </div>
-se} />
-                      <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }} />
-                      <Area type="monotone" dataKey="count" name="New Users" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* AI Insights Sidebar */}
-          <div className="lg:col-span-1">
-            <NudgePanel insights={insights} loading={intelLoading} />
-          </div>
-        </div>
-
 
         {/* Users Table Section */}
         <div className="premium-card p-0 overflow-hidden">
