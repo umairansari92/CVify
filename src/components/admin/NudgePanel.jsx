@@ -72,7 +72,7 @@ const NudgePanel = ({ insights, loading }) => {
                       <FaChevronRight />
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
           </AnimatePresence>
