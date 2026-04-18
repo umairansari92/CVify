@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { m } from "framer-motion";
+
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -134,15 +136,21 @@ const AdminDashboard = () => {
       setIntelLoading(false);
     }
   }, []);
-
   useEffect(() => {
     fetchStats();
     fetchIntel();
     fetchUsers(1, search);
 
-    // Delayed load of heavy visualizations to clear the main thread for initial hydrate
-    const timer = setTimeout(() => setShowHeavyUI(true), 1000);
-    return () => clearTimeout(timer);
+    // Using requestIdleCallback for "Surgical Deferral" of heavy charts
+    const deferLoad = () => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(() => setShowHeavyUI(true));
+      } else {
+        setTimeout(() => setShowHeavyUI(true), 1500);
+      }
+    };
+    
+    deferLoad();
   }, [fetchStats, fetchIntel, fetchUsers, search, statusFilter, industryFilter, dateRange]);
 
 

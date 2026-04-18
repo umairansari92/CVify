@@ -1,5 +1,5 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { FaLightbulb, FaExclamationTriangle, FaChevronRight } from "react-icons/fa";
 
 const NudgePanel = ({ insights, loading }) => {
@@ -45,7 +45,7 @@ const NudgePanel = ({ insights, loading }) => {
             {insights.map((nudge, idx) => {
               const config = severityConfig[nudge.severity] || severityConfig.INFO;
               return (
-                <motion.div
+                <m.div
                   key={nudge._id || idx}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}

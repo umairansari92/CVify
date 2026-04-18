@@ -1,6 +1,6 @@
 import React from "react";
 import { useTheme } from "../../contexts/ThemeContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 const Logo = ({ className = "w-40" }) => {
   const { theme } = useTheme();
@@ -12,23 +12,26 @@ const Logo = ({ className = "w-40" }) => {
   return (
     <div className={`relative flex items-center justify-center overflow-hidden ${className}`}>
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={theme}
           initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
           transition={{ 
             duration: 0.4, 
-            ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for premium feel
+            ease: [0.22, 1, 0.36, 1] 
           }}
           className="w-full h-auto flex items-center justify-center"
         >
           <img
             src={logoSrc}
             alt="CVify Pro"
+            width={160}
+            height={44}
+            fetchpriority="high"
             className="w-full h-auto object-contain rounded-xl shadow-sm"
           />
-        </motion.div>
+        </m.div>
       </AnimatePresence>
     </div>
   );

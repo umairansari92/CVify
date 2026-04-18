@@ -11,7 +11,7 @@ import {
   PieChart,
   Pie,
 } from "recharts";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FaRocket, FaGem } from "react-icons/fa";
 
 const AnalyticsCharts = ({ smartAnalytics }) => {
@@ -33,7 +33,7 @@ const AnalyticsCharts = ({ smartAnalytics }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Platform Health Funnel */}
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="premium-card p-6 min-h-[400px]"
@@ -68,10 +68,10 @@ const AnalyticsCharts = ({ smartAnalytics }) => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Diamond Economy Flow */}
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
@@ -116,7 +116,7 @@ const AnalyticsCharts = ({ smartAnalytics }) => {
              <span className="text-xl font-black text-text-primary tracking-tighter">7D</span>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

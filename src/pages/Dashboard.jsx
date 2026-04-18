@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 import { TypeAnimation } from "react-type-animation";
 import api from "../api/axios";
 import { toast } from "react-hot-toast";
+import { m } from "framer-motion";
 import { formatAuthError } from "../utils/formatAuthError";
 import { 
   deleteResume, 

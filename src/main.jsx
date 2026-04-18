@@ -9,12 +9,16 @@ import "./index.css";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { registerSW } from 'virtual:pwa-register';
 
+import { LazyMotion, domAnimation } from "framer-motion";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider>
         <BrowserRouter>
-          <App />
+          <LazyMotion features={domAnimation}>
+            <App />
+          </LazyMotion>
         </BrowserRouter>
       </ThemeProvider>
     </Provider>
