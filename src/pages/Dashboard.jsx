@@ -36,7 +36,7 @@ const Dashboard = () => {
   const loading = useSelector(selectDashboardLoading);
   const isRefreshing = useSelector(selectIsRefreshing);
   
-  const { user, resumes, economy, stats, meta } = dashboard;
+  const { user, resumes, coverLetters, economy, stats, meta } = dashboard;
 
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -429,11 +429,52 @@ const Dashboard = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-40 grayscale pointer-events-none">
-              <div className="premium-card p-12 text-center flex flex-col items-center justify-center border-dashed">
-                <FiZap className="text-4xl text-primary mb-4" />
-                <p className="font-bold text-sm text-text-muted">Letter aggregation coming soon in next v1.1</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {coverLetters?.map((letter) => (
+                <div 
+                  key={letter.id} 
+                  className="premium-card p-8 flex flex-col group hover:border-primary/40 transition-all border-l-4 border-l-secondary"
+                  onClick={() => {
+                    setSelectedLetter(letter);
+                    setIsPreviewOpen(true);
+                  }}
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+                      <FaFileAlt className="text-xl" />
+                    </div>
+                    <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                      letter.type === "ai" ? "bg-primary/10 text-primary" : "bg-emerald-500/10 text-emerald-500"
+                    }`}>
+                      {letter.type === "ai" ? "AI Generated" : "Template"}
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <h3 className="font-black text-text-primary text-lg line-clamp-1 mb-1">{letter.jobTitle}</h3>
+                    <p className="text-xs font-bold text-text-muted">{letter.companyName}</p>
+                  </div>
+
+                  <div className="p-3 bg-white/5 rounded-xl border border-white/5 mb-6">
+                    <p className="text-[9px] font-black text-text-muted uppercase tracking-tighter mb-1">Linked Resume</p>
+                    <div className="flex items-center gap-2 text-primary">
+                      <span className="text-[11px] font-black">{letter.resumeName}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-text-muted">
+                      {new Date(letter.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </span>
+                    <button 
+                      onClick={(e) => handleDeleteLetter(letter.id, e)}
+                      className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <FaTrash className="text-xs" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

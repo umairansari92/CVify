@@ -151,7 +151,7 @@ const CoverLetterPage = () => {
                 Select Resume
               </label>
               <select
-                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold"
+                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold text-text-primary"
                 value={formData.resumeId}
                 onChange={(e) =>
                   setFormData({ ...formData, resumeId: e.target.value })

@@ -14,6 +14,7 @@ const dashboardSlice = createSlice({
       user: null,
       economy: null,
       resumes: [],
+      coverLetters: [],
       stats: null,
       meta: {
         partial: false,
