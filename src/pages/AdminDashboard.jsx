@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
 import { m } from "framer-motion";
-
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { fetchAdminDashboardData } from "../features/admin/adminDashboardSlice";
 import Swal from "sweetalert2";
 import {
   FaUsers,
@@ -47,10 +46,18 @@ import { FiSend } from "react-icons/fi";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const { 
+    stats: reduxStats, 
+    insights: reduxInsights, 
+    users: reduxUsers, 
+    loading: reduxLoading,
+    meta: reduxMeta,
+    smartAnalytics: reduxSmartAnalytics
+  } = useSelector((state) => state.adminDashboard);
 
-  // ─── State ──────────────────────────────────────────────────────────────
-  const [stats, setStats] = useState(null);
+  // ─── Local State (UI Control & Filtering) ──────────────────────────────
   const [users, setUsers] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -60,7 +67,6 @@ const AdminDashboard = () => {
   });
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [statsLoading, setStatsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
   const [industryFilter, setIndustryFilter] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -68,10 +74,7 @@ const AdminDashboard = () => {
   const [bulkLoading, setBulkLoading] = useState(false);
   const [dateRange, setDateRange] = useState("all");
   
-  // Intelligence Layer State
-  const [insights, setInsights] = useState([]);
-  const [smartAnalytics, setSmartAnalytics] = useState(null);
-  const [intelLoading, setIntelLoading] = useState(true);
+  // UI Flags
   const [showHeavyUI, setShowHeavyUI] = useState(false);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
 
@@ -80,18 +83,12 @@ const AdminDashboard = () => {
 
 
 
-  // ─── Data Fetching ──────────────────────────────────────────────────────
-  const fetchStats = useCallback(async () => {
-    setStatsLoading(true);
-    try {
-      const res = await api.get("/admin/stats");
-      setStats(res.data);
-    } catch (err) {
-      console.error("Failed to load stats:", err);
-    } finally {
-      setStatsLoading(false);
+  // Sync Redux users to local state for internal filtering/updates
+  useEffect(() => {
+    if (reduxUsers?.length > 0 && !search) {
+      setUsers(reduxUsers);
     }
-  }, []);
+  }, [reduxUsers, search]);
 
   const fetchUsers = useCallback(
     async (page = 1, searchQuery = "") => {
@@ -110,38 +107,20 @@ const AdminDashboard = () => {
 
         setUsers(res.data.users);
         setPagination(res.data.pagination);
-        setStats(prev => ({ ...prev, ...res.data.stats }));
       } catch (err) {
-
         console.error("Failed to load users:", err);
       } finally {
         setLoading(false);
       }
     },
-    [pagination.limit]
+    [pagination.limit, statusFilter, industryFilter, dateRange]
   );
 
-  const fetchIntel = useCallback(async () => {
-    setIntelLoading(true);
-    try {
-      const [insRes, anaRes] = await Promise.all([
-        api.get("/admin/insights"),
-        api.get("/admin/smart-analytics")
-      ]);
-      setInsights(insRes.data);
-      setSmartAnalytics(anaRes.data);
-    } catch (err) {
-      console.error("Failed to load platform intelligence:", err);
-    } finally {
-      setIntelLoading(false);
-    }
-  }, []);
   useEffect(() => {
-    fetchStats();
-    fetchIntel();
-    fetchUsers(1, search);
-
-    // Using requestIdleCallback for "Surgical Deferral" of heavy charts
+    // Phase 1: Aggregated Landing Call
+    dispatch(fetchAdminDashboardData());
+    
+    // Phase 2: Surgical Deferral of heavy charts
     const deferLoad = () => {
       if (window.requestIdleCallback) {
         window.requestIdleCallback(() => setShowHeavyUI(true));
@@ -151,7 +130,7 @@ const AdminDashboard = () => {
     };
     
     deferLoad();
-  }, [fetchStats, fetchIntel, fetchUsers, search, statusFilter, industryFilter, dateRange]);
+  }, [dispatch]);
 
 
 
@@ -308,7 +287,7 @@ const AdminDashboard = () => {
         try {
           await api.delete(`/admin/users/${userId}`, { data: { reason } });
           setUsers((prev) => prev.filter((u) => u._id !== userId));
-          fetchStats();
+          dispatch(fetchAdminDashboardData());
           Swal.fire("Deleted!", "User account successfully soft-deleted.", "success");
         } catch (err) {
           Swal.fire("Error", err.response?.data?.message || "Deletion failed", "error");
@@ -607,11 +586,11 @@ const AdminDashboard = () => {
           <p className="text-xs font-black uppercase tracking-[0.2em] text-text-secondary opacity-60">
             {label}
           </p>
-          {statsLoading ? (
+          {loading ? (
             <div className="h-8 w-20 bg-white/5 rounded-lg animate-pulse mt-1" />
           ) : (
             <p className="text-3xl font-black text-text-primary">
-              {typeof value === "number" ? value.toLocaleString() : value}
+              {typeof value === "number" ? value.toLocaleString() : (value || 0)}
             </p>
           )}
         </div>
@@ -739,14 +718,50 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* Primary Platform Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 animate-fadeIn" style={{ animationDelay: "0.05s" }}>
+          <StatCard
+            icon={FaUsers}
+            label="Total Users"
+            value={reduxStats?.totalUsers}
+            gradient="from-primary/10 to-transparent"
+            iconColor="text-primary"
+            loading={reduxLoading}
+          />
+          <StatCard
+            icon={FaGem}
+            label="Diamond Flow"
+            value={reduxStats?.diamondBurnRate}
+            gradient="from-blue-500/10 to-transparent"
+            iconColor="text-blue-500"
+            loading={reduxLoading}
+          />
+          <StatCard
+            icon={FaFileAlt}
+            label="CVs Synthesized"
+            value={reduxStats?.totalResumes}
+            gradient="from-emerald-500/10 to-transparent"
+            iconColor="text-emerald-500"
+            loading={reduxLoading}
+          />
+          <StatCard
+            icon={FaShieldAlt}
+            label="Admin Force"
+            value={reduxStats?.adminCount}
+            gradient="from-amber-500/10 to-transparent"
+            iconColor="text-amber-500"
+            loading={reduxLoading}
+          />
+        </div>
+
         {/* Intelligence & Analytics Layer */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12 animate-fadeIn" style={{ animationDelay: "0.1s" }}>
           {/* Main Charts Area */}
           <div className="lg:col-span-3 flex flex-col gap-8">
             {showHeavyUI && (
               <Suspense fallback={<div className="h-[400px] glass rounded-3xl animate-pulse" />}>
-                <AnalyticsCharts smartAnalytics={smartAnalytics} />
-                <AcquisitionChart data={stats?.charts} />
+                <AnalyticsCharts smartAnalytics={reduxSmartAnalytics} />
+                <AcquisitionChart data={reduxStats?.charts} />
               </Suspense>
             )}
           </div>
@@ -755,7 +770,7 @@ const AdminDashboard = () => {
           <div className="lg:col-span-1">
             {showHeavyUI && (
               <Suspense fallback={<div className="h-[500px] glass rounded-3xl animate-pulse" />}>
-                <NudgePanel insights={insights} loading={intelLoading} />
+                <NudgePanel insights={reduxInsights} loading={reduxLoading} />
               </Suspense>
             )}
           </div>

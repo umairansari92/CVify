@@ -258,14 +258,15 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Resumes Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-[380px] glass rounded-[3rem] animate-pulse"
-              ></div>
+                className="min-h-[450px] aspect-[4/5] glass rounded-[3rem] animate-pulse relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+              </div>
             ))}
           </div>
         ) : resumes?.length > 0 ? (
@@ -273,7 +274,7 @@ const Dashboard = () => {
             {resumes.map((resume) => (
               <div
                 key={resume.id}
-                className="premium-card group h-full flex flex-col p-8"
+                className="premium-card group min-h-[450px] aspect-[4/5] flex flex-col p-8"
               >
                 {/* Visual Header */}
                 <div className="relative mb-8 aspect-[16/7] bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
