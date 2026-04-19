@@ -99,8 +99,8 @@
 }
 
 .premium-card {
-  @apply bg-midground rounded-2xl border border-border-subtle shadow-premium 
-         transition-all duration-300 hover:shadow-hover hover:-translate-y-1;
+  @apply bg-midground rounded-[2rem] border border-white/5 shadow-premium 
+         transition-all duration-500 hover:shadow-hover hover:-translate-y-1.5 hover:border-primary/20;
 }
 
 .input-premium {
@@ -146,13 +146,38 @@
 .bg-mesh {
   background-color: var(--background);
   background-image:
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.2) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.2) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(37, 99, 235, 0.05) 0px, transparent 50%);
+}
+
+.bg-mesh-dark {
+  background-color: #020617;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 40%);
 }
 
 .text-gradient {
-  @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent active:scale-95 transition-all;
+  @apply bg-gradient-to-r from-text-main via-text-main to-text-muted bg-clip-text text-transparent transition-all;
+}
+
+.hero-text {
+  @apply bg-gradient-to-br from-text-main via-text-main to-text-muted/60 bg-clip-text text-transparent font-black tracking-tighter;
+}
+
+/* Premium Glass Card Effect */
+.glass-card {
+  @apply backdrop-blur-2xl;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.shadow-soft-glow {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.05), 0 20px 40px -10px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes float {

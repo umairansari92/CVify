@@ -45,30 +45,30 @@ const QuestWidget = ({ quests = [] }) => {
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover/widget:bg-primary/20 transition-colors duration-700" />
 
       {/* Header */}
-      <div className="p-6 pb-4 relative z-10 flex flex-col gap-1">
+      <div className="p-8 pb-4 relative z-10 flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-black text-text-main flex items-center gap-2 tracking-tight">
-            <div className="p-2 bg-primary/10 rounded-xl text-primary">
-              <FiAward size={18} />
+          <h3 className="text-lg font-black text-[#fbbf24] flex items-center gap-2 tracking-tight group-hover/widget:translate-x-1 transition-transform duration-500">
+            <div className="p-2.5 bg-[#fbbf24]/10 rounded-2xl text-[#fbbf24] shadow-inner">
+              <FiAward size={20} />
             </div>
             Quest Journal
           </h3>
           {hasReadyQuests && (
             <m.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full border border-emerald-500/20 animate-pulse-soft"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full border border-emerald-500/20 shadow-glow-emerald"
             >
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
               </span>
-              <span className="text-[8px] font-black tracking-[0.1em] uppercase">Ready</span>
+              <span className="text-[8px] font-black tracking-[0.2em] uppercase">Ready</span>
             </m.div>
           )}
         </div>
-        <p className="text-[9px] font-bold text-text-muted uppercase tracking-[0.2em] ml-11">
-          Complete Milestones • Collect Rewards
+        <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.3em] ml-[68px] opacity-40">
+          Executive Milestone Matrix
         </p>
       </div>
 

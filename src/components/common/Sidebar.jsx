@@ -136,37 +136,33 @@ const Sidebar = ({ onClose }) => {
   ] : [];
 
   return (
-    <div className="w-72 lg:w-72 glass border-r border-border-subtle h-screen flex flex-col relative z-20 transition-all duration-500 overflow-hidden">
+    <div className="w-72 lg:w-72 backdrop-blur-2xl bg-white/[0.02] border-r border-white/5 h-screen flex flex-col relative z-20 transition-all duration-700 overflow-hidden shadow-2xl">
       {/* Mobile Close Button */}
       <div className="lg:hidden flex justify-end p-4">
         <button
           onClick={onClose}
-          className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+          className="p-2 rounded-xl hover:bg-white/5 transition-colors"
         >
-          <FaTimes className="text-xl text-text-main" />
+          <FaTimes className="text-xl text-text-muted" />
         </button>
       </div>
       
-      {/* Decorative Background Glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-0 -left-10 w-40 h-40 bg-primary/20 blur-[80px] animate-pulse"></div>
-        <div className="absolute bottom-0 -right-10 w-40 h-40 bg-accent/20 blur-[80px] animate-pulse" style={{ animationDelay: "2s" }}></div>
+      {/* Background Glows (Minimalist) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+        <div className="absolute top-0 -left-20 w-64 h-64 bg-primary/20 blur-[100px]" />
+        <div className="absolute bottom-0 -right-20 w-64 h-64 bg-accent/20 blur-[100px]" />
       </div>
 
-      <div className="p-8 flex flex-col items-center justify-center relative">
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex items-center justify-center group cursor-pointer">
-            <Logo className="w-48" />
-          </div>
-          <div className="h-0.5 w-12 bg-gradient-to-r from-transparent via-primary/50 to-transparent mt-2"></div>
+      <div className="p-8 pb-4 flex flex-col items-start relative">
+        <div className="relative z-10">
+          <Logo className="w-36 lg:w-40 opacity-90 hover:opacity-100 transition-opacity" />
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-4 space-y-2 relative z-10 overflow-y-auto custom-scrollbar pr-2">
+      <nav className="flex-1 px-4 py-6 space-y-1 relative z-10 overflow-y-auto custom-scrollbar pr-2">
         <div className="flex items-center gap-2 px-5 mb-4 mt-2">
-          <FaRocket className="text-primary/60 text-xs" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted opacity-60">
-            Main Menu
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-text-muted opacity-40">
+            Explorer
           </p>
         </div>
         {navItems.map((item) => (
@@ -174,23 +170,26 @@ const Sidebar = ({ onClose }) => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `group flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+              `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-500 relative overflow-hidden ${
                 isActive
-                  ? `bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]`
-                  : "text-text-muted hover:bg-foreground/20 hover:text-text-main hover:translate-x-1"
+                  ? `bg-white/10 text-text-main shadow-lg border border-white/10`
+                  : "text-text-muted hover:text-text-main hover:bg-white/[0.03]"
               }`
             }
           >
             {({ isActive }) => (
               <>
-                <span className={`text-lg transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "group-hover:text-primary text-text-muted"}`}>
+                <span className={`text-lg transition-all duration-500 ${isActive ? "text-primary scale-110" : "group-hover:text-primary"}`}>
                   {item.icon}
                 </span>
-                <span className={`font-bold text-sm tracking-tight ${isActive ? "text-white" : "group-hover:text-text-main"}`}>
+                <span className={`font-bold text-[13px] tracking-tight ${isActive ? "text-text-main" : "text-text-muted/80 group-hover:text-text-main"}`}>
                   {item.label}
                 </span>
                 {isActive && (
-                  <div className="absolute right-3 w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_8px_white]"></div>
+                  <m.div 
+                    layoutId="active-pill"
+                    className="absolute left-0 w-1 h-6 bg-primary rounded-r-full" 
+                  />
                 )}
               </>
             )}
@@ -200,9 +199,8 @@ const Sidebar = ({ onClose }) => {
         {isAdmin && (
           <>
             <div className="flex items-center gap-2 px-5 mt-10 mb-4">
-              <FaShieldAlt className="text-amber-500/60 text-xs" />
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500/60">
-                Admin Center
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-amber-500/50">
+                Command Center
               </p>
             </div>
             {adminItems.map((item) => (
@@ -210,21 +208,27 @@ const Sidebar = ({ onClose }) => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `group flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden ${
+                  `group flex items-center gap-4 px-5 py-3 rounded-2xl transition-all duration-500 relative overflow-hidden ${
                     isActive
-                      ? `bg-amber-500 text-white shadow-xl shadow-amber-500/20 scale-[1.02]`
-                      : "text-text-muted hover:bg-amber-500/5 hover:text-amber-500 hover:translate-x-1"
+                      ? `bg-amber-500/10 text-amber-500 shadow-lg border border-amber-500/20`
+                      : "text-text-muted hover:text-amber-500 hover:bg-amber-500/[0.02]"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <span className={`text-lg transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "group-hover:text-amber-500 text-text-muted"}`}>
+                    <span className={`text-lg transition-all duration-500 ${isActive ? "scale-110" : "group-hover:text-amber-500"}`}>
                       {item.icon}
                     </span>
-                    <span className={`font-bold text-sm tracking-tight ${isActive ? "text-white" : "group-hover:text-text-main"}`}>
+                    <span className={`font-bold text-[13px] tracking-tight ${isActive ? "text-amber-500" : "text-text-muted/80 group-hover:text-amber-500"}`}>
                       {item.label}
                     </span>
+                    {isActive && (
+                      <m.div 
+                        layoutId="active-pill-admin"
+                        className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full" 
+                      />
+                    )}
                   </>
                 )}
               </NavLink>
@@ -233,32 +237,32 @@ const Sidebar = ({ onClose }) => {
         )}
       </nav>
 
-      <div className="p-6 relative z-10">
-        <div className="premium-card p-5 bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 mb-6 group cursor-pointer relative overflow-hidden rounded-2xl">
+      <div className="p-6 pt-0 relative z-10">
+        <div className="p-5 glass-card mb-6 group cursor-pointer relative overflow-hidden rounded-[2rem]">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5">
+            <p className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5 leading-none">
               <span className="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
-              Account Status
+              Identity
             </p>
-            <FaCrown className="text-amber-500 text-xs animate-bounce" />
+            <FaCrown className="text-amber-500 text-[10px] animate-bounce" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-              <FaStar size={14} className="animate-spin" style={{ animationDuration: '4s' }} />
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <FaStar size={12} className="animate-spin" style={{ animationDuration: '6s' }} />
             </div>
             <div>
-              <p className="text-xs font-black text-text-main group-hover:text-primary transition-colors">Elite Member</p>
-              <p className="text-[9px] text-text-muted font-bold mt-0.5">Lifetime Access</p>
+              <p className="text-[12px] font-black text-text-main group-hover:text-primary transition-colors leading-none mb-1">Elite Strategist</p>
+              <p className="text-[9px] text-text-muted font-bold tracking-tight">Level 4 Certified</p>
             </div>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="flex w-full items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold transition-all duration-300 bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white shadow-sm hover:shadow-red-500/20 group"
+          className="flex w-full items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-500 bg-white/[0.02] border border-white/5 text-text-muted hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 group"
         >
-          <FaSignOutAlt className="text-lg group-hover:translate-x-1 transition-transform" />
-          <span>Sign Out</span>
+          <FaSignOutAlt className="group-hover:translate-x-1 transition-transform" />
+          <span>Exit System</span>
         </button>
       </div>
     </div>
