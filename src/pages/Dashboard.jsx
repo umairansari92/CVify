@@ -27,6 +27,8 @@ import {
   cloneResume 
 } from "../features/resume/resumeThunk";
 import { clearCurrentResume } from "../features/resume/resumeSlice";
+import QuestWidget from "../components/dashboard/QuestWidget";
+import { FaGem } from "react-icons/fa";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -207,27 +209,42 @@ const Dashboard = () => {
           <div className="w-full md:w-auto">
             <h1 className="text-4xl lg:text-5xl text-gradient font-black tracking-tighter flex flex-wrap items-center gap-4">
               Welcome Back, {user?.name?.split(" ")[0]}
-              <span className={`bg-gradient-to-r ${economy?.tier === "Elite" ? "from-amber-400 to-orange-600" : "from-emerald-500 to-teal-600"} text-white font-bold text-[10px] px-3 py-1.5 rounded-full italic tracking-tight shadow-sm shadow-emerald-500/20`}>
+              <span className={`bg-gradient-to-r ${economy?.tier === "Elite" ? "from-amber-400 to-orange-600" : "from-emerald-500 to-teal-600"} text-white font-bold text-[10px] px-3 py-1.5 rounded-full italic tracking-tight shadow-sm shadow-emerald-500/20 flex items-center gap-2`}>
                 {economy?.tier || "BASIC"} MEMBER
+                {stats?.readyToClaimCount > 0 && (
+                  <m.span 
+                    animate={{ scale: [1, 1.2, 1] }} 
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    className="w-2 h-2 rounded-full bg-red-400 border border-white shadow-[0_0_10px_rgba(248,113,113,0.8)]"
+                  />
+                )}
               </span>
             </h1>
-
-            <p className="text-text-muted mt-4 font-bold text-lg max-w-lg leading-relaxed">
-              <TypeAnimation
-                sequence={[
-                  "Elevate your career with precision-crafted, high-impact resumes.",
-                  3000,
-                  "Build professional resumes that get you noticed.",
-                  3000,
-                  "Transform your career story into compelling narratives.",
-                  3000,
-                ]}
-                wrapper="span"
-                speed={60}
-                repeat={Infinity}
-              />
-            </p>
+            <div className="mt-4 flex items-center gap-6">
+              <div className="flex items-center gap-2 px-4 py-2 glass rounded-2xl border border-primary/20 bg-primary/5">
+                <FaGem className="text-primary text-sm animate-pulse" />
+                <span className="text-sm font-black text-text-main tabular-nums">
+                  {economy?.diamonds || 0}
+                </span>
+                <span className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">Budget</span>
+              </div>
+              
+              <div className="text-text-muted font-bold text-sm leading-relaxed max-w-sm">
+                <TypeAnimation
+                  sequence={[
+                    "Elevate your career with precision.",
+                    3000,
+                    "Build resumes that get you noticed.",
+                    3000,
+                  ]}
+                  wrapper="span"
+                  speed={60}
+                  repeat={Infinity}
+                />
+              </div>
+            </div>
           </div>
+          
           <div className="flex gap-4 w-full md:w-auto">
             <button
               onClick={handleCreateNew}
@@ -237,7 +254,37 @@ const Dashboard = () => {
               <FiPlus className="text-2xl" />
               <span>Create New CV</span>
             </button>
+          </div>
+        </div>
 
+        {/* Quest Engine Tier (Executive Hardening) */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+          <div className="lg:col-span-3">
+             <div className="h-full flex flex-col justify-center">
+                <h2 className="text-2xl font-black text-text-primary mb-4 flex items-center gap-3">
+                   Career Progress <span className="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-full">ACTIVE</span>
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                   <div className="p-6 glass rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent group-hover:opacity-100 transition-opacity opacity-50" />
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">Profile Score</p>
+                      <p className="text-3xl font-black text-text-main tabular-nums">{user?.completionScore || 0}%</p>
+                   </div>
+                   <div className="p-6 glass rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent group-hover:opacity-100 transition-opacity opacity-50" />
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">ATS Insight</p>
+                      <p className="text-3xl font-black text-text-main tabular-nums">{stats?.totalScans || 0}</p>
+                   </div>
+                   <div className="p-6 glass rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent group-hover:opacity-100 transition-opacity opacity-50" />
+                      <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-2">Diamonds</p>
+                      <p className="text-3xl font-black text-text-main tabular-nums">{economy?.diamonds || 0}</p>
+                   </div>
+                </div>
+             </div>
+          </div>
+          <div className="lg:col-span-1">
+             <QuestWidget quests={dashboard.quests} />
           </div>
         </div>
 
