@@ -1,5 +1,5 @@
 import { m, AnimatePresence } from "framer-motion";
-import { FiCheckCircle, FiLock, FiGift, FiChevronRight, FiStar, FiZap, FiAward } from "react-icons/fi";
+import { FiCheckCircle, FiLock, FiGift, FiChevronRight, FiStar, FiZap, FiAward, FiRefreshCw } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import api from "../../api/axios";
 import { useDispatch } from "react-redux";

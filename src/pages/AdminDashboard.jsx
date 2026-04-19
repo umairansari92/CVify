@@ -28,9 +28,10 @@ import {
   FaLightbulb,
   FaExclamationTriangle,
   FaRocket,
+  FaDownload,
 } from "react-icons/fa";
 
-import { lazy, Suspense } from "react";
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import LoadingScreen from "../components/common/LoadingScreen";
 
 // Lazy loading heavy analytics suite
@@ -174,7 +175,7 @@ const AdminDashboard = () => {
         setUsers((prev) =>
           prev.map((u) => u._id === userId ? { ...u, isBlocked: res.data.isBlocked } : u)
         );
-        fetchStats();
+        dispatch(fetchAdminDashboardData());
         Swal.fire({
           toast: true,
           position: "top-end",
@@ -221,7 +222,7 @@ const AdminDashboard = () => {
         setUsers((prev) =>
           prev.map((u) => u._id === userId ? { ...u, isFrozen: res.data.isFrozen } : u)
         );
-        fetchStats();
+        dispatch(fetchAdminDashboardData());
         Swal.fire({
           toast: true,
           position: "top-end",
@@ -344,7 +345,7 @@ const AdminDashboard = () => {
           prev.map((u) => u._id === userId ? { ...u, diamonds: res.data.diamonds } : u)
         );
 
-        fetchStats();
+        dispatch(fetchAdminDashboardData());
         Swal.fire({
           toast: true,
           position: "top-end",
@@ -461,7 +462,7 @@ const AdminDashboard = () => {
         
         setSelectedUsers([]);
         fetchUsers(pagination.page, search);
-        fetchStats();
+        dispatch(fetchAdminDashboardData());
       } catch (err) {
         Swal.fire("Hierarchy/RBAC Violation", err.response?.data?.message || "Bulk action failed", "error");
       } finally {
@@ -522,7 +523,7 @@ const AdminDashboard = () => {
         
         setSelectedUsers([]);
         fetchUsers(pagination.page, search);
-        fetchStats();
+        dispatch(fetchAdminDashboardData());
       } catch (err) {
         Swal.fire("Error", err.response?.data?.message || "Bulk diamond adjustment failed", "error");
       } finally {
@@ -646,7 +647,7 @@ const AdminDashboard = () => {
     };
 
     return (
-      <motion.div 
+      <m.div 
         layout
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -667,7 +668,7 @@ const AdminDashboard = () => {
           <span className="text-[9px] font-bold opacity-60 italic">{nudge.severity} Priority</span>
           <button className="text-[9px] font-black uppercase tracking-tighter hover:underline">Investigate &rarr;</button>
         </div>
-      </motion.div>
+      </m.div>
     );
   };
 
@@ -1120,7 +1121,7 @@ const AdminDashboard = () => {
         {/* Floating Bulk Action Bar */}
         <AnimatePresence>
           {selectedUsers.length > 0 && (
-            <motion.div
+            <m.div
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}
@@ -1170,7 +1171,7 @@ const AdminDashboard = () => {
                     className="text-xs font-black text-text-muted hover:text-text-primary uppercase tracking-widest px-2">Cancel</button>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
         <AdminBroadcastModal 
