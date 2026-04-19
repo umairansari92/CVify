@@ -184,6 +184,35 @@
   word-break: keep-all;
 }
 
+/* Quest Engine Premium Effects */
+.shadow-glow-primary {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.15), 0 0 40px rgba(37, 99, 235, 0.05);
+}
+
+.shadow-glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), 0 0 40px rgba(16, 185, 129, 0.05);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.shimmer-mask {
+  mask-image: linear-gradient(90deg, #000 0%, rgba(0,0,0,0.5) 50%, #000 100%);
+  mask-size: 200% 100%;
+  animation: shimmer-swipe 2s infinite linear;
+}
+
+@keyframes shimmer-swipe {
+  0% { mask-position: 100% 0; }
+  100% { mask-position: -100% 0; }
+}
+
 /* SweetAlert2 Custom Styling */
 .swal2-popup {
   background: var(--midground) !important;

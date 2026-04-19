@@ -1,10 +1,11 @@
 import { m, AnimatePresence } from "framer-motion";
-import { FiCheckCircle, FiLock, FiGift, FiChevronRight } from "react-icons/fi";
+import { FiCheckCircle, FiLock, FiGift, FiChevronRight, FiStar, FiZap, FiAward } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import api from "../../api/axios";
 import { useDispatch } from "react-redux";
 import { fetchDashboardData } from "../../features/dashboard/dashboardThunk";
 import { useState } from "react";
+import { FaGem } from "react-icons/fa";
 
 const QuestWidget = ({ quests = [] }) => {
   const dispatch = useDispatch();
@@ -17,14 +18,14 @@ const QuestWidget = ({ quests = [] }) => {
       toast.success(response.data.message || "Bounty collected! 💎", {
         icon: '💎',
         style: {
-          borderRadius: '1rem',
+          borderRadius: '1.5rem',
           background: 'var(--midground)',
           color: 'var(--text-main)',
-          border: '1px solid var(--primary)'
+          border: '1px solid var(--primary)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }
       });
       
-      // Refresh total diamonds in header/stats
       dispatch(fetchDashboardData());
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to claim reward.");
@@ -35,152 +36,197 @@ const QuestWidget = ({ quests = [] }) => {
 
   if (!quests.length) return null;
 
-  return (
-    <div className="premium-card p-8 flex flex-col h-full bg-gradient-to-br from-midground to-foreground/10 overflow-hidden relative">
-      {/* Background Glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 blur-[80px] pointer-events-none" />
+  const hasReadyQuests = quests.some(q => q.status === 'ready');
 
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h3 className="text-xl font-black text-text-main flex items-center gap-3">
-            <FiGift className="text-primary" /> Quest Journal
+  return (
+    <div className="flex flex-col h-full glass rounded-[2.5rem] border border-white/10 overflow-hidden relative group/widget transition-all duration-700 hover:shadow-glow-primary">
+      {/* Dynamic Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover/widget:bg-primary/20 transition-colors duration-700" />
+
+      {/* Header */}
+      <div className="p-6 pb-4 relative z-10 flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-black text-text-main flex items-center gap-2 tracking-tight">
+            <div className="p-2 bg-primary/10 rounded-xl text-primary">
+              <FiAward size={18} />
+            </div>
+            Quest Journal
           </h3>
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-1">
-            Complete Milestones • Earn Diamonds
-          </p>
+          {hasReadyQuests && (
+            <m.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full border border-emerald-500/20 animate-pulse-soft"
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+              </span>
+              <span className="text-[8px] font-black tracking-[0.1em] uppercase">Ready</span>
+            </m.div>
+          )}
         </div>
-        {quests.some(q => q.status === 'ready') && (
-          <m.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full border border-emerald-500/20"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-[9px] font-black tracking-widest uppercase">Rewards Waiting</span>
-          </m.div>
-        )}
+        <p className="text-[9px] font-bold text-text-muted uppercase tracking-[0.2em] ml-11">
+          Complete Milestones • Collect Rewards
+        </p>
       </div>
 
-      <div className="space-y-4 flex-1">
+      {/* Quest List */}
+      <div className="flex-1 px-4 mb-4 space-y-3 relative z-10 overflow-y-auto custom-scrollbar-thin max-h-[420px] pr-2">
         {quests.map((quest) => {
           const progressPercent = Math.min((quest.progress / quest.threshold) * 100, 100);
+          const isReady = quest.status === 'ready';
+          const isClaimed = quest.status === 'claimed';
           
           return (
             <m.div 
               key={quest.id}
               layout
-              className={`p-4 rounded-2xl border transition-all duration-300 ${
-                quest.status === 'ready' 
-                  ? 'bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(37,99,235,0.05)]' 
-                  : 'bg-white/5 border-white/5'
-              } ${quest.status === 'claimed' ? 'opacity-60' : 'opacity-100'}`}
+              className={`p-4 rounded-3xl border transition-all duration-500 group/card relative overflow-hidden ${
+                isReady 
+                  ? 'bg-primary/5 border-primary/30 shadow-glow-primary' 
+                  : 'bg-white/[0.03] border-white/5 hover:border-white/10'
+              } ${isClaimed ? 'opacity-50 grayscale-[0.5]' : 'opacity-100'}`}
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-start justify-between mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{quest.icon}</span>
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shadow-inner ${
+                    isReady ? 'bg-primary/20 animate-bounce-slow' : 'bg-white/5'
+                  }`}>
+                    {quest.icon || <FiStar />}
+                  </div>
                   <div>
-                    <h4 className="text-sm font-black text-text-main line-clamp-1">
+                    <h4 className="text-[13px] font-black text-text-main leading-none mb-1.5">
                       {quest.title}
                     </h4>
-                    <p className="text-[10px] font-bold text-text-muted line-clamp-1 lowercase italic">
+                    <p className="text-[9px] font-semibold text-text-muted leading-tight line-clamp-2 italic opacity-70">
                       {quest.description}
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-primary font-black text-xs">
-                  <span>{quest.reward}</span>
-                  <span className="text-[10px]">💎</span>
+                <div className="flex items-center gap-1.5 px-2 py-1 bg-white/5 rounded-lg border border-white/5">
+                  <span className="text-[10px] font-black text-primary">{quest.reward}</span>
+                  <FaGem size={8} className="text-primary" />
                 </div>
               </div>
 
-              {/* Progress Bar Container */}
-              <div className="flex items-center gap-4">
-                <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden relative">
-                  <m.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercent}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className={`absolute inset-y-0 left-0 rounded-full ${
-                      quest.status === 'claimed' ? 'bg-text-muted' : 'bg-gradient-to-r from-primary to-accent'
-                    }`}
-                  />
+              {/* Progress HUD */}
+              <div className="space-y-2 relative z-10">
+                <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-text-muted px-1">
+                  <span>Progress</span>
+                  <span className={isReady ? "text-primary" : ""}>
+                    {quest.progress} / {quest.threshold}
+                  </span>
                 </div>
                 
-                {quest.status === 'claimed' ? (
-                  <div className="flex items-center gap-1 text-emerald-500 text-[10px] font-black uppercase">
-                    <FiCheckCircle />
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5 relative">
+                    <m.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progressPercent}%` }}
+                      transition={{ duration: 1.5, ease: "circOut" }}
+                      className={`absolute inset-y-0 left-0 rounded-full ${
+                        isClaimed ? 'bg-text-muted' : 'bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-shimmer'
+                      }`}
+                    />
                   </div>
-                ) : quest.status === 'ready' ? (
-                  <m.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    disabled={claimingId === quest.id}
-                    onClick={() => handleClaim(quest.id)}
-                    className="px-4 py-1.5 bg-primary text-white text-[10px] font-black rounded-lg shadow-lg shadow-primary/20 hover:bg-primary-hover transition-colors relative overflow-hidden group/claim"
-                  >
-                    <AnimatePresence mode="wait">
-                      {claimingId === quest.id ? (
-                        <m.div 
-                          key="loading"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          Claiming...
-                        </m.div>
-                      ) : (
-                        <m.span 
-                          key="label"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          CLAIM
-                        </m.span>
-                      )}
-                    </AnimatePresence>
-                    
-                    {/* Glow Pulse */}
-                    <div className="absolute inset-0 bg-white/20 animate-pulse opacity-0 group-hover/claim:opacity-100 transition-opacity" />
-                  </m.button>
-                ) : (
-                  <div className="flex items-center gap-2 text-text-muted text-[10px] font-black uppercase tracking-tighter tabular-nums whitespace-nowrap">
-                    {quest.progress}/{quest.threshold} <FiLock size={10} />
-                  </div>
-                )}
+                  
+                  {isClaimed ? (
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center border border-emerald-500/20">
+                      <FiCheckCircle size={14} />
+                    </div>
+                  ) : isReady ? (
+                    <m.button
+                      whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                      whileTap={{ scale: 0.9 }}
+                      disabled={claimingId === quest.id}
+                      onClick={() => handleClaim(quest.id)}
+                      className="w-10 h-10 bg-primary text-white rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center relative overflow-hidden group/claim transition-transform"
+                    >
+                      <AnimatePresence mode="wait">
+                        {claimingId === quest.id ? (
+                          <m.div 
+                            key="loading"
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                          >
+                            <FiRefreshCw size={14} />
+                          </m.div>
+                        ) : (
+                          <m.div
+                            key="gift"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                          >
+                            <FiGift size={16} />
+                          </m.div>
+                        )}
+                      </AnimatePresence>
+                      <div className="absolute inset-x-0 bottom-0 h-1 bg-white/30 animate-pulse" />
+                    </m.button>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-white/5 text-text-muted flex items-center justify-center border border-white/5 opacity-40">
+                      <FiLock size={12} />
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Card Glare effect */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 -translate-x-full group-hover/card:translate-x-full transition-transform" />
             </m.div>
           );
         })}
       </div>
 
-      <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="text-center">
-            <p className="text-[14px] font-black text-primary">
+      {/* Footer HUD */}
+      <div className="p-6 bg-white/[0.02] border-t border-white/5 flex items-center justify-between gap-6 relative z-10">
+        <div className="flex items-center gap-6">
+          <div className="flex flex-col">
+            <p className="text-lg font-black text-text-main leading-none tabular-nums">
               {quests.filter(q => q.status === 'claimed').length}
             </p>
-            <p className="text-[8px] font-bold text-text-muted uppercase tracking-widest">Done</p>
+            <p className="text-[8px] font-black text-text-muted uppercase tracking-[0.2em] mt-1">Completed</p>
           </div>
-          <div className="h-6 w-[1px] bg-white/10" />
-          <div className="text-center">
-            <p className="text-[14px] font-black text-text-main">
+          <div className="h-4 w-[1px] bg-white/10" />
+          <div className="flex flex-col">
+            <p className="text-lg font-black text-text-muted leading-none tabular-nums">
               {quests.length}
             </p>
-            <p className="text-[8px] font-bold text-text-muted uppercase tracking-widest">Total</p>
+            <p className="text-[8px] font-black text-text-muted uppercase tracking-[0.2em] mt-1">Total</p>
           </div>
         </div>
         
         <m.button 
-          whileHover={{ x: 3 }}
-          className="text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity"
+          whileHover={{ x: 5, color: 'var(--primary)' }}
+          className="text-[10px] font-black uppercase tracking-widest text-text-muted flex items-center gap-2 group/all"
         >
-          View Full Log <FiChevronRight />
+          Detailed Log 
+          <FiChevronRight className="group-hover/all:translate-x-1 transition-transform" />
         </m.button>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .custom-scrollbar-thin::-webkit-scrollbar {
+          width: 3px;
+        }
+        .custom-scrollbar-thin::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar-thin::-webkit-scrollbar-thumb {
+          background: rgba(37, 99, 235, 0.2);
+          border-radius: 20px;
+        }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
+        }
+      `}} />
     </div>
   );
 };
