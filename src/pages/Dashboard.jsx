@@ -197,7 +197,10 @@ const Dashboard = () => {
       <Suspense fallback={<div className="fixed inset-0 bg-background" />}>
         <ThreeBackground />
       </Suspense>
-      <div className="max-w-7xl mx-auto relative z-10">
+      <m.div 
+        layout
+        className="max-w-7xl mx-auto relative z-10 animate-fadeIn"
+      >
 
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-16 gap-8 animate-fadeIn">
@@ -263,9 +266,30 @@ const Dashboard = () => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="min-h-[450px] aspect-[4/5] glass rounded-[3rem] animate-pulse relative overflow-hidden"
+                className="min-h-[450px] aspect-[4/5] glass rounded-[3rem] relative overflow-hidden flex flex-col p-8"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+                {/* Shimmer Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-shimmer"></div>
+                
+                {/* Visual Placeholder */}
+                <div className="w-full aspect-[16/7] bg-white/5 rounded-2xl mb-8 animate-pulse" />
+                
+                {/* Text Placeholders */}
+                <div className="w-2/3 h-8 bg-white/10 rounded-xl mb-4 animate-pulse" />
+                <div className="w-1/3 h-4 bg-white/5 rounded-lg mb-8 animate-pulse" />
+                
+                <div className="flex gap-4 mb-8">
+                  <div className="w-10 h-10 bg-white/5 rounded-2xl animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="w-1/2 h-3 bg-white/5 rounded-md animate-pulse" />
+                    <div className="w-1/3 h-3 bg-white/5 rounded-md animate-pulse" />
+                  </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-2 gap-3 mb-4">
+                  <div className="w-full h-12 bg-white/5 rounded-xl animate-pulse" />
+                  <div className="w-full h-12 bg-white/5 rounded-xl animate-pulse" />
+                </div>
               </div>
             ))}
           </div>
@@ -478,7 +502,7 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-      </div>
+      </m.div>
 
       {/* Preview Modal */}
       {isPreviewOpen && selectedLetter && (

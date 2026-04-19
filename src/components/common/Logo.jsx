@@ -10,29 +10,29 @@ const Logo = ({ className = "w-40" }) => {
     : "/CVify Logo Light.jpg";
 
   return (
-    <div className={`relative flex items-center justify-center overflow-hidden ${className}`}>
-      <AnimatePresence mode="wait">
-        <m.div
-          key={theme}
-          initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-          transition={{ 
-            duration: 0.4, 
-            ease: [0.22, 1, 0.36, 1] 
-          }}
-          className="w-full h-auto flex items-center justify-center"
-        >
-          <img
-            src={logoSrc}
-            alt="CVify Pro"
-            width={160}
-            height={44}
-            fetchpriority="high"
-            className="w-full h-auto object-contain rounded-xl shadow-sm"
-          />
-        </m.div>
-      </AnimatePresence>
+    <div className={`relative w-[160px] aspect-[160/44] overflow-hidden ${className}`}>
+      {/* 
+        Executive Choice: Hardware-level theme switching 
+        Explicit width/height and loading=eager ensures 0 CLS and fast LCP.
+      */}
+      <img
+        src="/CVify Logo Light.jpg"
+        alt="CVify Pro"
+        width="160"
+        height="44"
+        fetchpriority="high"
+        loading="eager"
+        className="dark:hidden block w-full h-auto object-contain rounded-lg"
+      />
+      <img
+        src="/CVify Logo Dark.jpg"
+        alt="CVify Pro"
+        width="160"
+        height="44"
+        fetchpriority="high"
+        loading="eager"
+        className="hidden dark:block w-full h-auto object-contain rounded-lg"
+      />
     </div>
   );
 };

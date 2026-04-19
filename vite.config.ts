@@ -43,4 +43,21 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('recharts')) return 'vendor-charts';
+            if (id.includes('three')) return 'vendor-three';
+            if (id.includes('framer-motion') || id.includes('motion')) return 'vendor-animation';
+            if (id.includes('@react-pdf')) return 'vendor-pdf';
+            if (id.includes('lucide-react') || id.includes('react-icons')) return 'vendor-icons';
+            return 'vendor'; // Baki sab common dependencies
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 })
