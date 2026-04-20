@@ -13,7 +13,9 @@ import {
   Users2, 
   ChevronRight,
   TrendingUp,
-  Award
+  Award,
+  Zap,
+  Target
 } from "lucide-react";
 
 /**
@@ -34,10 +36,6 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
           <div key={i} className="h-40 bg-white/5 rounded-[2.5rem]" />
         ))}
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="h-64 bg-white/5 rounded-[3rem]" />
-        <div className="h-64 bg-white/5 rounded-[3rem]" />
-      </div>
     </div>
   );
 
@@ -50,18 +48,18 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
   );
 
   if (error || !data) return (
-    <section className="py-12 opacity-30 text-center italic text-sm">
+    <section className="py-12 opacity-30 text-center italic text-sm text-[var(--text-secondary)]">
       GitHub Decision Engine offline.
     </section>
   );
 
-  const { stats, scores, signals, verdict, topLanguages, topRepos } = data;
+  const { stats, scores, signals, verdict, topLanguages, topRepos, pulse, dna } = data;
 
   const signalConfig = {
-    Reliability: { icon: Activity, color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20" },
-    ProblemSolving: { icon: Cpu, color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
-    Collaboration: { icon: Users2, color: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-    Complexity: { icon: ShieldCheck, color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" }
+    Reliability: { icon: Activity, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-400/20" },
+    ProblemSolving: { icon: Cpu, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20" },
+    Collaboration: { icon: Users2, color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20" },
+    Complexity: { icon: ShieldCheck, color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/20" }
   };
 
   return (
@@ -71,52 +69,50 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* --- PHASE 1: THE EXECUTIVE HOOK --- */}
+        {/* --- PHASE 1: THE DECISION HUD (VERDICT BAR) --- */}
         <div className="mb-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 md:p-12 rounded-[3.5rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 backdrop-blur-3xl relative overflow-hidden group shadow-2xl"
+            className="p-8 md:p-14 rounded-[4rem] bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 backdrop-blur-3xl relative overflow-hidden group shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
           >
-             {/* Animating HUD overlay */}
-             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-30 transition-opacity">
-                <Settings className="w-40 h-40 animate-spin-slow" />
+             {/* HUD Decorative Background */}
+             <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+                <Target className="w-64 h-64 animate-pulse" />
              </div>
 
-             <div className="relative z-10 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full mb-8">
-                  <span className="w-2 h-2 bg-[var(--primary-color)] rounded-full animate-ping" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--primary-color)]">
-                    Developer Intelligence Summary
-                  </span>
-                </div>
-
-                <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter leading-[0.95] mb-8">
-                  Verified <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400">Decision Engine</span>
-                </h2>
-
-                <div className="p-6 md:p-8 bg-white/5 border border-white/5 rounded-[2.5rem] mb-10">
-                  <p className="text-xl md:text-2xl font-bold text-[var(--text-primary)] leading-tight italic">
-                    "{verdict}"
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-4">
-                  <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
-                    <TrendingUp size={16} className="text-[var(--primary-color)]" />
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">High Velocity Profile</span>
+             <div className="relative z-10">
+                <div className="flex flex-wrap items-center gap-4 mb-10">
+                  <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 rounded-full">
+                    <Zap size={14} className="text-[var(--primary-color)] fill-[var(--primary-color)]" />
+                    <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[var(--primary-color)]">
+                      Intelligence Report: {dna || "Developer"}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
-                    <Award size={16} className="text-yellow-500" />
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Architecture Specialist</span>
+                  <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full border ${pulse?.includes("Hot") ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"}`}>
+                    <span className={`w-2 h-2 rounded-full ${pulse?.includes("Hot") ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">{pulse || "Active Pulse"}</span>
+                  </div>
+                </div>
+
+                <div className="max-w-4xl">
+                  <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] uppercase tracking-tighter leading-[0.85] mb-10 italic">
+                    Hiring <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400">Verdict</span>
+                  </h2>
+
+                  <div className="p-8 md:p-12 bg-white/5 border border-white/5 rounded-[3rem] relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-2 h-full bg-[var(--primary-color)] shadow-[0_0_20px_var(--primary-color)]" />
+                    <p className="text-2xl md:text-4xl font-bold text-[var(--text-primary)] leading-[1.1] tracking-tight">
+                      "{verdict}"
+                    </p>
                   </div>
                 </div>
              </div>
           </motion.div>
         </div>
 
-        {/* --- PHASE 2: THE THREE PILLARS (SIGNALS) --- */}
+        {/* --- PHASE 2: THE FOUR PILLARS (INTERPRETED SIGNALS) --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
           {Object.entries(signalConfig).map(([key, config], idx) => (
             <motion.div
@@ -125,24 +121,29 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               viewport={{ once: true }}
-              className={`p-8 rounded-[3rem] bg-[var(--card-bg)] border ${config.border} hover:scale-[1.02] transition-all group relative overflow-hidden`}
+              className={`p-10 rounded-[3.5rem] bg-[var(--card-bg)] border ${config.border} hover:scale-[1.03] transition-all group relative overflow-hidden`}
             >
-              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <config.icon size={120} />
+              <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <config.icon size={140} />
               </div>
               
-              <div className={`w-14 h-14 ${config.bg} rounded-2xl flex items-center justify-center ${config.color} mb-6`}>
-                <config.icon size={24} />
+              <div className={`w-16 h-16 ${config.bg} rounded-[1.5rem] flex items-center justify-center ${config.color} mb-8`}>
+                <config.icon size={28} />
               </div>
 
-              <div className="space-y-1 mb-6">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">{key}</span>
-                <h4 className="text-2xl font-black text-[var(--text-primary)]">
-                  {signals[key.charAt(0).toLowerCase() + key.slice(1)]}
-                </h4>
+              <div className="space-y-1 mb-8">
+                <span className="text-[11px] font-black uppercase tracking-[0.25em] opacity-40 leading-none">{key}</span>
+                <div className="flex items-center gap-3">
+                  <h4 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">
+                    {signals[key.charAt(0).toLowerCase() + key.slice(1)]}
+                  </h4>
+                  {signals[key.charAt(0).toLowerCase() + key.slice(1)] === "High" && (
+                    <Award size={18} className="text-[var(--primary-color)]" />
+                  )}
+                </div>
               </div>
 
-              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${scores[key.charAt(0).toLowerCase() + key.slice(1)]}%` }}
@@ -153,41 +154,48 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
           ))}
         </div>
 
-        {/* --- PHASE 3: SUPPORTING EVIDENCE --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* --- PHASE 3: TECHNICAL VELOCITY & IMPACT --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* Top Repos (Recruiter Evidence) */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="flex items-center justify-between">
-               <h4 className="text-xl font-black uppercase tracking-widest flex items-center gap-4">
-                  <Package className="text-[var(--primary-color)]" size={20} />
-                  High Impact Projects
+          {/* Engineering Proof (Repos) */}
+          <div className="lg:col-span-7 space-y-10">
+            <div className="flex items-center justify-between px-4">
+               <h4 className="text-2xl font-black uppercase tracking-tight flex items-center gap-4 text-[var(--text-primary)]">
+                  <Package className="text-[var(--primary-color)]" size={24} />
+                  Top Engineered Solutions
                </h4>
-               <span className="text-[10px] font-bold opacity-30 uppercase tracking-widest">Ranked by Complexity</span>
+               <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold opacity-30 uppercase tracking-[0.2em]">
+                  <TrendingUp size={12} />
+                  Intelligence Rank
+               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid gap-6">
               {topRepos.map((repo, i) => (
-                <div key={i} className="group/repo p-6 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-[2.5rem] transition-all flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-2">
-                    <h5 className="text-lg font-black text-[var(--text-primary)] group-hover/repo:text-[var(--primary-color)] transition-colors">
-                      {repo.name}
-                    </h5>
-                    <p className="text-xs font-medium text-[var(--text-secondary)] line-clamp-1 max-w-md">
-                      {repo.description || "Sophisticated engineering implementation."}
+                <div key={i} className="group/repo p-8 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-[3rem] transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <h5 className="text-xl font-black text-[var(--text-primary)] group-hover/repo:text-[var(--primary-color)] transition-colors tracking-tight">
+                        {repo.name}
+                      </h5>
+                      <span className="px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase text-[var(--text-secondary)]">
+                        {repo.language || "Engine"}
+                      </span>
+                    </div>
+                    <p className="text-[13px] font-medium text-[var(--text-secondary)] line-clamp-1 max-w-md opacity-70">
+                      {repo.description || "Sophisticated engineering implementation with clean architecture."}
                     </p>
                   </div>
-                  <div className="flex items-center gap-8">
+                  <div className="flex items-center gap-10">
                     <div className="text-center">
-                      <p className="text-base font-black text-[var(--text-primary)]">{repo.stars}</p>
-                      <p className="text-[8px] font-black uppercase tracking-tighter opacity-30">Pulse</p>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                        <span className="text-xl font-black text-[var(--text-primary)]">{repo.stars}</span>
+                      </div>
+                      <p className="text-[9px] font-black uppercase tracking-tighter opacity-30">Impact</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-base font-black text-[var(--text-primary)]">{repo.forks}</p>
-                      <p className="text-[8px] font-black uppercase tracking-tighter opacity-30">Scale</p>
-                    </div>
-                    <a href={repo.url} target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[var(--primary-color)] transition-all">
-                      <ExternalLink size={14} />
+                    <a href={repo.url} target="_blank" rel="noreferrer" className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-[var(--primary-color)] hover:text-white transition-all shadow-xl group/link">
+                      <ChevronRight size={20} className="group-hover/link:translate-x-1 transition-transform" />
                     </a>
                   </div>
                 </div>
@@ -195,31 +203,32 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
             </div>
           </div>
 
-          {/* Activity & Tech Stack */}
+          {/* DNA & Language Synthesis */}
           <div className="lg:col-span-5 space-y-12">
-             <div className="p-10 rounded-[3.5rem] bg-white/[0.03] border border-white/10 space-y-8">
+             <div className="p-12 rounded-[4rem] bg-white/[0.03] border border-white/10 space-y-10 shadow-2xl">
                 <div>
-                   <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-2">Technical Velocity</h4>
-                   <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest">Commits per day average</p>
+                   <h4 className="text-base font-black uppercase tracking-[0.25em] text-[var(--text-primary)] mb-2">Technical Velocity</h4>
+                   <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">{scores.velocity} Commits / Pulse Avg</p>
                 </div>
                 
-                <div className="flex items-end gap-2">
-                   <span className="text-7xl font-black text-[var(--primary-color)] tracking-tighter">{scores.velocity}</span>
-                   <span className="text-xs font-black uppercase tracking-widest mb-4 opacity-40">Code / Pulse</span>
+                <div className="flex items-baseline gap-2">
+                   <span className="text-8xl font-black text-[var(--primary-color)] tracking-tighter">{scores.velocity}</span>
+                   <span className="text-sm font-black uppercase tracking-[0.3em] opacity-40">Pulse</span>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                    {topLanguages.map((lang, i) => (
-                     <div key={i} className="space-y-2">
+                     <div key={i} className="space-y-3">
                         <div className="flex justify-between items-end">
-                           <span className="text-[10px] font-black uppercase tracking-widest">{lang.name}</span>
-                           <span className="text-[10px] opacity-40">{lang.percentage}%</span>
+                           <span className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)]">{lang.name}</span>
+                           <span className="text-xs font-bold text-[var(--primary-color)]">{lang.percentage}%</span>
                         </div>
-                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                            <motion.div
                              initial={{ width: 0 }}
                              whileInView={{ width: `${lang.percentage}%` }}
-                             className="h-full bg-[var(--primary-color)]"
+                             transition={{ duration: 1, ease: "easeOut" }}
+                             className="h-full bg-gradient-to-r from-[var(--primary-color)] to-blue-500"
                            />
                         </div>
                      </div>
@@ -227,15 +236,15 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 </div>
              </div>
 
-             <div className="pt-6">
+             <div className="pt-4">
                <a 
                  href={githubUrl} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="w-full py-6 bg-[var(--primary-color)] text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:scale-[1.02] transition-all shadow-2xl shadow-[var(--primary-color)]/20"
+                 className="w-full py-7 bg-[var(--primary-color)] text-white rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] flex items-center justify-center gap-5 hover:scale-[1.02] transition-all shadow-[0_20px_50px_rgba(37,99,235,0.3)] group/btn"
                >
-                 View Full Engineering Proof
-                 <ChevronRight size={16} />
+                 Explore Full Code DNA
+                 <ExternalLink size={18} className="group-hover/btn:rotate-12 transition-transform" />
                </a>
              </div>
           </div>
