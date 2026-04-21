@@ -186,67 +186,101 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-10 lg:p-14 relative overflow-hidden group">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-10 lg:p-14 relative overflow-hidden group border-white/10">
           {/* HUD Mesh Layer */}
-          <div className="absolute inset-0 bg-mesh-dark opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
           
-          <div className="relative z-10 space-y-10">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 glass-soft rounded-full border-primary/20">
-                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                  {economy?.tier || "BASIC"} SYSTEM ACCESS
-                </span>
-              </div>
-              
-              {stats?.readyToClaimCount > 0 && (
-                <m.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="px-4 py-2 glass-soft border-amber-500/30 text-amber-500 text-[10px] font-black rounded-full shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center gap-3"
-                >
-                  <FaStar className="animate-bounce" />
-                  BOUNTY DETECTED
-                </m.div>
-              )}
-            </div>
-
-            <div className="max-w-3xl">
-              <h1 className="text-5xl lg:text-8xl font-black hero-text leading-[1.1] mb-6 tracking-tighter">
-                System Online,<br />
-                <span className="text-primary glow-text">{user?.name?.split(" ")[0]}</span>
-              </h1>
-              <div className="text-text-secondary font-black text-sm lg:text-base tracking-widest uppercase opacity-60 flex items-center gap-3">
-                <div className="w-8 h-[2px] bg-primary/40" />
-                <TypeAnimation
-                  sequence={[
-                    "Architecting professional identity...", 3000,
-                    "Neural optimizing ATS scores...", 3000,
-                    "Synchronizing candidate matrix...", 3000
-                  ]}
-                  repeat={Infinity}
-                />
-              </div>
-            </div>
-
-            <div className="pt-6 flex flex-wrap gap-6 items-center">
-              <PremiumButton 
-                onClick={handleCreateNew}
-                icon={FiPlus}
-                className="scale-110"
-              >
-                Initiate New Build
-              </PremiumButton>
-              
-              <div className="px-8 py-4 glass-strong rounded-2xl flex items-center gap-5 border-amber-500/10 hover:border-amber-500/40 transition-all cursor-pointer group/stat">
-                <div className="p-3 bg-amber-500/10 rounded-xl text-amber-500 group-hover/stat:scale-110 transition-transform">
-                  <FaGem className="animate-pulse" />
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-10">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2 px-4 py-2 glass-soft rounded-full border-primary/20">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+                    {economy?.tier || "BASIC"} SYSTEM ACCESS
+                  </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.4em] mb-1">Reserve</span>
-                  <span className="text-xl font-black text-text-primary tabular-nums">
-                    {economy?.diamonds || 0} 💎
+                
+                {stats?.readyToClaimCount > 0 && (
+                  <m.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="px-4 py-2 glass-soft border-primary/30 text-primary text-[10px] font-black rounded-full shadow-glow-primary flex items-center gap-3"
+                  >
+                    <FiActivity className="animate-pulse" />
+                    SYSTEM STABLE
+                  </m.div>
+                )}
+              </div>
+
+              <div className="max-w-xl">
+                <h1 className="text-5xl lg:text-7xl font-black hero-text leading-[1.1] mb-6 tracking-tighter">
+                  System Online,<br />
+                  <span className="text-primary glow-text">{user?.name?.split(" ")[0]}</span>
+                </h1>
+                <div className="text-text-secondary font-black text-sm tracking-widest uppercase opacity-60 flex items-center gap-3">
+                  <div className="w-8 h-[2px] bg-primary/40" />
+                  <TypeAnimation
+                    sequence={[
+                      "Architecting professional identity...", 3000,
+                      "Neural optimizing ATS scores...", 3000,
+                      "Synchronizing career matrix...", 3000
+                    ]}
+                    repeat={Infinity}
+                  />
+                </div>
+              </div>
+
+              <div className="pt-6 flex flex-wrap gap-6 items-center">
+                <PremiumButton 
+                  onClick={handleCreateNew}
+                  icon={FiPlus}
+                  className="scale-110 !px-10 shadow-glow-primary"
+                >
+                  Build New Resume
+                </PremiumButton>
+              </div>
+            </div>
+
+            {/* Neon Circular Integrity HUD */}
+            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-[3rem] border-white/5 relative group/integrity">
+              <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover/integrity:opacity-100 transition-opacity duration-1000" />
+              <div className="relative w-48 h-48 lg:w-56 lg:h-56">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="50%"
+                    cy="50%"
+                    r="42%"
+                    className="stroke-card-border fill-none"
+                    strokeWidth="8"
+                  />
+                  <m.circle
+                    cx="50%"
+                    cy="50%"
+                    r="42%"
+                    fill="none"
+                    stroke="var(--primary)"
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                    initial={{ strokeDasharray: "0, 1000" }}
+                    animate={{ strokeDasharray: `${(user?.completionScore || 0) * 2.64}, 1000` }}
+                    transition={{ duration: 2, ease: "circOut" }}
+                    className="shadow-glow-primary filter drop-shadow-[0_0_8px_var(--primary)]"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-4xl lg:text-5xl font-black text-text-primary tracking-tighter italic">
+                    {user?.completionScore || 0}%
+                  </span>
+                  <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.4em] opacity-50 mt-1">
+                    Integrity
+                  </span>
+                </div>
+              </div>
+              <div className="mt-8 flex items-center gap-3">
+                <div className="px-5 py-2 glass-soft border-primary/20 rounded-full">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                    AI Scored Stability
                   </span>
                 </div>
               </div>
@@ -299,19 +333,19 @@ const Dashboard = () => {
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-10 relative overflow-hidden group hover:glow-success transition-all duration-700">
+        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-white/5">
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 rotate-45 group-hover:rotate-0">
-              <FaGem size={100} />
+              <FaShieldAlt size={100} />
            </div>
            <SectionHeader 
-             title={economy?.diamonds || 0} 
-             subtitle="Total Economy Capital" 
-             badge="CURRENCY"
+             title="Verified" 
+             subtitle="Data Protection Active" 
+             badge="SECURITY"
              className="mb-0"
            />
            <div className="mt-8 text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-2">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              Wealth Generation Active
+              <div className="w-2 h-2 bg-success rounded-full animate-pulse shadow-glow-success" />
+              Secure Environment Matrix
            </div>
         </GlassContainer>
       </div>
@@ -398,9 +432,9 @@ const Dashboard = () => {
       {/* Synthesis Archive */}
       <div className="space-y-10">
         <SectionHeader 
-          title="Synthesis Archive" 
-          subtitle="Artifacts generated through neural bridging."
-          badge={`${coverLetters?.length || 0} ARTIFACTS`}
+          title="Cover Letter Archive" 
+          subtitle="Artifacts generated through neural optimization."
+          badge={`${coverLetters?.length || 0} GENERATED`}
           icon={FaEnvelopeOpenText}
         />
 

@@ -15,14 +15,14 @@ const QuestWidget = ({ quests = [] }) => {
     try {
       setClaimingId(questId);
       const response = await api.post(`/quests/claim/${questId}`);
-      toast.success(response.data.message || "Bounty collected! 💎", {
-        icon: '💎',
+      toast.success(response.data.message || "Milestone synchronized! 💠", {
+        icon: '💠',
         style: {
           borderRadius: '1.5rem',
           background: 'var(--midground)',
           color: 'var(--text-main)',
           border: '1px solid var(--primary)',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+          shadow: 'var(--shadow-glow-primary)'
         }
       });
       
@@ -47,11 +47,11 @@ const QuestWidget = ({ quests = [] }) => {
       {/* Header HUD */}
       <div className="p-10 pb-6 relative z-10 space-y-1">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-black text-amber-500 flex items-center gap-3 tracking-tighter uppercase italic">
-            <div className="p-3 bg-amber-500/10 rounded-2xl text-amber-500 shadow-glow-amber">
-              <FiAward size={20} />
+          <h3 className="text-xl font-black text-primary flex items-center gap-3 tracking-tighter uppercase italic">
+            <div className="p-3 bg-primary/10 rounded-2xl text-primary shadow-glow-primary">
+              <FiZap size={20} />
             </div>
-            Quest Journal
+            System Milestones
           </h3>
           {hasReadyQuests && (
             <m.div 
@@ -60,7 +60,7 @@ const QuestWidget = ({ quests = [] }) => {
               className="flex items-center gap-2 px-4 py-1.5 glass-soft text-emerald-500 rounded-full border border-emerald-500/30 shadow-glow-success"
             >
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_var(--success)]" />
-              <span className="text-[9px] font-black tracking-[0.2em] uppercase">BOUNTY</span>
+              <span className="text-[9px] font-black tracking-[0.2em] uppercase">PRIORITY</span>
             </m.div>
           )}
         </div>
@@ -109,9 +109,8 @@ const QuestWidget = ({ quests = [] }) => {
                     </p>
                   </div>
                   
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 glass-medium rounded-xl border-amber-500/20">
-                    <span className="text-[11px] font-black text-amber-500 tabular-nums">{quest.reward}</span>
-                    <FaGem size={10} className="text-amber-500" />
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 glass-medium rounded-xl border-white/5 font-black text-primary tabular-nums text-[11px]">
+                    {quest.reward} CR
                   </div>
                 </div>
 
