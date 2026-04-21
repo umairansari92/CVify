@@ -39,7 +39,7 @@ const QuestWidget = ({ quests = [] }) => {
   const hasReadyQuests = quests.some(q => q.status === 'ready');
 
   return (
-    <div className="flex flex-col h-full glass-strong rounded-[2.5rem] border border-card-border overflow-hidden relative group/widget transition-all duration-700 hover:glow-primary min-h-[500px]">
+    <div className="flex flex-col h-full glass-strong rounded-[2.5rem] border border-card-border overflow-hidden relative group/widget transition-all duration-700 hover:shadow-glow-primary min-h-[500px]">
       {/* Immersive HUD Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none" />
       <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[80px] rounded-full -translate-y-1/3 translate-x-1/3 group-hover/widget:bg-primary/15 transition-colors duration-1000" />
@@ -57,7 +57,7 @@ const QuestWidget = ({ quests = [] }) => {
             <m.div 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-2 px-4 py-1.5 glass-soft text-emerald-500 rounded-full border border-emerald-500/30 glow-success"
+              className="flex items-center gap-2 px-4 py-1.5 glass-soft text-emerald-500 rounded-full border border-emerald-500/30 shadow-glow-success"
             >
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_var(--success)]" />
               <span className="text-[9px] font-black tracking-[0.2em] uppercase">BOUNTY</span>
@@ -184,27 +184,6 @@ const QuestWidget = ({ quests = [] }) => {
           <FiChevronRight className="group-hover/all:translate-x-1 transition-transform" />
         </m.button>
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .custom-scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar-thin::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar-thin::-webkit-scrollbar-thumb {
-          background: rgba(59, 130, 246, 0.1);
-          border-radius: 20px;
-        }
-        .custom-scrollbar-thin::-webkit-scrollbar-thumb:hover {
-          background: rgba(59, 130, 246, 0.3);
-        }
-        @layer base {
-          .shadow-glow-amber {
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
-          }
-        }
-      `}} />
     </div>
   );
 };
