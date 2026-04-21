@@ -9,75 +9,79 @@ import Logo from "./Logo";
 const Header = ({ onMenuClick }) => {
   const { user } = useSelector((state) => state.auth);
 
-  const handleInstallClick = () => {
-    const event = new Event("trigger-pwa-install");
-    window.dispatchEvent(event);
-  };
-
   return (
-    <header className="h-16 lg:h-20 glass border-b border-border-subtle flex items-center justify-between px-4 lg:px-10 transition-all duration-500 sticky top-0 z-50 overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none"></div>
+    <header className="h-16 lg:h-20 glass-strong border-b border-card-border flex items-center justify-between px-6 lg:px-12 transition-all duration-500 sticky top-0 z-50 overflow-hidden group/header">
+      {/* Immersive HUD Header Glow */}
+      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover/header:opacity-100 transition-opacity duration-1000" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none" />
 
-      <div className="flex items-center gap-2 lg:gap-4 relative z-10">
+      <div className="flex items-center gap-4 lg:gap-6 relative z-10 lg:hidden">
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-3 -ml-3 rounded-xl hover:bg-white/10 active:bg-white/20 transition-all pointer-events-auto flex items-center justify-center"
+          className="p-3 rounded-2xl glass-soft hover:glass-medium hover:text-primary transition-all active:scale-95 duration-200"
           type="button"
           aria-label="Open Menu"
         >
-          <FaBars className="text-2xl text-text-primary" />
+          <FaBars size={20} />
         </button>
-        <Logo className="w-24 lg:w-40" />
+      </div>
+
+      {/* Dynamic Breadcrumb / System Status (Placeholder for future) */}
+      <div className="hidden lg:flex items-center gap-4 relative z-10">
+        <div className="flex items-center gap-2 px-4 py-2 glass-soft rounded-xl border-white/5">
+           <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse shadow-[0_0_8px_var(--success)]" />
+           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-80">System Online</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 lg:gap-8 relative z-10">
-        {/* Premium Diamond Indicator */}
-        <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-foreground/10 border border-border-subtle group hover:scale-105 transition-all duration-300">
-          <FaGem className="text-blue-500 animate-pulse text-sm lg:text-base" />
+        {/* Premium Diamond HUD */}
+        <div className="flex items-center gap-3.5 px-5 py-2.5 glass-medium rounded-2xl border-primary/20 group/diamonds hover:scale-[1.03] transition-all cursor-pointer">
+          <FaGem className="text-primary animate-pulse text-sm lg:text-base shadow-[0_0_15px_var(--primary)]" />
           <div className="flex flex-col">
-            <span className="text-[8px] lg:text-[9px] font-black text-text-muted uppercase tracking-tighter">
-              Diamonds
+            <span className="text-[8px] font-black text-text-secondary uppercase tracking-[0.2em] leading-none mb-1 opacity-60">
+              Diamond Reserve
             </span>
-            <span className="text-xs lg:text-sm font-black text-text-main leading-none">
+            <span className="text-sm lg:text-base font-black text-text-primary leading-none tabular-nums">
               {user?.diamonds || 0}
             </span>
           </div>
         </div>
         
-        <NotificationCenter />
-        <ThemeToggle />
+        <div className="flex items-center gap-2 lg:gap-4">
+           <NotificationCenter />
+           <ThemeToggle />
+        </div>
 
-
-        <div className="flex items-center gap-2 lg:gap-4 pl-4 lg:pl-8 border-l border-border-subtle">
-          <div className="flex flex-col items-end hidden md:flex group cursor-pointer">
-            <div className="flex items-center gap-1.5 lg:gap-2">
-              <span className="text-xs lg:text-sm font-black text-text-main tracking-tight group-hover:text-primary transition-colors">
+        <div className="flex items-center gap-3 lg:gap-5 pl-5 lg:pl-10 border-l border-card-border h-10">
+          <div className="flex flex-col items-end hidden sm:flex group cursor-pointer">
+            <div className="flex items-center gap-2">
+              <span className="text-xs lg:text-[13px] font-black text-text-primary tracking-tight group-hover:text-primary transition-colors uppercase">
                 {user?.firstName} {user?.lastName}
               </span>
-              {user?.role === 'admin' && <FaCrown className="text-yellow-500 text-xs" />}
+              {user?.role === 'admin' && <FaCrown className="text-amber-500 text-[10px]" />}
             </div>
-            <span className="text-[10px] text-text-muted font-bold opacity-80">{user?.email}</span>
+            <span className="text-[9px] text-text-secondary font-black opacity-50 uppercase tracking-widest">{user?.role || 'User'} Mode</span>
           </div>
 
-          {user?.profileImage ? (
-            <div className="relative group cursor-pointer">
-              <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full group-hover:bg-primary/40 transition-all scale-110"></div>
+          <div className="relative group cursor-pointer">
+            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+            
+            {user?.profileImage ? (
               <img
                 src={user.profileImage}
                 alt="Profile"
-                width={44}
-                height={44}
-                loading="lazy"
-                className="w-9 h-9 lg:w-11 lg:h-11 rounded-xl object-cover border-2 border-border-subtle relative z-10 shadow-lg group-hover:border-primary/50 transition-all"
+                className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl object-cover border-2 border-card-border group-hover:border-primary/50 transition-all duration-500 relative z-10 shadow-lg"
               />
-
-            </div>
-          ) : (
-            <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-xl bg-foreground/20 text-text-muted flex items-center justify-center border-2 border-border-subtle group hover:bg-primary hover:text-white transition-all cursor-pointer">
-              <FaUserCircle size={24} className="lg:w-7 lg:h-7" />
-            </div>
-          )}
+            ) : (
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl glass-medium text-text-secondary flex items-center justify-center border-2 border-card-border group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/40 transition-all duration-500 relative z-10">
+                <FaUserCircle size={22} className="lg:w-6 lg:h-6" />
+              </div>
+            )}
+            
+            {/* Status Indicator */}
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-bg-primary bg-success z-20 shadow-[0_0_10px_var(--success)]" />
+          </div>
         </div>
       </div>
     </header>

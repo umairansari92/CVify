@@ -10,42 +10,64 @@
 
 :root {
   /* Daylight Executive (Light Mode) */
-  --primary: #2563eb; /* Pro Blue */
-  --accent: #8b5cf6;
-  --success: #10b981;
+  --primary: #3b82f6; 
+  --accent: #9333ea;
+  --success: #22c55e;
+  --warning: #eab308;
+  --danger: #ef4444;
 
-  --background: #f8fafc; /* Slate-50 */
-  --midground: #ffffff;  /* White Cards */
-  --foreground: #f1f5f9; /* Slate-100 */
+  --background: #f8fafc; 
+  --midground: rgba(255, 255, 255, 0.6);  
+  --foreground: #f1f5f9; 
 
-  /* Text Pallette */
-  --text-main: #0f172a;   /* Slate-900 */
-  --text-muted: #64748b;  /* Slate-500 */
+  /* Semantic Tokens */
+  --bg-primary: var(--background);
+  --bg-secondary: var(--foreground);
+  --card-bg: var(--midground);
+  --card-border: rgba(0, 0, 0, 0.05);
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
 
-  /* Borders & Spacing */
-  --border-subtle: #e2e8f0;
-  --shadow-premium: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Elevation System */
+  --elevation-1: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --elevation-2: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --elevation-3: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+  --shadow-premium: var(--elevation-1);
+  --shadow-hover: var(--elevation-2);
+
+  /* Motion System */
+  --duration-fast: 0.2s;
+  --duration-medium: 0.3s;
+  --duration-slow: 0.5s;
+  --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
   /* Midnight Pro (Dark Mode) */
-  --primary: #10b981; /* Emerald for Pro feel */
-  --accent: #14b8a6;  /* Teal */
-  --success: #34d399;
+  --primary: #3b82f6; 
+  --accent: #9333ea;
+  --success: #10b981;
 
-  --background: #020617; /* Slate-950 */
-  --midground: #0f172a;  /* Slate-900 */
-  --foreground: #1e293b; /* Slate-800 */
+  --background: #0f172a; 
+  --midground: rgba(255, 255, 255, 0.05);  
+  --foreground: #1e293b; 
 
-  /* Text Pallette */
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
+  /* Semantic Tokens */
+  --bg-primary: var(--background);
+  --bg-secondary: #020617;
+  --card-bg: var(--midground);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
 
-  /* Shadows & Glows */
-  --border-subtle: #1e293b; /* Slate-800 */
-  --shadow-premium: 0 4px 20px -4px rgba(0, 0, 0, 0.7);
-  --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+  /* Elevation System */
+  --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --elevation-2: 0 12px 36px rgba(0, 0, 0, 0.5);
+  --elevation-3: 0 24px 48px rgba(0, 0, 0, 0.7);
+
+  --shadow-premium: var(--elevation-1);
+  --shadow-hover: var(--elevation-2);
 }
 
 @theme {
@@ -56,25 +78,30 @@
   --color-accent: var(--accent);
   --color-success: var(--success);
 
-  --color-background: var(--background);
-  --color-midground: var(--midground);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-primary);
+  --color-midground: var(--card-bg);
+  --color-foreground: var(--bg-secondary);
 
-  --color-surface: var(--midground);
-  --color-action: var(--primary);
-
-  --color-text-main: var(--text-main);
-  --color-text-muted: var(--text-muted);
-  --color-border-subtle: var(--border-subtle);
-
-  --shadow-premium: var(--shadow-premium);
-  --shadow-hover: var(--shadow-hover);
+  --color-text-main: var(--text-primary);
+  --color-text-muted: var(--text-secondary);
+  --color-border-subtle: var(--card-border);
 }
 
 @layer base {
   body {
-    @apply bg-background text-text-main font-sans transition-all duration-500 leading-relaxed;
+    @apply bg-background text-text-main font-sans transition-all duration-500 leading-relaxed relative overflow-x-hidden;
     min-height: 100vh;
+  }
+
+  /* Noise Texture Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.02;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -82,50 +109,69 @@
   }
 }
 
-/* Premium Utilities (Dhammakay Dar v2) */
-
-.glass {
-  @apply backdrop-blur-lg;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+/* Glass Tier System */
+.glass-soft {
+  @apply backdrop-blur-[10px];
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--elevation-1);
 }
 
-.dark .glass {
-  @apply backdrop-blur-xl;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+.glass-medium {
+  @apply backdrop-blur-[14px];
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--elevation-2);
+}
+
+.glass-strong {
+  @apply backdrop-blur-[20px];
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--elevation-3);
+}
+
+/* Legacy Support (Mapping .glass to .glass-medium) */
+.glass {
+  @apply glass-medium transition-all;
 }
 
 .premium-card {
-  @apply bg-midground rounded-[2rem] border border-white/5 shadow-premium 
-         transition-all duration-500 hover:shadow-hover hover:-translate-y-1.5 hover:border-primary/20;
+  @apply glass-medium rounded-[2rem] hover:shadow-hover hover:-translate-y-1.5 transition-all;
+  transition-duration: var(--duration-medium);
+  transition-timing-function: var(--ease-premium);
 }
 
 .input-premium {
   @apply w-full px-5 py-4 rounded-2xl bg-foreground/20 border-2 border-border-subtle 
          text-text-main placeholder:text-text-muted/40 outline-none transition-all font-bold;
+  transition-duration: var(--duration-fast);
 }
 
 .input-premium:focus {
   @apply border-primary ring-4 ring-primary/20 bg-midground;
 }
 
-/* Buttons (Premium Gradient for Dark Mode) */
+/* Premium Buttons with States */
 .btn-primary {
-  @apply px-8 py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95 duration-300;
-  background: var(--primary);
+  @apply px-8 py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden;
+  transition-duration: var(--duration-fast);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
 }
 
-.dark .btn-primary {
-  @apply bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border-none shadow-emerald-500/20;
+.btn-primary:hover {
+  @apply scale-[1.05] shadow-xl shadow-primary/30;
+}
+
+.btn-primary:disabled {
+  @apply opacity-50 grayscale cursor-not-allowed scale-100;
 }
 
 .btn-secondary {
   @apply px-8 py-4 rounded-xl font-bold border-2 border-border-subtle 
-         hover:bg-foreground/30 transition-all duration-300;
+         hover:bg-foreground/30 transition-all;
+  transition-duration: var(--duration-fast);
   background: var(--midground);
   color: var(--text-main);
 }
@@ -180,18 +226,25 @@
   box-shadow: 0 0 20px rgba(37, 99, 235, 0.05), 0 20px 40px -10px rgba(0, 0, 0, 0.1);
 }
 
+@keyframes bg-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-bg-shift {
+  background-size: 200% 200%;
+  animation: bg-shift 15s ease infinite;
+}
+
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
 }
 
 .animate-float {
   animation: float 8s ease-in-out infinite;
+  transition-duration: var(--duration-slow);
 }
 
 @keyframes shimmer {
@@ -203,28 +256,33 @@
   animation: shimmer 1.5s infinite;
 }
 
-/* prevent automatic hyphenation/word splitting across the entire app, fixes ATS parsers misreading keywords */
+/* HUD Specific Utilities */
+.hud-border {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+}
+
+.glow-primary {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+}
+
+.glow-accent {
+  box-shadow: 0 0 30px rgba(147, 51, 234, 0.2);
+}
+
+.glow-success {
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+}
+
+/* Visual Hierarchy Support */
+.hierarchy-primary { @apply glass-strong glow-primary scale-[1.02]; }
+.hierarchy-secondary { @apply glass-medium; }
+.hierarchy-tertiary { @apply glass-soft opacity-80 hover:opacity-100; }
+
+/* prevent automatic hyphenation/word splitting across the entire app */
 * {
   hyphens: none;
   word-break: keep-all;
-}
-
-/* Quest Engine Premium Effects */
-.shadow-glow-primary {
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.15), 0 0 40px rgba(37, 99, 235, 0.05);
-}
-
-.shadow-glow-emerald {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), 0 0 40px rgba(16, 185, 129, 0.05);
-}
-
-@keyframes pulse-soft {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
 }
 
 .shimmer-mask {
