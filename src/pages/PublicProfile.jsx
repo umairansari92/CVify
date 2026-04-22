@@ -310,8 +310,8 @@ const PublicProfile = () => {
     <div className="min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900" style={themeStyles}>
       <Helmet>
         {/* Dynamic SEO Tags */}
-        <title>{`${personalInfo.fullName} | ${personalInfo.jobTitle || 'Expert Portfolio'} | CVify Pro`}</title>
-        <meta name="description" content={personalInfo.objective?.substring(0, 160) || "Explore my professional portfolio, projects, and career journey built on CVify Pro."} />
+        <title>{`${personalInfo.fullName}${personalInfo.jobTitle ? ` | ${personalInfo.jobTitle}` : ''} | CVify Pro`}</title>
+        <meta name="description" content={personalInfo.objective?.substring(0, 160) || "Professional Portfolio"} />
         <link rel="canonical" href={`https://app-cvifypro.vercel.app/p/${username}`} />
         <link href={`https://fonts.googleapis.com/css2?family=${theme.fontPrimary.replace(/\s+/g, "+")}:wght@300;400;500;600;700;800;900&display=swap`} rel="stylesheet" />
 
@@ -384,12 +384,12 @@ const PublicProfile = () => {
                               </div>
                               <div>
                                 <p className="text-[10px] font-black text-[var(--primary-color)] uppercase tracking-[0.2em] mb-1">Target Role</p>
-                                <p className="text-lg font-black text-white leading-tight">{resume.jobTitle || "Software Engineer"}</p>
-                                <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-1">{resume.title || `Master Version ${idx + 1}`}</p>
+                                <p className="text-lg font-black text-white leading-tight">{resume.jobTitle}</p>
+                                <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-1">{resume.title}</p>
                               </div>
                             </div>
                             <div className="text-right bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-[var(--primary-color)]/20 transition-all">
-                              <p className="text-2xl font-black text-emerald-500">{resume.atsScore || "85"}%</p>
+                              <p className="text-2xl font-black text-emerald-500">{resume.atsScore}%</p>
                               <p className="text-[8px] font-black opacity-30 uppercase tracking-tighter">ATS Intelligence</p>
                             </div>
                           </button>
