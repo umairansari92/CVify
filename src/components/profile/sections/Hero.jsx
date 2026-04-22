@@ -79,25 +79,28 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
       <div className="relative z-20 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full">
         
         {/* LEFT COLUMN: TEXT */}
-        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-2">
+        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left">
           
           {personalInfo.fullName && (
-            <div className="space-y-4">
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-2">
-                <span className="text-[var(--primary-color)] font-bold tracking-widest uppercase text-xs sm:text-sm">Hi, I'm</span>
-                <div className="h-px w-8 bg-[var(--primary-color)]/30" />
+            <div className="space-y-1">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                <span className="text-white font-black uppercase text-sm sm:text-base tracking-[0.2em]">Hi, I'm</span>
               </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] font-black leading-[0.9] tracking-tighter w-full">
                 <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-                  <span className="uppercase block">{personalInfo.fullName}</span>
+                  <span className="uppercase block text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] hover:[-webkit-text-stroke:1px_var(--primary-color)] transition-all duration-500">
+                    {personalInfo.fullName}.
+                  </span>
                 </InlineEdit>
               </h1>
 
               {(slogans.length > 0 || personalInfo.jobTitle) && (
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-2xl sm:text-3xl md:text-4xl font-bold text-white/90 tracking-tight">
-                  <span className="whitespace-nowrap">I'm a Professional</span>
-                  <div className="text-[var(--primary-color)] italic font-black">
+                <div className="space-y-2 pt-4">
+                  <p className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-none uppercase">
+                    I'm a Professional
+                  </p>
+                  <div className="text-[var(--primary-color)] text-xl sm:text-2xl md:text-3xl font-bold tracking-widest uppercase opacity-90">
                     <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
                       <TypeAnimation
                         key={personalInfo.jobTitle || "empty"}
@@ -118,17 +121,20 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
           )}
 
           {user?.branding?.valueProposition && (
-            <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl font-medium leading-relaxed pt-4">
+            <p className="text-sm md:text-base text-[var(--text-secondary)] opacity-60 max-w-xl font-medium leading-relaxed pt-6 uppercase tracking-widest">
               {user.branding.valueProposition}
             </p>
           )}
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-4 pt-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-4 pt-12">
              <button onClick={() => document.getElementById('showcase')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40">
-               View My Work
+               View My Profile
              </button>
-             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">
-               Get In Touch
+             <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">
+               Get My Resume
+             </button>
+             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-transparent border-2 border-[var(--primary-color)]/30 text-[var(--primary-color)] rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all">
+               Contact Now
              </button>
           </motion.div>
 
