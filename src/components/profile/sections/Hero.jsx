@@ -79,60 +79,51 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
       <div className="relative z-20 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full">
         
         {/* LEFT COLUMN: TEXT */}
-        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-4">
+        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
           
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-[var(--text-primary)] leading-[1] tracking-tighter w-full">
-            <span className="block mb-2">
+          <div className="space-y-2">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[6rem] font-black text-[var(--text-primary)] leading-[0.9] tracking-tighter w-full">
               <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-                <span className="text-white uppercase">
+                <span className="text-white uppercase block">
                   {personalInfo.fullName}
                 </span>
               </InlineEdit>
-            </span>
-          </h1>
+            </h1>
 
-          {user?.branding?.valueProposition && (
-            <div className="flex flex-col space-y-2">
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl">
-                {user.branding.valueProposition}
-              </p>
-            </div>
-          )}
-
-          {(slogans.length > 0 || personalInfo.jobTitle) && (
-            <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
-              <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
-                <div className="w-full break-words leading-snug">
+            {(slogans.length > 0 || personalInfo.jobTitle) && (
+              <div className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--primary-color)] tracking-tighter italic leading-none h-[1.2em]">
+                <InlineEdit isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
                   <TypeAnimation
                     key={personalInfo.jobTitle || "empty"}
                     sequence={
                       slogans.length > 0 
                       ? slogans.flatMap(s => [s, 2000]) 
-                      : personalInfo.jobTitle ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) : ["Add your title...", 2000]
+                      : personalInfo.jobTitle ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) : ["Developer", 2000]
                     }
                     wrapper="span"
                     speed={50}
                     repeat={Infinity}
-                    className="text-[var(--primary-color)]"
                   />
-                </div>
-              </InlineEdit>
-            </div>
+                </InlineEdit>
+              </div>
+            )}
+          </div>
+
+          {user?.branding?.valueProposition && (
+            <p className="text-xl md:text-2xl text-[var(--text-secondary)] opacity-80 max-w-2xl font-medium leading-relaxed">
+              {user.branding.valueProposition}
+            </p>
           )}
 
-
-
-
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-4 pt-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-4 pt-10">
              <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-2">
-               📂 View My Profile
+               📂 View Profile
              </button>
              <button onClick={() => window.open(user?.resumes?.[0]?.fileUrl || '#', '_blank')} className="px-10 py-5 bg-white/5 border border-white/10 text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
-               📄 Download PDF
+               📄 Get Resume
              </button>
              <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-transparent border-2 border-[var(--primary-color)]/30 text-[var(--primary-color)] rounded-full font-black text-xs uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all flex items-center gap-2">
-               📧 Contact Me
+               📧 Contact
              </button>
           </motion.div>
 
