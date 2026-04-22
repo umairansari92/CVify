@@ -60,12 +60,12 @@ const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setSh
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-4">Verification Proof</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
               <div className="text-center">
-                <p className="text-4xl font-black text-white">95%</p>
+                <p className="text-4xl font-black text-white">{user?.branding?.verificationStats?.atsScore || 95}%</p>
                 <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Avg. ATS Score</p>
               </div>
               <div className="w-px h-12 bg-white/10 hidden sm:block" />
               <div className="text-center">
-                <p className="text-4xl font-black text-white">6.4m</p>
+                <p className="text-4xl font-black text-white">{user?.branding?.verificationStats?.dataPoints || "6.4m"}</p>
                 <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Data Points Scanned</p>
               </div>
               <div className="w-px h-12 bg-white/10 hidden sm:block" />

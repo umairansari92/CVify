@@ -96,7 +96,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
               {personalInfo.jobTitle || "AI Systems Builder | Web & Chatbot Developer"}
             </h2>
             <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl">
-              Building AI-powered systems that improve hiring, automation, and user experience.
+              {user?.branding?.valueProposition || "Building AI-powered systems that improve hiring, automation, and user experience."}
             </p>
           </div>
 

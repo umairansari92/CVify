@@ -34,6 +34,9 @@ const BrandingForm = () => {
       username: user?.username || '',
       headline: user?.headline || '',
       identityLabel: user?.branding?.identityLabel || '',
+      valueProposition: user?.branding?.valueProposition || '',
+      atsScore: user?.branding?.verificationStats?.atsScore || 95,
+      dataPoints: user?.branding?.verificationStats?.dataPoints || '6.4m',
       availability: user?.availability || 'Open to Work',
       industry: user?.industry || 'Technology & Software',
     }
@@ -45,6 +48,9 @@ const BrandingForm = () => {
         username: user.username || '',
         headline: user.headline || '',
         identityLabel: user.branding?.identityLabel || '',
+        valueProposition: user.branding?.valueProposition || '',
+        atsScore: user.branding?.verificationStats?.atsScore || 95,
+        dataPoints: user.branding?.verificationStats?.dataPoints || '6.4m',
         availability: user.availability || 'Open to Work',
         industry: user.industry || 'Technology & Software',
       });
@@ -57,7 +63,15 @@ const BrandingForm = () => {
       const payload = {
         username: data.username,
         headline: data.headline,
-        branding: { ...user.branding, identityLabel: data.identityLabel },
+        branding: { 
+          ...user.branding, 
+          identityLabel: data.identityLabel,
+          valueProposition: data.valueProposition,
+          verificationStats: {
+            atsScore: data.atsScore,
+            dataPoints: data.dataPoints
+          }
+        },
         availability: data.availability,
         industry: data.industry
       };
@@ -142,6 +156,34 @@ const BrandingForm = () => {
           placeholder="e.g. Design Lead @ Figma"
           className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
         />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Value Proposition (Hero Subtext)</label>
+        <textarea
+          {...register('valueProposition')}
+          placeholder="e.g. Building AI-powered systems that improve hiring, automation, and user experience."
+          rows="3"
+          className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm resize-none"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Verification Proof: ATS Score (%)</label>
+          <input
+            type="number"
+            {...register('atsScore')}
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Verification Proof: Data Points (e.g. 6.4m)</label>
+          <input
+            {...register('dataPoints')}
+            className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
+          />
+        </div>
       </div>
 
       <button

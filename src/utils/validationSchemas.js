@@ -11,6 +11,9 @@ export const brandingSchema = yup.object().shape({
   username: yup.string().required('Username is required').matches(/^[a-zA-Z0-9_-]+$/, 'Invalid characters'),
   headline: yup.string().nullable(),
   identityLabel: yup.string().nullable(),
+  valueProposition: yup.string().nullable(),
+  atsScore: yup.number().min(0).max(100).nullable(),
+  dataPoints: yup.string().nullable(),
   availability: yup.string().oneOf(['Open to Work', 'Freelance Available', 'Available for Internship', 'Currently Employed', 'Not Available']),
   industry: yup.string().required('Industry is required'),
 });
