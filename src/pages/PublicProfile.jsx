@@ -174,7 +174,9 @@ const PublicProfile = () => {
 
   useEffect(() => {
     const githubUrl = user?.socialLinks?.github;
-    const githubUsername = githubUrl?.split("github.com/")[1]?.split("/")[0];
+    const githubUsername = githubUrl?.includes("github.com") 
+      ? githubUrl.split("github.com/")[1]?.split("/")[0] 
+      : githubUrl;
 
     if (!githubUsername) {
       setGithubData(null);
