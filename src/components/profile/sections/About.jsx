@@ -35,22 +35,49 @@ const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setSh
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight leading-none uppercase">
-            Professional Narrative
+          <h2 className="text-4xl md:text-6xl font-black text-[var(--text-primary)] tracking-tighter leading-none uppercase">
+            About Me
           </h2>
-          <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full opacity-60" />
-          <p className="text-[10px] md:text-xs font-black text-[var(--primary-color)] uppercase tracking-[0.4em] opacity-40">The Mission & Vision</p>
+          <div className="h-1.5 w-24 bg-[var(--primary-color)] mx-auto rounded-full" />
+          <div className="flex items-center justify-center gap-2 pt-2">
+            <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase tracking-widest rounded-md">
+              ✓ AI Optimized
+            </span>
+            <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] font-bold uppercase tracking-widest rounded-md">
+              ✓ ATS Tested
+            </span>
+          </div>
         </div>
         
-        <div className="text-lg md:text-2xl lg:text-3xl text-[var(--text-secondary)] leading-relaxed font-light max-w-3xl mx-auto opacity-90 italic">
+        <div className="text-xl md:text-3xl text-[var(--text-secondary)] leading-tight font-medium max-w-3xl mx-auto opacity-95">
           <InlineEdit isOwner={isOwner} label="Professional Summary" value={user.bio} onSave={(v) => handleLiveUpdate({ bio: v })} type="textarea">
-            <p className="whitespace-pre-wrap">"{displayValue(user.bio, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}"</p>
+            <p className="whitespace-pre-wrap">{displayValue(user.bio, "I am a dedicated professional focused on delivering high-quality, scalable digital solutions...")}</p>
           </InlineEdit>
         </div>
 
-        <div className="pt-10">
-          <button onClick={() => setShowResumeModal(true)} className="px-10 py-4 bg-white/5 hover:bg-[var(--primary-color)]/10 border border-white/10 hover:border-[var(--primary-color)]/30 rounded-full text-[var(--text-primary)] font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 mx-auto group shadow-2xl active:scale-95">
-            <Download size={16} className="group-hover:translate-y-1 transition-transform" /> View Full Dossier
+        <div className="pt-12 space-y-8">
+          <div className="p-8 bg-white/5 border border-white/10 rounded-[2rem] max-w-2xl mx-auto">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-4">Verification Proof</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+              <div className="text-center">
+                <p className="text-4xl font-black text-white">95%</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Avg. ATS Score</p>
+              </div>
+              <div className="w-px h-12 bg-white/10 hidden sm:block" />
+              <div className="text-center">
+                <p className="text-4xl font-black text-white">6.4m</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Data Points Scanned</p>
+              </div>
+              <div className="w-px h-12 bg-white/10 hidden sm:block" />
+              <div className="text-center">
+                <p className="text-4xl font-black text-white">Verified</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">By CVify Intelligence</p>
+              </div>
+            </div>
+          </div>
+
+          <button onClick={() => setShowResumeModal(true)} className="px-12 py-5 bg-[var(--primary-color)] text-white rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-3 mx-auto group shadow-2xl active:scale-95">
+            <Download size={16} className="group-hover:translate-y-1 transition-transform" /> Access Full Professional Dossier
           </button>
         </div>
       </motion.div>

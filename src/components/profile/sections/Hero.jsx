@@ -5,7 +5,7 @@ import { FaMagic, FaCheckCircle, FaChevronDown, FaLayerGroup } from "react-icons
 import { TypeAnimation } from "react-type-animation";
 import InlineEdit from "../InlineEdit";
 
-const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate }) => {
+const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate, analytics }) => {
   const personalInfo = user?.personalInfo || {
     fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
     image: user?.profileImage,
@@ -21,19 +21,19 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
   const HeroStats = () => {
     const stats = [
       { 
-        label: "Impact", 
-        value: (user?.projects?.length || 0) > 0 ? `${user.projects.length}+ Projects` : "10+ Projects", 
+        label: "Recruiter Engagement", 
+        value: `${analytics.views || 0} Profile Views`, 
+        icon: <FaMagic size={14} />,
+        field: null 
+      },
+      { 
+        label: "Hiring Signals", 
+        value: `${(analytics.contactClicks || 0) + (analytics.resumeDownloads || 0)} Signals Generated`, 
         icon: <RocketIcon size={14} />,
         field: null 
       },
       { 
-        label: "Identity", 
-        value: displayValue(branding.identityLabel, "Full-stack Expert"), 
-        icon: <FaMagic size={14} />,
-        field: "branding.identityLabel"
-      },
-      { 
-        label: "Availability", 
+        label: "Talent Status", 
         value: displayValue(user?.availability, "Open to Work"), 
         icon: <FaCheckCircle size={14} />,
         field: "availability"
@@ -81,19 +81,24 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
         {/* LEFT COLUMN: TEXT */}
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-7 flex flex-col items-start text-left space-y-4">
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-[var(--text-primary)] leading-[1.2] tracking-normal w-full">
-            <span className="block mb-2 md:mb-4">
-              Hi, I'm{" "}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-[var(--text-primary)] leading-[1] tracking-tighter w-full">
+            <span className="block mb-2">
               <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-                <span className="text-transparent uppercase" style={{ WebkitTextStroke: '2px var(--text-secondary)', opacity: 0.8 }}>
-                  {displayValue(personalInfo.fullName, "User Name")}.
+                <span className="text-white uppercase">
+                  {displayValue(personalInfo.fullName, "User Name")}
                 </span>
               </InlineEdit>
             </span>
-            <span className="block">
-              I'm a Professional
-            </span>
           </h1>
+
+          <div className="flex flex-col space-y-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--primary-color)] leading-tight">
+              {personalInfo.jobTitle || "AI Systems Builder | Web & Chatbot Developer"}
+            </h2>
+            <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl">
+              Building AI-powered systems that improve hiring, automation, and user experience.
+            </p>
+          </div>
 
           <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
             <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
@@ -120,12 +125,15 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate 
 
 
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-6 pt-6">
-             <a href="#showcase" className="px-8 py-4 bg-[var(--primary-color)] text-[var(--bg-color)] rounded-full font-black text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_20px_var(--primary-color)]/30 flex items-center gap-2">
-               🚀 View My Journey
-             </a>
-             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:border-[var(--primary-color)]/50 transition-all flex items-center gap-2">
-               🤝 Let's Work Together
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-wrap items-center gap-4 pt-8">
+             <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40 flex items-center gap-2">
+               📂 View My Profile
+             </button>
+             <button onClick={() => window.open(user?.resumes?.[0]?.fileUrl || '#', '_blank')} className="px-10 py-5 bg-white/5 border border-white/10 text-[var(--text-primary)] rounded-full font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
+               📄 Download PDF
+             </button>
+             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-transparent border-2 border-[var(--primary-color)]/30 text-[var(--primary-color)] rounded-full font-black text-xs uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all flex items-center gap-2">
+               📧 Contact Me
              </button>
           </motion.div>
 

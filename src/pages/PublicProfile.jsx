@@ -371,20 +371,26 @@ const PublicProfile = () => {
                         <div className="flex items-center justify-between w-full">
                           <button 
                             onClick={() => { handleDownloadPDF(resume, resume.templateId); setShowResumeModal(false); }}
-                            className="flex-1 p-6 bg-white/5 border border-white/5 hover:border-action/30 rounded-3xl flex items-center justify-between group transition-all mr-2"
+                            className="flex-1 p-8 bg-white/5 border border-white/10 hover:border-[var(--primary-color)]/50 rounded-[2rem] flex items-center justify-between group transition-all mr-2 relative overflow-hidden"
                           >
+                            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity">
+                              <span className="text-[7px] font-black uppercase tracking-widest bg-[var(--primary-color)] text-white px-2 py-1 rounded-bl-xl">
+                                Optimized for Hire
+                              </span>
+                            </div>
                             <div className="flex items-center gap-6 text-left">
-                              <div className="w-12 h-12 bg-action/10 rounded-2xl flex items-center justify-center text-action group-hover:scale-110 transition-all">
-                                <FaFilePdf size={20} />
+                              <div className="w-16 h-16 bg-[var(--primary-color)]/10 rounded-2xl flex items-center justify-center text-[var(--primary-color)] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                <FaFilePdf size={24} />
                               </div>
                               <div>
-                                <p className="text-sm font-black text-white">{resume.title || `Resume Version ${idx + 1}`}</p>
-                                <p className="text-[9px] font-bold opacity-40 uppercase tracking-wider">{resume.jobTitle || "Professional Standard"}</p>
+                                <p className="text-[10px] font-black text-[var(--primary-color)] uppercase tracking-[0.2em] mb-1">Target Role</p>
+                                <p className="text-lg font-black text-white leading-tight">{resume.jobTitle || "Software Engineer"}</p>
+                                <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-1">{resume.title || `Master Version ${idx + 1}`}</p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="text-lg font-black text-emerald-500">{resume.atsScore || "85"}%</p>
-                              <p className="text-[7px] font-black opacity-30 uppercase tracking-tighter">ATS Score</p>
+                            <div className="text-right bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-[var(--primary-color)]/20 transition-all">
+                              <p className="text-2xl font-black text-emerald-500">{resume.atsScore || "85"}%</p>
+                              <p className="text-[8px] font-black opacity-30 uppercase tracking-tighter">ATS Intelligence</p>
                             </div>
                           </button>
                           
@@ -438,20 +444,20 @@ const PublicProfile = () => {
           >
             <div className="flex items-center gap-2 px-4 border-r border-white/5">
               <FaChartBar className="text-[var(--primary-color)] text-sm" />
-              <span className="text-[8px] font-black uppercase tracking-widest opacity-60">HUD Intelligence</span>
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-60">Recruiter Insights HUD</span>
             </div>
             <div className="flex gap-8 px-4">
               <div className="text-center">
                 <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.views || 0}</p>
-                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Views</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Recruiters Reached</p>
               </div>
               <div className="text-center">
                 <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.resumeDownloads || 0}</p>
-                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Pulse</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Action Signals</p>
               </div>
               <div className="text-center">
                 <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.contactClicks || 0}</p>
-                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Interests</p>
+                <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Direct Outreach</p>
               </div>
             </div>
             
@@ -576,6 +582,7 @@ const PublicProfile = () => {
         theme={theme} 
         displayValue={displayValue} 
         handleLiveUpdate={handleLiveUpdate} 
+        analytics={analytics}
       />
 
       <Suspense fallback={null}>
