@@ -198,10 +198,10 @@ const PublicProfile = () => {
   }, [user?.socialLinks?.github]);
 
   const displayValue = useCallback((value, placeholder) => {
-    if (value && value.trim() !== "") return value;
-    if (isOwner) return placeholder;
+    if (value && typeof value === 'string' && value.trim() !== "") return value;
+    if (value && typeof value !== 'string') return value;
     return null;
-  }, [isOwner]);
+  }, []);
 
   const handleLiveUpdate = async (updates) => {
     if (!user.isOwner) return;

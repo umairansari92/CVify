@@ -22,23 +22,23 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
     const stats = [
       { 
         label: "Recruiter Engagement", 
-        value: `${analytics.views || 0} Profile Views`, 
+        value: analytics.views != null ? `${analytics.views} Profile Views` : null, 
         icon: <FaMagic size={14} />,
         field: null 
       },
       { 
         label: "Hiring Signals", 
-        value: `${(analytics.contactClicks || 0) + (analytics.resumeDownloads || 0)} Signals Generated`, 
+        value: (analytics.contactClicks != null || analytics.resumeDownloads != null) ? `${(analytics.contactClicks || 0) + (analytics.resumeDownloads || 0)} Signals Generated` : null, 
         icon: <RocketIcon size={14} />,
         field: null 
       },
       { 
         label: "Talent Status", 
-        value: displayValue(user?.availability, "Open to Work"), 
+        value: user?.availability, 
         icon: <FaCheckCircle size={14} />,
         field: "availability"
       },
-    ];
+    ].filter(s => s.value);
 
     return (
       <motion.div 
@@ -85,41 +85,40 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
             <span className="block mb-2">
               <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
                 <span className="text-white uppercase">
-                  {displayValue(personalInfo.fullName, "User Name")}
+                  {personalInfo.fullName}
                 </span>
               </InlineEdit>
             </span>
           </h1>
 
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--primary-color)] leading-tight">
-              {personalInfo.jobTitle || "AI Systems Builder | Web & Chatbot Developer"}
-            </h2>
-            <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl">
-              {user?.branding?.valueProposition || "Building AI-powered systems that improve hiring, automation, and user experience."}
-            </p>
-          </div>
+          {user?.branding?.valueProposition && (
+            <div className="flex flex-col space-y-2">
+              <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-80 max-w-2xl">
+                {user.branding.valueProposition}
+              </p>
+            </div>
+          )}
 
-          <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
-            <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
-              <div className="w-full break-words leading-snug">
-                <TypeAnimation
-                  key={personalInfo.jobTitle} // Force re-render on live update
-                  sequence={
-                    slogans.length > 0 
-                    ? slogans.flatMap(s => [s, 2000]) 
-                    : (personalInfo.jobTitle 
-                        ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) 
-                        : ["Software Engineer", 2000])
-                  }
-                  wrapper="span"
-                  speed={50}
-                  repeat={Infinity}
-                  className="text-[var(--text-secondary)]"
-                />
-              </div>
-            </InlineEdit>
-          </div>
+          {(slogans.length > 0 || personalInfo.jobTitle) && (
+            <div className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--text-secondary)] mt-4 min-h-[4rem] md:min-h-[5rem] flex items-start">
+              <InlineEdit className="w-full" isOwner={isOwner} id="heroRole" value={personalInfo.jobTitle} multiline={true} onSave={(v) => handleLiveUpdate({ headline: v })}>
+                <div className="w-full break-words leading-snug">
+                  <TypeAnimation
+                    key={personalInfo.jobTitle || "empty"}
+                    sequence={
+                      slogans.length > 0 
+                      ? slogans.flatMap(s => [s, 2000]) 
+                      : personalInfo.jobTitle ? personalInfo.jobTitle.split(",").map(s => s.trim()).filter(Boolean).flatMap(s => [s, 2000]) : ["Add your title...", 2000]
+                    }
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
+                    className="text-[var(--primary-color)]"
+                  />
+                </div>
+              </InlineEdit>
+            </div>
+          )}
 
 
 
@@ -166,20 +165,21 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
              </div>
            )}
 
-           {/* Identity Label Pill (Relocated below image) */}
-           <motion.div 
-             initial={{ opacity: 0, y: 10 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 1 }}
-             className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-6 py-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]/80 backdrop-blur-xl shadow-2xl whitespace-nowrap min-w-[200px] justify-center"
-           >
-             <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse shadow-[0_0_10px_var(--primary-color)]" />
-             <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-[var(--text-primary)]">
-                <InlineEdit isOwner={isOwner} id="heroStatusBadge" value={branding.identityLabel} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
-                  {displayValue(branding.identityLabel, "Visionary Designer")}
-                </InlineEdit>
-             </span>
-           </motion.div>
+           {branding.identityLabel && (
+             <motion.div 
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 1 }}
+               className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-6 py-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]/80 backdrop-blur-xl shadow-2xl whitespace-nowrap min-w-[200px] justify-center"
+             >
+               <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse shadow-[0_0_10px_var(--primary-color)]" />
+               <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-[var(--text-primary)]">
+                  <InlineEdit isOwner={isOwner} id="heroStatusBadge" value={branding.identityLabel} onSave={(v) => handleLiveUpdate({ "branding.identityLabel": v })}>
+                    {branding.identityLabel}
+                  </InlineEdit>
+               </span>
+             </motion.div>
+           )}
         </motion.div>
       </div>
       
