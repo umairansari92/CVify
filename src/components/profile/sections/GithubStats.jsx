@@ -207,13 +207,27 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
           <div className="lg:col-span-5 space-y-12">
              <div className="p-12 rounded-[4rem] bg-white/[0.03] border border-white/10 space-y-10 shadow-2xl">
                 <div>
-                   <h4 className="text-base font-black uppercase tracking-[0.25em] text-[var(--text-primary)] mb-2">Technical Velocity</h4>
-                   <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">{scores.velocity} Commits / Pulse Avg</p>
+                   <h4 className="text-base font-black uppercase tracking-[0.25em] text-[var(--text-primary)] mb-2">Engineering Activity</h4>
+                   <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
-                <div className="flex items-baseline gap-2">
-                   <span className="text-8xl font-black text-[var(--primary-color)] tracking-tighter">{scores.velocity}</span>
-                   <span className="text-sm font-black uppercase tracking-[0.3em] opacity-40">Pulse</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5 hover:border-[var(--primary-color)]/30 transition-all group/stat">
+                    <p className="text-3xl font-black text-white group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.journey?.totalCommits || stats.commits90d || 0}</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Lifetime</p>
+                  </div>
+                  <div className="p-6 bg-[var(--primary-color)]/10 rounded-[2rem] border border-[var(--primary-color)]/20">
+                    <p className="text-3xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5">
+                    <p className="text-2xl font-black text-white">{stats.journey?.thisWeek || 0}</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5">
+                    <p className="text-2xl font-black text-white">{stats.journey?.lastWeek || 0}</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Last Week</p>
+                  </div>
                 </div>
 
                 <div className="space-y-8">
