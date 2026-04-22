@@ -25,16 +25,23 @@ api.interceptors.response.use(
     const message = data?.message || error.message || "An error occurred";
 
     if (status === 401) {
-      // Clear token and force login with a modal confirmation
+      // Clear token
       localStorage.removeItem("token");
-      Swal.fire({
-        icon: "error",
-        title: "Session Expired",
-        text: message || "Please log in again.",
-        confirmButtonText: "OK",
-      }).then(() => {
-        window.location.href = "/login";
-      });
+      
+      // Determine if we are on a public route where we shouldn't interrupt the user
+      const isPublicRoute = window.location.pathname.startsWith("/p/");
+
+      if (!isPublicRoute) {
+        // Force login with a modal confirmation only on protected/app routes
+        Swal.fire({
+          icon: "error",
+          title: "Session Expired",
+          text: message || "Please log in again.",
+          confirmButtonText: "OK",
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      }
     } else if (status === 403 && data?.code === "EMAIL_NOT_VERIFIED" && data?.email) {
       // Don't show generic toast - Login page will show verify prompt and redirect
       // Just reject so auth thunk can handle it
