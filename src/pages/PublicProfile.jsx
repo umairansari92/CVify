@@ -184,7 +184,13 @@ const PublicProfile = () => {
     const fetchGithub = async () => {
       setGithubLoading(true);
       try {
-        const res = await api.get(`/portfolio/github/${githubUsername}`);
+        const res = await api.get(`/portfolio/github/${githubUsername}?t=${Date.now()}`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         setGithubData(res.data);
       } catch (err) {
         console.error("GitHub Fetch Error:", err);
