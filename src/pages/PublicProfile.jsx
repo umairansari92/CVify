@@ -184,11 +184,9 @@ const PublicProfile = () => {
     }
 
     const fetchGithub = async () => {
-      console.log(`[PublicProfile] Triggering GitHub fetch for: ${githubUsername}`);
       setGithubLoading(true);
       try {
         const res = await api.get(`/portfolio/github/${githubUsername}?t=${Date.now()}`);
-        console.log("[PublicProfile] GitHub Data Received:", res.data);
         setGithubData(res.data);
       } catch (err) {
         console.error("GitHub Fetch Error:", err);
