@@ -100,7 +100,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
                 <div className="max-w-4xl">
                   <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] uppercase tracking-tight leading-[0.85] mb-10 italic">
-                    Hiring <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400 px-1">Verdict </span>
+                    Hiring <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400 px-4 py-2 -mr-4">Verdict</span>
                   </h2>
 
                   <div className="p-8 md:p-12 bg-white/5 border border-white/5 rounded-[3rem] relative overflow-hidden">
