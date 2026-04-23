@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-export const BASE_URL = "https://c-vify-backend.vercel.app/api";
+export const BASE_URL = import.meta.env.VITE_API_URL || "https://c-vify-backend.vercel.app/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
