@@ -135,9 +135,9 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 <span className="text-[11px] font-black uppercase tracking-[0.25em] opacity-40 leading-none">{key}</span>
                 <div className="flex items-center gap-3">
                   <h4 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">
-                    {signals?.[key.charAt(0).toLowerCase() + key.slice(1)] || "N/A"}
+                    {signals?.[key.charAt(0).toLowerCase() + key.slice(1)] || (loading ? "Analyzing..." : "Standard")}
                   </h4>
-                  {signals?.[key.charAt(0).toLowerCase() + key.slice(1)] === "High" && (
+                  {(signals?.[key.charAt(0).toLowerCase() + key.slice(1)] === "High" || signals?.[key.charAt(0).toLowerCase() + key.slice(1)] === "Exceptional") && (
                     <Award size={18} className="text-[var(--primary-color)]" />
                   )}
                 </div>
