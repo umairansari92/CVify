@@ -23,9 +23,11 @@ import {
  * Transforms raw GitHub data into high-fidelity hiring signals.
  */
 const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) => {
+  const githubUsername = githubUrl?.includes("github.com") 
+    ? githubUrl.split("github.com/")[1]?.split("/")[0] 
+    : githubUrl;
+  
   const error = !data && !loading && githubUrl;
-  const githubUsername = githubUrl?.split("github.com/")[1]?.split("/")[0];
-
   if (!githubUsername) return null;
 
   const Skeleton = () => (
