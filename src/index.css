@@ -10,61 +10,61 @@
 
 :root {
   /* Daylight Executive (Light Mode) */
-  --primary: #3b82f6; 
-  --accent: #9333ea;
-  --success: #22c55e;
-  --warning: #eab308;
-  --danger: #ef4444;
+  --primary: #4F46E5; 
+  --accent: #7C3AED;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
 
-  --background: #f8fafc; 
-  --midground: rgba(255, 255, 255, 0.6);  
-  --foreground: #f1f5f9; 
+  --background: #F3F4F6; 
+  --midground: #FFFFFF;  
+  --foreground: #F9FAFB; 
 
   /* Semantic Tokens */
   --bg-primary: var(--background);
   --bg-secondary: var(--foreground);
   --card-bg: var(--midground);
-  --card-border: rgba(0, 0, 0, 0.05);
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
+  --card-border: #E5E7EB;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
 
   /* Elevation System */
-  --elevation-1: 0 4px 10px rgba(0, 0, 0, 0.05);
-  --elevation-2: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --elevation-3: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --elevation-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   --shadow-premium: var(--elevation-1);
   --shadow-hover: var(--elevation-2);
 
   /* Motion System */
-  --duration-fast: 0.2s;
-  --duration-medium: 0.3s;
-  --duration-slow: 0.5s;
-  --ease-premium: cubic-bezier(0.4, 0, 0, 1);
+  --duration-fast: 0.15s;
+  --duration-medium: 0.25s;
+  --duration-slow: 0.4s;
+  --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
   /* Midnight Pro (Dark Mode) */
-  --primary: #3b82f6; 
-  --accent: #9333ea;
-  --success: #10b981;
+  --primary: #6366F1; 
+  --accent: #818CF8;
+  --success: #10B981;
 
-  --background: #0f172a; 
-  --midground: rgba(255, 255, 255, 0.05);  
-  --foreground: #1e293b; 
+  --background: #0B0E14; 
+  --midground: #161B22;  
+  --foreground: #020617; 
 
   /* Semantic Tokens */
   --bg-primary: var(--background);
-  --bg-secondary: #020617;
+  --bg-secondary: var(--foreground);
   --card-bg: var(--midground);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
 
   /* Elevation System */
-  --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --elevation-2: 0 12px 36px rgba(0, 0, 0, 0.5);
-  --elevation-3: 0 24px 48px rgba(0, 0, 0, 0.7);
+  --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --elevation-2: 0 12px 36px rgba(0, 0, 0, 0.6);
+  --elevation-3: 0 24px 48px rgba(0, 0, 0, 0.8);
 
   --shadow-premium: var(--elevation-1);
   --shadow-hover: var(--elevation-2);
@@ -155,10 +155,10 @@
 }
 
 .premium-card {
-  @apply backdrop-blur-[14px] rounded-[2rem] hover:shadow-hover hover:-translate-y-1.5 transition-all;
+  @apply backdrop-blur-[14px] rounded-2xl hover:shadow-hover hover:-translate-y-1 transition-all;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  box-shadow: var(--elevation-2);
+  box-shadow: var(--elevation-1);
   transition-duration: var(--duration-medium);
   transition-timing-function: var(--ease-premium);
 }
@@ -337,9 +337,9 @@
 .swal2-popup {
   background: var(--midground) !important;
   color: var(--text-main) !important;
-  border-radius: 2rem !important;
+  border-radius: 1.5rem !important;
   backdrop-filter: blur(20px) !important;
-  border: 1px solid var(--border-subtle) !important;
+  border: 1px solid var(--card-border) !important;
 }
 
 .swal2-title {

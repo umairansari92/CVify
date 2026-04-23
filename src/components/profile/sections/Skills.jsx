@@ -371,7 +371,7 @@ const Skills = React.memo(
               >
                 <FaLayerGroup className="text-[var(--primary-color)] text-xs" />
                 <span className="text-[10px] font-black text-[var(--primary-color)] uppercase tracking-widest">
-                  Expertise Engine
+                  Skill Ecosystem
                 </span>
               </motion.div>
 
@@ -406,7 +406,7 @@ const Skills = React.memo(
               {technicalSkills.length > 0 && (
                 <div className="space-y-8">
                   <h3 className="text-[9px] font-black text-[var(--primary-color)] text-center uppercase tracking-[0.5em] opacity-40">
-                    Technical Arsenal
+                    Technical Proficiencies
                   </h3>
                   <div className="flex flex-wrap items-center justify-center gap-4 max-w-5xl mx-auto">
                     {technicalSkills.map((skill, idx) => (
@@ -448,7 +448,7 @@ const Skills = React.memo(
                 >
                   <FaServicestack className="text-violet-500 text-xs" />
                   <span className="text-[10px] font-black text-violet-500 uppercase tracking-widest">
-                    Solutions Factory
+                    Professional Services
                   </span>
                 </motion.div>
 
@@ -486,7 +486,7 @@ const Skills = React.memo(
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 md:p-12 bg-white/[0.02] border border-white/5 rounded-[3rem] space-y-6 hover:bg-white/[0.04] hover:border-violet-500/20 transition-all group relative overflow-hidden"
+                    className="p-8 md:p-12 bg-white/[0.02] border border-white/5 rounded-3xl space-y-6 hover:bg-white/[0.04] hover:border-violet-500/20 transition-all group relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 blur-[50px] rounded-full pointer-events-none" />
                     <div className="flex items-center justify-between">
@@ -494,7 +494,7 @@ const Skills = React.memo(
                         <FaServicestack size={20} />
                       </div>
                       <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-4 py-1.5 rounded-full uppercase tracking-widest">
-                        Ready to Deploy
+                        Available for Engagement
                       </span>
                     </div>
                     <div className="space-y-4">

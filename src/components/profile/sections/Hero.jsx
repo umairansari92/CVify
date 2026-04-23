@@ -143,8 +143,8 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
         {/* RIGHT COLUMN: PORTRAIT */}
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-5 flex justify-center lg:justify-end relative mt-16 mx-auto lg:mt-0 lg:mx-0 w-full">
            {personalInfo.image && (
-             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-[2rem] border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20">
-               <img src={personalInfo.image} alt="Profile" className="w-full h-full object-cover rounded-[1.5rem]" />
+             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20">
+               <img src={personalInfo.image} alt="Profile" className="w-full h-full object-cover rounded-2xl" />
                
                {/* Floating Badges */}
                <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -right-4 top-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">
@@ -163,7 +163,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
                </motion.div>
 
                {/* Background Accent */}
-               <div className="absolute -inset-4 bg-gradient-to-tr from-[var(--primary-color)] to-transparent opacity-20 blur-2xl -z-10 rounded-[3rem]" />
+               <div className="absolute -inset-4 bg-gradient-to-tr from-[var(--primary-color)] to-transparent opacity-20 blur-2xl -z-10 rounded-3xl" />
              </div>
            )}
 

@@ -127,7 +127,7 @@ const ATSPage = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-text-primary tracking-tight">
-            ATS Optimization System
+            Resume Intelligence Audit
           </h1>
           <p className="text-text-secondary mt-1 font-medium italic opacity-70">
             Scan your resume, match keywords, and get AI-driven scoring.
@@ -144,7 +144,7 @@ const ATSPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Section */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="glass p-8 rounded-[2.5rem] border border-white/10 shadow-2xl space-y-6">
+          <div className="glass p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6">
             {/* Resume Input - Selective */}
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
@@ -186,7 +186,7 @@ const ATSPage = () => {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
                   <div
-                    className={`p-10 border-2 border-dashed rounded-[2rem] transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-white/10 hover:border-primary/20 bg-white/5"} ${selectedResumeId ? "opacity-30" : ""}`}
+                    className={`p-10 border-2 border-dashed rounded-2xl transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-white/10 hover:border-primary/20 bg-white/5"} ${selectedResumeId ? "opacity-30" : ""}`}
                   >
                     <div
                       className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${file ? "bg-primary text-white shadow-glow" : "bg-white/5 text-slate-400"}`}
@@ -212,7 +212,7 @@ const ATSPage = () => {
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 placeholder="Paste the target job description here for accurate matching..."
-                className="w-full bg-background border border-border-subtle p-5 rounded-[2rem] focus:ring-4 ring-primary/10 transition-all font-medium text-sm h-48 resize-none leading-relaxed"
+                className="w-full bg-background border border-border-subtle p-5 rounded-2xl focus:ring-4 ring-primary/10 transition-all font-medium text-sm h-48 resize-none leading-relaxed"
               />
               {!jobDescription.trim() && (
                 <div className="flex items-center gap-2 px-4 py-2.5 mt-2 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
@@ -271,10 +271,10 @@ const ATSPage = () => {
               </div>
             </div>
 
-            <button
+             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full py-6 rounded-[2rem] bg-linear-to-r from-primary to-blue-600 text-white font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full py-6 rounded-2xl bg-linear-to-r from-primary to-blue-600 text-white font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {loading ? (
                 <FaSpinner className="animate-spin" />
@@ -282,7 +282,7 @@ const ATSPage = () => {
                 <FaSearch className="group-hover:rotate-12 transition-transform" />
               )}
               <span className="tracking-[0.2em] font-black uppercase">
-                Start ATS Scan (50 💎)
+                Run Intelligence Scan (50 💎)
               </span>
             </button>
           </div>
@@ -293,12 +293,12 @@ const ATSPage = () => {
           {result ? (
             <ATSResult data={result} />
           ) : (
-            <div className="glass rounded-[3rem] border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]">
-              <div className="w-32 h-32 bg-primary/10 text-primary rounded-[3rem] flex items-center justify-center mx-auto mb-10 shadow-glow animate-pulse">
+            <div className="glass rounded-3xl border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]">
+              <div className="w-32 h-32 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-10 shadow-glow animate-pulse">
                 <FaSearch size={48} />
               </div>
               <h3 className="font-black text-3xl text-text-primary mb-4 tracking-tighter">
-                ATS Analysis Result
+                Audit Results Pending
               </h3>
               <p className="font-medium text-text-muted opacity-60 max-w-sm mx-auto leading-relaxed">
                 Upload your resume and provide a job description to see your

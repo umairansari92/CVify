@@ -25,11 +25,11 @@ export default function ParticleBackground() {
   const colors = useMemo(() => {
     const cls = new Float32Array(particlesCount * 3);
     const themeColors = [
-      new THREE.Color("#60a5fa"), // Primary Blue
-      new THREE.Color("#c084fc"), // Accent Violet
-      new THREE.Color("#34d399"), // Success Emerald
-      new THREE.Color("#3b82f6"), // Bright Blue
-      new THREE.Color("#a855f7"), // Purple
+      new THREE.Color("#6366F1"), // Indigo Primary
+      new THREE.Color("#818CF8"), // Soft Indigo
+      new THREE.Color("#10B981"), // Emerald Success
+      new THREE.Color("#C084FC"), // Violet Accent
+      new THREE.Color("#4F46E5"), // Royal Blue
     ];
     for (let i = 0; i < particlesCount; i++) {
       const color = themeColors[Math.floor(Math.random() * themeColors.length)];

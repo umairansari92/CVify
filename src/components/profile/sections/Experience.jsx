@@ -22,7 +22,7 @@ const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, 
              </InlineEdit>
           </h2>
           <div className="h-1.5 w-16 bg-[var(--primary-color)] mx-auto rounded-full" />
-          <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">The Evolution of Strategy</p>
+          <p className="text-sm font-black text-[var(--text-secondary)] opacity-40 uppercase tracking-[0.3em]">Professional Background</p>
         </motion.div>
         
         <div className="w-full max-w-2xl space-y-12 relative before:absolute before:inset-0 before:mx-auto before:h-full before:w-0.5 before:bg-[var(--primary-color)]/20">

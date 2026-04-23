@@ -197,7 +197,7 @@ const Dashboard = () => {
                 <div className="flex items-center gap-2 px-4 py-2 glass-soft rounded-full border-primary/20">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                    {economy?.tier || "BASIC"} SYSTEM ACCESS
+                    {economy?.tier || "PROFESSIONAL"} ACCOUNT STATUS
                   </span>
                 </div>
                 
@@ -208,23 +208,23 @@ const Dashboard = () => {
                     className="px-4 py-2 glass-soft border-primary/30 text-primary text-[10px] font-black rounded-full shadow-glow-primary flex items-center gap-3"
                   >
                     <FiActivity className="animate-pulse" />
-                    SYSTEM STABLE
+                    ACCOUNT ACTIVE
                   </m.div>
                 )}
               </div>
 
               <div className="max-w-xl">
                 <h1 className="text-5xl lg:text-7xl font-black hero-text leading-[1.1] mb-6 tracking-tighter">
-                  System Online,<br />
+                  Welcome Back,<br />
                   <span className="text-primary glow-text">{user?.name?.split(" ")[0]}</span>
                 </h1>
                 <div className="text-text-secondary font-black text-sm tracking-widest uppercase opacity-60 flex items-center gap-3">
                   <div className="w-8 h-[2px] bg-primary/40" />
                   <TypeAnimation
                     sequence={[
-                      "Architecting professional identity...", 3000,
-                      "Neural optimizing ATS scores...", 3000,
-                      "Synchronizing career matrix...", 3000
+                      "Crafting your professional presence...", 3000,
+                      "Optimizing resume intelligence...", 3000,
+                      "Refining career presentation...", 3000
                     ]}
                     repeat={Infinity}
                   />
@@ -242,8 +242,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Neon Circular Integrity HUD */}
-            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-[3rem] border-white/5 relative group/integrity">
+            {/* Circular Profile Integrity Section */}
+            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-3xl border-white/5 relative group/integrity">
               <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover/integrity:opacity-100 transition-opacity duration-1000" />
               <div className="relative w-48 h-48 lg:w-56 lg:h-56">
                 <svg className="w-full h-full transform -rotate-90">
@@ -273,14 +273,14 @@ const Dashboard = () => {
                     {user?.completionScore || 0}%
                   </span>
                   <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.4em] opacity-50 mt-1">
-                    Integrity
+                    Completion
                   </span>
                 </div>
               </div>
               <div className="mt-8 flex items-center gap-3">
                 <div className="px-5 py-2 glass-soft border-primary/20 rounded-full">
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                    AI Scored Stability
+                    Profile Strength Score
                   </span>
                 </div>
               </div>
@@ -301,8 +301,8 @@ const Dashboard = () => {
            </div>
            <SectionHeader 
              title={`${user?.completionScore || 0}%`} 
-             subtitle="Profile Integrity Mapping" 
-             badge="LIVE STATUS"
+             subtitle="Profile Completion Strength" 
+             badge="LIVE DATA"
              className="mb-0"
            />
            <div className="mt-8 flex items-center justify-between">
@@ -345,7 +345,7 @@ const Dashboard = () => {
            />
            <div className="mt-8 text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-2">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse shadow-glow-success" />
-              Secure Environment Matrix
+              Verified & Secure Environment
            </div>
         </GlassContainer>
       </div>
@@ -353,9 +353,9 @@ const Dashboard = () => {
       {/* Career Components Matrix */}
       <div className="space-y-10">
         <SectionHeader 
-          title="Career Components" 
-          subtitle="Modular fragments synthesized by the AI Engine."
-          badge={`${resumes?.length || 0} REGISTERED`}
+          title="Professional Resumes" 
+          subtitle="Refined resume variations managed by the AI Engine."
+          badge={`${resumes?.length || 0} ACTIVE`}
           icon={FaFileSignature}
         />
 
@@ -378,11 +378,11 @@ const Dashboard = () => {
               <div className="p-10 flex-1 flex flex-col -mt-12 relative z-10">
                 <div className="mb-8">
                   <h3 className="text-3xl font-black text-text-primary mb-2 truncate group-hover:text-primary transition-colors">{resume.title}</h3>
-                  <p className="text-[11px] font-black text-primary/60 uppercase tracking-[0.3em]">Quantum Modular Template</p>
+                  <p className="text-[11px] font-black text-primary/60 uppercase tracking-[0.3em]">Premium Resume Template</p>
                 </div>
 
                 <div className="flex-1 space-y-8">
-                   <div className="flex items-center gap-5 p-5 glass-soft rounded-[1.5rem] border-white/5 group/revision">
+                   <div className="flex items-center gap-5 p-5 glass-soft rounded-2xl border-white/5 group/revision">
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover/revision:rotate-12 transition-transform">
                         <FiEdit2 size={18} />
                       </div>
@@ -408,7 +408,7 @@ const Dashboard = () => {
                   <PremiumButton onClick={() => handleEdit(resume.id)} className="flex-1 !py-4 !text-[10px] shadow-sm" icon={FiEdit2}>
                     Open Builder
                   </PremiumButton>
-                  <button onClick={() => handleDownloadPDF(resume, "Modern")} className="w-14 h-14 glass-soft rounded-[1.25rem] border-white/5 flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
+                  <button onClick={() => handleDownloadPDF(resume, "Modern")} className="w-14 h-14 glass-soft rounded-2xl border-white/5 flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
                     <FiDownload size={20} />
                   </button>
                 </div>
@@ -418,11 +418,11 @@ const Dashboard = () => {
 
           {resumes?.length < 3 && (
             <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-white/10 flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all h-[500px]">
-              <div className="w-20 h-20 bg-primary/10 rounded-[2.5rem] flex items-center justify-center text-primary group-hover:scale-110 group-hover:glow-primary transition-all duration-500 mb-6">
+              <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 group-hover:glow-primary transition-all duration-500 mb-6">
                 <FiPlus size={36} />
               </div>
               <p className="font-black text-xs uppercase tracking-[0.4em] text-text-secondary group-hover:text-primary transition-colors text-center leading-relaxed">
-                Initialize<br/><span className="text-[10px] opacity-50">New Component</span>
+                Create New<br/><span className="text-[10px] opacity-50">Professional Resume</span>
               </p>
             </GlassContainer>
           )}
@@ -432,8 +432,8 @@ const Dashboard = () => {
       {/* Synthesis Archive */}
       <div className="space-y-10">
         <SectionHeader 
-          title="Cover Letter Archive" 
-          subtitle="Artifacts generated through neural optimization."
+          title="Cover Letter Collection" 
+          subtitle="Artifacts generated through AI optimization."
           badge={`${coverLetters?.length || 0} GENERATED`}
           icon={FaEnvelopeOpenText}
         />
@@ -463,7 +463,7 @@ const Dashboard = () => {
 
               <div className="mt-12 pt-6 border-t border-white/5 flex items-center justify-between">
                  <div className="flex items-center gap-3 group/btn">
-                    <span className="text-[11px] font-black text-accent tracking-[0.3em] uppercase">Decode</span>
+                    <span className="text-[11px] font-black text-accent tracking-[0.3em] uppercase">View Details</span>
                     <FiArrowRight className="text-accent group-hover/btn:translate-x-2 transition-transform" />
                  </div>
                  <button onClick={(e) => handleDeleteLetter(letter.id, e)} className="w-10 h-10 rounded-xl bg-red-500/5 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-10 hover:opacity-100">
@@ -480,10 +480,10 @@ const Dashboard = () => {
         {isPreviewOpen && selectedLetter && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10">
             <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsPreviewOpen(false)} className="fixed inset-0 bg-bg-secondary/90 backdrop-blur-xl transition-all" />
-            <m.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="glass-strong w-full max-w-4xl max-h-[90vh] rounded-[3.5rem] border-white/10 flex flex-col relative z-20 overflow-hidden shadow-2xl">
+            <m.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="glass-strong w-full max-w-4xl max-h-[90vh] rounded-3xl border-white/10 flex flex-col relative z-20 overflow-hidden shadow-2xl">
                <div className="p-12 border-b border-card-border flex justify-between items-start bg-white/[0.02]">
                   <div>
-                    <h3 className="text-[11px] font-black text-accent uppercase tracking-[0.4em] mb-4">Neural Artifact Export</h3>
+                    <h3 className="text-[11px] font-black text-accent uppercase tracking-[0.4em] mb-4">Export Document</h3>
                     <h3 className="font-black text-4xl lg:text-5xl text-text-primary tracking-tighter leading-none">{selectedLetter.jobTitle}</h3>
                     <p className="mt-3 text-text-secondary font-bold text-lg opacity-60">{selectedLetter.companyName}</p>
                   </div>
@@ -496,7 +496,7 @@ const Dashboard = () => {
                </div>
                <div className="p-10 border-t border-card-border bg-white/[0.04]">
                   <PremiumButton onClick={() => handleDownloadLetter(selectedLetter, user)} className="w-full !py-6" icon={FaDownload}>
-                    Secure Archive Synchronization (PDF)
+                    Download as PDF
                   </PremiumButton>
                </div>
             </m.div>

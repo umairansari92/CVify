@@ -32,10 +32,10 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
   const Skeleton = () => (
     <div className="space-y-12 animate-pulse">
-      <div className="h-48 bg-white/5 rounded-[3rem]" />
+      <div className="h-48 bg-white/5 rounded-3xl" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-40 bg-white/5 rounded-[2.5rem]" />
+          <div key={i} className="h-40 bg-white/5 rounded-2xl" />
         ))}
       </div>
     </div>
@@ -77,7 +77,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 md:p-14 rounded-[4rem] bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 backdrop-blur-3xl relative overflow-hidden group shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
+            className="p-8 md:p-14 rounded-3xl bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 backdrop-blur-3xl relative overflow-hidden group shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
           >
              {/* HUD Decorative Background */}
              <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
@@ -100,10 +100,10 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
                 <div className="max-w-4xl">
                   <h2 className="text-4xl md:text-7xl font-black text-[var(--text-primary)] uppercase tracking-tight leading-[0.85] mb-10 italic">
-                    Hiring <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400 px-4 py-2 -mr-4">Verdict</span>
+                    Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400 px-4 py-2 -mr-4">Insight</span>
                   </h2>
 
-                  <div className="p-8 md:p-12 bg-white/5 border border-white/5 rounded-[3rem] relative overflow-hidden">
+                  <div className="p-8 md:p-12 bg-white/5 border border-white/5 rounded-3xl relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-2 h-full bg-[var(--primary-color)] shadow-[0_0_20px_var(--primary-color)]" />
                     <p className="text-2xl md:text-4xl font-bold text-[var(--text-primary)] leading-[1.1] tracking-tight">
                       "{verdict}"
@@ -123,7 +123,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               viewport={{ once: true }}
-              className={`p-10 rounded-[3.5rem] bg-[var(--card-bg)] border ${config.border} hover:scale-[1.03] transition-all group relative overflow-hidden`}
+              className={`p-10 rounded-3xl bg-[var(--card-bg)] border ${config.border} hover:scale-[1.03] transition-all group relative overflow-hidden`}
             >
               <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 transition-opacity">
                 <config.icon size={140} />
@@ -174,7 +174,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
             <div className="grid gap-6">
               {topRepos?.map((repo, i) => (
-                <div key={i} className="group/repo p-8 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-[3rem] transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
+                <div key={i} className="group/repo p-8 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-3xl transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <h5 className="text-xl font-black text-[var(--text-primary)] group-hover/repo:text-[var(--primary-color)] transition-colors tracking-tight">
@@ -207,26 +207,26 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
           {/* DNA & Language Synthesis */}
           <div className="lg:col-span-5 space-y-12">
-             <div className="p-12 rounded-[4rem] bg-white/[0.03] border border-white/10 space-y-10 shadow-2xl">
+             <div className="p-12 rounded-3xl bg-white/[0.03] border border-white/10 space-y-10 shadow-2xl">
                 <div>
                    <h4 className="text-base font-black uppercase tracking-[0.25em] text-[var(--text-primary)] mb-2">Engineering Activity</h4>
                    <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5 hover:border-[var(--primary-color)]/30 transition-all group/stat">
+                   <div className="p-6 bg-white/5 rounded-2xl border border-white/5 hover:border-[var(--primary-color)]/30 transition-all group/stat">
                     <p className="text-3xl font-black text-white group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.journey?.totalCommits || stats.commits90d || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Lifetime</p>
                   </div>
-                  <div className="p-6 bg-[var(--primary-color)]/10 rounded-[2rem] border border-[var(--primary-color)]/20">
+                  <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
                     <p className="text-3xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
                   </div>
-                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
                     <p className="text-2xl font-black text-white">{stats.journey?.thisWeek || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
                   </div>
-                  <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
                     <p className="text-2xl font-black text-white">{stats.journey?.lastWeek || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Last Week</p>
                   </div>
@@ -257,7 +257,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                  href={githubUrl} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="w-full py-7 bg-[var(--primary-color)] text-white rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] flex items-center justify-center gap-5 hover:scale-[1.02] transition-all shadow-[0_20px_50px_rgba(37,99,235,0.3)] group/btn"
+                 className="w-full py-7 bg-[var(--primary-color)] text-white rounded-3xl font-black text-xs uppercase tracking-[0.4em] flex items-center justify-center gap-5 hover:scale-[1.02] transition-all shadow-[0_20px_50px_rgba(37,99,235,0.3)] group/btn"
                >
                  Explore Full Code DNA
                  <ExternalLink size={18} className="group-hover/btn:rotate-12 transition-transform" />
