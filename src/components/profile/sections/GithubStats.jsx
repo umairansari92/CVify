@@ -135,9 +135,9 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 <span className="text-[11px] font-black uppercase tracking-[0.25em] opacity-40 leading-none">{key}</span>
                 <div className="flex items-center gap-3">
                   <h4 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">
-                    {signals[key.charAt(0).toLowerCase() + key.slice(1)]}
+                    {signals?.[key.charAt(0).toLowerCase() + key.slice(1)] || "N/A"}
                   </h4>
-                  {signals[key.charAt(0).toLowerCase() + key.slice(1)] === "High" && (
+                  {signals?.[key.charAt(0).toLowerCase() + key.slice(1)] === "High" && (
                     <Award size={18} className="text-[var(--primary-color)]" />
                   )}
                 </div>
@@ -146,7 +146,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
               <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
-                  whileInView={{ width: `${scores[key.charAt(0).toLowerCase() + key.slice(1)]}%` }}
+                  whileInView={{ width: `${scores?.[key.charAt(0).toLowerCase() + key.slice(1)] || 0}%` }}
                   className={`h-full bg-current ${config.color}`}
                 />
               </div>
@@ -171,7 +171,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
             </div>
 
             <div className="grid gap-6">
-              {topRepos.map((repo, i) => (
+              {topRepos?.map((repo, i) => (
                 <div key={i} className="group/repo p-8 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-[3rem] transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
@@ -231,7 +231,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 </div>
 
                 <div className="space-y-8">
-                   {topLanguages.map((lang, i) => (
+                   {topLanguages?.map((lang, i) => (
                      <div key={i} className="space-y-3">
                         <div className="flex justify-between items-end">
                            <span className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)]">{lang.name}</span>
