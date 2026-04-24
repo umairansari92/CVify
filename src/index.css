@@ -10,23 +10,23 @@
 
 :root {
   /* Daylight Executive (Light Mode) */
-  --primary: #4F46E5; 
-  --accent: #7C3AED;
+  --primary: #2563EB; 
+  --accent: #4F46E5;
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  --background: #F3F4F6; 
+  --background: #F8FAFC; 
   --midground: #FFFFFF;  
-  --foreground: #F9FAFB; 
+  --foreground: #F1F5F9; 
 
   /* Semantic Tokens */
   --bg-primary: var(--background);
   --bg-secondary: var(--foreground);
   --card-bg: var(--midground);
-  --card-border: #E5E7EB;
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
+  --card-border: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
 
   /* Elevation System */
   --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -45,21 +45,21 @@
 
 .dark {
   /* Midnight Pro (Dark Mode) */
-  --primary: #6366F1; 
-  --accent: #818CF8;
+  --primary: #8B5CF6; 
+  --accent: #3B82F6;
   --success: #10B981;
 
-  --background: #0B0E14; 
-  --midground: #161B22;  
-  --foreground: #020617; 
+  --background: #020617; 
+  --midground: #1E293B;  
+  --foreground: #0F172A; 
 
   /* Semantic Tokens */
   --bg-primary: var(--background);
   --bg-secondary: var(--foreground);
   --card-bg: var(--midground);
   --card-border: rgba(255, 255, 255, 0.08);
-  --text-primary: #F9FAFB;
-  --text-secondary: #9CA3AF;
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
 
   /* Elevation System */
   --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.4);
