@@ -1,4 +1,4 @@
-import { m } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
