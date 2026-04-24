@@ -10,7 +10,7 @@ const Logo = ({ className = "w-40" }) => {
     : "/CVify Logo Light.jpg";
 
   return (
-    <div className={`relative w-[160px] aspect-[160/44] overflow-hidden ${className}`}>
+    <div className={`relative ${className}`}>
       {/* 
         Executive Choice: Hardware-level theme switching 
         Explicit width/height and loading=eager ensures 0 CLS and fast LCP.
