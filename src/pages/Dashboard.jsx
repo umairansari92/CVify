@@ -216,7 +216,7 @@ const Dashboard = () => {
               <div className="max-w-xl">
                 <h1 className="text-5xl lg:text-7xl font-black hero-text leading-[1.1] mb-6 tracking-tighter">
                   Welcome Back,<br />
-                  <span className="text-primary glow-text">{user?.name?.split(" ")[0]}</span>
+                  <span className="text-primary glow-text">{user?.name}</span>
                 </h1>
                 <div className="text-text-secondary font-black text-sm tracking-widest uppercase opacity-60 flex items-center gap-3">
                   <div className="w-8 h-[2px] bg-primary/40" />
