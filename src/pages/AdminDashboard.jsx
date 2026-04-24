@@ -84,12 +84,7 @@ const AdminDashboard = () => {
 
 
 
-  // Sync Redux users to local state for internal filtering/updates
-  useEffect(() => {
-    if (reduxUsers?.length > 0 && !search) {
-      setUsers(reduxUsers);
-    }
-  }, [reduxUsers, search]);
+  // Removed Redux user sync as it bypasses pagination metadata
 
   const fetchUsers = useCallback(
     async (page = 1, searchQuery = "") => {
@@ -137,10 +132,15 @@ const AdminDashboard = () => {
 
 
 
-  // Debounced search
+  // Initial load and filter debounce
   useEffect(() => {
-    setPagination(prev => ({ ...prev, page: 1 }));
-  }, [search, statusFilter, industryFilter]);
+    const handler = setTimeout(() => {
+      setPagination(prev => ({ ...prev, page: 1 }));
+      fetchUsers(1, search);
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [search, statusFilter, industryFilter, dateRange, fetchUsers]);
 
 
   // ─── Actions ────────────────────────────────────────────────────────────
