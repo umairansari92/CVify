@@ -11,7 +11,7 @@ import {
 } from "../features/dashboard/dashboardSlice";
 import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaSearchPlus, FaRocket, FaChartBar, FaAngleRight, FaEnvelopeOpenText } from "react-icons/fa";
-import { FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle, FiArrowRight } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle, FiArrowRight, FiActivity } from "react-icons/fi";
 import { lazy, Suspense } from "react";
 const ThreeBackground = lazy(() => import("../components/three/ThreeBackground"));
 import Swal from "sweetalert2";
