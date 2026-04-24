@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-10 lg:p-14 relative overflow-hidden group border-white/10">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-10 lg:p-14 relative overflow-hidden group border-[var(--card-border)]">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -243,7 +243,7 @@ const Dashboard = () => {
             </div>
 
             {/* Circular Profile Integrity Section */}
-            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-3xl border-white/5 relative group/integrity">
+            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-3xl border-[var(--card-border)] relative group/integrity">
               <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover/integrity:opacity-100 transition-opacity duration-1000" />
               <div className="relative w-48 h-48 lg:w-56 lg:h-56">
                 <svg className="w-full h-full transform -rotate-90">
@@ -306,7 +306,7 @@ const Dashboard = () => {
              className="mb-0"
            />
            <div className="mt-8 flex items-center justify-between">
-              <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-[var(--card-border)] rounded-full overflow-hidden">
                 <m.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${user?.completionScore || 0}%` }}
@@ -328,12 +328,12 @@ const Dashboard = () => {
            />
            <div className="mt-8 flex gap-2">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < (stats?.totalScans || 0) % 5 ? "bg-accent" : "bg-white/5"}`} />
+                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < (stats?.totalScans || 0) % 5 ? "bg-accent" : "bg-[var(--card-border)]"}`} />
               ))}
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-white/5">
+        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-[var(--card-border)]">
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 rotate-45 group-hover:rotate-0">
               <FaShieldAlt size={100} />
            </div>
@@ -361,14 +361,14 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {resumes?.map((resume) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 h-[500px] hover:glow-primary transition-all duration-700 overflow-hidden flex flex-col border-white/5">
+            <GlassContainer key={resume.id} intensity="medium" className="group p-0 h-[500px] hover:glow-primary transition-all duration-700 overflow-hidden flex flex-col border-[var(--card-border)]">
               {/* Revision Banner HUD */}
               <div className="h-44 bg-mesh opacity-30 relative group-hover:scale-[1.05] transition-transform duration-1000">
                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
                 <div className="absolute top-6 left-6 flex flex-col gap-3">
                   <div className="flex gap-2">
                     {renderAtsBadge(resume.atsScore)}
-                    <span className="bg-primary/20 text-text-primary text-[9px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest border border-white/10 backdrop-blur-md">
+                    <span className="bg-primary/20 text-text-primary text-[9px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[var(--card-border)] backdrop-blur-md">
                       {resume.status}
                     </span>
                   </div>
@@ -382,7 +382,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex-1 space-y-8">
-                   <div className="flex items-center gap-5 p-5 glass-soft rounded-2xl border-white/5 group/revision">
+                   <div className="flex items-center gap-5 p-5 glass-soft rounded-2xl border-[var(--card-border)] group/revision">
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover/revision:rotate-12 transition-transform">
                         <FiEdit2 size={18} />
                       </div>
@@ -395,10 +395,10 @@ const Dashboard = () => {
                    </div>
 
                    <div className="grid grid-cols-2 gap-4">
-                      <button onClick={() => handleScan(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 hover:text-primary transition-all border-white/5">
+                      <button onClick={() => handleScan(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 hover:text-primary transition-all border-[var(--card-border)]">
                         <FaSearchPlus size={14} /> Analysis
                       </button>
-                      <button onClick={() => handleImprove(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/10 hover:text-amber-500 transition-all border-white/5">
+                      <button onClick={() => handleImprove(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/10 hover:text-amber-500 transition-all border-[var(--card-border)]">
                         <FiZap size={14} /> Optimize
                       </button>
                    </div>
@@ -408,7 +408,7 @@ const Dashboard = () => {
                   <PremiumButton onClick={() => handleEdit(resume.id)} className="flex-1 !py-4 !text-[10px] shadow-sm" icon={FiEdit2}>
                     Open Builder
                   </PremiumButton>
-                  <button onClick={() => handleDownloadPDF(resume, "Modern")} className="w-14 h-14 glass-soft rounded-2xl border-white/5 flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
+                  <button onClick={() => handleDownloadPDF(resume, "Modern")} className="w-14 h-14 glass-soft rounded-2xl border-[var(--card-border)] flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
                     <FiDownload size={20} />
                   </button>
                 </div>
@@ -417,7 +417,7 @@ const Dashboard = () => {
           ))}
 
           {resumes?.length < 3 && (
-            <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-white/10 flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all h-[500px]">
+            <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-[var(--card-border)] flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all h-[500px]">
               <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 group-hover:glow-primary transition-all duration-500 mb-6">
                 <FiPlus size={36} />
               </div>
@@ -440,7 +440,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {coverLetters?.map((letter) => (
-            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-10 cursor-pointer hover:border-accent/40 transition-all flex flex-col relative overflow-hidden border-white/5">
+            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-10 cursor-pointer hover:border-accent/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]">
               <div className="absolute -top-10 -right-10 p-10 opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-700">
                  <FaEnvelopeOpenText size={120} />
               </div>
@@ -461,7 +461,7 @@ const Dashboard = () => {
                  </p>
               </div>
 
-              <div className="mt-12 pt-6 border-t border-white/5 flex items-center justify-between">
+              <div className="mt-12 pt-6 border-t border-[var(--card-border)] flex items-center justify-between">
                  <div className="flex items-center gap-3 group/btn">
                     <span className="text-[11px] font-black text-accent tracking-[0.3em] uppercase">View Details</span>
                     <FiArrowRight className="text-accent group-hover/btn:translate-x-2 transition-transform" />
@@ -480,21 +480,21 @@ const Dashboard = () => {
         {isPreviewOpen && selectedLetter && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10">
             <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsPreviewOpen(false)} className="fixed inset-0 bg-bg-secondary/90 backdrop-blur-xl transition-all" />
-            <m.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="glass-strong w-full max-w-4xl max-h-[90vh] rounded-3xl border-white/10 flex flex-col relative z-20 overflow-hidden shadow-2xl">
-               <div className="p-12 border-b border-card-border flex justify-between items-start bg-white/[0.02]">
+            <m.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="glass-strong w-full max-w-4xl max-h-[90vh] rounded-3xl border-[var(--card-border)] flex flex-col relative z-20 overflow-hidden shadow-2xl">
+               <div className="p-12 border-b border-card-border flex justify-between items-start bg-[var(--glass-soft-bg)]">
                   <div>
                     <h3 className="text-[11px] font-black text-accent uppercase tracking-[0.4em] mb-4">Export Document</h3>
                     <h3 className="font-black text-4xl lg:text-5xl text-text-primary tracking-tighter leading-none">{selectedLetter.jobTitle}</h3>
                     <p className="mt-3 text-text-secondary font-bold text-lg opacity-60">{selectedLetter.companyName}</p>
                   </div>
-                  <button onClick={() => setIsPreviewOpen(false)} className="w-14 h-14 glass-medium border-white/10 rounded-2xl flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 transition-all active:scale-90">
+                  <button onClick={() => setIsPreviewOpen(false)} className="w-14 h-14 glass-medium border-[var(--card-border)] rounded-2xl flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 transition-all active:scale-90">
                     <FaTimes size={20} />
                   </button>
                </div>
                <div className="p-12 overflow-y-auto font-medium text-text-secondary text-lg leading-relaxed whitespace-pre-wrap select-text custom-scrollbar space-y-6">
                   {selectedLetter.content}
                </div>
-               <div className="p-10 border-t border-card-border bg-white/[0.04]">
+               <div className="p-10 border-t border-[var(--card-border)] bg-[var(--glass-soft-bg)]">
                   <PremiumButton onClick={() => handleDownloadLetter(selectedLetter, user)} className="w-full !py-6" icon={FaDownload}>
                     Download as PDF
                   </PremiumButton>

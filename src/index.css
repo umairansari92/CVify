@@ -28,6 +28,12 @@
   --text-primary: #0F172A;
   --text-secondary: #475569;
 
+  /* Glass System Tokens */
+  --glass-soft-bg: rgba(255, 255, 255, 0.6);
+  --glass-medium-bg: rgba(255, 255, 255, 0.8);
+  --glass-strong-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: var(--card-border);
+
   /* Elevation System */
   --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -60,6 +66,12 @@
   --card-border: rgba(255, 255, 255, 0.08);
   --text-primary: #E2E8F0;
   --text-secondary: #94A3B8;
+
+  /* Glass System Tokens */
+  --glass-soft-bg: rgba(15, 23, 42, 0.3);
+  --glass-medium-bg: rgba(15, 23, 42, 0.5);
+  --glass-strong-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
 
   /* Elevation System */
   --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -127,22 +139,22 @@
 /* Glass Tier System */
 .glass-soft {
   @apply backdrop-blur-[15px];
-  background: rgba(15, 23, 42, 0.15);
-  border: 1px solid var(--card-border);
+  background: var(--glass-soft-bg);
+  border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-1);
 }
 
 .glass-medium {
   @apply backdrop-blur-[25px];
-  background: rgba(15, 23, 42, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--glass-medium-bg);
+  border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-2);
 }
 
 .glass-strong {
   @apply backdrop-blur-[40px];
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--glass-strong-bg);
+  border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-3);
 }
 
