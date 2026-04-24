@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 
 const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
   return (
-    <section id="education" className="py-20 md:py-32 border-b border-white/5">
+    <section id="education" className="py-20 md:py-32 border-b border-[var(--card-border)]">
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -74,7 +74,7 @@ const Education = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
                 </h4>
 
                 {edu.description && (
-                   <div className="relative pt-6 border-t border-white/5">
+                   <div className="relative pt-6 border-t border-[var(--card-border)]">
                      <p className="text-base text-[var(--text-secondary)] leading-relaxed italic opacity-40 group-hover:opacity-90 transition-all duration-500">
                         <InlineEdit isOwner={isOwner} label="Story" value={edu.description} onSave={(v) => handleArrayUpdate("education", index, { description: v })} multiline>{edu.description}</InlineEdit>
                      </p>

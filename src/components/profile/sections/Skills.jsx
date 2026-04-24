@@ -93,7 +93,7 @@ const ICON_MAP = {
 
   // --- FRONTEND FRAMEWORKS ---
   react: <FaReact className="text-[#61DAFB]" />,
-  next: <SiNextdotjs className="text-white" />,
+  next: <SiNextdotjs className="text-[var(--text-primary)]" />,
   vue: <SiVuedotjs className="text-[#4FC08D]" />,
   angular: <SiAngular className="text-[#DD0031]" />,
   svelte: <SiSvelte className="text-[#FF3E00]" />,
@@ -102,7 +102,7 @@ const ICON_MAP = {
   solid: <FaCode className="text-[#2C4F7C]" />,
   qwik: <FaCode className="text-[#161616]" />,
   preact: <FaCode className="text-[#673AB8]" />,
-  remix: <FaCode className="text-white" />,
+  remix: <FaCode className="text-[var(--text-primary)]" />,
   astro: <FaCode className="text-[#FF5D01]" />,
   gatsby: <FaCode className="text-[#663399]" />,
   jquery: <SiJquery className="text-[#0769AD]" />,
@@ -117,7 +117,7 @@ const ICON_MAP = {
   mobx: <FaLayerGroup className="text-[#FF0995]" />,
   zustand: <FaLayerGroup className="text-[#434343]" />,
   recoil: <FaLayerGroup className="text-[#3578E5]" />, // No Si icon, fallback
-  jotai: <FaLayerGroup className="text-white" />,
+  jotai: <FaLayerGroup className="text-[var(--text-primary)]" />,
   pinia: <FaLayerGroup className="text-[#FFE485]" />,
 
   // --- STYLING ---
@@ -128,27 +128,27 @@ const ICON_MAP = {
   less: <SiLess className="text-[#1D365D]" />,
   mui: <SiMui className="text-[#007FFF]" />,
   chakra: <SiChakraui className="text-[#319795]" />,
-  shadcn: <SiShadcnui className="text-white" />,
+  shadcn: <SiShadcnui className="text-[var(--text-primary)]" />,
   postcss: <SiPostcss className="text-[#DD3A0A]" />,
-  framer: <SiFramer className="text-white" />,
+  framer: <SiFramer className="text-[var(--text-primary)]" />,
   styled: <FaFileCode className="text-[#DB7093]" />,
 
   // --- BACKEND ---
   node: <FaNodeJs className="text-[#339933]" />,
-  express: <SiExpress className="text-white" />,
+  express: <SiExpress className="text-[var(--text-primary)]" />,
   nest: <SiNestjs className="text-[#E0234E]" />,
   django: <SiDjango className="text-[#092E20]" />,
-  flask: <SiFlask className="text-white" />,
+  flask: <SiFlask className="text-[var(--text-primary)]" />,
   fastapi: <SiFastapi className="text-[#05998B]" />,
   laravel: <SiLaravel className="text-[#FF2D20]" />,
-  symfony: <FaTerminal className="text-white" />,
+  symfony: <FaTerminal className="text-[var(--text-primary)]" />,
   springboot: <SiSpringboot className="text-[#6DB33F]" />,
   spring: <SiSpringboot className="text-[#6DB33F]" />,
   ruby: <FaGem className="text-[#CC342D]" />,
   rails: <FaGem className="text-[#CC342D]" />,
   php: <FaPhp className="text-[#777BB4]" />,
   go: <FaTerminal className="text-[#00ADD8]" />,
-  rust: <FaRust className="text-white" />,
+  rust: <FaRust className="text-[var(--text-primary)]" />,
   java: <FaJava className="text-[#007396]" />,
   csharp: <FaCode className="text-[#239120]" />,
   cpp: <FaCode className="text-[#00599C]" />,
@@ -172,7 +172,7 @@ const ICON_MAP = {
   neo4j: <SiNeo4J className="text-[#008CC1]" />,
   firebase: <SiFirebase className="text-[#FFCA28]" />,
   supabase: <SiSupabase className="text-[#3ECF8E]" />,
-  prisma: <SiPrisma className="text-white" />,
+  prisma: <SiPrisma className="text-[var(--text-primary)]" />,
   mongoose: <SiMongoose className="text-[#880000]" />,
   sequelize: <SiSequelize className="text-[#52B0E7]" />,
   typeorm: <SiTypeorm className="text-[#FE0805]" />,
@@ -185,7 +185,7 @@ const ICON_MAP = {
   docker: <FaDocker className="text-[#2496ED]" />,
   kubernetes: <SiKubernetes className="text-[#326CE5]" />,
   k8s: <SiKubernetes className="text-[#326CE5]" />,
-  vercel: <SiVercel className="text-white" />,
+  vercel: <SiVercel className="text-[var(--text-primary)]" />,
   netlify: <SiNetlify className="text-[#00C7B7]" />,
   digitalocean: <SiDigitalocean className="text-[#0080FF]" />,
   cloudflare: <SiCloudflare className="text-[#F38020]" />,
@@ -194,7 +194,7 @@ const ICON_MAP = {
   terraform: <SiTerraform className="text-[#7B42BC]" />,
   ansible: <SiAnsible className="text-[#EE0000]" />,
   git: <FaGitAlt className="text-[#F05032]" />,
-  github: <FaGithub className="text-white" />,
+  github: <FaGithub className="text-[var(--text-primary)]" />,
   gitlab: <SiGitlab className="text-[#FC6D26]" />,
   bitbucket: <SiBitbucket className="text-[#0052CC]" />,
 
@@ -217,14 +217,14 @@ const ICON_MAP = {
   pandas: <FaCode className="text-[#150458]" />,
   numpy: <FaCode className="text-[#013243]" />,
   keras: <FaCode className="text-[#D00000]" />,
-  langchain: <FaLink className="text-white" />,
+  langchain: <FaLink className="text-[var(--text-primary)]" />,
 
   // --- MOBILE & OTHER ---
   android: <FaAndroid className="text-[#3DDC84]" />,
-  ios: <FaApple className="text-white" />,
+  ios: <FaApple className="text-[var(--text-primary)]" />,
   flutter: <FaCode className="text-[#02569B]" />,
   reactnative: <FaReact className="text-[#61DAFB]" />,
-  unity: <FaUnity className="text-white" />,
+  unity: <FaUnity className="text-[var(--text-primary)]" />,
   ghost: <FaCode className="text-[#3ABBFF]" />,
   contentful: <FaCode className="text-[#24B47E]" />,
   magento: <FaCode className="text-[#EE672F]" />,
@@ -327,18 +327,18 @@ const Skills = React.memo(
           boxShadow: "0 20px 40px -10px rgba(0,0,0,0.3)",
           borderColor: "var(--primary-color)",
         }}
-        className="group relative flex items-center gap-5 px-5 py-4 bg-white/[0.03] dark:bg-white/[0.01] border border-white/10 dark:border-white/5 rounded-2xl cursor-default transition-all duration-500 hover:bg-white dark:hover:bg-white hover:text-slate-900 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
+        className="group relative flex items-center gap-5 px-5 py-4 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl cursor-default transition-all duration-500 hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
       >
         {/* Hover Highlight Effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
 
         {/* Icon Container */}
-        <div className="relative z-10 flex-shrink-0 w-12 h-12 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 group-hover:bg-slate-100 group-hover:border-transparent transition-all duration-500 text-3xl group-hover:scale-110 group-hover:-rotate-3">
+        <div className="relative z-10 flex-shrink-0 w-12 h-12 flex items-center justify-center bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] group-hover:bg-slate-100 group-hover:border-transparent transition-all duration-500 text-3xl group-hover:scale-110 group-hover:-rotate-3">
           {getSkillIcon(name)}
         </div>
 
         {/* Separator Line */}
-        <div className="w-px h-8 bg-white/10 group-hover:bg-slate-200 transition-colors duration-500" />
+        <div className="w-px h-8 bg-[var(--card-border)] group-hover:bg-slate-200 transition-colors duration-500" />
 
         {/* Text Content */}
         <div className="flex flex-col relative z-10">
@@ -355,7 +355,7 @@ const Skills = React.memo(
     return (
       <section
         id="expertise"
-        className="py-24 md:py-36 border-b border-white/5 relative overflow-hidden"
+        className="py-24 md:py-36 border-b border-[var(--card-border)] relative overflow-hidden"
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--primary-color)]/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -486,7 +486,7 @@ const Skills = React.memo(
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 md:p-12 bg-white/[0.02] border border-white/5 rounded-3xl space-y-6 hover:bg-white/[0.04] hover:border-violet-500/20 transition-all group relative overflow-hidden"
+                    className="p-8 md:p-12 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl space-y-6 hover:border-violet-500/20 transition-all group relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 blur-[50px] rounded-full pointer-events-none" />
                     <div className="flex items-center justify-between">
@@ -522,7 +522,7 @@ const Skills = React.memo(
             viewport={{ once: true }}
             className="pt-10 flex flex-col items-center gap-4"
           >
-            <div className="h-px w-20 bg-white/10" />
+            <div className="h-px w-20 bg-[var(--card-border)]" />
             <p className="text-[9px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] opacity-30">
               Verified Expertise & Value Propositions
             </p>

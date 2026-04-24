@@ -8,7 +8,7 @@ const Interests = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
   const interests = user?.interests || [];
 
   return (
-    <section id="interests" className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]">
+    <section id="interests" className="py-16 md:py-24 border-b border-[var(--card-border)] bg-[var(--card-bg)]">
       <div className="max-w-6xl mx-auto px-6 space-y-16">
         <div className="text-center space-y-4">
           <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
@@ -24,10 +24,10 @@ const Interests = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
               key={index}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+              whileHover={{ scale: 1.05, backgroundColor: "var(--card-bg)" }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="px-6 py-3 md:px-8 md:py-4 bg-white/[0.03] border border-white/10 rounded-[1.5rem] md:rounded-[2rem] flex items-center gap-3 transition-all group"
+              className="px-6 py-3 md:px-8 md:py-4 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[1.5rem] md:rounded-[2rem] flex items-center gap-3 transition-all group"
             >
               <FaHeart size={14} className="text-[var(--primary-color)] opacity-40 group-hover:opacity-100 transition-all" />
               <span className="text-sm font-black text-[var(--text-primary)] tracking-wide uppercase">
@@ -41,7 +41,7 @@ const Interests = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, h
           {isOwner && (
             <button 
               onClick={() => toast.success("Add interests in Dashboard > Dossier.")}
-              className="px-8 py-4 border border-dashed border-white/20 hover:border-[var(--primary-color)]/40 rounded-[2rem] text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-all flex items-center gap-2 text-sm font-black uppercase tracking-widest"
+              className="px-8 py-4 border border-dashed border-[var(--card-border)] hover:border-[var(--primary-color)]/40 rounded-[2rem] text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-all flex items-center gap-2 text-sm font-black uppercase tracking-widest"
             >
               <FaPlus size={10} /> Add Passion
             </button>

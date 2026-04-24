@@ -35,11 +35,11 @@ const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArra
               transition={{ delay: index * 0.1 }}
               className="group flex flex-col bg-[var(--card-bg)] backdrop-blur-sm border border-[var(--card-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--primary-color)]/80 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:-translate-y-1"
             >
-              <div className="relative aspect-video w-full bg-white/5 overflow-hidden border-b border-white/10">
+              <div className="relative aspect-video w-full bg-[var(--card-bg)] overflow-hidden border-b border-[var(--card-border)]">
                 {project.thumbnail || project.image ? (
                   <img src={project.thumbnail || project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/20">
+                  <div className="w-full h-full flex items-center justify-center text-[var(--text-primary)] opacity-20">
                     <ImageIcon size={48} strokeWidth={1} />
                   </div>
                 )}
@@ -90,7 +90,7 @@ const Showcase = React.memo(({ user, isOwner, projects, displayValue, handleArra
                   <div className="flex-1"></div>
 
                   {isOwner && (
-                    <button onClick={() => dispatch(deleteProjectThunk(project._id || index))} className="text-white/30 hover:text-red-400 transition-colors">
+                    <button onClick={() => dispatch(deleteProjectThunk(project._id || index))} className="text-[var(--text-secondary)] opacity-50 hover:opacity-100 hover:text-red-400 transition-all">
                       <Trash size={16} />
                     </button>
                   )}

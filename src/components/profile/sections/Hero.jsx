@@ -45,10 +45,10 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-12 border-t border-white/5"
+        className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-12 border-t border-[var(--card-border)]"
       >
         {stats.map((stat, i) => (
-          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[var(--primary-color)]/20 transition-all group">
+          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-[var(--primary-color)]/20 transition-all group">
             <div className="text-[var(--primary-color)] opacity-60 group-hover:opacity-100 transition-all">
               {stat.icon}
             </div>
@@ -84,12 +84,12 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
           {personalInfo.fullName && (
             <div className="space-y-1">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <span className="text-white font-black uppercase text-sm sm:text-base tracking-[0.2em]">Hi, I'm</span>
+                <span className="text-[var(--text-primary)] font-black uppercase text-sm sm:text-base tracking-[0.2em]">Hi, I'm</span>
               </motion.div>
 
               <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] font-black leading-[0.9] tracking-tighter w-full">
                 <InlineEdit className="inline-block" isOwner={isOwner} id="heroTitle" value={personalInfo.fullName} onSave={(v) => { const [f, ...l] = v.split(" "); handleLiveUpdate({ firstName: f, lastName: l.join(" ") }); }}>
-                  <span className="uppercase block text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] hover:[-webkit-text-stroke:1px_var(--primary-color)] transition-all duration-500">
+                  <span className="uppercase block text-transparent [-webkit-text-stroke:1px_var(--text-primary)] opacity-80 hover:opacity-100 hover:[-webkit-text-stroke:1px_var(--primary-color)] transition-all duration-500">
                     {personalInfo.fullName}.
                   </span>
                 </InlineEdit>
@@ -97,7 +97,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
 
               {(slogans.length > 0 || personalInfo.jobTitle) && (
                 <div className="space-y-2 pt-4">
-                  <p className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-none uppercase">
+                  <p className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--text-primary)] tracking-tight leading-none uppercase">
                     I'm a Professional
                   </p>
                   <div className="text-[var(--primary-color)] text-xl sm:text-2xl md:text-3xl font-bold tracking-widest uppercase opacity-90">
@@ -130,7 +130,7 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
              <button onClick={() => document.getElementById('showcase')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-[var(--primary-color)] text-white rounded-full font-black text-[10px] uppercase tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_var(--primary-color)]/40">
                View My Profile
              </button>
-             <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">
+             <button onClick={() => setShowResumeModal(true)} className="px-10 py-5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-[var(--primary-color)]/10 hover:border-[var(--primary-color)]/30 transition-all">
                Get My Resume
              </button>
              <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-transparent border-2 border-[var(--primary-color)]/30 text-[var(--primary-color)] rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-[var(--primary-color)]/10 transition-all">

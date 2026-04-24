@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 
 const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, handleArrayUpdate }) => {
   return (
-    <section id="journey" className="py-20 md:py-32 border-b border-white/5 bg-white/[0.01]">
+    <section id="journey" className="py-20 md:py-32 border-b border-[var(--card-border)] bg-[var(--card-bg)]">
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -78,7 +78,7 @@ const Experience = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, 
                   <InlineEdit isOwner={isOwner} label="Company" value={exp.company} onSave={(v) => handleArrayUpdate("experience", index, { company: v })}>{exp.company || "Company"}</InlineEdit>
                 </h4>
 
-                <div className="text-base text-[var(--text-secondary)] leading-relaxed relative pl-4 border-l border-white/10 group-hover:border-[var(--primary-color)]/30 transition-colors">
+                <div className="text-base text-[var(--text-secondary)] leading-relaxed relative pl-4 border-l border-[var(--card-border)] group-hover:border-[var(--primary-color)]/30 transition-colors">
                   <InlineEdit isOwner={isOwner} label="Achievements" value={exp.achievements} onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })} multiline>
                     <p className="whitespace-pre-wrap opacity-70 group-hover:opacity-100 transition-opacity">{exp.achievements || "Description..."}</p>
                   </InlineEdit>

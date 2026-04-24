@@ -11,7 +11,7 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
   if (!isOwner && achievements.length === 0 && certifications.length === 0 && languages.length === 0) return null;
 
   return (
-    <section id="journey" className="py-20 md:py-32 border-b border-white/5 bg-white/[0.02]">
+    <section id="journey" className="py-20 md:py-32 border-b border-[var(--card-border)] bg-[var(--card-bg)]">
       <div className="max-w-6xl mx-auto px-6 space-y-16 md:space-y-24">
         
         {/* Certifications & Achievements Title */}
@@ -38,7 +38,7 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-6 md:p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] md:rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all"
+                  className="p-6 md:p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2rem] md:rounded-[2.5rem] hover:border-[var(--primary-color)]/20 transition-all"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="space-y-1">
@@ -64,7 +64,7 @@ const Dossier = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, han
 
         {/* Global Reach (Languages) */}
         {languages.length > 0 && (
-          <div className="pt-16 border-t border-white/5">
+          <div className="pt-16 border-t border-[var(--card-border)]">
             <div className="flex flex-wrap items-center justify-center gap-10">
               {languages.map((lang, idx) => (
                 <div key={idx} className="flex items-center gap-4 group">

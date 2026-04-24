@@ -295,16 +295,20 @@ const PublicProfile = () => {
     </div>
   );
 
-  const theme = localTheme || themePresets[0];
+  const baseTheme = localTheme || themePresets[0];
+  const fullTheme = themePresets.find(p => p.name === baseTheme.name) || themePresets[0];
+  const theme = { ...fullTheme, ...baseTheme };
+  const isLight = ["#f8fafc", "#ffffff", "#f1f5f9", "#f0fdf4", "#fff7ed"].includes(theme.bodyBg?.toLowerCase());
+
   const themeStyles = {
     backgroundColor: theme.bodyBg,
     fontFamily: `'${theme.fontPrimary}', sans-serif`,
     "--primary-color": theme.accentColor || "#2563eb",
     "--bg-primary": theme.bodyBg || "#0f172a",
-    "--text-primary": theme.textPrimary || "#ffffff",
-    "--text-secondary": theme.textSecondary || "#94a3b8",
-    "--card-bg": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.04)" : "rgba(255,255,255,0.02)",
-    "--card-border": theme.cardStyle === "glass" ? "rgba(255, 255, 255, 0.1)" : "rgba(255,255,255,0.08)",
+    "--text-primary": theme.textPrimary || (isLight ? "#0f172a" : "#ffffff"),
+    "--text-secondary": theme.textSecondary || (isLight ? "#64748b" : "#94a3b8"),
+    "--card-bg": theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.03)" : "rgba(255, 255, 255, 0.04)") : (isLight ? "rgba(0, 0, 0, 0.01)" : "rgba(255, 255, 255, 0.02)"),
+    "--card-border": theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.1)") : (isLight ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.08)"),
     color: "var(--text-primary)",
   };
 
@@ -530,7 +534,7 @@ const PublicProfile = () => {
 
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-3 rounded-full bg-white/5 text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
+              className="lg:hidden p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -566,7 +570,7 @@ const PublicProfile = () => {
                   {item}
                 </a>
               ))}
-              <hr className="border-white/5" />
+              <hr className="border-[var(--card-border)]" />
               <button 
                 onClick={() => { setIsMenuOpen(false); setShowResumeModal(true); }}
                 className="w-full py-5 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest"

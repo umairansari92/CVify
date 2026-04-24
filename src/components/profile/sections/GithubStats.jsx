@@ -32,10 +32,10 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
   const Skeleton = () => (
     <div className="space-y-12 animate-pulse">
-      <div className="h-48 bg-white/5 rounded-3xl" />
+      <div className="h-48 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-40 bg-white/5 rounded-2xl" />
+          <div key={i} className="h-40 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl" />
         ))}
       </div>
     </div>
@@ -77,7 +77,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-8 md:p-14 rounded-3xl bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 backdrop-blur-3xl relative overflow-hidden group shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
+            className="p-8 md:p-14 rounded-3xl bg-gradient-to-br from-[var(--card-bg)] to-transparent border border-[var(--card-border)] backdrop-blur-3xl relative overflow-hidden group shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
           >
              {/* HUD Decorative Background */}
              <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
@@ -103,7 +103,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                     Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] to-blue-400 px-4 py-2 -mr-4">Insight</span>
                   </h2>
 
-                  <div className="p-8 md:p-12 bg-white/5 border border-white/5 rounded-3xl relative overflow-hidden">
+                  <div className="p-8 md:p-12 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-2 h-full bg-[var(--primary-color)] shadow-[0_0_20px_var(--primary-color)]" />
                     <p className="text-2xl md:text-4xl font-bold text-[var(--text-primary)] leading-[1.1] tracking-tight">
                       "{verdict}"
@@ -145,7 +145,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 </div>
               </div>
 
-              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${scores?.[key.charAt(0).toLowerCase() + key.slice(1)] || 0}%` }}
@@ -174,13 +174,13 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
             <div className="grid gap-6">
               {topRepos?.map((repo, i) => (
-                <div key={i} className="group/repo p-8 bg-white/[0.02] border border-white/5 hover:border-[var(--primary-color)]/30 rounded-3xl transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
+                <div key={i} className="group/repo p-8 bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 rounded-3xl transition-all flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <h5 className="text-xl font-black text-[var(--text-primary)] group-hover/repo:text-[var(--primary-color)] transition-colors tracking-tight">
                         {repo.name}
                       </h5>
-                      <span className="px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase text-[var(--text-secondary)]">
+                      <span className="px-3 py-1 bg-[var(--bg-primary)] border border-[var(--card-border)] rounded-full text-[9px] font-black uppercase text-[var(--text-secondary)]">
                         {repo.language || "Engine"}
                       </span>
                     </div>
@@ -196,7 +196,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                       </div>
                       <p className="text-[9px] font-black uppercase tracking-tighter opacity-30">Impact</p>
                     </div>
-                    <a href={repo.url} target="_blank" rel="noreferrer" className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-[var(--primary-color)] hover:text-white transition-all shadow-xl group/link">
+                    <a href={repo.url} target="_blank" rel="noreferrer" className="w-14 h-14 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl flex items-center justify-center hover:bg-[var(--primary-color)] hover:text-white text-[var(--text-primary)] transition-all shadow-xl group/link">
                       <ChevronRight size={20} className="group-hover/link:translate-x-1 transition-transform" />
                     </a>
                   </div>
@@ -207,27 +207,27 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
 
           {/* DNA & Language Synthesis */}
           <div className="lg:col-span-5 space-y-12">
-             <div className="p-12 rounded-3xl bg-white/[0.03] border border-white/10 space-y-10 shadow-2xl">
+             <div className="p-12 rounded-3xl bg-[var(--card-bg)] border border-[var(--card-border)] space-y-10 shadow-2xl">
                 <div>
                    <h4 className="text-base font-black uppercase tracking-[0.25em] text-[var(--text-primary)] mb-2">Engineering Activity</h4>
                    <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="p-6 bg-white/5 rounded-2xl border border-white/5 hover:border-[var(--primary-color)]/30 transition-all group/stat">
-                    <p className="text-3xl font-black text-white group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.journey?.totalCommits || stats.commits90d || 0}</p>
+                   <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 transition-all group/stat">
+                    <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.journey?.totalCommits || stats.commits90d || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Lifetime</p>
                   </div>
                   <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
                     <p className="text-3xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
                   </div>
-                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-                    <p className="text-2xl font-black text-white">{stats.journey?.thisWeek || 0}</p>
+                  <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                    <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.thisWeek || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
                   </div>
-                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-                    <p className="text-2xl font-black text-white">{stats.journey?.lastWeek || 0}</p>
+                  <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                    <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.lastWeek || 0}</p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Last Week</p>
                   </div>
                 </div>
@@ -239,7 +239,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                            <span className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)]">{lang.name}</span>
                            <span className="text-xs font-bold text-[var(--primary-color)]">{lang.percentage}%</span>
                         </div>
-                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-2 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-full overflow-hidden">
                            <motion.div
                              initial={{ width: 0 }}
                              whileInView={{ width: `${lang.percentage}%` }}

@@ -59,29 +59,29 @@ const About = React.memo(({ user, isOwner, displayValue, handleLiveUpdate, setSh
 
         <div className="pt-12 space-y-8">
           {(user?.branding?.verificationStats?.atsScore || user?.branding?.verificationStats?.dataPoints) && (
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[2rem] max-w-2xl mx-auto">
+            <div className="p-8 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2rem] max-w-2xl mx-auto">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-4">Verification Proof</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 {user?.branding?.verificationStats?.atsScore && (
                   <>
                     <div className="text-center">
-                      <p className="text-4xl font-black text-white">{user.branding.verificationStats.atsScore}%</p>
+                      <p className="text-4xl font-black text-[var(--text-primary)]">{user.branding.verificationStats.atsScore}%</p>
                       <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Avg. ATS Score</p>
                     </div>
-                    <div className="w-px h-12 bg-white/10 hidden sm:block" />
+                    <div className="w-px h-12 bg-[var(--card-border)] hidden sm:block" />
                   </>
                 )}
                 {user?.branding?.verificationStats?.dataPoints && (
                   <>
                     <div className="text-center">
-                      <p className="text-4xl font-black text-white">{user.branding.verificationStats.dataPoints}</p>
+                      <p className="text-4xl font-black text-[var(--text-primary)]">{user.branding.verificationStats.dataPoints}</p>
                       <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">Data Points Scanned</p>
                     </div>
-                    <div className="w-px h-12 bg-white/10 hidden sm:block" />
+                    <div className="w-px h-12 bg-[var(--card-border)] hidden sm:block" />
                   </>
                 )}
                 <div className="text-center">
-                  <p className="text-4xl font-black text-white">Verified</p>
+                  <p className="text-4xl font-black text-[var(--text-primary)]">Verified</p>
                   <p className="text-[8px] font-bold uppercase tracking-widest opacity-40">By CVify Intelligence</p>
                 </div>
               </div>
