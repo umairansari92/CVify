@@ -246,24 +246,24 @@ const Dashboard = () => {
             <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-3xl border-[var(--card-border)] relative group/integrity">
               <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover/integrity:opacity-100 transition-opacity duration-1000" />
               <div className="relative w-48 h-48 lg:w-56 lg:h-56">
-                <svg className="w-full h-full transform -rotate-90">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle
-                    cx="50%"
-                    cy="50%"
-                    r="42%"
+                    cx="50"
+                    cy="50"
+                    r="42"
                     className="stroke-card-border fill-none"
                     strokeWidth="8"
                   />
                   <m.circle
-                    cx="50%"
-                    cy="50%"
-                    r="42%"
+                    cx="50"
+                    cy="50"
+                    r="42"
                     fill="none"
                     stroke="var(--primary)"
                     strokeWidth="10"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: "0, 1000" }}
-                    animate={{ strokeDasharray: `${(user?.completionScore || 0) * 2.64}, 1000` }}
+                    animate={{ strokeDasharray: `${(user?.completionScore || 0) * 2.6389}, 1000` }}
                     transition={{ duration: 2, ease: "circOut" }}
                     className="shadow-glow-primary filter drop-shadow-[0_0_8px_var(--primary)]"
                   />
