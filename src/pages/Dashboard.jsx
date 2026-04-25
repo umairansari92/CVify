@@ -363,18 +363,20 @@ const Dashboard = () => {
           {resumes?.map((resume) => (
             <GlassContainer key={resume.id} intensity="medium" className="group p-0 h-[500px] hover:glow-primary transition-all duration-700 overflow-hidden flex flex-col border-[var(--card-border)]">
               {/* Revision Banner HUD */}
-              <div className="h-44 relative overflow-hidden shrink-0 group-hover:scale-[1.05] transition-transform duration-1000">
+              <div className="h-44 relative group-hover:scale-[1.05] transition-transform duration-1000 shrink-0">
                 <div className="absolute inset-0 bg-mesh opacity-30" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-color)] to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
+                <div className="absolute bottom-16 left-10 flex flex-col gap-3">
+                  <div className="flex gap-2">
+                    {renderAtsBadge(resume.atsScore)}
+                    <span className="bg-primary/20 text-text-primary text-[9px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[var(--card-border)] backdrop-blur-md">
+                      {resume.status}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="p-10 flex-1 flex flex-col -mt-16 relative z-10">
-                <div className="flex gap-2 mb-4">
-                  {renderAtsBadge(resume.atsScore)}
-                  <span className="bg-primary/20 text-text-primary text-[9px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[var(--card-border)] backdrop-blur-md">
-                    {resume.status}
-                  </span>
-                </div>
+              <div className="p-10 flex-1 flex flex-col -mt-10 relative z-10">
                 <div className="mb-8">
                   <h3 className="text-3xl font-black text-text-primary mb-2 truncate group-hover:text-primary transition-colors">{resume.title}</h3>
                   <p className="text-[11px] font-black text-primary/60 uppercase tracking-[0.3em]">Premium Resume Template</p>
