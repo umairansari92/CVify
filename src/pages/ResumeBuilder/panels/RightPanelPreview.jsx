@@ -51,7 +51,7 @@ const RightPanelPreview = ({ resume }) => {
         <div 
           className="bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-transform duration-300 origin-top h-fit"
           style={{ 
-            transform: \`scale(\${zoom})\`,
+            transform: `scale(${zoom})`,
             width: "210mm", // Standard A4 width
           }}
         >
