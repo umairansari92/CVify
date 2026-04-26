@@ -9,9 +9,12 @@ import ProjectsForm from "../../../components/forms/ProjectsForm";
 import CustomSectionsForm from "../../../components/forms/CustomSectionsForm";
 import ResumeMatcherView from "../components/ResumeMatcherView";
 import ResumeDesignerView from "../components/ResumeDesignerView";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setResumeData } from "../../../features/resume/resumeSlice";
+import api from "../../../api/axios";
 
 const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
+  const dispatch = useDispatch();
   const { currentResume } = useSelector((state) => state.resume);
   
   const isAnalyzer = activeTab === "Analyzer";
@@ -24,12 +27,25 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   const handleExecuteAI = async () => {
     if (!intent.trim()) return;
     setIsExecuting(true);
-    // Simulation
-    setTimeout(() => {
+    
+    const toastId = toast.loading(`AI is processing: "${intent}"...`);
+    try {
+      const response = await api.post("/resume-intelligence/optimize-intent", {
+        currentResume,
+        intent
+      });
+
+      if (response.data.success) {
+        dispatch(setResumeData(response.data.data));
+        toast.success("Resume optimized successfully!", { id: toastId });
+        setIntent("");
+      }
+    } catch (error) {
+      console.error("AI Intent Error:", error);
+      toast.error(error.response?.data?.message || "AI failed to process intent", { id: toastId });
+    } finally {
       setIsExecuting(false);
-      setIntent("");
-      toast.success("AI is re-writing your resume sections based on intent...");
-    }, 2000);
+    }
   };
 
   return (
