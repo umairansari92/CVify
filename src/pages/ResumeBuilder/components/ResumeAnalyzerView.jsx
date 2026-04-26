@@ -1,19 +1,34 @@
 import React from "react";
 import { CheckCircle2, AlertCircle, Info, Target, Zap } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const ResumeAnalyzerView = ({ resume }) => {
-  // Mock data for now, will integrate with real analysis state later
+  const { parsingAnalysis } = useSelector((state) => state.resume);
+  
+  // Rule-based feedback mapping
+  const getIssues = () => {
+    if (!parsingAnalysis) return [];
+    
+    const issues = [];
+    if (parsingAnalysis.scores.quantification < 40) {
+      issues.push({ id: 1, type: "error", title: "Missing Quantifiable Results", description: "Only " + (parsingAnalysis.stats?.quantifiedBullets || 0) + " of your bullets have numbers. Recruiters love percentages!", impact: "High" });
+    }
+    if (parsingAnalysis.scores.impact < 50) {
+      issues.push({ id: 2, type: "warning", title: "Weak Action Verbs", description: "Your experience bullets could use more powerful verbs like 'Architected' or 'Optimized'.", impact: "Medium" });
+    }
+    if (parsingAnalysis.scores.completeness < 80) {
+      issues.push({ id: 3, type: "info", title: "Incomplete Profile", description: "Some sections of your profile are still thin. Add more details to reach 100%.", impact: "Low" });
+    }
+    return issues;
+  };
+
   const analysis = {
-    overallScore: 76,
-    issues: [
-      { id: 1, type: "error", title: "Missing Quantifiable Results", description: "Your experience bullets lack numbers and percentages.", impact: "High" },
-      { id: 2, type: "warning", title: "Soft Skill Overload", description: "Too many soft skills in the Expertise section.", impact: "Medium" },
-      { id: 3, type: "info", title: "Strong Action Verbs", description: "Good use of 'Spearheaded' and 'Architected'.", impact: "Low" }
-    ],
+    overallScore: parsingAnalysis?.scores?.completeness || 0,
+    issues: getIssues(),
     metrics: [
-      { label: "Resume Structure", score: 85, color: "emerald" },
-      { label: "Measurable Results", score: 40, color: "red" },
-      { label: "Keyword Usage", score: 65, color: "amber" }
+      { label: "Resume Structure", score: parsingAnalysis?.scores?.completeness || 0, color: "emerald" },
+      { label: "Measurable Results", score: parsingAnalysis?.scores?.quantification || 0, color: "red" },
+      { label: "Keyword Usage", score: parsingAnalysis?.scores?.impact || 0, color: "amber" }
     ]
   };
 

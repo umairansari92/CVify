@@ -9,6 +9,15 @@ const ResumeUploadModal = ({ isOpen, onClose }) => {
   const { loading } = useSelector((state) => state.resume);
   const [file, setFile] = useState(null);
   const [parsingStep, setParsingStep] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { parsingAnalysis } = useSelector((state) => state.resume);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFile(null);
+      setShowSuccess(false);
+    }
+  }, [isOpen, setShowSuccess]);
 
   const steps = [
     "Reading file data...",
@@ -51,8 +60,8 @@ const ResumeUploadModal = ({ isOpen, onClose }) => {
 
     const result = await dispatch(parseResume(formData));
     if (result.type.includes("fulfilled")) {
-      toast.success("Resume parsed and hydrated successfully!");
-      onClose();
+      toast.success("Intelligence Hydration Complete!");
+      setShowSuccess(true);
     } else {
       toast.error(result.payload || "Failed to parse resume");
     }
@@ -81,8 +90,41 @@ const ResumeUploadModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {!loading ? (
+          {showSuccess ? (
+            <div className="py-8 animate-fadeIn">
+              <div className="flex flex-col items-center text-center mb-8">
+                 <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 mb-6 scale-110 animate-bounce">
+                    <CheckCircle2 size={40} />
+                 </div>
+                 <h3 className="text-2xl font-black mb-2">Resume Intelligence Active</h3>
+                 <p className="text-sm text-slate-500">We've successfully extracted and validated your professional data.</p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-10">
+                 <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-center">
+                    <span className="block text-[8px] font-black uppercase text-slate-400 mb-1">Completeness</span>
+                    <span className="text-lg font-black text-primary">{parsingAnalysis?.scores?.completeness || 0}%</span>
+                 </div>
+                 <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-center">
+                    <span className="block text-[8px] font-black uppercase text-slate-400 mb-1">Impact Score</span>
+                    <span className="text-lg font-black text-emerald-500">{parsingAnalysis?.scores?.impact || 0}%</span>
+                 </div>
+                 <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-center">
+                    <span className="block text-[8px] font-black uppercase text-slate-400 mb-1">Quantification</span>
+                    <span className="text-lg font-black text-amber-500">{parsingAnalysis?.scores?.quantification || 0}%</span>
+                 </div>
+              </div>
+
+              <button 
+                onClick={onClose}
+                className="w-full py-5 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] hover:bg-black dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-3"
+              >
+                Enter Builder Experience
+              </button>
+            </div>
+          ) : !loading ? (
             <div className="space-y-6">
+              {/* ... existing upload UI ... */}
               <label 
                 className={`
                   border-2 border-dashed rounded-3xl p-12 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all

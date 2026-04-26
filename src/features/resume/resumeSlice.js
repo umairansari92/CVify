@@ -14,6 +14,7 @@ const resumeSlice = createSlice({
   initialState: {
     resumes: [],
     currentResume: null,
+    parsingAnalysis: null,
     loading: false,
     error: null,
   },
@@ -158,7 +159,8 @@ const resumeSlice = createSlice({
       })
       .addCase(parseResume.fulfilled, (state, action) => {
         state.loading = false;
-        const data = action.payload;
+        const { data, analysis } = action.payload;
+        state.parsingAnalysis = analysis;
         
         // Map AI structured data to Resume model
         state.currentResume = {
