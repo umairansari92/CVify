@@ -47,7 +47,7 @@ const Sidebar = ({ onClose }) => {
       color: "from-blue-500 to-cyan-500",
     },
     {
-      path: "/create",
+      path: "/builder",
       label: "Create Resume",
       icon: <FaFileAlt />,
       color: "from-green-500 to-emerald-500",

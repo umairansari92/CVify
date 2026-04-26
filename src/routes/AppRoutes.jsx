@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
@@ -84,6 +84,11 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
+const ResumeRedirect = () => {
+  const { id } = useParams();
+  return <Navigate to={id ? `/builder/${id}` : "/builder"} replace />;
+};
+
 const AppRoutes = () => {
   const { token } = useSelector((state) => state.auth);
 
@@ -122,8 +127,8 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create" element={<CreateResume />} />
-        <Route path="/edit/:id" element={<CreateResume />} />
+        <Route path="/create" element={<ResumeRedirect />} />
+        <Route path="/edit/:id" element={<ResumeRedirect />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/cover-letter" element={<CoverLetterPage />} />
         <Route path="/ats" element={<ATSPage />} />
