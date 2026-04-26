@@ -11,7 +11,7 @@ import ResumeMatcherView from "../components/ResumeMatcherView";
 import ResumeDesignerView from "../components/ResumeDesignerView";
 import { useSelector } from "react-redux";
 
-const MiddlePanelEditor = ({ activeSection, activeTab }) => {
+const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   const { currentResume } = useSelector((state) => state.resume);
   
   const isAnalyzer = activeTab === "Analyzer";
@@ -72,9 +72,12 @@ const MiddlePanelEditor = ({ activeSection, activeTab }) => {
                    <button className="p-3 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-red-500 transition-all">
                      <Trash2 size={16} />
                    </button>
-                   <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all">
-                     <Save size={14} /> Save Section
-                   </button>
+                    <button 
+                      onClick={onSave}
+                      className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+                    >
+                      <Save size={14} /> Save Section
+                    </button>
                 </div>
               </div>
 

@@ -7,7 +7,9 @@ import LeftPanelNavigation from "./panels/LeftPanelNavigation";
 import MiddlePanelEditor from "./panels/MiddlePanelEditor";
 import RightPanelPreview from "./panels/RightPanelPreview";
 import ResumeUploadModal from "./components/ResumeUploadModal";
-import { Sparkles } from "lucide-react";
+import { updateResume, createResume } from "../../features/resume/resumeThunk";
+import { handleDownloadPDF } from "../../utils/pdfExport";
+import toast from "react-hot-toast";
 
 const ResumeBuilderLayout = () => {
   const { id } = useParams();
@@ -24,6 +26,32 @@ const ResumeBuilderLayout = () => {
       dispatch(initNewResume());
     }
   }, [dispatch, id]);
+
+  const handleSave = async () => {
+    if (!currentResume) return;
+    
+    const toastId = toast.loading("Saving your resume...");
+    try {
+      if (id || currentResume._id) {
+        await dispatch(updateResume({ id: id || currentResume._id, data: currentResume }));
+        toast.success("Resume saved successfully!", { id: toastId });
+      } else {
+        const result = await dispatch(createResume(currentResume));
+        if (result.type.includes("fulfilled")) {
+          toast.success("Resume created successfully!", { id: toastId });
+        } else {
+          throw new Error(result.payload?.message || "Failed to create");
+        }
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to save", { id: toastId });
+    }
+  };
+
+  const handleExport = () => {
+    if (!currentResume) return toast.error("No resume data to export");
+    handleDownloadPDF(currentResume, currentResume.templateId || "classic");
+  };
 
   return (
     <div className="h-screen w-full bg-[#F8FAFC] dark:bg-[#0F172A] overflow-hidden flex flex-col">
@@ -57,9 +85,12 @@ const ResumeBuilderLayout = () => {
            >
              <Sparkles size={14} className="text-primary" /> Magic Import
            </button>
-           <button className="px-6 py-2.5 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all">
-             Export PDF
-           </button>
+            <button 
+              onClick={handleExport}
+              className="px-6 py-2.5 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all"
+            >
+              Export PDF
+            </button>
         </div>
       </nav>
 
@@ -82,6 +113,7 @@ const ResumeBuilderLayout = () => {
         <MiddlePanelEditor 
           activeSection={activeSection} 
           activeTab={activeTab}
+          onSave={handleSave}
         />
 
         {/* Panel 3: Live Preview (Right) */}
