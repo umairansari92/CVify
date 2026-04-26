@@ -7,6 +7,7 @@ import LeftPanelNavigation from "./panels/LeftPanelNavigation";
 import MiddlePanelEditor from "./panels/MiddlePanelEditor";
 import RightPanelPreview from "./panels/RightPanelPreview";
 import ResumeUploadModal from "./components/ResumeUploadModal";
+import { Sparkles } from "lucide-react";
 import { updateResume, createResume } from "../../features/resume/resumeThunk";
 import { handleDownloadPDF } from "../../utils/pdfExport";
 import toast from "react-hot-toast";
