@@ -13,6 +13,7 @@ const ResumeBuilderLayout = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [activeSection, setActiveSection] = useState("personal");
+  const [activeTab, setActiveTab] = useState("Content");
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const { currentResume } = useSelector((state) => state.resume);
 
@@ -37,8 +38,9 @@ const ResumeBuilderLayout = () => {
           {["Content", "Designer", "Analyzer", "Matcher"].map((tab) => (
             <button
               key={tab}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${
-                tab === "Content" 
+                tab === activeTab 
                   ? "bg-white dark:bg-slate-700 shadow-sm text-primary" 
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               }`}
@@ -78,6 +80,7 @@ const ResumeBuilderLayout = () => {
         {/* Panel 2: Editor (Center) */}
         <MiddlePanelEditor 
           activeSection={activeSection} 
+          activeTab={activeTab}
         />
 
         {/* Panel 3: Live Preview (Right) */}

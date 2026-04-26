@@ -361,7 +361,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {resumes?.map((resume) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 h-[500px] hover:glow-primary transition-all duration-700 overflow-hidden flex flex-col border-[var(--card-border)]">
+            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[550px] h-auto hover:glow-primary transition-all duration-700 flex flex-col border-[var(--card-border)] relative">
               {/* Revision Banner HUD */}
               <div className="h-44 relative group-hover:scale-[1.05] transition-transform duration-1000 shrink-0">
                 <div className="absolute inset-0 bg-mesh opacity-30" />
@@ -418,7 +418,7 @@ const Dashboard = () => {
           ))}
 
           {resumes?.length < 3 && (
-            <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-[var(--card-border)] flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all h-[500px]">
+            <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-[var(--card-border)] flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all min-h-[550px]">
               <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 group-hover:glow-primary transition-all duration-500 mb-6">
                 <FiPlus size={36} />
               </div>

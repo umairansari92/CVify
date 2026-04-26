@@ -1,13 +1,21 @@
 import React from "react";
-import { Sparkles, Save, Trash2, Plus } from "lucide-react";
+import { Sparkles, Save, Trash2, Plus, Zap } from "lucide-react";
 import PersonalInfoForm from "../../../components/forms/PersonalInfoForm";
 import ExperienceForm from "../../../components/forms/ExperienceForm";
 import EducationForm from "../../../components/forms/EducationForm";
 import SkillsForm from "../../../components/forms/SkillsForm";
 import ProjectsForm from "../../../components/forms/ProjectsForm";
 import CustomSectionsForm from "../../../components/forms/CustomSectionsForm";
+import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
+import { useSelector } from "react-redux";
 
-const MiddlePanelEditor = ({ activeSection }) => {
+const MiddlePanelEditor = ({ activeSection, activeTab }) => {
+  const { currentResume } = useSelector((state) => state.resume);
+  
+  const isAnalyzer = activeTab === "Analyzer";
+  const isContent = activeTab === "Content";
+  const isMatcher = activeTab === "Matcher";
+  const isDesigner = activeTab === "Designer";
   return (
     <div className="flex-1 flex flex-col bg-[#F8FAFC] dark:bg-[#0F172A] relative overflow-hidden">
       {/* Intent Mode Bar (The AI Command Center) */}
@@ -29,38 +37,56 @@ const MiddlePanelEditor = ({ activeSection }) => {
       <div className="flex-1 overflow-y-auto p-6 no-scrollbar pb-24">
         <div className="max-w-3xl mx-auto space-y-8">
           
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <h2 className="text-2xl font-black tracking-tighter capitalize">{activeSection}</h2>
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage your professional {activeSection}</p>
-            </div>
-            
-            <div className="flex items-center gap-2">
-               <button className="p-3 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-red-500 transition-all">
-                 <Trash2 size={16} />
-               </button>
-               <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all">
-                 <Save size={14} /> Save Section
-               </button>
-            </div>
-          </div>
-
-          <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
-            {activeSection === "personal" && <PersonalInfoForm />}
-            {activeSection === "experience" && <ExperienceForm />}
-            {activeSection === "education" && <EducationForm />}
-            {activeSection === "skills" && <SkillsForm />}
-            {activeSection === "projects" && <ProjectsForm />}
-            {activeSection === "custom" && <CustomSectionsForm />}
-          </div>
-          
-          {activeSection !== "personal" && (
-            <button className="w-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center gap-3 text-slate-400 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all group">
-              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <Plus size={20} />
+          {isContent && (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <h2 className="text-2xl font-black tracking-tighter capitalize">{activeSection}</h2>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage your professional {activeSection}</p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                   <button className="p-3 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-red-500 transition-all">
+                     <Trash2 size={16} />
+                   </button>
+                   <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all">
+                     <Save size={14} /> Save Section
+                   </button>
+                </div>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Add New {activeSection} Entry</span>
-            </button>
+
+              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+                {activeSection === "personal" && <PersonalInfoForm />}
+                {activeSection === "experience" && <ExperienceForm />}
+                {activeSection === "education" && <EducationForm />}
+                {activeSection === "skills" && <SkillsForm />}
+                {activeSection === "projects" && <ProjectsForm />}
+                {activeSection === "custom" && <CustomSectionsForm />}
+              </div>
+              
+              {activeSection !== "personal" && (
+                <button className="w-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center gap-3 text-slate-400 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all group">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <Plus size={20} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">Add New {activeSection} Entry</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {isAnalyzer && (
+            <ResumeAnalyzerView resume={currentResume} />
+          )}
+
+          {(isMatcher || isDesigner) && (
+            <div className="h-96 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl">
+               <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-6">
+                 <Sparkles size={32} />
+               </div>
+               <h3 className="text-xl font-black mb-2">{activeTab} Mode Coming Soon</h3>
+               <p className="text-sm text-slate-400">We're calibrating the AI engines for this premium feature.</p>
+            </div>
           )}
         </div>
       </div>
