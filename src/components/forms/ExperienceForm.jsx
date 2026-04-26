@@ -167,10 +167,14 @@ const ExperienceForm = () => {
                   <span className="flex items-center gap-1 truncate max-w-[150px]">
                     <FiMapPin className="shrink-0" size={12} /> {experienceValues[index]?.company || "Company Name"}
                   </span>
-                  <span className="flex items-center gap-1 shrink-0">
+                  <span className={`flex items-center gap-1 shrink-0 ${!isValidDateRange(experienceValues[index]?.startDate, experienceValues[index]?.endDate) ? "text-red-500" : ""}`}>
                     <FiCalendar className="shrink-0" size={12} /> {experienceValues[index]?.startDate} - {experienceValues[index]?.endDate}
+                    {!isValidDateRange(experienceValues[index]?.startDate, experienceValues[index]?.endDate) && (
+                      <FiAlertCircle size={12} className="animate-pulse" />
+                    )}
                   </span>
                 </div>
+
               </div>
               
               <div className="flex items-center gap-2">
@@ -235,8 +239,21 @@ const ExperienceForm = () => {
           <FiCheck size={16} /> Save & Done
         </button>
       </div>
+      
+      {!isValidDateRange(watch(`experience.${index}.startDate`), watch(`experience.${index}.endDate`)) && (
+        <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl flex items-center gap-4 animate-bounce-subtle">
+           <div className="w-12 h-12 rounded-2xl bg-red-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-red-500/20">
+              <FiAlertCircle size={24} />
+           </div>
+           <div>
+              <h4 className="text-sm font-black text-red-500 uppercase tracking-widest">Invalid Timeline Detected</h4>
+              <p className="text-[10px] text-red-500/70 font-bold mt-1">Your start date cannot be after your end date. Please adjust the periods below to maintain resume integrity.</p>
+           </div>
+        </div>
+      )}
 
       <div className="space-y-8 bg-midground/50 p-6 rounded-[2rem] border border-border-subtle">
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex flex-col gap-2.5">
             <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1">

@@ -82,8 +82,11 @@ const EducationForm = () => {
                   <span className="flex items-center gap-1 truncate max-w-[150px]">
                     <FiAward className="shrink-0" size={12} /> {educationValues[index]?.institution || "Institution Name"}
                   </span>
-                  <span className="flex items-center gap-1 shrink-0">
+                  <span className={`flex items-center gap-1 shrink-0 ${!isValidDateRange(educationValues[index]?.startDate, educationValues[index]?.endDate) ? "text-red-500" : ""}`}>
                     <FiCalendar className="shrink-0" size={12} /> {educationValues[index]?.startDate} - {educationValues[index]?.endDate}
+                    {!isValidDateRange(educationValues[index]?.startDate, educationValues[index]?.endDate) && (
+                      <FiAlertCircle size={12} className="animate-pulse" />
+                    )}
                   </span>
                 </div>
               </div>
@@ -148,6 +151,18 @@ const EducationForm = () => {
           <FiCheck size={16} /> Save & Done
         </button>
       </div>
+
+      {!isValidDateRange(watch(`education.${index}.startDate`), watch(`education.${index}.endDate`)) && (
+        <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl flex items-center gap-4 animate-bounce-subtle">
+           <div className="w-12 h-12 rounded-2xl bg-red-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-red-500/20">
+              <FiAlertCircle size={24} />
+           </div>
+           <div>
+              <h4 className="text-sm font-black text-red-500 uppercase tracking-widest">Invalid Timeline Detected</h4>
+              <p className="text-[10px] text-red-500/70 font-bold mt-1">Your start date cannot be after your end date. Please adjust the periods below to maintain resume integrity.</p>
+           </div>
+        </div>
+      )}
 
       <div className="space-y-8 bg-midground/50 p-6 rounded-[2rem] border border-border-subtle">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
