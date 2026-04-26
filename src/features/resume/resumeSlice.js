@@ -85,6 +85,9 @@ const resumeSlice = createSlice({
         current[keys[keys.length - 1]] = value;
       }
     },
+    setResumeData(state, action) {
+      state.currentResume = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -219,6 +222,7 @@ export const {
   initNewResume,
   initResumeWithData,
   setResumeField,
+  setResumeData,
 } = resumeSlice.actions;
 export default resumeSlice.reducer;
 
