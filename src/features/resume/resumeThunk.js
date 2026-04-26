@@ -99,3 +99,22 @@ export const cloneResume = createAsyncThunk(
     }
   },
 );
+
+// PARSE RESUME [V3]
+export const parseResume = createAsyncThunk(
+  "resume/parse",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/resume-intelligence/parse", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to parse resume"
+      );
+    }
+  }
+);

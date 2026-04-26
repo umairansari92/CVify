@@ -6,6 +6,7 @@ import {
   updateResume,
   deleteResume,
   cloneResume,
+  parseResume
 } from "./resumeThunk";
 
 const resumeSlice = createSlice({
@@ -141,6 +142,61 @@ const resumeSlice = createSlice({
       .addCase(cloneResume.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || action.payload;
+      })
+      // PARSE [V3]
+      .addCase(parseResume.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(parseResume.fulfilled, (state, action) => {
+        state.loading = false;
+        const data = action.payload;
+        
+        // Map AI structured data to Resume model
+        state.currentResume = {
+          ...state.currentResume,
+          personalInfo: {
+            ...state.currentResume?.personalInfo,
+            fullName: data.basics?.name || "",
+            email: data.basics?.email || "",
+            phone: data.basics?.phone || "",
+            location: data.basics?.location || "",
+            jobTitle: data.basics?.headline || "",
+            profileSummary: data.basics?.summary || "",
+          },
+          experience: (data.experience || []).map(exp => ({
+            company: exp.company,
+            position: exp.role,
+            startDate: exp.startDate,
+            endDate: exp.endDate,
+            location: exp.location,
+            responsibilities: exp.bullets || [],
+            impactScore: exp.impactScore || 0
+          })),
+          education: (data.education || []).map(edu => ({
+            institution: edu.institution,
+            degree: edu.degree,
+            startDate: edu.startDate,
+            endDate: edu.endDate,
+            specialization: edu.fieldOfStudy
+          })),
+          projects: (data.projects || []).map(proj => ({
+            name: proj.name,
+            description: proj.description || [],
+            link: proj.link
+          })),
+          skills: [
+            ...(data.skills?.technical || []),
+            ...(data.skills?.soft || [])
+          ],
+          technicalSkills: {
+            ...state.currentResume?.technicalSkills,
+            tools: data.skills?.technical || []
+          }
+        };
+      })
+      .addCase(parseResume.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

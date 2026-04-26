@@ -9,6 +9,7 @@ const Signup = lazy(() => import("../pages/Signup"));
 const VerifyOtp = lazy(() => import("../pages/VerifyOtp"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const CreateResume = lazy(() => import("../pages/CreateResume"));
+const ResumeBuilder = lazy(() => import("../pages/ResumeBuilder/ResumeBuilderLayout"));
 const Templates = lazy(() => import("../pages/Templates"));
 const CoverLetterPage = lazy(() => import("../pages/CoverLetterPage"));
 const ATSPage = lazy(() => import("../pages/ATSPage"));
@@ -101,6 +102,16 @@ const AppRoutes = () => {
       <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+      {/* New Resume Builder (Full Screen) */}
+      <Route
+        path="/builder/:id?"
+        element={
+          <ProtectedRoute>
+            <ResumeBuilder />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Protected Routes with Layout */}
       <Route
