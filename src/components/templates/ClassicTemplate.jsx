@@ -7,10 +7,12 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaMapMarkerAlt,
   FaWhatsapp,
 } from "react-icons/fa";
+import InlineEditable from "../common/InlineEditable";
 
-const ClassicTemplate = ({ data }) => {
+const ClassicTemplate = ({ data, isEditable = false }) => {
   const {
     personalInfo,
     education,
@@ -53,10 +55,24 @@ const ClassicTemplate = ({ data }) => {
       {/* Header */}
       <div className="border-b-2 pb-4 mb-6" style={{ borderColor: themeColor }}>
         <h1 className="text-4xl font-bold uppercase text-gray-900 tracking-wider">
-          {personalInfo?.fullName || "Your Name"}
+          {isEditable ? (
+            <InlineEditable 
+              value={personalInfo?.fullName} 
+              path="personalInfo.fullName" 
+            />
+          ) : (
+            personalInfo?.fullName || "Your Name"
+          )}
         </h1>
         <p className="text-lg text-gray-600 mt-1">
-          {personalInfo?.jobTitle || "Job Title"}
+          {isEditable ? (
+            <InlineEditable 
+              value={personalInfo?.jobTitle} 
+              path="personalInfo.jobTitle" 
+            />
+          ) : (
+            personalInfo?.jobTitle || "Job Title"
+          )}
         </p>
 
         <div className="flex flex-wrap mt-3 text-sm text-gray-600">
@@ -118,7 +134,15 @@ const ClassicTemplate = ({ data }) => {
 
         {personalInfo?.profileSummary && (
           <p className="mt-4 text-sm leading-relaxed max-w-2xl text-gray-700">
-            {personalInfo.profileSummary}
+            {isEditable ? (
+              <InlineEditable 
+                value={personalInfo.profileSummary} 
+                path="personalInfo.profileSummary" 
+                multiline={true}
+              />
+            ) : (
+              personalInfo.profileSummary
+            )}
           </p>
         )}
       </div>
