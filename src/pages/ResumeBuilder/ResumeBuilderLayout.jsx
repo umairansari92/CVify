@@ -10,7 +10,9 @@ import ResumeUploadModal from "./components/ResumeUploadModal";
 import { Sparkles } from "lucide-react";
 import { updateResume, createResume } from "../../features/resume/resumeThunk";
 import { handleDownloadPDF } from "../../utils/pdfExport";
+import ResumeLimitModal from "./components/ResumeLimitModal";
 import toast from "react-hot-toast";
+
 
 const ResumeBuilderLayout = () => {
   const { id } = useParams();
@@ -18,7 +20,9 @@ const ResumeBuilderLayout = () => {
   const [activeSection, setActiveSection] = useState("personal");
   const [activeTab, setActiveTab] = useState("Content");
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [limitInfo, setLimitInfo] = useState(null);
   const { currentResume } = useSelector((state) => state.resume);
+
 
   useEffect(() => {
     if (id) {
@@ -28,18 +32,23 @@ const ResumeBuilderLayout = () => {
     }
   }, [dispatch, id]);
 
-  const handleSave = async () => {
+  const handleSave = async (useDiamonds = false) => {
     if (!currentResume) return;
     
-    const toastId = toast.loading("Saving your resume...");
+    const toastId = toast.loading(useDiamonds ? "Processing diamonds..." : "Saving your resume...");
     try {
       if (id || currentResume._id) {
         await dispatch(updateResume({ id: id || currentResume._id, data: currentResume }));
         toast.success("Resume saved successfully!", { id: toastId });
       } else {
-        const result = await dispatch(createResume(currentResume));
+        const result = await dispatch(createResume({ ...currentResume, useDiamonds }));
+        
         if (result.type.includes("fulfilled")) {
-          toast.success("Resume created successfully!", { id: toastId });
+          toast.success(useDiamonds ? "Unlocked & Created successfully!" : "Resume created successfully!", { id: toastId });
+          setLimitInfo(null);
+        } else if (result.payload?.limitReached) {
+          toast.dismiss(toastId);
+          setLimitInfo(result.payload.details);
         } else {
           throw new Error(result.payload?.message || "Failed to create");
         }
@@ -48,6 +57,7 @@ const ResumeBuilderLayout = () => {
       toast.error(error.message || "Failed to save", { id: toastId });
     }
   };
+
 
   const handleExport = () => {
     if (!currentResume) return toast.error("No resume data to export");
@@ -122,7 +132,16 @@ const ResumeBuilderLayout = () => {
           resume={currentResume} 
         />
       </main>
+
+      <ResumeLimitModal 
+        isOpen={!!limitInfo} 
+        onClose={() => setLimitInfo(null)}
+        onConfirm={() => handleSave(true)}
+        currentCount={limitInfo?.currentCount}
+        requiredDiamonds={limitInfo?.requiredDiamonds}
+      />
     </div>
+
   );
 };
 
