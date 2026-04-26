@@ -75,6 +75,7 @@ const ResumeBuilderLayout = () => {
         <LeftPanelNavigation 
           activeSection={activeSection} 
           setActiveSection={setActiveSection} 
+          setActiveTab={setActiveTab}
         />
 
         {/* Panel 2: Editor (Center) */}

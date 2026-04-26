@@ -1,12 +1,14 @@
 import React from "react";
 import { Sparkles, Save, Trash2, Plus, Zap } from "lucide-react";
+import toast from "react-hot-toast";
 import PersonalInfoForm from "../../../components/forms/PersonalInfoForm";
 import ExperienceForm from "../../../components/forms/ExperienceForm";
 import EducationForm from "../../../components/forms/EducationForm";
 import SkillsForm from "../../../components/forms/SkillsForm";
 import ProjectsForm from "../../../components/forms/ProjectsForm";
 import CustomSectionsForm from "../../../components/forms/CustomSectionsForm";
-import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
+import ResumeMatcherView from "../components/ResumeMatcherView";
+import ResumeDesignerView from "../components/ResumeDesignerView";
 import { useSelector } from "react-redux";
 
 const MiddlePanelEditor = ({ activeSection, activeTab }) => {
@@ -16,6 +18,20 @@ const MiddlePanelEditor = ({ activeSection, activeTab }) => {
   const isContent = activeTab === "Content";
   const isMatcher = activeTab === "Matcher";
   const isDesigner = activeTab === "Designer";
+  const [intent, setIntent] = React.useState("");
+  const [isExecuting, setIsExecuting] = React.useState(false);
+
+  const handleExecuteAI = async () => {
+    if (!intent.trim()) return;
+    setIsExecuting(true);
+    // Simulation
+    setTimeout(() => {
+      setIsExecuting(false);
+      setIntent("");
+      toast.success("AI is re-writing your resume sections based on intent...");
+    }, 2000);
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-[#F8FAFC] dark:bg-[#0F172A] relative overflow-hidden">
       {/* Intent Mode Bar (The AI Command Center) */}
@@ -26,9 +42,16 @@ const MiddlePanelEditor = ({ activeSection, activeTab }) => {
             type="text" 
             placeholder="AI Intent Mode: e.g. 'Optimize my bullets for a Google Frontend role'"
             className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-slate-600 dark:text-slate-300 placeholder:text-slate-400"
+            value={intent}
+            onChange={(e) => setIntent(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleExecuteAI()}
           />
-          <button className="px-4 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all">
-            Execute AI
+          <button 
+            onClick={handleExecuteAI}
+            disabled={isExecuting || !intent}
+            className="px-4 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all disabled:opacity-50"
+          >
+            {isExecuting ? "Executing..." : "Execute AI"}
           </button>
         </div>
       </div>
@@ -79,14 +102,12 @@ const MiddlePanelEditor = ({ activeSection, activeTab }) => {
             <ResumeAnalyzerView resume={currentResume} />
           )}
 
-          {(isMatcher || isDesigner) && (
-            <div className="h-96 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl">
-               <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-6">
-                 <Sparkles size={32} />
-               </div>
-               <h3 className="text-xl font-black mb-2">{activeTab} Mode Coming Soon</h3>
-               <p className="text-sm text-slate-400">We're calibrating the AI engines for this premium feature.</p>
-            </div>
+          {isMatcher && (
+            <ResumeMatcherView />
+          )}
+
+          {isDesigner && (
+            <ResumeDesignerView />
           )}
         </div>
       </div>

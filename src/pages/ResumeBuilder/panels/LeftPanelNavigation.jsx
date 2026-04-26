@@ -9,7 +9,7 @@ import {
   Target 
 } from "lucide-react";
 
-const LeftPanelNavigation = ({ activeSection, setActiveSection }) => {
+const LeftPanelNavigation = ({ activeSection, setActiveSection, setActiveTab }) => {
   const sections = [
     { id: "personal", label: "Identity", icon: User },
     { id: "experience", label: "Experience", icon: Briefcase },
@@ -62,7 +62,10 @@ const LeftPanelNavigation = ({ activeSection, setActiveSection }) => {
                 <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
                   Paste a job link to optimize your resume with AI.
                 </p>
-                <button className="mt-4 w-full py-2 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all">
+                <button 
+                  onClick={() => setActiveTab("Matcher")}
+                  className="mt-4 w-full py-2 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all"
+                >
                   Analyze JD
                 </button>
               </div>
