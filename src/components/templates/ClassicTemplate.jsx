@@ -7,7 +7,6 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaMapMarkerAlt,
-  FaMapMarkerAlt,
   FaWhatsapp,
 } from "react-icons/fa";
 import InlineEditable from "../common/InlineEditable";
