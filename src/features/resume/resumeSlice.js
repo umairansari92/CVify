@@ -159,6 +159,8 @@ const resumeSlice = createSlice({
       })
       .addCase(parseResume.fulfilled, (state, action) => {
         state.loading = false;
+        if (!action.payload || !action.payload.data) return;
+
         const { data, analysis } = action.payload;
         state.parsingAnalysis = analysis;
         

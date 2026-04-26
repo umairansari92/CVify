@@ -110,7 +110,7 @@ export const parseResume = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      return res.data.data;
+      return res.data;
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to parse resume"
