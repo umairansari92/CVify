@@ -12,6 +12,8 @@ import ResumeDesignerView from "../components/ResumeDesignerView";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeData } from "../../../features/resume/resumeSlice";
 import api from "../../../api/axios";
+import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
+
 
 const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   const dispatch = useDispatch();
