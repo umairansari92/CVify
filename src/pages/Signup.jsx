@@ -98,7 +98,7 @@ const Signup = () => {
   };
 
   const passwordValidation = {
-    length: (password || "").length >= 7,
+    length: (password || "").length >= 8,
     hasUpper: /[A-Z]/.test(password || ""),
     hasLower: /[a-z]/.test(password || ""),
     hasNumber: /\d/.test(password || ""),
@@ -245,7 +245,7 @@ const Signup = () => {
                     required: "Password is required",
                     pattern: {
                       value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{7,}$/,
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{8,}$/,
                       message:
                         "Complete the checklist below for a strong password",
                     },
@@ -265,7 +265,7 @@ const Signup = () => {
               {(password || errors.password) && (
                 <div className="bg-slate-50 dark:bg-midnight/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 grid grid-cols-2 gap-y-2 gap-x-4 animate-fadeIn">
                   <ValidationItem
-                    label="7+ Characters"
+                    label="8 Characters"
                     passed={passwordValidation.length}
                   />
                   <ValidationItem
