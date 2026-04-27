@@ -215,21 +215,21 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                 
                 <div className="grid grid-cols-2 gap-4">
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 transition-all group/stat">
-                    <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.journey?.totalCommits || stats.commits90d || 0}</p>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Lifetime</p>
-                  </div>
-                  <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
-                    <p className="text-3xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
-                  </div>
-                  <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
-                    <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.thisWeek || 0}</p>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
-                  </div>
-                  <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
-                    <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.lastWeek || 0}</p>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Last Week</p>
-                  </div>
+                     <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.totalContributions || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Contributions</p>
+                   </div>
+                   <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                     <p className="text-3xl font-black text-[var(--text-primary)]">{stats.journey?.totalCommits || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Commits</p>
+                   </div>
+                   <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
+                     <p className="text-2xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
+                   </div>
+                   <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                     <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.thisWeek || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
+                   </div>
                 </div>
 
                 <div className="space-y-8">
