@@ -213,22 +213,30 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                    <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 transition-all group/stat">
-                     <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.totalContributions || 0}</p>
+                     <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.stars || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Stars</p>
+                   </div>
+                   <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                     <p className="text-3xl font-black text-[var(--text-primary)]">{stats.totalContributions || 0}</p>
                      <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Contributions</p>
                    </div>
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
                      <p className="text-3xl font-black text-[var(--text-primary)]">{stats.journey?.totalCommits || 0}</p>
                      <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Commits</p>
                    </div>
-                   <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
-                     <p className="text-2xl font-black text-[var(--primary-color)]">{stats.journey?.thisMonth || 0}</p>
-                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">This Month</p>
+                   <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+                     <p className="text-3xl font-black text-[var(--text-primary)]">{stats.prs || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total PRs</p>
                    </div>
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
-                     <p className="text-2xl font-black text-[var(--text-primary)]">{stats.journey?.thisWeek || 0}</p>
-                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">This Week</p>
+                     <p className="text-3xl font-black text-[var(--text-primary)]">{stats.issues || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Issues</p>
+                   </div>
+                   <div className="p-6 bg-[var(--primary-color)]/10 rounded-2xl border border-[var(--primary-color)]/20">
+                     <p className="text-2xl font-black text-[var(--primary-color)]">{stats.reposContributed || 0}</p>
+                     <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-[var(--primary-color)] mt-1">Contributed To</p>
                    </div>
                 </div>
 
