@@ -171,9 +171,12 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
                 <p className="text-gray-700 italic text-sm">{exp.company}</p>
                 {exp.responsibilities && (
                   <ul className="list-disc list-inside mt-2 text-sm text-gray-700 space-y-1">
-                    {exp.responsibilities.map((res, i) => (
-                      <li key={i}>{res}</li>
-                    ))}
+                    {Array.isArray(exp.responsibilities) 
+                      ? exp.responsibilities.map((res, i) => (
+                          <li key={i}>{res}</li>
+                        ))
+                      : <li className="list-none">{exp.responsibilities}</li>
+                    }
                   </ul>
                 )}
               </div>
@@ -210,9 +213,12 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
                   )}
                 </div>
                 <ul className="list-disc list-inside mt-1 text-sm text-gray-700">
-                  {proj.description?.map((desc, i) => (
-                    <li key={i}>{desc}</li>
-                  ))}
+                  {Array.isArray(proj.description) 
+                    ? proj.description?.map((desc, i) => (
+                        <li key={i}>{desc}</li>
+                      ))
+                    : <li className="list-none">{proj.description}</li>
+                  }
                 </ul>
               </div>
             ))}
