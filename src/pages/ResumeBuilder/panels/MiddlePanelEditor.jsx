@@ -11,6 +11,7 @@ import ResumeMatcherView from "../components/ResumeMatcherView";
 import ResumeDesignerView from "../components/ResumeDesignerView";
 import { useDispatch, useSelector } from "react-redux";
 import { setResumeData } from "../../../features/resume/resumeSlice";
+import { updateDiamonds } from "../../../features/auth/authSlice";
 import api from "../../../api/axios";
 import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
 
@@ -39,7 +40,13 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
 
       if (response.data.success) {
         dispatch(setResumeData(response.data.data));
-        toast.success("Resume optimized successfully!", { id: toastId });
+        
+        // Sync diamonds in HUD
+        if (response.data.newDiamondBalance !== undefined) {
+          dispatch(updateDiamonds(response.data.newDiamondBalance));
+        }
+
+        toast.success(response.data.message || "Resume optimized successfully!", { id: toastId });
         setIntent("");
       }
     } catch (error) {
@@ -69,7 +76,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
             disabled={isExecuting || !intent}
             className="px-4 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all disabled:opacity-50"
           >
-            {isExecuting ? "Executing..." : "Execute AI"}
+            {isExecuting ? "Executing..." : "Execute AI (30 💎)"}
           </button>
         </div>
       </div>
