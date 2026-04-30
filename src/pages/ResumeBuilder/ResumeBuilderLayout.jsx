@@ -5,6 +5,15 @@ import { getResumeById } from "../../features/resume/resumeThunk";
 import { initNewResume } from "../../features/resume/resumeSlice";
 import SlimSidebar from "../../components/common/SlimSidebar";
 import { FaGem, FaUserCircle, FaChevronRight } from "react-icons/fa";
+import { Sparkles } from "lucide-react";
+import LeftPanelNavigation from "./panels/LeftPanelNavigation";
+import MiddlePanelEditor from "./panels/MiddlePanelEditor";
+import RightPanelPreview from "./panels/RightPanelPreview";
+import ResumeUploadModal from "./components/ResumeUploadModal";
+import { updateResume, createResume } from "../../features/resume/resumeThunk";
+import { handleDownloadPDF } from "../../utils/pdfExport";
+import ResumeLimitModal from "./components/ResumeLimitModal";
+import toast from "react-hot-toast";
 
 
 const ResumeBuilderLayout = () => {
