@@ -5,7 +5,8 @@ import {
   FileText, Globe, ArrowLeft, Users, Sparkles, Eye,
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
-  BarChart3, GitBranch, TrendingUp, Heart
+  BarChart3, GitBranch, TrendingUp, Heart,
+  AlertCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
