@@ -74,30 +74,29 @@ const ResumeBuilderLayout = () => {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Unified Global Header */}
-        <nav className="h-20 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] flex items-center justify-between px-8 shrink-0 z-50">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <img src="/CVify Favicon.jpg" alt="Logo" className="w-9 h-9 rounded-xl shadow-lg" />
-              <div className="flex flex-col">
-                <h1 className="font-black text-lg tracking-tighter leading-none">CVify<span className="text-primary">Pro</span></h1>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Dashboard</span>
-                  <FaChevronRight size={7} className="text-slate-300" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Resume Builder</span>
-                </div>
+        <nav className="h-20 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] flex items-center justify-between px-10 shrink-0 z-50">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">CVify</span>
+                <FaChevronRight size={8} className="text-slate-300" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Engine</span>
               </div>
+              <h1 className="font-black text-xl tracking-tighter leading-none text-slate-900 dark:text-white">
+                Resume Builder
+              </h1>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50">
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/40 p-1.5 rounded-[1.25rem] border border-slate-200/50 dark:border-slate-700/50">
             {["Content", "Designer", "Analyzer", "Matcher"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${
+                className={`px-8 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-500 ${
                   tab === activeTab 
-                    ? "bg-white dark:bg-slate-700 shadow-xl shadow-primary/10 text-primary scale-[1.02]" 
-                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800"
+                    ? "bg-white dark:bg-slate-700 shadow-xl shadow-primary/20 text-primary scale-[1.05]" 
+                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
                 }`}
               >
                 {tab}
@@ -105,32 +104,31 @@ const ResumeBuilderLayout = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-6">
-            {/* Diamond Reserve HUD */}
-            <div className="hidden lg:flex items-center gap-3 px-5 py-2.5 glass-medium rounded-2xl border-primary/20 group hover:scale-[1.03] transition-all cursor-pointer">
-              <FaGem className="text-primary animate-pulse text-sm shadow-[0_0_15px_var(--primary)]" />
-              <div className="flex flex-col">
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1 opacity-60">
-                  Diamond Reserve
+          <div className="flex items-center gap-8">
+            {/* Diamond Reserve HUD - Premium Glass Version */}
+            <div className="hidden lg:flex items-center gap-4 px-6 py-2.5 glass-strong rounded-2xl border-primary/20 group hover:glow-primary transition-all cursor-pointer relative overflow-hidden">
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <FaGem className="text-primary animate-pulse text-[15px] shadow-[0_0_15px_var(--primary)]" />
+              <div className="flex flex-col relative z-10">
+                <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.25em] leading-none mb-1.5 opacity-70">
+                  Reserve
                 </span>
-                <span className="text-sm font-black text-slate-700 dark:text-white leading-none tabular-nums">
+                <span className="text-[15px] font-black text-slate-900 dark:text-white leading-none tabular-nums">
                   {user?.diamonds || 0}
                 </span>
               </div>
             </div>
 
-            <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800" />
-
             <div className="flex items-center gap-3">
                <button 
                  onClick={() => setIsImportModalOpen(true)}
-                 className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all shadow-xl shadow-black/10"
+                 className="flex items-center gap-2 px-6 py-3.5 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all shadow-xl shadow-black/10"
                >
                  <Sparkles size={14} className="text-primary" /> Magic Import
                </button>
                 <button 
                   onClick={handleExport}
-                  className="px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all"
+                  className="px-6 py-3.5 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all"
                 >
                   Export PDF
                 </button>

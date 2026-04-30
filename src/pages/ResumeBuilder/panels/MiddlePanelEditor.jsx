@@ -60,23 +60,35 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   return (
     <div className="flex-1 flex flex-col bg-[#F8FAFC] dark:bg-[#0F172A] relative overflow-hidden">
       {/* Intent Mode Bar (The AI Command Center) */}
-      <div className="p-6 pb-0 shrink-0">
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-2 pl-6 flex items-center gap-4 shadow-sm group focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-          <Sparkles className="text-primary animate-pulse shrink-0" size={18} />
-          <input 
-            type="text" 
-            placeholder="AI Intent Mode: e.g. 'Optimize my bullets for a Google Frontend role'"
-            className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-slate-600 dark:text-slate-300 placeholder:text-slate-400"
-            value={intent}
-            onChange={(e) => setIntent(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleExecuteAI()}
-          />
+      <div className="px-8 pt-8 pb-2 shrink-0">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-[1.25rem] p-1.5 flex items-center gap-3 shadow-sm group focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-500">
+          <div className="flex items-center gap-3 pl-4 flex-1">
+            <Sparkles className="text-primary animate-pulse shrink-0" size={16} />
+            <input 
+              type="text" 
+              placeholder="What should the AI do? e.g. 'Rewrite my summary to sound more executive'"
+              className="w-full bg-transparent border-none outline-none text-sm font-semibold text-slate-600 dark:text-slate-300 placeholder:text-slate-400 placeholder:font-medium"
+              value={intent}
+              onChange={(e) => setIntent(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleExecuteAI()}
+            />
+          </div>
           <button 
             onClick={handleExecuteAI}
             disabled={isExecuting || !intent}
-            className="px-4 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all disabled:opacity-50"
+            className="px-6 py-2.5 bg-slate-900 dark:bg-primary text-white rounded-[1rem] text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 flex items-center gap-2 shadow-lg shadow-black/10 dark:shadow-primary/20"
           >
-            {isExecuting ? "Executing..." : "Execute AI (30 💎)"}
+            {isExecuting ? (
+              <>
+                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Executing...</span>
+              </>
+            ) : (
+              <>
+                <Zap size={12} className="text-primary dark:text-white" />
+                <span>Execute AI (30 💎)</span>
+              </>
+            )}
           </button>
         </div>
       </div>
