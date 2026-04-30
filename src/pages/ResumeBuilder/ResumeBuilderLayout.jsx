@@ -164,8 +164,8 @@ const ResumeBuilderLayout = () => {
         currentCount={limitInfo?.currentCount}
         requiredDiamonds={limitInfo?.requiredDiamonds}
       />
+      </div>
     </div>
-
   );
 };
 
