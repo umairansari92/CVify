@@ -162,7 +162,7 @@ const ResumeUploadModal = ({ isOpen, onClose }) => {
                 className="w-full py-5 bg-primary text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:scale-100 transition-all flex items-center justify-center gap-3"
               >
                 <Sparkles size={16} />
-                Start AI Analysis
+                Start AI Analysis (30 💎)
               </button>
             </div>
           ) : (

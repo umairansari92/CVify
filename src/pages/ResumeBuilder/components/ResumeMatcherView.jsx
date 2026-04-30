@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Target, Sparkles, Send, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
+import { Target, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { updateDiamonds } from "../../../features/auth/authSlice";
+import api from "../../../api/axios";
 
 const ResumeMatcherView = () => {
+  const dispatch = useDispatch();
   const [jdText, setJdText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [matchResult, setMatchResult] = useState(null);
@@ -12,22 +15,41 @@ const ResumeMatcherView = () => {
 
   const handleAnalyze = async () => {
     if (!jdText.trim()) return toast.error("Please paste a Job Description first!");
+    if (!currentResume?._id) return toast.error("Please save your resume first!");
     
     setIsAnalyzing(true);
-    // Simulation for now, we'll connect real backend next
-    setTimeout(() => {
-      setMatchResult({
-        score: 72,
-        missingKeywords: ["Docker", "Redis", "CI/CD Pipeline", "Unit Testing"],
-        recommendations: [
-          "Highlight your experience with Cloud deployments.",
-          "Add 'System Architecture' to your technical expertise.",
-          "Quantify your React experience with specific performance metrics."
-        ]
+    const toastId = toast.loading("AI is analyzing your match...");
+    
+    try {
+      const response = await api.post("/resume-intelligence/job-match", {
+        resumeId: currentResume._id,
+        jobDescription: jdText,
+        marketMode: "Standard",
+        experienceLevel: "Mid-Level"
       });
+
+      if (response.data.success) {
+        const { scan, newDiamondBalance } = response.data;
+        
+        setMatchResult({
+          score: scan.overallScore,
+          missingKeywords: scan.feedback.missingKeywords,
+          recommendations: scan.feedback.hints
+        });
+
+        // Sync diamonds in HUD
+        if (newDiamondBalance !== undefined) {
+          dispatch(updateDiamonds(newDiamondBalance));
+        }
+
+        toast.success(scan.isFreeRescan ? "Match Analysis Refreshed (Free)!" : "Analysis Complete (-50 💎)!", { id: toastId });
+      }
+    } catch (error) {
+      console.error("Match Analysis Error:", error);
+      toast.error(error.response?.data?.message || "Failed to analyze match", { id: toastId });
+    } finally {
       setIsAnalyzing(false);
-      toast.success("Match Analysis Complete!");
-    }, 2000);
+    }
   };
 
   return (
@@ -67,7 +89,7 @@ const ResumeMatcherView = () => {
           ) : (
             <>
               <Sparkles size={16} />
-              Analyze Job Match
+              Analyze Job Match (50 💎)
             </>
           )}
         </button>
