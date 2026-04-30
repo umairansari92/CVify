@@ -34,12 +34,12 @@ const Documentation = () => {
       ]
     },
     {
-      label: "Intelligence",
+      label: "Intelligence Hub",
       items: [
-        { id: "engine", icon: <Brain size={16} />, label: "3-Layer ATS Engine" },
-        { id: "bff", icon: <GitBranch size={16} />, label: "BFF v1 Architecture" },
-        { id: "architecture", icon: <Layers size={16} />, label: "System Architecture" },
-        { id: "security", icon: <Shield size={16} />, label: "Security & Privacy" },
+        { id: "magic-import", icon: <Sparkles size={16} />, label: "Magic AI Import" },
+        { id: "intent-mode", icon: <Zap size={16} />, label: "AI Intent Mode" },
+        { id: "job-matcher", icon: <Target size={16} />, label: "Job Matcher (JD Analysis)" },
+        { id: "ats", icon: <Target size={16} />, label: "ATS v4.0 Precision Engine" },
       ]
     },
     {
@@ -48,7 +48,6 @@ const Documentation = () => {
         { id: "diamonds", icon: <Gem size={16} />, label: "Diamond Economy" },
         { id: "competitors", icon: <Award size={16} />, label: "Why We Stand Out" },
         { id: "recruiter", icon: <Briefcase size={16} />, label: "For Recruiters & HR" },
-        { id: "universal", icon: <Users size={16} />, label: "Built for Everyone" },
       ]
     },
     {
@@ -57,7 +56,6 @@ const Documentation = () => {
         { id: "tips", icon: <Star size={16} />, label: "Pro Tips (90+ Score)" },
         { id: "faq", icon: <Book size={16} />, label: "FAQ" },
         { id: "roadmap", icon: <TrendingUp size={16} />, label: "Future Roadmap" },
-        { id: "company", icon: <GitBranch size={16} />, label: "Company & Ownership" },
       ]
     },
   ];
@@ -97,51 +95,89 @@ const Documentation = () => {
       </>
     ),
 
+    "magic-import": (
+      <>
+        <DocHeader title="Magic AI Import" badge="Intelligence Hub" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
+          Don't start from scratch. Our <strong className="text-primary">Magic AI Import</strong> parses your existing PDF or DOCX resume and instantly builds a professional CVify Pro profile. 
+        </p>
+        <SectionTitle>Key Features</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Brain size={18} />} color="blue" title="Semantic Parsing" 
+            desc="AI understands that 'Software Engineer' is a Role and 'Python' is a Skill, mapping them to the correct sections with 98% accuracy." />
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Instant Hydration" 
+            desc="Your entire professional timeline (Experience, Education, Projects) is populated in under 20 seconds." />
+        </div>
+        <SectionTitle>How to Use</SectionTitle>
+        <Steps items={[
+          { step: "1", title: "Open Resume Builder", desc: "Click the 'Magic Import' button in the builder header." },
+          { step: "2", title: "Upload File", desc: "Select your PDF or DOCX resume (Max 5MB)." },
+          { step: "3", title: "AI Analysis", desc: "Wait while our AI maps your story. Cost: 30 💎." },
+        ]} />
+      </>
+    ),
+
+    "intent-mode": (
+      <>
+        <DocHeader title="AI Intent Mode" badge="Intelligence Hub" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
+          The <strong className="text-primary">Intelligence Command Bar</strong> allows you to optimize your resume using natural language. No more manual editing — just tell the AI what you want.
+        </p>
+        <SectionTitle>Example Commands</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { cmd: "Rewrite my summary to sound more like a CEO", icon: <TrendingUp size={14} /> },
+            { cmd: "Optimize my bullets for a Google Frontend role", icon: <Target size={14} /> },
+            { cmd: "Make my experience section sound more technical", icon: <Cpu size={14} /> },
+            { cmd: "Highlight my leadership skills in all bullet points", icon: <Users size={14} /> },
+          ].map((item, i) => (
+            <div key={i} className="p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center gap-4 text-sm italic font-medium text-slate-300">
+              <span className="text-primary">{item.icon}</span> "{item.cmd}"
+            </div>
+          ))}
+        </div>
+        <SectionTitle>Pricing & Logic</SectionTitle>
+        <p className="text-slate-400 text-[13px] leading-relaxed mb-4">
+          Every execution costs <strong className="text-primary">30 💎</strong>. The AI analyzes your entire resume context before applying the requested changes to ensure consistency.
+        </p>
+      </>
+    ),
+
+    "job-matcher": (
+      <>
+        <DocHeader title="Job Matcher (JD Analysis)" badge="Intelligence Hub" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
+          The <strong className="text-primary">Job Matcher</strong> mimics a real Applicant Tracking System (ATS). It audits your resume against a specific job description to find missing keywords and gaps.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Target size={16} />} color="red" title="Compatibility Score" desc="A real-time percentage score showing how well you match the JD." />
+          <InfoCard icon={<AlertCircle size={16} />} color="amber" title="Keyword Gaps" desc="Identifies exactly which skills or tools are missing from your profile." />
+        </div>
+        <SectionTitle>Usage Guide</SectionTitle>
+        <Steps items={[
+          { step: "1", title: "Select Matcher Tab", desc: "Go to the 'Matcher' section in the Resume Builder." },
+          { step: "2", title: "Paste JD", desc: "Paste the job requirements from LinkedIn or any job board." },
+          { step: "3", title: "Analyze", desc: "Click 'Analyze Job Match' (50 💎). You'll get a detailed strategy report." },
+        ]} />
+      </>
+    ),
+
     ats: (
       <>
         <DocHeader title="ATS v4.0 Precision Engine" badge="Core Feature" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          CVify Pro's ATS Scanner is not a basic keyword checker — it's a <strong className="text-text-primary">3-Layer Intelligence Engine</strong> that audits your resume like a Fortune 500 hiring pipeline with 99.99% accuracy.
+          CVify Pro's ATS Scanner is a <strong className="text-text-primary">3-Layer Intelligence Engine</strong> that audits your resume with 99.99% accuracy.
         </p>
 
-        <SectionTitle>How to Scan</SectionTitle>
-        <Steps items={[
-          { step: "1", title: "Select Resume Source", desc: "Choose a Platform-Generated resume or upload a PDF/DOCX file (Max 5MB)." },
-          { step: "2", title: "Paste Job Description", desc: "Paste the target JD. If left empty, the AI audits against general industry standards for your level." },
-          { step: "3", title: "Select Experience Level", desc: "Choose Fresher (0-1 yr), Junior (1-2 yrs), Mid-Level (3-5 yrs), or Senior (5+ yrs)." },
-          { step: "4", title: "Select Market Mode", desc: "Choose Standard, Pakistan HR, Freelance, or Remote — each adjusts scoring weights." },
-          { step: "5", title: "Start Scan", desc: "Click \"Start ATS Scan\". (Fresh Scans: 50 💎 | Re-scans: See pricing section)." },
-        ]} />
-
-        <SectionTitle>What You Get</SectionTitle>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <InfoCard icon={<Sparkles size={16} />} color="blue" title="AI Verdict" desc="A one-line motivating summary of your resume's strengths and gaps." />
-          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="4-Dimension Score" desc="Formatting, Keywords, Quantification, Impact — each with WHY justification on hover." />
-          <InfoCard icon={<Zap size={16} />} color="emerald" title="Strong Bullets ✅" desc="Your best resume lines highlighted with reasons why they're excellent." />
-          <InfoCard icon={<FileText size={16} />} color="amber" title="Weak Bullets → Rewritten" desc="Your weakest lines with AI-rewritten versions using Google XYZ formula." />
-          <InfoCard icon={<Target size={16} />} color="red" title="Keyword Gap Analyzer" desc="Missing skills with importance, reason, and exact placement advice." />
-          <InfoCard icon={<Eye size={16} />} color="purple" title="Recruiter's 6-Second Impression" desc="What a recruiter would think in the first 6 seconds of seeing your resume." />
+        <SectionTitle>Deep Scan Process</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="4-Dimension Score" desc="Formatting, Keywords, Quantification, Impact — each with WHY justification." />
+          <InfoCard icon={<Eye size={16} />} color="amber" title="6-Second Verdict" desc="Psychological simulation of what a recruiter thinks at first glance." />
         </div>
-
-        <SectionTitle>Context-Aware Intelligence</SectionTitle>
-        <ComparisonTable items={[
-          { left: "Fresher Missing AWS", right: "Marked as \"Growth Opportunity\" — not penalized" },
-          { left: "Senior Missing AWS", right: "Marked as \"Critical Gap\" — heavily weighted" },
-          { left: "No JD Provided", right: "AI audits against industry standards for your level" },
-          { left: "JD Provided", right: "AI matches resume against specific role requirements" },
-        ]} />
-
-        <SectionTitle>Anti-Hallucination Guardrails</SectionTitle>
-        <div className="p-5 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
-          <p className="text-text-secondary text-[13px] leading-relaxed">
-            <strong className="text-amber-400">6 strict rules</strong> ensure accuracy: <strong>"Quote or Die"</strong> (every feedback references actual resume content), 
-            <strong> "Keyword Source Lock"</strong> (missing keywords come only from the JD or standard databases), 
-            <strong> "Honest Scoring"</strong> (no lazy 65-75 defaults), 
-            <strong> "Balanced Feedback"</strong> (3 strengths + 3 improvements minimum), 
-            <strong> "No Generic Advice"</strong> (exact keyword, section, and phrasing), and 
-            <strong> "Real Bullet Quotes"</strong> (direct copy-paste from resume, never paraphrased).
-          </p>
-        </div>
+        
+        <p className="text-slate-400 text-[13px] italic">
+          Full AI ATS Scan costs <strong className="text-primary">50 💎</strong> per new version. Re-scans within 24h of the same content are discounted or FREE.
+        </p>
       </>
     ),
 
@@ -360,10 +396,11 @@ const Documentation = () => {
           Diamonds power CVify Pro's AI features. We charge <strong className="text-text-primary">post-success only</strong> — you're never billed for failed requests. Atomic operations ensure integrity.
         </p>
         <ComparisonTable items={[
-          { left: "Fresh Deep Scan", right: "50 💎 (One-time)" },
-          { left: "24h Re-scan (Same)", right: "0 💎 (FREE)" },
-          { left: "24h Re-scan (Improved)", right: "25 💎 (50% Off)" },
-          { left: "AI Cover Letter", right: "20 💎" },
+          { left: "Magic AI Import", right: "30 💎" },
+          { left: "AI Intent Mode", right: "30 💎" },
+          { left: "AI Cover Letter", right: "30 💎" },
+          { left: "Deep ATS Scan", right: "50 💎 (New Version)" },
+          { left: "24h Re-scan (Same Version)", right: "0 💎 (FREE)" },
           { left: "Signup Bonus", right: "100 💎 free" },
         ]} />
         <p className="text-text-muted text-[12px] leading-relaxed mt-4 italic">
