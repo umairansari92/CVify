@@ -614,14 +614,32 @@ const Documentation = () => {
 
     roadmap: (
       <>
-        <DocHeader title="Future Roadmap" badge="Coming Soon" />
+        <DocHeader title="Future Roadmap" badge="Product Vision" />
+        
+        <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { title: "AI Job Matcher v1.0", desc: "Real-time JD analysis with missing keyword detection and strategy reports.", status: "ACTIVE" },
+            { title: "Magic AI Import", desc: "Instant resume hydration from PDF/DOCX using deep semantic parsing.", status: "ACTIVE" },
+            { title: "Intelligence Command Bar", desc: "Natural language resume optimization with Intent Mode.", status: "ACTIVE" },
+          ].map((item, i) => (
+            <div key={i} className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex justify-between items-start gap-4">
+              <div>
+                <p className="font-black text-emerald-400 text-sm">{item.title}</p>
+                <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
+              </div>
+              <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0">{item.status}</span>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>Upcoming Milestones</SectionTitle>
         <div className="space-y-3">
           {[
-            { title: "AI Job Matcher", desc: "Upload resume → get matched jobs from LinkedIn, Indeed, and Glassdoor with compatibility scores.", status: "Q3 2026" },
-            { title: "Verified Skill Badges", desc: "Blockchain-verified certifications and proficiency badges that recruiters can trust.", status: "Q4 2026" },
-            { title: "Recruiter Hot-Lead Notifications", desc: "Recruiters get notified when a high-match candidate updates their profile.", status: "Q4 2026" },
-            { title: "Skill Alignment Roadmap", desc: "AI generates a personalized learning path to close skill gaps for target roles.", status: "2027" },
-            { title: "Multi-Language Resumes", desc: "Generate resumes in English, Urdu, Arabic, and Dutch for regional job markets.", status: "2027" },
+            { title: "AI Interview Simulation", desc: "AI-powered voice/text interviews based on your resume and target JD.", status: "Q3 2026" },
+            { title: "CVify Chrome Extension", desc: "Analyze any job description on LinkedIn/Indeed without leaving the page.", status: "Q4 2026" },
+            { title: "Verified Skill Badges", desc: "Blockchain-verified proficiency badges that recruiters can trust.", status: "Q4 2026" },
+            { title: "Multi-Language Resumes", desc: "Generate resumes in Arabic, Dutch, and Urdu for regional markets.", status: "2027" },
           ].map((item, i) => (
             <div key={i} className="p-5 glass rounded-2xl border border-white/5 flex justify-between items-start gap-4">
               <div>
