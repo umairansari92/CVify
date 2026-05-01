@@ -636,17 +636,18 @@ const Documentation = () => {
         <SectionTitle>Upcoming Milestones</SectionTitle>
         <div className="space-y-3">
           {[
+            { title: "AI Job Discovery Engine", desc: "A unified job board that automatically matches you with roles from LinkedIn, Indeed, and glassdoor based on your CVify score.", status: "TOP PRIORITY" },
             { title: "AI Interview Simulation", desc: "AI-powered voice/text interviews based on your resume and target JD.", status: "Q3 2026" },
             { title: "CVify Chrome Extension", desc: "Analyze any job description on LinkedIn/Indeed without leaving the page.", status: "Q4 2026" },
             { title: "Verified Skill Badges", desc: "Blockchain-verified proficiency badges that recruiters can trust.", status: "Q4 2026" },
             { title: "Multi-Language Resumes", desc: "Generate resumes in Arabic, Dutch, and Urdu for regional markets.", status: "2027" },
           ].map((item, i) => (
-            <div key={i} className="p-5 glass rounded-2xl border border-white/5 flex justify-between items-start gap-4">
+            <div key={i} className={`p-5 rounded-2xl flex justify-between items-start gap-4 transition-all ${item.status === "TOP PRIORITY" ? "bg-primary/5 border border-primary/20 shadow-lg shadow-primary/5" : "glass border border-white/5"}`}>
               <div>
-                <p className="font-black text-text-primary text-sm">{item.title}</p>
+                <p className={`font-black text-sm ${item.status === "TOP PRIORITY" ? "text-primary" : "text-text-primary"}`}>{item.title}</p>
                 <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
               </div>
-              <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0">{item.status}</span>
+              <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0 ${item.status === "TOP PRIORITY" ? "bg-primary text-white" : "bg-primary/10 text-primary"}`}>{item.status}</span>
             </div>
           ))}
         </div>
