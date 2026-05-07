@@ -23,7 +23,8 @@
   /* Semantic Tokens */
   --bg-primary: var(--background);
   --bg-secondary: var(--foreground);
-  --card-bg: rgba(255, 255, 255, 0.88);
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-tint: rgba(15, 157, 138, 0.03); /* Extremely subtle green shade */
   --card-border: #D9E7E3;
   --text-primary: #0F172A;   /* Rich navy black */
   --text-secondary: #64748B; /* Elegant muted text */
@@ -212,12 +213,20 @@
 }
 
 .premium-card {
-  @apply backdrop-blur-[14px] rounded-[24px] hover:shadow-hover hover:-translate-y-[2px] transition-all;
-  background: var(--card-bg);
+  @apply backdrop-blur-[14px] rounded-[24px] hover:shadow-hover hover:-translate-y-[2px] transition-all relative overflow-hidden;
+  background: linear-gradient(135deg, var(--card-bg), var(--card-tint));
   border: 1px solid var(--card-border);
   box-shadow: var(--elevation-1);
   transition-duration: var(--duration-medium);
   transition-timing-function: var(--ease-premium);
+}
+
+.premium-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(15, 157, 138, 0.05), transparent 70%);
+  pointer-events: none;
 }
 
 .input-premium {
