@@ -39,7 +39,7 @@ const QuestWidget = ({ quests = [] }) => {
   const hasReadyQuests = quests.some(q => q.status === 'ready');
 
   return (
-    <div className="flex flex-col h-full glass-strong rounded-[2.5rem] border border-card-border overflow-hidden relative group/widget transition-all duration-700 hover:shadow-glow-primary">
+    <div className="flex flex-col h-full glass-strong rounded-[2.5rem] border border-card-border overflow-hidden relative group/widget transition-all duration-700 hover:shadow-glow-primary card-flap-effect">
       {/* Immersive HUD Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none" />
       <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[80px] rounded-full -translate-y-1/3 translate-x-1/3 group-hover/widget:bg-primary/15 transition-colors duration-1000" />
