@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)]">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)] card-border-glow">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -361,7 +361,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {resumes?.map((resume) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative">
+            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative card-flap-effect">
               {/* Revision Banner HUD */}
               <div className="h-44 relative group-hover:scale-[1.02] transition-transform duration-slow shrink-0 overflow-hidden">
                 <div className="absolute inset-0 bg-mesh opacity-20" />
