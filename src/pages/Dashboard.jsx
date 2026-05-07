@@ -185,8 +185,8 @@ const Dashboard = () => {
   return (
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-8 relative overflow-hidden group border-[var(--card-border)]">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)]">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
