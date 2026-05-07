@@ -220,18 +220,19 @@ const Dashboard = () => {
                 </h1>
                 
                 <div className="flex flex-wrap items-center gap-6 mb-8">
-                  <div className="text-text-secondary font-semibold text-[13px] tracking-tight opacity-80 flex items-center gap-2">
-                    <div className="w-4 h-[1px] bg-primary/30" />
+                  <div className="text-text-secondary font-semibold text-[13px] tracking-tight opacity-80 flex items-center gap-2 min-w-[220px]">
+                    <div className="w-4 h-[1px] bg-primary/30 shrink-0" />
                     <TypeAnimation
                       sequence={[
                         "AI Workspace Active", 3000,
                         "Intelligence Synchronized", 3000,
+                        "System Status: Elite", 3000
                       ]}
                       repeat={Infinity}
                     />
                   </div>
-                  <div className="h-4 w-[1px] bg-card-border" />
-                  <div className="flex items-center gap-1.5">
+                  <div className="hidden sm:block h-4 w-[1px] bg-card-border/40" />
+                  <div className="flex items-center gap-2">
                     <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{resumes?.length || 0} Assets Found</span>
                   </div>
                 </div>
