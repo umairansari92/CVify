@@ -151,35 +151,34 @@
 }
 
 /* Glass Tier System */
-.glass-soft, .glass-medium, .glass-strong {
-  @apply relative overflow-hidden;
-}
-
 .glass-soft {
-  @apply backdrop-blur-[15px];
+  @apply backdrop-blur-[15px] relative;
   background: var(--glass-soft-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-1);
 }
 
 .glass-medium {
-  @apply backdrop-blur-[25px];
+  @apply backdrop-blur-[25px] relative;
   background: var(--glass-medium-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-2);
 }
 
 .glass-strong {
-  @apply backdrop-blur-[40px];
+  @apply backdrop-blur-[40px] relative;
   background: var(--glass-strong-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-3);
 }
 
-/* Connect Global Glass to Flap Animation */
-.glass-soft::before, .glass-soft::after,
-.glass-medium::before, .glass-medium::after,
-.glass-strong::before, .glass-strong::after {
+/* Connect to Flap Animation (OPT-IN ONLY) */
+.with-flap {
+  @apply relative overflow-hidden;
+}
+
+.with-flap::before,
+.with-flap::after {
   position: absolute;
   content: "";
   width: 0%;
@@ -194,21 +193,20 @@
   pointer-events: none;
 }
 
-.glass-soft::before, .glass-medium::before, .glass-strong::before {
+.with-flap::before {
   top: 0;
   right: 0;
   border-radius: 0 0 0 100%;
 }
 
-.glass-soft::after, .glass-medium::after, .glass-strong::after {
+.with-flap::after {
   bottom: 0;
   left: 0;
   border-radius: 0 100% 0 0;
 }
 
-.glass-soft:hover::before, .glass-soft:hover::after,
-.glass-medium:hover::before, .glass-medium:hover::after,
-.glass-strong:hover::before, .glass-strong:hover::after {
+.with-flap:hover::before,
+.with-flap:hover::after {
   width: 100%;
   height: 100%;
   border-radius: 0;

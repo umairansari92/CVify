@@ -10,7 +10,7 @@ const GlassContainer = ({ children, className = "", intensity = "medium", ...pro
 
   return (
     <m.div
-      className={`${intensities[intensity]} rounded-[2.5rem] p-6 lg:p-8 card-flap-effect border-[var(--card-border)] ${className}`}
+      className={`${intensities[intensity]} rounded-3xl p-6 lg:p-8 ${className}`}
       {...props}
     >
       {children}
