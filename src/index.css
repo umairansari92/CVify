@@ -176,38 +176,53 @@
   box-shadow: var(--elevation-3);
 }
 
-/* Connect to Flap Animation (VISIBLE & SHARP) */
-.glass-soft::before, .glass-soft::after,
-.glass-medium::before, .glass-medium::after,
-.glass-strong::before, .glass-strong::after {
-  position: absolute;
-  content: "";
-  width: 0%;
-  height: 0%;
-  background: linear-gradient(135deg, rgba(15, 157, 138, 0.1), rgba(15, 157, 138, 0.04));
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 0; /* Background ke upar, Content (z-10) ke neeche */
-  pointer-events: none;
+/* Global Card Animation: Rotating Elite Glow (Uiverse Inspired) */
+.glass-soft, .glass-medium, .glass-strong {
+  @apply relative overflow-hidden;
+  z-index: 1;
 }
 
 .glass-soft::before, .glass-medium::before, .glass-strong::before {
-  top: 0;
-  right: 0;
-  border-radius: 0 0 0 100%;
+  content: " ";
+  position: absolute;
+  display: block;
+  width: 140px;
+  height: 400px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary),
+    var(--accent),
+    transparent
+  );
+  transition: opacity 400ms;
+  animation: rotation_9018 3500ms infinite linear;
+  animation-play-state: paused;
+  opacity: 0;
+  top: -50%;
+  left: 25%;
+  z-index: -2;
+}
+
+.glass-soft:hover::before, .glass-medium:hover::before, .glass-strong:hover::before {
+  opacity: 1;
+  animation-play-state: running;
 }
 
 .glass-soft::after, .glass-medium::after, .glass-strong::after {
-  bottom: 0;
-  left: 0;
-  border-radius: 0 100% 0 0;
+  position: absolute;
+  content: " ";
+  display: block;
+  inset: 1px;
+  background: inherit;
+  backdrop-filter: blur(40px);
+  z-index: -1;
+  border-radius: inherit;
 }
 
-.glass-soft:hover::before, .glass-soft:hover::after,
-.glass-medium:hover::before, .glass-medium:hover::after,
-.glass-strong:hover::before, .glass-strong:hover::after {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
+@keyframes rotation_9018 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .sidebar-premium {
