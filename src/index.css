@@ -109,6 +109,11 @@
   --shadow-glow-primary: 0 0 30px rgba(15, 157, 138, 0.1);
   --shadow-glow-accent: 0 0 30px rgba(11, 125, 110, 0.1);
   
+  --duration-fast: 180ms;
+  --duration-medium: 220ms;
+  --duration-slow: 400ms;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+
   --animate-float: float 8s ease-in-out infinite;
   --animate-shimmer: shimmer 1.5s infinite;
   --animate-bg-shift: bg-shift 15s ease infinite;
@@ -171,7 +176,8 @@
 }
 
 .nav-item-premium {
-  @apply flex items-center gap-4 px-6 py-3.5 rounded-[14px] transition-all duration-medium text-text-muted font-semibold;
+  @apply flex items-center gap-4 px-6 py-3.5 rounded-[14px] transition-all text-text-muted font-semibold;
+  transition-duration: var(--duration-medium);
 }
 
 .nav-item-premium:hover {
