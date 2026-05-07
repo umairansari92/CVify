@@ -194,10 +194,10 @@ const Dashboard = () => {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-10">
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 glass-soft rounded-full border-primary/20">
-                  <div className="w-1 h-1 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
+                <div className="flex items-center gap-2 px-3 py-1.5 glass-soft rounded-full border-primary/20 hover:border-primary/40 transition-colors cursor-help group/status">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                    {economy?.tier || "PROFESSIONAL"} ACCOUNT
+                    {economy?.tier || "PROFESSIONAL"} IDENTITY
                   </span>
                 </div>
                 
@@ -242,9 +242,11 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Circular Profile Integrity Section */}
-            <div className="flex flex-col items-center justify-center p-8 glass-medium rounded-3xl border-[var(--card-border)] relative group/integrity">
-              <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover/integrity:opacity-100 transition-opacity duration-1000" />
+            {/* Circular Profile Integrity Focal Point */}
+            <div className="hidden lg:flex justify-end relative group/focal">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-[100px] rounded-full opacity-0 group-hover/focal:opacity-100 transition-opacity duration-1000" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-primary/10 rounded-full animate-pulse-slow" />
+              
               <div className="relative w-48 h-48 lg:w-56 lg:h-56">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle
@@ -274,13 +276,6 @@ const Dashboard = () => {
                   </span>
                   <span className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-40 mt-1">
                     Profile
-                  </span>
-                </div>
-              </div>
-              <div className="mt-8 flex items-center gap-3">
-                <div className="px-5 py-2 glass-soft border-primary/20 rounded-full">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                    Profile Strength Score
                   </span>
                 </div>
               </div>
@@ -363,9 +358,18 @@ const Dashboard = () => {
           {resumes?.map((resume) => (
             <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative">
               {/* Revision Banner HUD */}
-              <div className="h-44 relative group-hover:scale-[1.05] transition-transform duration-1000 shrink-0">
-                <div className="absolute inset-0 bg-mesh opacity-30" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
+              <div className="h-44 relative group-hover:scale-[1.02] transition-transform duration-slow shrink-0 overflow-hidden">
+                <div className="absolute inset-0 bg-mesh opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
+                {/* Visual ATS Indicator */}
+                <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-1">
+                   <div className="px-3 py-1.5 glass-strong rounded-lg border-white/10 text-[10px] font-bold text-text-primary tracking-tight">
+                     ATS READY
+                   </div>
+                   <div className="w-12 h-1 bg-primary/20 rounded-full overflow-hidden">
+                      <div className="w-4/5 h-full bg-primary" />
+                   </div>
+                </div>
                 <div className="absolute bottom-16 left-10 flex flex-col gap-3">
                   <div className="flex gap-2">
                     {renderAtsBadge(resume.atsScore)}

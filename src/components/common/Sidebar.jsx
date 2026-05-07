@@ -154,10 +154,14 @@ const Sidebar = ({ onClose }) => {
         <div className="absolute bottom-0 -right-20 w-64 h-64 bg-accent/20 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="p-10 pb-6 flex flex-col items-start relative">
-        <div className="relative z-10 hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
-          <Logo className="w-40 lg:w-44 opacity-95" />
-        </div>
+      <div className="p-8 pb-6 flex flex-col items-center relative">
+        <m.div 
+          whileHover={{ scale: 1.02 }}
+          className="relative z-10 p-4 glass-soft rounded-[2rem] border-primary/10 w-full flex justify-center group/logo overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover/logo:opacity-100 transition-opacity duration-700" />
+          <Logo className="w-36 lg:w-40 opacity-95 relative z-10" />
+        </m.div>
       </div>
 
       <nav className="flex-1 px-5 py-4 space-y-1.5 relative z-10 overflow-y-auto custom-scrollbar-thin pr-3">
