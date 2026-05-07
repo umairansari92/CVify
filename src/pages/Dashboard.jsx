@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-8 lg:p-12 relative overflow-hidden group border-[var(--card-border)]">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-8 relative overflow-hidden group border-[var(--card-border)]">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -214,30 +214,34 @@ const Dashboard = () => {
               </div>
 
               <div className="max-w-xl">
-                <h1 className="text-4xl lg:text-6xl font-bold text-text-primary leading-[1.1] mb-6 tracking-[-0.04em]">
+                <h1 className="text-3xl lg:text-4xl font-bold text-text-primary leading-tight mb-4 tracking-[-0.03em]">
                   Welcome Back,<br />
                   <span className="text-primary">{user?.name}</span>
                 </h1>
-                <div className="text-text-secondary font-semibold text-sm tracking-tight opacity-80 flex items-center gap-3">
-                  <div className="w-6 h-[1.5px] bg-primary/30" />
-                  <TypeAnimation
-                    sequence={[
-                      "Crafting your professional presence...", 3000,
-                      "Optimizing resume intelligence...", 3000,
-                      "Refining career presentation...", 3000
-                    ]}
-                    repeat={Infinity}
-                  />
+                
+                <div className="flex flex-wrap items-center gap-6 mb-8">
+                  <div className="text-text-secondary font-semibold text-[13px] tracking-tight opacity-80 flex items-center gap-2">
+                    <div className="w-4 h-[1px] bg-primary/30" />
+                    <TypeAnimation
+                      sequence={[
+                        "AI Workspace Active", 3000,
+                        "Intelligence Synchronized", 3000,
+                      ]}
+                      repeat={Infinity}
+                    />
+                  </div>
+                  <div className="h-4 w-[1px] bg-card-border" />
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{resumes?.length || 0} Assets Found</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="pt-6 flex flex-wrap gap-6 items-center">
                 <PremiumButton 
                   onClick={handleCreateNew}
                   icon={FiPlus}
-                  className="scale-110 !px-10 shadow-glow-primary"
+                  className="shadow-glow-primary"
                 >
-                  Build New Resume
+                  Create New Resume
                 </PremiumButton>
               </div>
             </div>
@@ -247,7 +251,7 @@ const Dashboard = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-[100px] rounded-full opacity-0 group-hover/focal:opacity-100 transition-opacity duration-1000" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-primary/10 rounded-full animate-pulse-slow" />
               
-              <div className="relative w-48 h-48 lg:w-56 lg:h-56">
+              <div className="relative w-40 h-40 lg:w-44 lg:h-44">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle
                     cx="50"
