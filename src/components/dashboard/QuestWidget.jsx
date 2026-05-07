@@ -47,11 +47,11 @@ const QuestWidget = ({ quests = [] }) => {
       {/* Header HUD */}
       <div className="p-10 pb-6 relative z-10 space-y-1">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-black text-primary flex items-center gap-3 tracking-tighter uppercase italic">
-            <div className="p-3 bg-primary/10 rounded-2xl text-primary shadow-glow-primary">
-              <FiZap size={20} />
+          <h3 className="text-lg font-bold text-text-main flex items-center gap-3 tracking-tight">
+            <div className="p-2.5 bg-primary/10 rounded-xl text-primary">
+              <FiZap size={18} />
             </div>
-            System Milestones
+            Milestones
           </h3>
           {hasReadyQuests && (
             <m.div 
@@ -101,10 +101,10 @@ const QuestWidget = ({ quests = [] }) => {
               <div className="space-y-4 pt-1">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h4 className={`text-base font-black tracking-tight leading-tight mb-1 transition-colors ${isReady ? "text-primary" : "text-text-primary"}`}>
+                    <h4 className={`text-sm font-bold tracking-tight leading-tight mb-1 transition-colors ${isReady ? "text-primary" : "text-text-primary"}`}>
                       {quest.title}
                     </h4>
-                    <p className="text-[11px] font-bold text-text-secondary leading-relaxed opacity-60 italic">
+                    <p className="text-[12px] font-medium text-text-secondary leading-relaxed opacity-80">
                       {quest.description}
                     </p>
                   </div>
@@ -134,18 +134,18 @@ const QuestWidget = ({ quests = [] }) => {
 
                    {isReady && (
                      <m.button
-                       whileHover={{ scale: 1.02 }}
+                       whileHover={{ y: -1 }}
                        whileTap={{ scale: 0.98 }}
                        disabled={claimingId === quest.id}
                        onClick={() => handleClaim(quest.id)}
-                       className="w-full py-4 bg-emerald-500 text-white rounded-2xl shadow-glow-success font-black text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-3 active:scale-95 transition-all"
+                       className="w-full h-10 bg-primary text-white rounded-xl shadow-premium font-bold text-[12px] flex items-center justify-center gap-2 active:scale-95 transition-all"
                      >
                        {claimingId === quest.id ? (
                          <FiRefreshCw size={14} className="animate-spin" />
                        ) : (
                          <>
-                           <FiGift size={16} className="animate-bounce" />
-                           Claim Reward Package
+                           <FiGift size={16} />
+                           Claim Reward
                          </>
                        )}
                      </m.button>

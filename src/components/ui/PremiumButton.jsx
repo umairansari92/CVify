@@ -13,8 +13,8 @@ const PremiumButton = ({
   type = "button"
 }) => {
   const variants = {
-    primary: "bg-gradient-to-r from-primary to-accent text-white shadow-xl shadow-primary/20",
-    secondary: "glass-medium text-text-main border-card-border hover:bg-white/[0.08]",
+    primary: "bg-primary text-white shadow-premium hover:bg-accent",
+    secondary: "bg-white text-text-main border border-card-border hover:bg-[#F8FBFA] hover:border-primary",
     danger: "bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white"
   };
 
@@ -23,11 +23,11 @@ const PremiumButton = ({
       type={type}
       disabled={disabled || isLoading}
       onClick={onClick}
-      whileHover={!disabled && !isLoading ? { y: -2, scale: 1.02 } : {}}
+      whileHover={!disabled && !isLoading ? { y: -1 } : {}}
       whileTap={!disabled && !isLoading ? { scale: 0.98 } : {}}
       className={`
-        px-8 py-4 rounded-2xl font-black text-[11px] tracking-[0.2em] uppercase transition-all 
-        flex items-center justify-center gap-3 relative overflow-hidden 
+        px-6 rounded-[14px] font-semibold text-[14px] transition-all 
+        flex items-center justify-center gap-2 relative overflow-hidden h-[48px]
         disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed
         ${variants[variant]} ${className}
       `}

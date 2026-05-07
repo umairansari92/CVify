@@ -137,7 +137,7 @@ const Sidebar = ({ onClose }) => {
   ] : [];
 
   return (
-    <div className="w-72 lg:w-72 glass-strong border-r border-card-border h-screen flex flex-col relative z-20 transition-all duration-700 overflow-hidden">
+    <div className="w-72 lg:w-72 sidebar-premium h-screen flex flex-col relative z-20 transition-all duration-700 overflow-hidden">
       {/* Mobile Close Button */}
       <div className="lg:hidden flex justify-end p-4">
         <button
@@ -172,19 +172,15 @@ const Sidebar = ({ onClose }) => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `group flex items-center gap-4 px-6 py-3.5 rounded-[1.25rem] transition-all duration-500 relative overflow-hidden ${
-                isActive
-                  ? `glass-medium text-text-primary glow-primary border-primary/20`
-                  : "text-text-secondary hover:text-text-primary hover:bg-white/[0.04]"
-              }`
+              `nav-item-premium ${isActive ? "active" : ""}`
             }
           >
             {({ isActive }) => (
               <>
-                <span className={`text-[1.1rem] transition-all duration-500 ${isActive ? "text-primary scale-110" : "group-hover:text-primary group-hover:scale-110"}`}>
+                <span className={`text-[1.1rem] transition-all duration-500 ${isActive ? "text-primary" : "group-hover:text-primary"}`}>
                   {item.icon}
                 </span>
-                <span className={`font-black tracking-tight text-[13px] ${isActive ? "text-text-primary" : "text-text-secondary group-hover:text-text-primary"}`}>
+                <span className={`tracking-tight text-[14px] ${isActive ? "text-text-main" : "text-text-muted group-hover:text-text-main"}`}>
                   {item.label}
                 </span>
                 {isActive && (

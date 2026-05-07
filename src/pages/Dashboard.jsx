@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-10 lg:p-14 relative overflow-hidden group border-[var(--card-border)]">
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-8 lg:p-12 relative overflow-hidden group border-[var(--card-border)]">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -194,10 +194,10 @@ const Dashboard = () => {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-10">
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2 px-4 py-2 glass-soft rounded-full border-primary/20">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                    {economy?.tier || "PROFESSIONAL"} ACCOUNT STATUS
+                <div className="flex items-center gap-2 px-3 py-1.5 glass-soft rounded-full border-primary/20">
+                  <div className="w-1 h-1 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+                    {economy?.tier || "PROFESSIONAL"} ACCOUNT
                   </span>
                 </div>
                 
@@ -214,12 +214,12 @@ const Dashboard = () => {
               </div>
 
               <div className="max-w-xl">
-                <h1 className="text-5xl lg:text-7xl font-black hero-text leading-[1.1] mb-6 tracking-tighter">
+                <h1 className="text-4xl lg:text-6xl font-bold text-text-primary leading-[1.1] mb-6 tracking-[-0.04em]">
                   Welcome Back,<br />
-                  <span className="text-primary glow-text">{user?.name}</span>
+                  <span className="text-primary">{user?.name}</span>
                 </h1>
-                <div className="text-text-secondary font-black text-sm tracking-widest uppercase opacity-60 flex items-center gap-3">
-                  <div className="w-8 h-[2px] bg-primary/40" />
+                <div className="text-text-secondary font-semibold text-sm tracking-tight opacity-80 flex items-center gap-3">
+                  <div className="w-6 h-[1.5px] bg-primary/30" />
                   <TypeAnimation
                     sequence={[
                       "Crafting your professional presence...", 3000,
@@ -269,11 +269,11 @@ const Dashboard = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-4xl lg:text-5xl font-black text-text-primary tracking-tighter italic">
+                  <span className="text-4xl lg:text-5xl font-bold text-text-primary tracking-[-0.04em]">
                     {user?.completionScore || 0}%
                   </span>
-                  <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.4em] opacity-50 mt-1">
-                    Completion
+                  <span className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-40 mt-1">
+                    Profile
                   </span>
                 </div>
               </div>
@@ -295,40 +295,40 @@ const Dashboard = () => {
 
       {/* Bento Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <GlassContainer className="p-10 relative overflow-hidden group hover:glow-primary transition-all duration-700">
-           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 rotate-12 group-hover:rotate-0">
-              <FaRocket size={100} />
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
+           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow rotate-12 group-hover:rotate-0">
+              <FaRocket size={80} />
            </div>
            <SectionHeader 
              title={`${user?.completionScore || 0}%`} 
-             subtitle="Profile Completion Strength" 
-             badge="LIVE DATA"
+             subtitle="Profile Strength" 
+             badge="LIVE"
              className="mb-0"
            />
            <div className="mt-8 flex items-center justify-between">
-              <div className="flex-1 h-2 bg-[var(--card-border)] rounded-full overflow-hidden">
+              <div className="flex-1 h-1.5 bg-[var(--card-border)] rounded-full overflow-hidden">
                 <m.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${user?.completionScore || 0}%` }}
-                  className="h-full bg-gradient-to-r from-primary to-accent" 
+                  className="h-full bg-primary" 
                 />
               </div>
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-10 relative overflow-hidden group hover:glow-accent transition-all duration-700">
-           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 -rotate-12 group-hover:rotate-0">
-              <FaSearchPlus size={100} />
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
+           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow -rotate-12 group-hover:rotate-0">
+              <FaSearchPlus size={80} />
            </div>
            <SectionHeader 
              title={stats?.totalScans || 0} 
-             subtitle="Intelligence Scans Conducted" 
-             badge="ENGINE DATA"
+             subtitle="Intelligence Scans" 
+             badge="ENGINE"
              className="mb-0"
            />
-           <div className="mt-8 flex gap-2">
+           <div className="mt-8 flex gap-1.5">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < (stats?.totalScans || 0) % 5 ? "bg-accent" : "bg-[var(--card-border)]"}`} />
+                <div key={i} className={`h-1 flex-1 rounded-full ${i < (stats?.totalScans || 0) % 5 ? "bg-primary" : "bg-[var(--card-border)]"}`} />
               ))}
            </div>
         </GlassContainer>
@@ -361,7 +361,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {resumes?.map((resume) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[550px] h-auto hover:glow-primary transition-all duration-700 flex flex-col border-[var(--card-border)] relative">
+            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative">
               {/* Revision Banner HUD */}
               <div className="h-44 relative group-hover:scale-[1.05] transition-transform duration-1000 shrink-0">
                 <div className="absolute inset-0 bg-mesh opacity-30" />
@@ -376,10 +376,10 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="p-10 flex-1 flex flex-col -mt-10 relative z-10">
+              <div className="p-8 flex-1 flex flex-col -mt-10 relative z-10">
                 <div className="mb-8">
-                  <h3 className="text-3xl font-black text-text-primary mb-2 truncate group-hover:text-primary transition-colors">{resume.title}</h3>
-                  <p className="text-[11px] font-black text-primary/60 uppercase tracking-[0.3em]">Premium Resume Template</p>
+                  <h3 className="text-2xl font-bold text-text-primary mb-1 truncate group-hover:text-primary transition-colors">{resume.title}</h3>
+                  <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.2em]">Premium Template</p>
                 </div>
 
                 <div className="flex-1 space-y-8">
@@ -441,7 +441,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {coverLetters?.map((letter) => (
-            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-10 cursor-pointer hover:border-accent/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]">
+            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-8 cursor-pointer hover:border-primary/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]">
               <div className="absolute -top-10 -right-10 p-10 opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-700">
                  <FaEnvelopeOpenText size={120} />
               </div>
@@ -450,14 +450,14 @@ const Dashboard = () => {
                  <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent glow-accent">
                     <FaEnvelopeOpenText size={20} />
                  </div>
-                 <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_8px_var(--accent)]" />
+                <div className="w-1 h-1 bg-accent rounded-full animate-pulse shadow-[0_0_8px_var(--accent)]" />
               </div>
 
               <div className="flex-1">
-                 <h3 className="font-black text-text-primary text-2xl leading-[1.2] mb-3 line-clamp-2 group-hover:text-accent transition-colors italic tracking-tighter">
+                 <h3 className="font-bold text-text-primary text-xl leading-[1.2] mb-2 line-clamp-2 group-hover:text-accent transition-colors tracking-tight">
                    {letter.jobTitle}
                  </h3>
-                 <p className="text-[11px] font-black text-text-secondary uppercase tracking-[0.3em] opacity-60">
+                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-60">
                    {letter.companyName}
                  </p>
               </div>
