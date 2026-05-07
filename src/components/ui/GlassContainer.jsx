@@ -13,7 +13,9 @@ const GlassContainer = ({ children, className = "", intensity = "medium", ...pro
       className={`${intensities[intensity]} rounded-3xl p-6 lg:p-8 ${className}`}
       {...props}
     >
-      {children}
+      <div className="relative z-10 h-full w-full">
+        {children}
+      </div>
     </m.div>
   );
 };

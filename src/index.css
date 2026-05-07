@@ -151,33 +151,32 @@
 }
 
 /* Glass Tier System */
+.glass-soft, .glass-medium, .glass-strong {
+  @apply relative overflow-hidden;
+}
+
 .glass-soft {
-  @apply backdrop-blur-[15px] relative;
+  @apply backdrop-blur-[15px];
   background: var(--glass-soft-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-1);
 }
 
 .glass-medium {
-  @apply backdrop-blur-[25px] relative;
+  @apply backdrop-blur-[25px];
   background: var(--glass-medium-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-2);
 }
 
 .glass-strong {
-  @apply backdrop-blur-[40px] relative;
+  @apply backdrop-blur-[40px];
   background: var(--glass-strong-bg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--elevation-3);
 }
 
-/* Connect to Flap Animation (SHARP & GLOBAL) */
-.glass-soft, .glass-medium, .glass-strong {
-  @apply relative overflow-hidden;
-  z-index: 1;
-}
-
+/* Connect to Flap Animation (VISIBLE & SHARP) */
 .glass-soft::before, .glass-soft::after,
 .glass-medium::before, .glass-medium::after,
 .glass-strong::before, .glass-strong::after {
@@ -185,9 +184,9 @@
   content: "";
   width: 0%;
   height: 0%;
-  background: linear-gradient(135deg, rgba(15, 157, 138, 0.12), rgba(15, 157, 138, 0.05));
+  background: linear-gradient(135deg, rgba(15, 157, 138, 0.1), rgba(15, 157, 138, 0.04));
   transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: -1; /* Text ke peeche rahega */
+  z-index: 0; /* Background ke upar, Content (z-10) ke neeche */
   pointer-events: none;
 }
 
