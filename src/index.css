@@ -686,3 +686,54 @@
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color, #2dd4bf) var(--bg-primary, #0b1121);
 }
+
+/* ==========================================
+   Uiverse Inspired: Premium Neon Border
+   ========================================== */
+.card-neon-border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg, #171717);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: inherit;
+  transition: all var(--duration-medium) var(--ease-premium);
+}
+
+.card-neon-border::before {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 1000px;
+  background-image: linear-gradient(180deg, var(--primary), var(--action));
+  animation: rotation_neon 5000ms infinite linear;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.card-neon-border:hover::before {
+  opacity: 1;
+}
+
+.card-neon-border::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: var(--card-bg);
+  border-radius: inherit;
+  z-index: 0;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes rotation_neon {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.card-neon-border > * {
+  position: relative;
+  z-index: 10;
+}

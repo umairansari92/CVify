@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)] card-border-glow" delay={0.1}>
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)] card-border-glow" delay={0.1} neon={true}>
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -295,7 +295,7 @@ const Dashboard = () => {
 
       {/* Bento Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.2}>
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.2} neon={true}>
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow rotate-12 group-hover:rotate-0">
               <FaRocket size={80} />
            </div>
@@ -316,7 +316,7 @@ const Dashboard = () => {
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.3}>
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.3} neon={true}>
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow -rotate-12 group-hover:rotate-0">
               <FaSearchPlus size={80} />
            </div>
