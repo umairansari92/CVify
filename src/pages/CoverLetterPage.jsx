@@ -16,6 +16,7 @@ import { updateDiamonds } from "../features/auth/authSlice";
 import { toast } from "react-hot-toast";
 import { handleDownloadLetter } from "../utils/pdfExport";
 import Swal from "sweetalert2";
+import GlassContainer from "../components/ui/GlassContainer";
 
 const CoverLetterPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -130,18 +131,19 @@ const CoverLetterPage = () => {
             Craft professional letters in seconds. Edit them to perfection.
           </p>
         </div>
-        <div className="flex items-center gap-3 px-6 py-3 glass rounded-2xl border border-primary/20 shadow-xl shadow-primary/5">
+        <GlassContainer intensity="soft" className="flex items-center gap-3 px-6 py-3 border border-primary/20 shadow-xl shadow-primary/5" delay={0.1}>
           <FaGem className="text-blue-400 animate-bounce" />
           <span className="font-black text-text-primary">
             {user?.diamonds || 0} Diamonds Available
           </span>
-        </div>
+        </GlassContainer>
       </div>
 
       {/* Two-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Form */}
-        <div className="lg:col-span-5 space-y-6 glass p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20">
+        <div className="lg:col-span-5 space-y-6">
+          <GlassContainer intensity="medium" className="p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20" delay={0.2}>
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
           <div className="space-y-4 relative z-10">
@@ -259,13 +261,13 @@ const CoverLetterPage = () => {
                 <span>Basic Template (Free)</span>
               </button>
             </div>
-          </div>
+          </GlassContainer>
         </div>
 
         {/* RIGHT: Live Editable Preview */}
         <div className="lg:col-span-7">
           {generatedLetter ? (
-            <div className="glass rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col">
+            <GlassContainer intensity="strong" className="rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col !p-0" delay={0.3}>
               {/* Preview Header */}
               <div className="p-6 border-b border-white/5 bg-white/5">
                 <div className="flex justify-between items-start">
@@ -374,10 +376,10 @@ const CoverLetterPage = () => {
                   </>
                 )}
               </div>
-            </div>
+            </GlassContainer>
           ) : (
             /* Empty State */
-            <div className="glass rounded-3xl border-2 border-dashed border-white/10 p-16 text-center flex flex-col items-center justify-center min-h-96">
+            <GlassContainer intensity="soft" className="rounded-3xl border-2 border-dashed border-white/10 p-16 text-center flex flex-col items-center justify-center min-h-96" delay={0.3}>
               <div className="w-24 h-24 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-glow">
                 <FaRegFileAlt size={40} />
               </div>
@@ -388,7 +390,7 @@ const CoverLetterPage = () => {
                 Fill in the form and click <strong>Generate</strong>. You can
                 then edit the result directly before downloading.
               </p>
-            </div>
+            </GlassContainer>
           )}
         </div>
       </div>
