@@ -688,52 +688,57 @@
 }
 
 /* ==========================================
-   Uiverse Inspired: Premium Neon Border
+   CVify Elite Border Glow (Refined SaaS)
    ========================================== */
-.card-neon-border {
+.cvify-border-glow {
   position: relative;
-  width: 100%;
-  height: 100%;
-  background: var(--card-bg, #171717);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
-  border-radius: inherit;
-  transition: all var(--duration-medium) var(--ease-premium);
+  isolation: isolate;
 }
 
-.card-neon-border::before {
+.cvify-border-glow::before {
   content: "";
   position: absolute;
-  width: 150px;
-  height: 1000px;
-  background-image: linear-gradient(180deg, var(--primary), var(--action));
-  animation: rotation_neon 5000ms infinite linear;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 420px;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(15, 157, 138, 0.9),
+    rgba(11, 125, 110, 0.7),
+    transparent
+  );
   opacity: 0;
-  transition: opacity 300ms;
+  transition: opacity 300ms ease;
+  animation: cvify-rotate-border 8s linear infinite;
+  animation-play-state: paused;
+  z-index: -2;
 }
 
-.card-neon-border:hover::before {
-  opacity: 1;
+.cvify-border-glow:hover::before {
+  opacity: 0.8;
+  animation-play-state: running;
 }
 
-.card-neon-border::after {
+.cvify-border-glow::after {
   content: "";
   position: absolute;
-  inset: 2px;
+  inset: 1px;
   background: var(--card-bg);
+  backdrop-filter: blur(24px);
   border-radius: inherit;
-  z-index: 0;
-  backdrop-filter: blur(10px);
+  z-index: -1;
 }
 
-@keyframes rotation_neon {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes cvify-rotate-border {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.card-neon-border > * {
+.cvify-border-glow > * {
   position: relative;
   z-index: 10;
 }

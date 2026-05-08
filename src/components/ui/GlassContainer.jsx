@@ -6,7 +6,6 @@ const GlassContainer = ({
   className = "", 
   intensity = "medium", 
   animateEntrance = true,
-  neon = false,
   delay = 0,
   ...props 
 }) => {
@@ -31,7 +30,7 @@ const GlassContainer = ({
         scale: 1.01,
         transition: { duration: 0.2, ease: "easeOut" }
       }}
-      className={`${intensities[intensity]} rounded-3xl p-6 lg:p-8 hover:shadow-hover transition-shadow ${neon ? "card-neon-border" : ""} ${className}`}
+      className={`${intensities[intensity]} rounded-3xl p-6 lg:p-8 hover:shadow-hover transition-shadow ${className}`}
       {...props}
     >
       <div className="relative z-10 h-full w-full">
