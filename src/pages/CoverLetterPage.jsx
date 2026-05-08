@@ -174,22 +174,22 @@ const CoverLetterPage = () => {
                   ))}
                 </select>
               </div>
-            </div>
-            {/* Job Title */}
-            <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
-                Job Title
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Senior Frontend Developer"
-                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold"
-                value={formData.jobTitle}
-                onChange={(e) =>
-                  setFormData({ ...formData, jobTitle: e.target.value })
-                }
-              />
-            </div>
+
+              {/* Job Title */}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
+                  Job Title
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Senior Frontend Developer"
+                  className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold"
+                  value={formData.jobTitle}
+                  onChange={(e) =>
+                    setFormData({ ...formData, jobTitle: e.target.value })
+                  }
+                />
+              </div>
 
             {/* Company */}
             <div>
@@ -269,7 +269,8 @@ const CoverLetterPage = () => {
                 <span>Basic Template (Free)</span>
               </button>
             </div>
-          </GlassContainer>
+          </div>
+        </GlassContainer>
         </div>
 
         {/* RIGHT: Live Editable Preview */}
