@@ -688,54 +688,47 @@
 }
 
 /* ==========================================
-   CVify Elite Border Glow (Refined SaaS)
+   Uiverse Smooth Sweeping Border (1:1 Logic)
    ========================================== */
 .cvify-border-glow {
   position: relative;
   overflow: hidden;
+  background: var(--card-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   isolation: isolate;
 }
 
 .cvify-border-glow::before {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 140px;
-  height: 420px;
-  transform: translate(-50%, -50%) rotate(0deg);
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(15, 157, 138, 0.9),
-    rgba(11, 125, 110, 0.7),
-    transparent
-  );
+  width: 100px;
+  height: 600px;
+  background: linear-gradient(var(--primary), var(--accent));
+  animation: cvify-sweep 8s linear infinite;
+  transition: opacity 0.5s ease;
   opacity: 0;
-  transition: opacity 300ms ease;
-  animation: cvify-rotate-border 8s linear infinite;
-  animation-play-state: paused;
   z-index: -2;
 }
 
 .cvify-border-glow:hover::before {
-  opacity: 0.8;
-  animation-play-state: running;
+  opacity: 1;
 }
 
 .cvify-border-glow::after {
   content: "";
   position: absolute;
-  inset: 1px;
+  inset: 4px; /* Border thickness */
   background: var(--card-bg);
-  backdrop-filter: blur(24px);
   border-radius: inherit;
   z-index: -1;
+  backdrop-filter: blur(50px);
 }
 
-@keyframes cvify-rotate-border {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes cvify-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .cvify-border-glow > * {
