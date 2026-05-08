@@ -131,7 +131,11 @@ const CoverLetterPage = () => {
             Craft professional letters in seconds. Edit them to perfection.
           </p>
         </div>
-        <GlassContainer intensity="soft" className="flex items-center gap-3 px-6 py-3 border border-primary/20 shadow-xl shadow-primary/5" delay={0.1}>
+        <GlassContainer
+          intensity="soft"
+          className="flex items-center gap-3 px-6 py-3 border border-primary/20 shadow-xl shadow-primary/5"
+          delay={0.1}
+        >
           <FaGem className="text-blue-400 animate-bounce" />
           <span className="font-black text-text-primary">
             {user?.diamonds || 0} Diamonds Available
@@ -143,30 +147,34 @@ const CoverLetterPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Form */}
         <div className="lg:col-span-5 space-y-6">
-          <GlassContainer intensity="medium" className="p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20" delay={0.2}>
-          <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+          <GlassContainer
+            intensity="medium"
+            className="p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20"
+            delay={0.2}
+          >
+            <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
-          <div className="space-y-4 relative z-10">
-            {/* Resume Select */}
-            <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
-                Select Resume
-              </label>
-              <select
-                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold text-text-primary"
-                value={formData.resumeId}
-                onChange={(e) =>
-                  setFormData({ ...formData, resumeId: e.target.value })
-                }
-              >
-                {resumes.map((r) => (
-                  <option key={r._id} value={r._id}>
-                    {r.personalInfo.fullName} — {r.templateId}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-4 relative z-10">
+              {/* Resume Select */}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
+                  Select Resume
+                </label>
+                <select
+                  className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold text-text-primary"
+                  value={formData.resumeId}
+                  onChange={(e) =>
+                    setFormData({ ...formData, resumeId: e.target.value })
+                  }
+                >
+                  {resumes.map((r) => (
+                    <option key={r._id} value={r._id}>
+                      {r.personalInfo.fullName} — {r.templateId}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-
             {/* Job Title */}
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
@@ -267,7 +275,11 @@ const CoverLetterPage = () => {
         {/* RIGHT: Live Editable Preview */}
         <div className="lg:col-span-7">
           {generatedLetter ? (
-            <GlassContainer intensity="strong" className="rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col !p-0" delay={0.3}>
+            <GlassContainer
+              intensity="strong"
+              className="rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col !p-0"
+              delay={0.3}
+            >
               {/* Preview Header */}
               <div className="p-6 border-b border-white/5 bg-white/5">
                 <div className="flex justify-between items-start">
@@ -379,7 +391,11 @@ const CoverLetterPage = () => {
             </GlassContainer>
           ) : (
             /* Empty State */
-            <GlassContainer intensity="soft" className="rounded-3xl border-2 border-dashed border-white/10 p-16 text-center flex flex-col items-center justify-center min-h-96" delay={0.3}>
+            <GlassContainer
+              intensity="soft"
+              className="rounded-3xl border-2 border-dashed border-white/10 p-16 text-center flex flex-col items-center justify-center min-h-96"
+              delay={0.3}
+            >
               <div className="w-24 h-24 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-glow">
                 <FaRegFileAlt size={40} />
               </div>
