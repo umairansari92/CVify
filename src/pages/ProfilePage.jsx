@@ -32,7 +32,6 @@ import ThemeEditor from "../components/profile/ThemeEditor";
 import CareerAnalytics from "../components/profile/CareerAnalytics";
 
 import ThreeBackground from "../components/three/ThreeBackground";
-import GlassContainer from "../components/ui/GlassContainer";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -162,7 +161,7 @@ const ProfilePage = () => {
             </p>
           </div>
 
-          <GlassContainer intensity="soft" className="flex items-center gap-6 p-6" delay={0.2}>
+          <div className="flex items-center gap-6 p-6 glass rounded-[2rem]">
             <div className="relative">
               <svg className="w-20 h-20 -rotate-90">
                 <circle
@@ -199,7 +198,7 @@ const ProfilePage = () => {
                 <span>{user?.diamonds || 0} Builder Points</span>
               </div>
             </div>
-          </GlassContainer>
+          </div>
         </div>
         {/* --- TAB NAVIGATION --- */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 custom-scrollbar no-scrollbar border-b border-border-subtle">

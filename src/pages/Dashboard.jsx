@@ -186,7 +186,7 @@ const Dashboard = () => {
     <div className="space-y-12 lg:space-y-20 pb-20">
       {/* Elite Hero HUD Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)] cvify-border-glow" delay={0.1}>
+        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)] card-border-glow">
           {/* HUD Mesh Layer */}
           <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
@@ -295,7 +295,7 @@ const Dashboard = () => {
 
       {/* Bento Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.2}>
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow rotate-12 group-hover:rotate-0">
               <FaRocket size={80} />
            </div>
@@ -316,7 +316,7 @@ const Dashboard = () => {
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium" delay={0.3}>
+        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow -rotate-12 group-hover:rotate-0">
               <FaSearchPlus size={80} />
            </div>
@@ -333,7 +333,7 @@ const Dashboard = () => {
            </div>
         </GlassContainer>
 
-        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-[var(--card-border)]" delay={0.4}>
+        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-[var(--card-border)]">
            <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 rotate-45 group-hover:rotate-0">
               <FaShieldAlt size={100} />
            </div>
@@ -360,8 +360,8 @@ const Dashboard = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {resumes?.map((resume, index) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto transition-all duration-medium flex flex-col border-[var(--card-border)] relative card-flap-effect" delay={0.2 + index * 0.1}>
+          {resumes?.map((resume) => (
+            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative card-flap-effect">
               {/* Revision Banner HUD */}
               <div className="h-44 relative group-hover:scale-[1.02] transition-transform duration-slow shrink-0 overflow-hidden">
                 <div className="absolute inset-0 bg-mesh opacity-20" />
@@ -449,8 +449,8 @@ const Dashboard = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {coverLetters?.map((letter, index) => (
-            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-8 cursor-pointer hover:border-primary/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]" delay={0.3 + index * 0.1}>
+          {coverLetters?.map((letter) => (
+            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-8 cursor-pointer hover:border-primary/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]">
               <div className="absolute -top-10 -right-10 p-10 opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-700">
                  <FaEnvelopeOpenText size={120} />
               </div>

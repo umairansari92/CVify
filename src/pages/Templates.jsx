@@ -5,7 +5,6 @@ import ResumePreview from "../components/ResumePreview";
 import { handleDownloadPDF } from "../utils/pdfExport";
 import { FaFileDownload, FaEye } from "react-icons/fa";
 import { initResumeWithData } from "../features/resume/resumeSlice";
-import GlassContainer from "../components/ui/GlassContainer";
 
 const dummyResume = {
   personalInfo: {
@@ -155,11 +154,10 @@ const Templates = () => {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {templates.map((tpl, index) => (
-            <GlassContainer
+          {templates.map((tpl) => (
+            <div
               key={tpl.id}
-              className="group !p-0 overflow-hidden transition-all duration-500 hover:-translate-y-2"
-              delay={index * 0.05}
+              className="group bg-white dark:bg-slate-blue rounded-[2.5rem] shadow-premium border border-slate-100 dark:border-white/5 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
             >
               <div className="relative h-[450px] overflow-hidden bg-slate-50 dark:bg-midnight/30">
                 {/* Template Preview with Scale */}
@@ -212,7 +210,7 @@ const Templates = () => {
                   <div className="w-2.5 h-2.5 rounded-full bg-action animate-pulse"></div>
                 </div>
               </div>
-            </GlassContainer>
+            </div>
           ))}
         </div>
       </div>

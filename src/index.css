@@ -501,7 +501,6 @@
     transparent 50%
   );
   animation: rotate-glow 4s linear infinite;
-  opacity: 0;
   transition: opacity 0.5s;
   z-index: -2;
 }
@@ -536,8 +535,6 @@
     transform: translateX(100%);
   }
 }
-
-/* HUD Specific Utilities */
 .hud-border {
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
@@ -687,51 +684,4 @@
   scrollbar-color: var(--primary-color, #2dd4bf) var(--bg-primary, #0b1121);
 }
 
-/* ==========================================
-   Uiverse Smooth Sweeping Border (1:1 Logic)
-   ========================================== */
-.cvify-border-glow {
-  position: relative;
-  overflow: hidden;
-  background: var(--card-bg);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  isolation: isolate;
-}
 
-.cvify-border-glow::before {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 600px;
-  background: linear-gradient(var(--primary), var(--accent));
-  animation: cvify-sweep 8s linear infinite;
-  transition: opacity 0.5s ease;
-  opacity: 0;
-  z-index: -2;
-}
-
-.cvify-border-glow:hover::before {
-  opacity: 1;
-}
-
-.cvify-border-glow::after {
-  content: "";
-  position: absolute;
-  inset: 4px; /* Border thickness */
-  background: var(--card-bg);
-  border-radius: inherit;
-  z-index: -1;
-  backdrop-filter: blur(50px);
-}
-
-@keyframes cvify-sweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.cvify-border-glow > * {
-  position: relative;
-  z-index: 10;
-}

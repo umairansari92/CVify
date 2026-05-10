@@ -18,7 +18,6 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import ATSResult from "../components/ats/ATSResult"; // [V3]
-import GlassContainer from "../components/ui/GlassContainer";
 
 const ATSPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -134,18 +133,18 @@ const ATSPage = () => {
             Scan your resume, match keywords, and get AI-driven scoring.
           </p>
         </div>
-        <GlassContainer intensity="soft" className="flex items-center gap-3 px-6 py-3 border border-primary/20 shadow-xl shadow-primary/5" delay={0.1}>
+        <div className="flex items-center gap-3 px-6 py-3 glass rounded-2xl border border-primary/20 shadow-xl shadow-primary/5">
           <FaGem className="text-blue-400 animate-pulse" />
           <span className="font-black text-text-primary">
             {user?.diamonds || 0} Diamonds Available
           </span>
-        </GlassContainer>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Section */}
         <div className="lg:col-span-5 space-y-6">
-          <GlassContainer intensity="medium" className="p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6" delay={0.2}>
+          <div className="glass p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6">
             {/* Resume Input - Selective */}
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
@@ -286,7 +285,7 @@ const ATSPage = () => {
                 Run Intelligence Scan (50 💎)
               </span>
             </button>
-          </GlassContainer>
+          </div>
         </div>
 
         {/* RIGHT: Results Section */}
@@ -294,7 +293,7 @@ const ATSPage = () => {
           {result ? (
             <ATSResult data={result} />
           ) : (
-            <GlassContainer intensity="soft" className="rounded-3xl border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]" delay={0.3}>
+            <div className="glass rounded-3xl border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]">
               <div className="w-32 h-32 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-10 shadow-glow animate-pulse">
                 <FaSearch size={48} />
               </div>
@@ -305,7 +304,7 @@ const ATSPage = () => {
                 Upload your resume and provide a job description to see your
                 performance score and actionable feedback.
               </p>
-            </GlassContainer>
+            </div>
           )}
         </div>
       </div>
