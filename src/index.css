@@ -479,54 +479,6 @@
   border-radius: 0;
 }
 
-/* Premium Animation 2: Rotating Border Glow (Refined for SaaS) */
-.card-border-glow {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.card-border-glow::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    transparent,
-    var(--primary),
-    transparent 20%,
-    var(--accent),
-    transparent 50%
-  );
-  animation: rotate-glow 4s linear infinite;
-  transition: opacity 0.5s;
-  z-index: -2;
-}
-
-.card-border-glow::after {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  background: inherit;
-  border-radius: inherit;
-  z-index: -1;
-}
-
-.card-border-glow:hover::before {
-  opacity: 1;
-}
-
-@keyframes rotate-glow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
