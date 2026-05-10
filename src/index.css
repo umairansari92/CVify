@@ -435,55 +435,6 @@
   transition-duration: var(--duration-slow);
 }
 
-/* Premium Animation 1: Corner Flap Effect (Modified for CVify) */
-.card-flap-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.card-flap-effect::before,
-.card-flap-effect::after {
-  position: absolute;
-  content: "";
-  width: 0%;
-  height: 0%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 157, 138, 0.08),
-    rgba(15, 157, 138, 0.03)
-  );
-  backdrop-filter: blur(10px);
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 5;
-}
-
-.card-flap-effect::before {
-  top: 0;
-  right: 0;
-  border-radius: 0 0 0 100%;
-}
-
-.card-flap-effect::after {
-  bottom: 0;
-  left: 0;
-  border-radius: 0 100% 0 0;
-}
-
-.card-flap-effect:hover::before,
-.card-flap-effect:hover::after {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
     transform: translateX(100%);
   }
 }
@@ -532,25 +483,7 @@
   word-break: keep-all;
 }
 
-.shimmer-mask {
-  mask-image: linear-gradient(
-    90deg,
-    #000 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    #000 100%
-  );
-  mask-size: 200% 100%;
-  animation: shimmer-swipe 2s infinite linear;
-}
 
-@keyframes shimmer-swipe {
-  0% {
-    mask-position: 100% 0;
-  }
-  100% {
-    mask-position: -100% 0;
-  }
-}
 
 /* SweetAlert2 Custom Styling */
 .swal2-popup {
