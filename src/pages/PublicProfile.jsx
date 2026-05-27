@@ -87,6 +87,7 @@ const Footer = lazy(() => import("../components/profile/sections/Footer"));
 import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
+import OrientalLuxeTheme from "../themes/orientalluxe";
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -796,127 +797,140 @@ const PublicProfile = () => {
         </AnimatePresence>
       </nav>
 
-      <Hero 
-        user={user} 
-        isOwner={isOwner} 
-        theme={theme} 
-        displayValue={displayValue} 
-        handleLiveUpdate={handleLiveUpdate} 
-        analytics={analytics}
-      />
-
-      <Suspense fallback={null}>
-        <GithubStats 
-          githubUrl={user?.socialLinks?.github} 
-          userSkills={user?.skills?.technical || user?.skills || []} 
-          data={githubData}
-          loading={githubLoading}
+      {isOrientalLuxeTheme ? (
+        <OrientalLuxeTheme 
+          user={user}
+          projects={projects}
+          isOwner={isOwner}
+          handleLiveUpdate={handleLiveUpdate}
+          handleArrayUpdate={handleArrayUpdate}
+          setShowResumeModal={setShowResumeModal}
         />
-      </Suspense>
+      ) : (
+        <>
+          <Hero 
+            user={user} 
+            isOwner={isOwner} 
+            theme={theme} 
+            displayValue={displayValue} 
+            handleLiveUpdate={handleLiveUpdate} 
+            analytics={analytics}
+          />
 
-      <Suspense fallback={null}>
-        <Brands user={user} isOwner={isOwner} />
-      </Suspense>
+          <Suspense fallback={null}>
+            <GithubStats 
+              githubUrl={user?.socialLinks?.github} 
+              userSkills={user?.skills?.technical || user?.skills || []} 
+              data={githubData}
+              loading={githubLoading}
+            />
+          </Suspense>
 
-      <About 
-        user={user} 
-        isOwner={isOwner} 
-        displayValue={displayValue} 
-        handleLiveUpdate={handleLiveUpdate} 
-        setShowResumeModal={setShowResumeModal} 
-      />
+          <Suspense fallback={null}>
+            <Brands user={user} isOwner={isOwner} />
+          </Suspense>
 
-      <Suspense fallback={
-        <div className="py-20 text-center opacity-20 animate-pulse font-black uppercase tracking-[0.5em] text-[8px]">
-          Loading Intelligence...
-        </div>
-      }>
-        {(isOwner || (user.experience?.length > 0)) && (
-          <Experience 
+          <About 
             user={user} 
             isOwner={isOwner} 
             displayValue={displayValue} 
             handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
+            setShowResumeModal={setShowResumeModal} 
           />
-        )}
 
-        {(isOwner || (user.projects?.length > 0) || (user.portfolio?.length > 0)) && (
-          <Showcase 
-            user={user} 
-            isOwner={isOwner} 
-            projects={projects} 
-            displayValue={displayValue} 
-            handleArrayUpdate={handleArrayUpdate} 
-            dispatch={dispatch} 
-            deleteProjectThunk={deleteProjectThunk} 
-            openProjectModalThunk={openProjectModalThunk} 
-          />
-        )}
+          <Suspense fallback={
+            <div className="py-20 text-center opacity-20 animate-pulse font-black uppercase tracking-[0.5em] text-[8px]">
+              Loading Intelligence...
+            </div>
+          }>
+            {(isOwner || (user.experience?.length > 0)) && (
+              <Experience 
+                user={user} 
+                isOwner={isOwner} 
+                displayValue={displayValue} 
+                handleLiveUpdate={handleLiveUpdate} 
+                handleArrayUpdate={handleArrayUpdate} 
+              />
+            )}
 
-        {(isOwner || (Array.isArray(user.skills) ? user.skills.length > 0 : (user.skills?.technical?.length > 0)) || (user.services?.length > 0)) && (
-          <Skills 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-            githubStats={githubData}
-            projectsCount={projects.length}
-          />
-        )}
+            {(isOwner || (user.projects?.length > 0) || (user.portfolio?.length > 0)) && (
+              <Showcase 
+                user={user} 
+                isOwner={isOwner} 
+                projects={projects} 
+                displayValue={displayValue} 
+                handleArrayUpdate={handleArrayUpdate} 
+                dispatch={dispatch} 
+                deleteProjectThunk={deleteProjectThunk} 
+                openProjectModalThunk={openProjectModalThunk} 
+              />
+            )}
 
-        {(isOwner || (user.education?.length > 0)) && (
-          <Education 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
-        )}
+            {(isOwner || (Array.isArray(user.skills) ? user.skills.length > 0 : (user.skills?.technical?.length > 0)) || (user.services?.length > 0)) && (
+              <Skills 
+                user={user} 
+                isOwner={isOwner} 
+                displayValue={displayValue} 
+                handleLiveUpdate={handleLiveUpdate} 
+                handleArrayUpdate={handleArrayUpdate} 
+                githubStats={githubData}
+                projectsCount={projects.length}
+              />
+            )}
 
-        {(isOwner || (user.certifications?.length > 0)) && (
-          <Certifications user={user} isOwner={isOwner} />
-        )}
+            {(isOwner || (user.education?.length > 0)) && (
+              <Education 
+                user={user} 
+                isOwner={isOwner} 
+                displayValue={displayValue} 
+                handleLiveUpdate={handleLiveUpdate} 
+                handleArrayUpdate={handleArrayUpdate} 
+              />
+            )}
 
-        {(isOwner || (user.achievements?.length > 0) || (user.languages?.length > 0)) && (
-          <Dossier 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
-        )}
+            {(isOwner || (user.certifications?.length > 0)) && (
+              <Certifications user={user} isOwner={isOwner} />
+            )}
 
-        {(isOwner || (user.testimonials?.length > 0)) && (
-          <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
-        )}
+            {(isOwner || (user.achievements?.length > 0) || (user.languages?.length > 0)) && (
+              <Dossier 
+                user={user} 
+                isOwner={isOwner} 
+                displayValue={displayValue} 
+                handleLiveUpdate={handleLiveUpdate} 
+                handleArrayUpdate={handleArrayUpdate} 
+              />
+            )}
 
-        {(isOwner || (user.interests?.length > 0)) && (
-          <Interests 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
-        )}
+            {(isOwner || (user.testimonials?.length > 0)) && (
+              <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
+            )}
 
-        <Contact 
-          user={user} 
-          isOwner={isOwner} 
-          contactForm={contactForm} 
-          setContactForm={setContactForm} 
-          handleContactSubmit={handleContactSubmit} 
-          isSending={isSending} 
-          handleLiveUpdate={handleLiveUpdate} 
-          ensureAbsoluteUrl={ensureAbsoluteUrl} 
-        />
+            {(isOwner || (user.interests?.length > 0)) && (
+              <Interests 
+                user={user} 
+                isOwner={isOwner} 
+                displayValue={displayValue} 
+                handleLiveUpdate={handleLiveUpdate} 
+                handleArrayUpdate={handleArrayUpdate} 
+              />
+            )}
 
-        <Footer personalInfo={personalInfo} />
-      </Suspense>
+            <Contact 
+              user={user} 
+              isOwner={isOwner} 
+              contactForm={contactForm} 
+              setContactForm={setContactForm} 
+              handleContactSubmit={handleContactSubmit} 
+              isSending={isSending} 
+              handleLiveUpdate={handleLiveUpdate} 
+              ensureAbsoluteUrl={ensureAbsoluteUrl} 
+            />
+
+            <Footer personalInfo={personalInfo} />
+          </Suspense>
+        </>
+      )}
 
 
       {/* ── Builder Controls ── */}
