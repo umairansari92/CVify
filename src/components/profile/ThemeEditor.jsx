@@ -199,7 +199,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
               <button
                 key={p.id}
                 onClick={() => {
-                  const updated = { ...localSettings, ...p.settings };
+                  const updated = { ...localSettings, ...p.settings, name: p.name };
                   setLocalSettings(updated);
                   onUpdate(updated, bannerFile);
                   toast.success(`${p.name} Applied`);
