@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import { getMe } from "./features/auth/authThunk";
 import PWAInstall from "./components/common/PWAInstall";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,9 @@ const App = () => {
         <link rel="canonical" href={currentUrl} />
       </Helmet>
       <PWAInstall />
-      <AppRoutes />
+      <ErrorBoundary>
+        <AppRoutes />
+      </ErrorBoundary>
       <Toaster position="top-center" reverseOrder={false} />
     </>
   );
