@@ -1,25 +1,23 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { GraduationCap } from "lucide-react";
 import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 import { staggerContainer, staggerChild } from "./animations";
 
 /**
- * ORIENTAL LUXE — Experience Section
- * ─────────────────────────────────────
- * COMPLETELY different from default:
- * - Left-aligned vertical timeline with gradient line
- * - Glowing copper dot indicators (outer glow ring + inner solid)
- * - Timeline cards with role/date header, company, bullet points
- * - Cards have left padding from timeline, hover border glow
+ * ORIENTAL LUXE — Education Section
+ * ──────────────────────────────────
+ * Same vertical timeline style as Experience for visual consistency,
+ * but with GraduationCap icon and degree/institution layout.
  */
-const Experience = ({ user, isOwner, handleArrayUpdate }) => {
-  const experiences = user?.experience || [];
-  if (experiences.length === 0) return null;
+const Education = ({ user, isOwner, handleArrayUpdate }) => {
+  const education = user?.education || [];
+  if (education.length === 0) return null;
 
   return (
     <section
-      id="experience-ol"
+      id="education-ol"
       className="relative py-20 sm:py-28"
       style={{ fontFamily: tokens.fonts.primary }}
     >
@@ -36,20 +34,19 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
             className="mb-2 text-[11px] font-semibold uppercase tracking-[0.25em]"
             style={{ color: tokens.colors.accent }}
           >
-            CAREER PATH
+            ACADEMIC BACKGROUND
           </p>
           <h2
             className="flex items-center gap-4 text-3xl sm:text-4xl font-extrabold tracking-tight"
             style={{ color: tokens.colors.textPrimary }}
           >
             <span className="h-8 w-1 rounded-full" style={{ backgroundColor: tokens.colors.accent }} />
-            Experience
+            Education
           </h2>
         </motion.div>
 
         {/* Timeline */}
         <div className="relative">
-          {/* Vertical Line */}
           <div
             className="absolute left-3 top-2 h-full w-px"
             style={{
@@ -64,9 +61,9 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
             viewport={{ once: true }}
             className="space-y-10"
           >
-            {experiences.map((exp, index) => (
+            {education.map((edu, index) => (
               <motion.li
-                key={exp._id || index}
+                key={edu._id || index}
                 variants={staggerChild}
                 className="relative pl-12"
               >
@@ -76,12 +73,10 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
                     className="absolute h-6 w-6 rounded-full"
                     style={{ backgroundColor: `${tokens.colors.accent}20` }}
                   />
-                  <span
-                    className="relative h-3 w-3 rounded-full"
-                    style={{
-                      backgroundColor: tokens.colors.accent,
-                      boxShadow: `0 0 12px ${tokens.colors.accentGlowStrong}`,
-                    }}
+                  <GraduationCap
+                    size={12}
+                    className="relative z-10"
+                    style={{ color: tokens.colors.accent }}
                   />
                 </span>
 
@@ -99,7 +94,6 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
                     e.currentTarget.style.borderColor = tokens.colors.border;
                   }}
                 >
-                  {/* Header Row */}
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <h3
                       className="text-lg font-semibold"
@@ -107,48 +101,34 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
                     >
                       <InlineEdit
                         isOwner={isOwner}
-                        value={exp.role}
-                        onSave={(v) => handleArrayUpdate("experience", index, { role: v })}
+                        value={edu.degree}
+                        onSave={(v) => handleArrayUpdate("education", index, { degree: v })}
                       >
-                        {exp.role}
+                        {edu.degree}
                       </InlineEdit>
                     </h3>
                     <span
                       className="text-sm font-medium whitespace-nowrap"
                       style={{ color: tokens.colors.accent }}
                     >
-                      {exp.startDate} – {exp.isCurrent ? "Present" : exp.endDate}
+                      {edu.startYear || edu.startDate} – {edu.endYear || edu.endDate || "Present"}
                     </span>
                   </div>
 
-                  {/* Company */}
                   <p className="mt-0.5 text-sm" style={{ color: tokens.colors.textMuted }}>
                     <InlineEdit
                       isOwner={isOwner}
-                      value={exp.company}
-                      onSave={(v) => handleArrayUpdate("experience", index, { company: v })}
+                      value={edu.institution}
+                      onSave={(v) => handleArrayUpdate("education", index, { institution: v })}
                     >
-                      {exp.company}
+                      {edu.institution}
                     </InlineEdit>
                   </p>
 
-                  {/* Description / Achievements */}
-                  {exp.achievements && (
-                    <div className="mt-3 space-y-1.5">
-                      <InlineEdit
-                        isOwner={isOwner}
-                        value={exp.achievements}
-                        type="textarea"
-                        onSave={(v) => handleArrayUpdate("experience", index, { achievements: v })}
-                      >
-                        {exp.achievements.split("\n").filter(Boolean).map((line, li) => (
-                          <div key={li} className="flex gap-2 text-sm leading-relaxed" style={{ color: tokens.colors.textSecondary }}>
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: tokens.colors.accent }} />
-                            {line.replace(/^[-•]\s*/, "")}
-                          </div>
-                        ))}
-                      </InlineEdit>
-                    </div>
+                  {edu.description && (
+                    <p className="mt-3 text-sm leading-relaxed" style={{ color: tokens.colors.textSecondary }}>
+                      {edu.description}
+                    </p>
                   )}
                 </div>
               </motion.li>
@@ -160,4 +140,4 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
   );
 };
 
-export default Experience;
+export default Education;

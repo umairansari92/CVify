@@ -4,73 +4,175 @@ import { FaGithub } from "react-icons/fa";
 import { ExternalLink } from "lucide-react";
 import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
+import { staggerContainer, staggerChild } from "./animations";
 
+/**
+ * ORIENTAL LUXE — Projects Showcase
+ * ──────────────────────────────────
+ * COMPLETELY different from default:
+ * - 2-column grid (no thumbnails, text-only cards)
+ * - Cards have hover lift (-translate-y) + border glow
+ * - Tech stack as copper-bordered pill tags
+ * - GitHub/Live links at card bottom with separator
+ * - Title turns copper on hover
+ */
 const Showcase = ({ user, isOwner, projects, handleArrayUpdate }) => {
-  if (projects.length === 0) return null;
+  if (!projects || projects.length === 0) return null;
 
   return (
-    <section 
-      id="showcase" 
-      className="py-24 border-b border-[#1a1a1a]"
+    <section
+      id="showcase-ol"
+      className="relative py-20 sm:py-28"
       style={{ fontFamily: tokens.fonts.primary }}
     >
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-left mb-16 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#b58953]">SELECTED WORK</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-4">
-            <span className="h-8 w-1 rounded-full bg-[#b58953]" /> PROJECTS
+      <div className="mx-auto max-w-7xl px-6">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="mb-14"
+        >
+          <p
+            className="mb-2 text-[11px] font-semibold uppercase tracking-[0.25em]"
+            style={{ color: tokens.colors.accent }}
+          >
+            SELECTED WORK
+          </p>
+          <h2
+            className="flex items-center gap-4 text-3xl sm:text-4xl font-extrabold tracking-tight"
+            style={{ color: tokens.colors.textPrimary }}
+          >
+            <span className="h-8 w-1 rounded-full" style={{ backgroundColor: tokens.colors.accent }} />
+            Projects
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Project Grid */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid gap-6 md:grid-cols-2"
+        >
           {projects.map((project, index) => (
-            <motion.div 
+            <motion.article
               key={project._id || index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group bg-[#121212] border border-[#1a1a1a] rounded-xl p-6 sm:p-8 flex flex-col justify-between hover:border-[#b58953]/40 transition-all duration-300"
+              variants={staggerChild}
+              className="group flex h-full flex-col rounded-2xl border p-6 sm:p-7 transition-all duration-300"
+              style={{
+                backgroundColor: `${tokens.colors.bgSoft}60`,
+                borderColor: tokens.colors.border,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.borderColor = tokens.colors.borderHover;
+                e.currentTarget.style.boxShadow = tokens.shadows.glowStrong;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.borderColor = tokens.colors.border;
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
-              <div className="space-y-4">
-                <h3 className="text-xl font-extrabold text-white group-hover:text-[#b58953] transition-colors">
-                  <InlineEdit isOwner={isOwner} id={`oriental-proj-title-${index}`} value={project.title} onSave={(v) => handleArrayUpdate("projects", index, { title: v })}>
-                    {project.title}
-                  </InlineEdit>
-                </h3>
+              {/* Title */}
+              <h3
+                className="text-xl font-semibold transition-colors duration-300"
+                style={{ color: tokens.colors.textPrimary }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = tokens.colors.accent; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = tokens.colors.textPrimary; }}
+              >
+                <InlineEdit
+                  isOwner={isOwner}
+                  id={`ol-proj-title-${index}`}
+                  value={project.title}
+                  onSave={(v) => handleArrayUpdate("projects", index, { title: v })}
+                >
+                  {project.title}
+                </InlineEdit>
+              </h3>
 
-                {project.techStack && (
-                  <div className="flex flex-wrap gap-2">
-                    {project.techStack.map((tech, i) => (
-                      <span key={i} className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded bg-[#b58953]/5 border border-[#b58953]/15 text-[#b58953]">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              {/* Tech Stack Tags */}
+              {project.techStack && project.techStack.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.techStack.map((tech, i) => (
+                    <span
+                      key={i}
+                      className="rounded-full border px-3 py-1 text-[10px] font-medium"
+                      style={{
+                        borderColor: `${tokens.colors.accent}30`,
+                        backgroundColor: `${tokens.colors.accent}08`,
+                        color: tokens.colors.accent,
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-                <p className="text-sm text-[#a3a3a3] leading-relaxed font-light">
-                  <InlineEdit isOwner={isOwner} id={`oriental-proj-desc-${index}`} value={project.description} type="textarea" onSave={(v) => handleArrayUpdate("projects", index, { description: v })}>
-                    {project.description}
-                  </InlineEdit>
-                </p>
-              </div>
+              {/* Description */}
+              <p
+                className="mt-4 flex-1 text-sm leading-relaxed"
+                style={{ color: tokens.colors.textSecondary }}
+              >
+                <InlineEdit
+                  isOwner={isOwner}
+                  id={`ol-proj-desc-${index}`}
+                  value={project.description}
+                  type="textarea"
+                  onSave={(v) => handleArrayUpdate("projects", index, { description: v })}
+                >
+                  {project.description}
+                </InlineEdit>
+              </p>
 
-              <div className="flex items-center gap-4 pt-6 border-t border-[#1a1a1a] mt-6">
-                {(project.liveUrl || project.liveLink) && (
-                  <a href={project.liveUrl || project.liveLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#b58953] hover:opacity-80 transition-opacity">
-                    <ExternalLink size={14} /> LIVE DEMO
-                  </a>
-                )}
-                {(project.githubUrl || project.githubLink) && (
-                  <a href={project.githubUrl || project.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#a3a3a3] hover:text-white transition-colors">
-                    <FaGithub size={14} /> SOURCE CODE
-                  </a>
-                )}
-              </div>
-            </motion.div>
+              {/* Links */}
+              {((project.liveUrl || project.liveLink) || (project.githubUrl || project.githubLink)) && (
+                <div
+                  className="mt-5 flex items-center gap-4 border-t pt-5"
+                  style={{ borderColor: tokens.colors.border }}
+                >
+                  {(project.githubUrl || project.githubLink) && (
+                    <a
+                      href={project.githubUrl || project.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors duration-200"
+                      style={{
+                        borderColor: tokens.colors.border,
+                        color: tokens.colors.textPrimary,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = tokens.colors.accent;
+                        e.currentTarget.style.color = tokens.colors.accent;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = tokens.colors.border;
+                        e.currentTarget.style.color = tokens.colors.textPrimary;
+                      }}
+                    >
+                      <FaGithub size={16} /> GitHub
+                    </a>
+                  )}
+                  {(project.liveUrl || project.liveLink) && (
+                    <a
+                      href={project.liveUrl || project.liveLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-opacity duration-200 hover:opacity-80"
+                      style={{ color: tokens.colors.accent }}
+                    >
+                      <ExternalLink size={14} /> Live Demo
+                    </a>
+                  )}
+                </div>
+              )}
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
