@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from "react";
-const GithubStats = lazy(() => import("../../components/profile/sections/GithubStats"));
+import React from "react";
+import GithubStats from "../../components/profile/sections/GithubStats";
 import Hero from "./Hero";
 import About from "./About";
 import Experience from "./Experience";
@@ -62,14 +62,12 @@ const OrientalLuxeTheme = ({
         />
 
         {/* GitHub Insights (Intelligence Report) */}
-        <Suspense fallback={null}>
-          <GithubStats 
-            githubUrl={user?.socialLinks?.github} 
-            userSkills={user?.skills?.technical || user?.skills || []} 
-            data={githubData}
-            loading={githubLoading}
-          />
-        </Suspense>
+        <GithubStats 
+          githubUrl={user?.socialLinks?.github} 
+          userSkills={user?.skills?.technical || user?.skills || []} 
+          data={githubData}
+          loading={githubLoading}
+        />
 
         {/* Split-Column About with Photo + Bio + Stats */}
         <About
