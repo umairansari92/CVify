@@ -298,10 +298,10 @@ const PublicProfile = () => {
   );
 
   const baseTheme = localTheme || themePresets[0];
-  const fullTheme = themePresets.find(p => p.name === baseTheme.name) || themePresets[0];
+  const fullTheme = themePresets.find(p => p.name === baseTheme.name || (baseTheme.name === "AHMED RAZA PORTFOLIO" && p.name === "ORIENTAL LUXE")) || themePresets[0];
   const theme = { ...fullTheme, ...baseTheme };
   const isLight = ["#f8fafc", "#ffffff", "#f1f5f9", "#f0fdf4", "#fff7ed"].includes(theme.bodyBg?.toLowerCase());
-  const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE";
+  const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE" || baseTheme.name === "AHMED RAZA PORTFOLIO";
 
   const themeStyles = {
     backgroundColor: theme.bodyBg,
