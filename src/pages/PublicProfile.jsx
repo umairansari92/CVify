@@ -279,6 +279,7 @@ const PublicProfile = () => {
     { name: "CREATIVE SUNSET", headerBg: "#f97316", headerBgSecondary: "#db2777", bodyBg: "#fff7ed", fontPrimary: "Poppins", cardStyle: "glass", icon: "🌅", textPrimary: "#431407", textSecondary: "#9a3412", accentColor: "#e11d48" },
     { name: "SLATE MINIMALIST", headerBg: "#475569", headerBgSecondary: "#64748b", bodyBg: "#f1f5f9", fontPrimary: "Roboto", cardStyle: "minimal", icon: "🎨", textPrimary: "#334155", textSecondary: "#64748b", accentColor: "#0f172a" },
     { name: "EMERALD LEADER", headerBg: "#059669", headerBgSecondary: "#10b981", bodyBg: "#f0fdf4", fontPrimary: "Montserrat", cardStyle: "classic", icon: "🌿", textPrimary: "#064e3b", textSecondary: "#065f46", accentColor: "#059669" },
+    { name: "AHMED RAZA PORTFOLIO", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
   ];
 
   if (loading) return (

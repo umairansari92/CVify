@@ -148,6 +148,21 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         fontPrimary: "Montserrat",
       },
     },
+    {
+      id: "ahmedraza",
+      name: "AHMED RAZA PORTFOLIO",
+      icon: <span className="text-2xl">🕌</span>,
+      settings: {
+        headerBg: "#101010",
+        headerBgSecondary: "#181818",
+        bodyBg: "#090909",
+        accentColor: "#b58953",
+        textPrimary: "#ffffff",
+        textSecondary: "#a3a3a3",
+        cardStyle: "glass",
+        fontPrimary: "Outfit",
+      },
+    },
   ];
 
   const paletteItems = [
