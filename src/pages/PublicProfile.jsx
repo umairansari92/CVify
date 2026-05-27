@@ -599,6 +599,8 @@ const PublicProfile = () => {
           setContactForm={setContactForm}
           handleContactSubmit={handleContactSubmit}
           isSending={isSending}
+          githubData={githubData}
+          githubLoading={githubLoading}
         />
       ) : (
         <>
