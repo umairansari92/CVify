@@ -279,7 +279,7 @@ const PublicProfile = () => {
     { name: "CREATIVE SUNSET", headerBg: "#f97316", headerBgSecondary: "#db2777", bodyBg: "#fff7ed", fontPrimary: "Poppins", cardStyle: "glass", icon: "🌅", textPrimary: "#431407", textSecondary: "#9a3412", accentColor: "#e11d48" },
     { name: "SLATE MINIMALIST", headerBg: "#475569", headerBgSecondary: "#64748b", bodyBg: "#f1f5f9", fontPrimary: "Roboto", cardStyle: "minimal", icon: "🎨", textPrimary: "#334155", textSecondary: "#64748b", accentColor: "#0f172a" },
     { name: "EMERALD LEADER", headerBg: "#059669", headerBgSecondary: "#10b981", bodyBg: "#f0fdf4", fontPrimary: "Montserrat", cardStyle: "classic", icon: "🌿", textPrimary: "#064e3b", textSecondary: "#065f46", accentColor: "#059669" },
-    { name: "AHMED RAZA PORTFOLIO", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
+    { name: "ORIENTAL LUXE", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
   ];
 
   if (loading) return (
@@ -300,6 +300,7 @@ const PublicProfile = () => {
   const fullTheme = themePresets.find(p => p.name === baseTheme.name) || themePresets[0];
   const theme = { ...fullTheme, ...baseTheme };
   const isLight = ["#f8fafc", "#ffffff", "#f1f5f9", "#f0fdf4", "#fff7ed"].includes(theme.bodyBg?.toLowerCase());
+  const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE";
 
   const themeStyles = {
     backgroundColor: theme.bodyBg,
@@ -308,13 +309,225 @@ const PublicProfile = () => {
     "--bg-primary": theme.bodyBg || "#0f172a",
     "--text-primary": theme.textPrimary || (isLight ? "#0f172a" : "#ffffff"),
     "--text-secondary": theme.textSecondary || (isLight ? "#64748b" : "#94a3b8"),
-    "--card-bg": theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.03)" : "rgba(255, 255, 255, 0.04)") : (isLight ? "rgba(0, 0, 0, 0.01)" : "rgba(255, 255, 255, 0.02)"),
-    "--card-border": theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.1)") : (isLight ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.08)"),
+    "--card-bg": isOrientalLuxeTheme ? "#121212" : (theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.03)" : "rgba(255, 255, 255, 0.04)") : (isLight ? "rgba(0, 0, 0, 0.01)" : "rgba(255, 255, 255, 0.02)")),
+    "--card-border": isOrientalLuxeTheme ? "#222222" : (theme.cardStyle === "glass" ? (isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.1)") : (isLight ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.08)")),
+    "--about-image-url": personalInfo.image ? `url(${personalInfo.image})` : `url('/ahmed.webp')`,
     color: "var(--text-primary)",
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900" style={themeStyles}>
+    <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
+      {isOrientalLuxeTheme && (
+        <style>{`
+          .oriental-luxe-active #home,
+          .oriental-luxe-active #about,
+          .oriental-luxe-active #journey,
+          .oriental-luxe-active #education,
+          .oriental-luxe-active #expertise,
+          .oriental-luxe-active #showcase,
+          .oriental-luxe-active #certifications,
+          .oriental-luxe-active #contact {
+            background-color: #090909 !important;
+            background-image: radial-gradient(ellipse 70% 70% at 50% 45%, rgba(181, 137, 83, 0.06) 0%, transparent 80%) !important;
+            position: relative;
+          }
+          
+          /* Islamic Geometric Pattern Backdrop Overlay matching screenshot */
+          .oriental-luxe-active::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 110 110'%3E%3Cpolygon points='55.00,17.00 60.93,40.68 81.87,28.13 69.32,49.07 93.00,55.00 69.32,60.93 81.87,81.87 60.93,69.32 55.00,93.00 49.07,69.32 28.13,81.87 40.68,60.93 17.00,55.00 40.68,49.07 28.13,28.13 49.07,40.68' fill='none' stroke='%23b58953' stroke-width='0.8'%3E%3C/polygon%3E%3Ccircle cx='55' cy='55' r='5' fill='none' stroke='%23b58953' stroke-width='0.6'%3E%3C/circle%3E%3C/svg%3E");
+            background-repeat: repeat;
+          }
+
+          /* Ahmed Raza Glow and Fonts styling */
+          .oriental-luxe-active h1,
+          .oriental-luxe-active h2 {
+            text-shadow: 0 0 20px rgba(181, 137, 83, 0.2);
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.03em !important;
+          }
+
+          .oriental-luxe-active .text-gradient,
+          .oriental-luxe-active [class*="text-[var(--primary-color)]"] {
+            color: #b58953 !important;
+          }
+
+          /* Alignment & Cards override */
+          .oriental-luxe-active section {
+            border-bottom: 1px solid #1a1a1a !important;
+          }
+          
+          /* Hero structure styling matching screenshot */
+          .oriental-luxe-active #home {
+            min-height: 90vh !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center !important;
+            padding-top: 10rem !important;
+            padding-bottom: 6rem !important;
+            clip-path: none !important;
+          }
+          .oriental-luxe-active #home .grid {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+          .oriental-luxe-active #home .lg\\:col-span-7 {
+            align-items: center !important;
+            text-align: center !important;
+            max-w-3xl !important;
+            margin: 0 auto !important;
+          }
+          .oriental-luxe-active #home .lg\\:col-span-7 h1 span {
+            text-align: center !important;
+            -webkit-text-stroke: unset !important;
+            color: #ffffff !important;
+            display: block !important;
+            font-size: 4rem !important;
+          }
+          @media (min-width: 640px) {
+            .oriental-luxe-active #home .lg\\:col-span-7 h1 span {
+              font-size: 6rem !important;
+            }
+          }
+          .oriental-luxe-active #home .lg\\:col-span-5 {
+            display: none !important; /* Portrait removed in Hero to match main screenshot top title header layout */
+          }
+          .oriental-luxe-active #home .pt-12 {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+          }
+          
+          /* About page layout matching top portion of screenshot */
+          .oriental-luxe-active #about .max-w-4xl {
+            max-w-6xl !important;
+            display: grid !important;
+            grid-template-cols: 1fr !important;
+            gap: 4rem !important;
+            text-align: left !important;
+            align-items: center !important;
+          }
+          @media (min-width: 768px) {
+            .oriental-luxe-active #about .max-w-4xl {
+              grid-template-columns: 320px 1fr !important;
+            }
+          }
+          .oriental-luxe-active #about h2 {
+            text-align: left !important;
+          }
+          .oriental-luxe-active #about .h-1.5 {
+            margin: 0 !important;
+          }
+          .oriental-luxe-active #about .text-center {
+            text-align: left !important;
+          }
+          .oriental-luxe-active #about .flex.justify-center {
+            justify-content: flex-start !important;
+          }
+          .oriental-luxe-active #about .flex.items-center.justify-center {
+            justify-content: flex-start !important;
+          }
+          
+          /* Dynamic Profile Image Injection for Ahmed Raza layout if profileImage is loaded */
+          .oriental-luxe-active #about .max-w-4xl::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 350px;
+            border-radius: 16px;
+            border: 1px solid rgba(181, 137, 83, 0.3);
+            background-image: var(--about-image-url, url('/ahmed.webp'));
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 40px rgba(181, 137, 83, 0.2);
+            order: -1;
+          }
+
+          /* Hide extra Dossier/Verification block for cleaner scholar aesthetic */
+          .oriental-luxe-active #about .pt-12.space-y-8 > div {
+            display: none !important;
+          }
+          
+          /* Cards general adjustments */
+          .oriental-luxe-active [class*="bg-[var(--card-bg)]"],
+          .oriental-luxe-active .group {
+            background-color: #121212 !important;
+            border-color: #1a1a1a !important;
+            border-radius: 12px !important;
+          }
+          .oriental-luxe-active [class*="bg-[var(--card-bg)]"]:hover {
+            border-color: rgba(181, 137, 83, 0.4) !important;
+            box-shadow: 0 0 30px rgba(181, 137, 83, 0.1) !important;
+          }
+          
+          /* Journey and Education - Left Align Vertical Timelines */
+          .oriental-luxe-active #journey .before\\:absolute,
+          .oriental-luxe-active #education .before\\:absolute {
+            margin: unset !important;
+            left: 20px !important;
+          }
+          .oriental-luxe-active #journey .relative.flex,
+          .oriental-luxe-active #education .relative.flex {
+            align-items: flex-start !important;
+            flex-direction: row !important;
+            padding-left: 3.5rem !important;
+          }
+          .oriental-luxe-active #journey .z-20,
+          .oriental-luxe-active #education .z-20 {
+            position: absolute !important;
+            left: 0px !important;
+            margin: 0 !important;
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 8px !important;
+            background-color: #161616 !important;
+            border: 1px solid #222 !important;
+            color: #b58953 !important;
+          }
+          .oriental-luxe-active #journey [class*="bg-[var(--card-bg)]"],
+          .oriental-luxe-active #education [class*="bg-[var(--card-bg)]"] {
+            border: 1px solid #1a1a1a !important;
+            border-left: 0 !important;
+            border-radius: 12px !important;
+            text-align: left !important;
+            padding: 2rem !important;
+          }
+          
+          /* Projects card showcase mapping grid layout */
+          .oriental-luxe-active #showcase .grid {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+            gap: 1.5rem !important;
+          }
+          .oriental-luxe-active #showcase [class*="aspect-video"] {
+            display: none !important; /* Remove thumbnails for flat clean premium text look */
+          }
+          .oriental-luxe-active #showcase [class*="bg-[var(--card-bg)]"] {
+            padding: 1.5rem !important;
+            border-radius: 12px !important;
+          }
+          
+          /* Contacts direct layout */
+          .oriental-luxe-active #contact .grid {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+          }
+          @media (min-width: 1024px) {
+            .oriental-luxe-active #contact .grid {
+              grid-template-columns: 1fr 1fr !important;
+            }
+          }
+        `}</style>
+      )}
       <Helmet>
         {/* Dynamic SEO Tags */}
         <title>{`${personalInfo.fullName}${personalInfo.jobTitle ? ` | ${personalInfo.jobTitle}` : ''} | CVify Pro`}</title>

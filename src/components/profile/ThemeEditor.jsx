@@ -149,8 +149,8 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
       },
     },
     {
-      id: "ahmedraza",
-      name: "AHMED RAZA PORTFOLIO",
+      id: "orientalluxe",
+      name: "ORIENTAL LUXE",
       icon: <span className="text-2xl">🕌</span>,
       settings: {
         headerBg: "#101010",
