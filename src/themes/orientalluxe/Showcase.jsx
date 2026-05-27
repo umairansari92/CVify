@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, FaGithub } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { ExternalLink } from "lucide-react";
 import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 
