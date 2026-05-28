@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "tsparticles-slim";
 
 /**
  * ThemeBackgroundFX — "Felt, Not Seen" principle
@@ -20,6 +22,57 @@ const Flower5 = ({ cx, cy, pr = 3, pl = 7, sw = 0.7, id }) =>
       strokeWidth={sw}
     />
   ));
+
+const MidnightDevParticles = () => {
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
+    });
+  }, []);
+
+  if (!init) return null;
+
+  return (
+    <Particles
+      id="tsparticles-midnight"
+      options={{
+        background: { color: { value: "transparent" } },
+        fpsLimit: 120,
+        particles: {
+          color: { value: ["#7dd3fc", "#38bdf8"] },
+          links: {
+            color: "#38bdf8",
+            distance: 150,
+            enable: true,
+            opacity: 0.3,
+            width: 1,
+          },
+          move: {
+            direction: "none",
+            enable: true,
+            outModes: { default: "bounce" },
+            random: false,
+            speed: 0.8,
+            straight: false,
+          },
+          number: {
+            density: { enable: true, area: 800 },
+            value: 60,
+          },
+          opacity: { value: 0.5 },
+          shape: { type: "circle" },
+          size: { value: { min: 1, max: 3 } },
+        },
+        detectRetina: true,
+      }}
+      className="absolute inset-0 w-full h-full"
+    />
+  );
+};
 
 const ThemeBackgroundFX = ({ themeName }) => {
   if (!themeName) return null;
@@ -55,74 +108,19 @@ const ThemeBackgroundFX = ({ themeName }) => {
   }
 
   /* ── 2. MIDNIGHT DEV ───────────────────────────────────────────
-   * Dark bg (#020617) → Abstract Tech Network / Constellation
+   * Dark bg (#020617) → Abstract Tech Network / Constellation using tsParticles
    */
   if (themeName === "MIDNIGHT DEV") {
     return (
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <svg
-          className="absolute inset-0 w-full h-full"
-          style={{
-            maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
-            WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
-          }}
-        >
-          <defs>
-            <pattern id="tech-network" width="300" height="300" patternUnits="userSpaceOnUse">
-              {/* Abstract dotted flowing waves in the background */}
-              <path d="M 0 150 Q 75 50, 150 150 T 300 150" fill="none" stroke="rgba(125, 211, 252, 0.15)" strokeWidth="1.5" strokeDasharray="1 6" strokeLinecap="round" />
-              <path d="M 0 200 Q 100 100, 300 200" fill="none" stroke="rgba(125, 211, 252, 0.1)" strokeWidth="1" strokeDasharray="1 5" strokeLinecap="round" />
-              <path d="M 0 100 Q 200 300, 300 100" fill="none" stroke="rgba(125, 211, 252, 0.1)" strokeWidth="1" strokeDasharray="1 5" strokeLinecap="round" />
-              <path d="M -50 50 Q 150 0, 350 250" fill="none" stroke="rgba(125, 211, 252, 0.08)" strokeWidth="2" strokeDasharray="2 8" strokeLinecap="round" />
-
-              {/* Connecting Lines */}
-              <g stroke="rgba(56, 189, 248, 0.3)" strokeWidth="0.6">
-                {/* Internal network */}
-                <line x1="30" y1="50" x2="120" y2="100" />
-                <line x1="120" y1="100" x2="220" y2="60" />
-                <line x1="220" y1="60" x2="270" y2="180" />
-                <line x1="270" y1="180" x2="160" y2="240" />
-                <line x1="160" y1="240" x2="60" y2="210" />
-                <line x1="60" y1="210" x2="30" y2="50" />
-                <line x1="120" y1="100" x2="160" y2="240" />
-                <line x1="60" y1="210" x2="220" y2="60" />
-                <line x1="120" y1="100" x2="270" y2="180" />
-                
-                {/* Secondary shorter connections */}
-                <line x1="150" y1="160" x2="120" y2="100" />
-                <line x1="150" y1="160" x2="270" y2="180" />
-                <line x1="150" y1="160" x2="160" y2="240" />
-
-                {/* Edges to connect seamlessly */}
-                <line x1="270" y1="180" x2="330" y2="230" />
-                <line x1="-30" y1="230" x2="60" y2="210" />
-                
-                <line x1="220" y1="60" x2="250" y2="-10" />
-                <line x1="250" y1="290" x2="270" y2="180" />
-
-                <line x1="30" y1="50" x2="-20" y2="20" />
-                <line x1="280" y1="20" x2="220" y2="60" />
-              </g>
-
-              {/* Glowing Nodes (Dots) */}
-              <g fill="#7dd3fc">
-                <circle cx="30" cy="50" r="2.5" />
-                <circle cx="120" cy="100" r="3" />
-                <circle cx="220" cy="60" r="2" />
-                <circle cx="270" cy="180" r="2.5" />
-                <circle cx="160" cy="240" r="3" />
-                <circle cx="60" cy="210" r="2" />
-                <circle cx="150" cy="160" r="1.5" />
-              </g>
-              <g fill="#38bdf8" opacity="0.5">
-                <circle cx="30" cy="50" r="5" />
-                <circle cx="120" cy="100" r="6" />
-                <circle cx="160" cy="240" r="5" />
-              </g>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#tech-network)" opacity="0.4" />
-        </svg>
+        <div style={{
+          maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
+          position: "absolute",
+          inset: 0,
+        }}>
+          <MidnightDevParticles />
+        </div>
         <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[220px]"
           style={{ background: "radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 65%)" }} />
         <div className="absolute -bottom-20 left-[15%] w-[600px] h-[400px] rounded-full blur-[180px]"
