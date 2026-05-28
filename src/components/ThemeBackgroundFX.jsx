@@ -1,20 +1,21 @@
 import React from "react";
 
 /**
- * ThemeBackgroundFX
- * Renders a unique, theme-specific SVG geometric background pattern
- * for each of the 6 standard themes.
+ * ThemeBackgroundFX — "Felt, Not Seen" principle
  *
- * Design rules:
- *  - Dark backgrounds  → bright/white-tinted strokes, higher opacity
- *  - Light backgrounds → deep dark strokes, higher opacity so they're visible
+ * A premium background pattern should add depth and texture
+ * without competing with content. Rules:
+ *  - Radial mask: pattern fades at center (where content lives),
+ *    stays visible at edges for subtle framing
+ *  - Opacity: 0.07–0.12 for light bg, 0.15–0.22 for dark bg
+ *  - Larger tile size = less dense = more elegant
  */
 const ThemeBackgroundFX = ({ themeName }) => {
   if (!themeName) return null;
 
   /* ── 1. CVIFY CLASSIC ──────────────────────────────────────────
-   * Light background (#f8fafc) → dark-blue hexagon grid
-   * Increased strokeWidth + opacity so it's clearly visible
+   * Light bg (#f8fafc) → navy-blue hexagon grid
+   * Radial mask fades the center → premium texture at edges
    */
   if (themeName === "CVIFY CLASSIC") {
     return (
@@ -22,59 +23,57 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 85% 85% at 50% 45%, transparent 30%, black 80%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 85% 85% at 50% 45%, transparent 30%, black 80%)",
+          }}
+        >
           <defs>
             <pattern
               id="hex-classic"
-              width="60"
-              height="104"
+              width="90"
+              height="156"
               patternUnits="userSpaceOnUse"
             >
               <polygon
-                points="30,2 58,17 58,47 30,62 2,47 2,17"
+                points="45,3 87,26 87,71 45,93 3,71 3,26"
                 fill="none"
-                stroke="#1d4ed8"
-                strokeWidth="1"
+                stroke="#1e40af"
+                strokeWidth="0.9"
               />
               <polygon
-                points="30,62 58,77 58,107 30,122 2,107 2,77"
+                points="45,93 87,116 87,161 45,183 3,161 3,116"
                 fill="none"
-                stroke="#1d4ed8"
-                strokeWidth="1"
+                stroke="#1e40af"
+                strokeWidth="0.9"
               />
-              <circle cx="30" cy="32" r="2.5" fill="#1d4ed8" opacity="0.4" />
+              <circle cx="45" cy="48" r="2" fill="#1e40af" opacity="0.5" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#hex-classic)"
-            opacity="0.18"
-          />
+          <rect width="100%" height="100%" fill="url(#hex-classic)" opacity="0.22" />
         </svg>
-        {/* Blue glow — top left */}
+
+        {/* Soft blue atmosphere — top left corner */}
         <div
-          className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full blur-[180px] pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 60%)",
-          }}
+          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[200px] pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(37,99,235,0.09) 0%, transparent 65%)" }}
         />
-        {/* Blue glow — bottom right */}
+        {/* Purple atmosphere — bottom right */}
         <div
-          className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full blur-[160px] pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(147,51,234,0.08) 0%, transparent 60%)",
-          }}
+          className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full blur-[180px] pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 65%)" }}
         />
       </div>
     );
   }
 
   /* ── 2. MIDNIGHT DEV ───────────────────────────────────────────
-   * Dark background (#020617) → bright cyan grid
-   * Brighter color, thicker lines, higher opacity
+   * Dark bg (#020617) → cyan dot-grid
+   * Radial mask keeps center clean, edges glow subtly
    */
   if (themeName === "MIDNIGHT DEV") {
     return (
@@ -82,70 +81,48 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 25%, black 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 25%, black 75%)",
+          }}
+        >
           <defs>
             <pattern
               id="code-grid"
-              width="40"
-              height="40"
+              width="48"
+              height="48"
               patternUnits="userSpaceOnUse"
             >
-              {/* Horizontal grid line */}
-              <line
-                x1="0" y1="0" x2="40" y2="0"
-                stroke="#7dd3fc"
-                strokeWidth="0.6"
-              />
-              {/* Vertical grid line */}
-              <line
-                x1="0" y1="0" x2="0" y2="40"
-                stroke="#7dd3fc"
-                strokeWidth="0.6"
-              />
-              {/* Corner intersection dot */}
-              <circle cx="0" cy="0" r="1.8" fill="#38bdf8" opacity="1" />
-              {/* Mid-cell dot */}
-              <circle cx="20" cy="20" r="1" fill="#7dd3fc" opacity="0.6" />
+              <line x1="0" y1="0" x2="48" y2="0" stroke="#38bdf8" strokeWidth="0.5" />
+              <line x1="0" y1="0" x2="0" y2="48" stroke="#38bdf8" strokeWidth="0.5" />
+              <circle cx="0" cy="0" r="1.5" fill="#7dd3fc" opacity="0.9" />
+              <circle cx="24" cy="24" r="0.8" fill="#38bdf8" opacity="0.5" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#code-grid)"
-            opacity="0.35"
-          />
+          <rect width="100%" height="100%" fill="url(#code-grid)" opacity="0.3" />
         </svg>
-        {/* Horizontal scan-line effect */}
+
+        {/* Cyan core glow */}
         <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(125,211,252,0.03) 3px, rgba(125,211,252,0.03) 4px)",
-          }}
+          className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[220px]"
+          style={{ background: "radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 65%)" }}
         />
-        {/* Ambient cyan glow — centre */}
+        {/* Teal edge glow — bottom */}
         <div
-          className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full blur-[200px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%)",
-          }}
-        />
-        {/* Secondary teal glow — bottom */}
-        <div
-          className="absolute bottom-0 left-[20%] w-[500px] h-[400px] rounded-full blur-[160px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 70%)",
-          }}
+          className="absolute -bottom-20 left-[15%] w-[600px] h-[400px] rounded-full blur-[180px]"
+          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 65%)" }}
         />
       </div>
     );
   }
 
   /* ── 3. CORPORATE GOLD ─────────────────────────────────────────
-   * Light background (#ffffff) → navy + gold cross-hatch
-   * Bolder lines, higher opacity
+   * Light bg (#ffffff) → fine diagonal cross-hatch (navy + gold)
+   * Radial mask: invisible center, subtle frame at edges
    */
   if (themeName === "CORPORATE GOLD") {
     return (
@@ -153,58 +130,46 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, black 80%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, black 80%)",
+          }}
+        >
           <defs>
             <pattern
               id="crosshatch-gold"
-              width="24"
-              height="24"
+              width="32"
+              height="32"
               patternUnits="userSpaceOnUse"
             >
-              {/* Navy diagonal — NW to SE */}
-              <line
-                x1="0" y1="24" x2="24" y2="0"
-                stroke="#1e3a8a"
-                strokeWidth="0.9"
-              />
-              {/* Gold diagonal — NE to SW */}
-              <line
-                x1="0" y1="0" x2="24" y2="24"
-                stroke="#b45309"
-                strokeWidth="0.7"
-              />
+              <line x1="0" y1="32" x2="32" y2="0" stroke="#1e3a8a" strokeWidth="0.7" />
+              <line x1="0" y1="0" x2="32" y2="32" stroke="#92400e" strokeWidth="0.5" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#crosshatch-gold)"
-            opacity="0.12"
-          />
+          <rect width="100%" height="100%" fill="url(#crosshatch-gold)" opacity="0.18" />
         </svg>
+
         {/* Gold shimmer — top right */}
         <div
-          className="absolute -top-20 right-0 w-[600px] h-[500px] rounded-full blur-[160px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(217,119,6,0.12) 0%, transparent 70%)",
-          }}
+          className="absolute -top-20 right-0 w-[600px] h-[500px] rounded-full blur-[180px]"
+          style={{ background: "radial-gradient(circle, rgba(217,119,6,0.1) 0%, transparent 65%)" }}
         />
-        {/* Navy glow — bottom left */}
+        {/* Navy depth — bottom left */}
         <div
-          className="absolute bottom-0 left-0 w-[500px] h-[400px] rounded-full blur-[150px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(30,58,138,0.08) 0%, transparent 70%)",
-          }}
+          className="absolute bottom-0 -left-20 w-[500px] h-[400px] rounded-full blur-[160px]"
+          style={{ background: "radial-gradient(circle, rgba(30,58,138,0.07) 0%, transparent 65%)" }}
         />
       </div>
     );
   }
 
   /* ── 4. CREATIVE SUNSET ────────────────────────────────────────
-   * Light-warm background (#fff7ed) → orange/pink ripple waves
-   * Bolder strokes + higher opacity
+   * Light-warm bg (#fff7ed) → concentric ripple circles (organic)
+   * Mask keeps center clean so profile text stays readable
    */
   if (themeName === "CREATIVE SUNSET") {
     return (
@@ -212,65 +177,48 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 85% 85% at 50% 45%, transparent 25%, black 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 85% 85% at 50% 45%, transparent 25%, black 75%)",
+          }}
+        >
           <defs>
             <pattern
               id="ripple-sunset"
-              width="80"
-              height="80"
+              width="100"
+              height="100"
               patternUnits="userSpaceOnUse"
             >
-              <circle
-                cx="40" cy="40" r="37"
-                fill="none"
-                stroke="#ea580c"
-                strokeWidth="1.2"
-              />
-              <circle
-                cx="40" cy="40" r="26"
-                fill="none"
-                stroke="#be185d"
-                strokeWidth="1.0"
-              />
-              <circle
-                cx="40" cy="40" r="14"
-                fill="none"
-                stroke="#ea580c"
-                strokeWidth="0.8"
-              />
-              <circle cx="40" cy="40" r="3.5" fill="#be185d" opacity="0.5" />
+              <circle cx="50" cy="50" r="46" fill="none" stroke="#c2410c" strokeWidth="0.9" />
+              <circle cx="50" cy="50" r="32" fill="none" stroke="#9d174d" strokeWidth="0.7" />
+              <circle cx="50" cy="50" r="17" fill="none" stroke="#c2410c" strokeWidth="0.5" />
+              <circle cx="50" cy="50" r="4" fill="#9d174d" opacity="0.35" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#ripple-sunset)"
-            opacity="0.2"
-          />
+          <rect width="100%" height="100%" fill="url(#ripple-sunset)" opacity="0.18" />
         </svg>
-        {/* Warm amber glow — bottom left */}
+
+        {/* Warm amber atmosphere — bottom */}
         <div
-          className="absolute bottom-0 left-0 w-[700px] h-[500px] rounded-full blur-[180px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(249,115,22,0.14) 0%, transparent 70%)",
-          }}
+          className="absolute -bottom-20 left-0 w-[700px] h-[500px] rounded-full blur-[200px]"
+          style={{ background: "radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 65%)" }}
         />
-        {/* Pink glow — top right */}
+        {/* Pink atmosphere — top right */}
         <div
-          className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(219,39,119,0.12) 0%, transparent 70%)",
-          }}
+          className="absolute -top-20 right-0 w-[500px] h-[500px] rounded-full blur-[180px]"
+          style={{ background: "radial-gradient(circle, rgba(219,39,119,0.09) 0%, transparent 65%)" }}
         />
       </div>
     );
   }
 
   /* ── 5. SLATE MINIMALIST ───────────────────────────────────────
-   * Light background (#f1f5f9) → slate-grey dots + cross lines
-   * Larger dots + added thin line grid for visibility
+   * Light bg (#f1f5f9) → fine dot matrix
+   * Mask fades center (Notion / Linear inspired minimal aesthetic)
    */
   if (themeName === "SLATE MINIMALIST") {
     return (
@@ -278,42 +226,34 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 75% 75% at 50% 40%, transparent 20%, black 80%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 75% 75% at 50% 40%, transparent 20%, black 80%)",
+          }}
+        >
           <defs>
             <pattern
               id="dot-slate"
-              width="28"
-              height="28"
+              width="24"
+              height="24"
               patternUnits="userSpaceOnUse"
             >
-              {/* Primary dot */}
-              <circle cx="14" cy="14" r="1.8" fill="#334155" opacity="0.55" />
-              {/* Corner tiny dot */}
-              <circle cx="0" cy="0" r="0.9" fill="#475569" opacity="0.35" />
+              <circle cx="12" cy="12" r="1.4" fill="#475569" opacity="0.6" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#dot-slate)"
-            opacity="0.6"
-          />
+          <rect width="100%" height="100%" fill="url(#dot-slate)" opacity="0.7" />
         </svg>
-        {/* Very subtle edge fade */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(241,245,249,0.5) 0%, transparent 20%, transparent 80%, rgba(241,245,249,0.5) 100%)",
-          }}
-        />
       </div>
     );
   }
 
   /* ── 6. EMERALD LEADER ─────────────────────────────────────────
-   * Light-green background (#f0fdf4) → emerald diamond grid
-   * Thicker strokes + higher opacity
+   * Light-green bg (#f0fdf4) → diamond grid (botanical)
+   * Mask keeps profile center clean, botanical frame at edges
    */
   if (themeName === "EMERALD LEADER") {
     return (
@@ -321,56 +261,51 @@ const ThemeBackgroundFX = ({ themeName }) => {
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         aria-hidden="true"
       >
-        <svg className="absolute inset-0 w-full h-full">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, black 80%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 80% at 50% 45%, transparent 30%, black 80%)",
+          }}
+        >
           <defs>
             <pattern
               id="diamond-emerald"
-              width="60"
-              height="60"
+              width="64"
+              height="64"
               patternUnits="userSpaceOnUse"
             >
-              {/* Outer diamond */}
               <rect
-                x="15" y="15" width="30" height="30"
-                transform="rotate(45 30 30)"
+                x="16" y="16" width="32" height="32"
+                transform="rotate(45 32 32)"
                 fill="none"
-                stroke="#047857"
-                strokeWidth="1.2"
+                stroke="#065f46"
+                strokeWidth="0.9"
               />
-              {/* Inner diamond */}
               <rect
-                x="22" y="22" width="16" height="16"
-                transform="rotate(45 30 30)"
+                x="24" y="24" width="16" height="16"
+                transform="rotate(45 32 32)"
                 fill="none"
                 stroke="#059669"
-                strokeWidth="0.7"
+                strokeWidth="0.5"
               />
-              {/* Centre dot */}
-              <circle cx="30" cy="30" r="2" fill="#047857" opacity="0.5" />
+              <circle cx="32" cy="32" r="1.8" fill="#065f46" opacity="0.4" />
             </pattern>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#diamond-emerald)"
-            opacity="0.22"
-          />
+          <rect width="100%" height="100%" fill="url(#diamond-emerald)" opacity="0.2" />
         </svg>
-        {/* Emerald ambient glow — top right */}
+
+        {/* Emerald glow — top right */}
         <div
-          className="absolute top-[10%] right-[10%] w-[600px] h-[600px] rounded-full blur-[180px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(5,150,105,0.1) 0%, transparent 70%)",
-          }}
+          className="absolute -top-20 right-[5%] w-[600px] h-[600px] rounded-full blur-[200px]"
+          style={{ background: "radial-gradient(circle, rgba(5,150,105,0.09) 0%, transparent 65%)" }}
         />
-        {/* Secondary glow — bottom left */}
+        {/* Teal glow — bottom left */}
         <div
-          className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] rounded-full blur-[150px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)",
-          }}
+          className="absolute -bottom-20 left-[5%] w-[500px] h-[500px] rounded-full blur-[180px]"
+          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%)" }}
         />
       </div>
     );
