@@ -55,7 +55,7 @@ const ThemeBackgroundFX = ({ themeName }) => {
   }
 
   /* ── 2. MIDNIGHT DEV ───────────────────────────────────────────
-   * Dark bg (#020617) → bright cyan dot-grid
+   * Dark bg (#020617) → Abstract Tech Network / Constellation
    */
   if (themeName === "MIDNIGHT DEV") {
     return (
@@ -63,19 +63,65 @@ const ThemeBackgroundFX = ({ themeName }) => {
         <svg
           className="absolute inset-0 w-full h-full"
           style={{
-            maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 25%, black 75%)",
-            WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 25%, black 75%)",
+            maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
+            WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
           }}
         >
           <defs>
-            <pattern id="code-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="48" y2="0" stroke="#38bdf8" strokeWidth="0.5" />
-              <line x1="0" y1="0" x2="0" y2="48" stroke="#38bdf8" strokeWidth="0.5" />
-              <circle cx="0" cy="0" r="1.5" fill="#7dd3fc" opacity="0.9" />
-              <circle cx="24" cy="24" r="0.8" fill="#38bdf8" opacity="0.5" />
+            <pattern id="tech-network" width="300" height="300" patternUnits="userSpaceOnUse">
+              {/* Abstract dotted flowing waves in the background */}
+              <path d="M 0 150 Q 75 50, 150 150 T 300 150" fill="none" stroke="rgba(125, 211, 252, 0.15)" strokeWidth="1.5" strokeDasharray="1 6" strokeLinecap="round" />
+              <path d="M 0 200 Q 100 100, 300 200" fill="none" stroke="rgba(125, 211, 252, 0.1)" strokeWidth="1" strokeDasharray="1 5" strokeLinecap="round" />
+              <path d="M 0 100 Q 200 300, 300 100" fill="none" stroke="rgba(125, 211, 252, 0.1)" strokeWidth="1" strokeDasharray="1 5" strokeLinecap="round" />
+              <path d="M -50 50 Q 150 0, 350 250" fill="none" stroke="rgba(125, 211, 252, 0.08)" strokeWidth="2" strokeDasharray="2 8" strokeLinecap="round" />
+
+              {/* Connecting Lines */}
+              <g stroke="rgba(56, 189, 248, 0.3)" strokeWidth="0.6">
+                {/* Internal network */}
+                <line x1="30" y1="50" x2="120" y2="100" />
+                <line x1="120" y1="100" x2="220" y2="60" />
+                <line x1="220" y1="60" x2="270" y2="180" />
+                <line x1="270" y1="180" x2="160" y2="240" />
+                <line x1="160" y1="240" x2="60" y2="210" />
+                <line x1="60" y1="210" x2="30" y2="50" />
+                <line x1="120" y1="100" x2="160" y2="240" />
+                <line x1="60" y1="210" x2="220" y2="60" />
+                <line x1="120" y1="100" x2="270" y2="180" />
+                
+                {/* Secondary shorter connections */}
+                <line x1="150" y1="160" x2="120" y2="100" />
+                <line x1="150" y1="160" x2="270" y2="180" />
+                <line x1="150" y1="160" x2="160" y2="240" />
+
+                {/* Edges to connect seamlessly */}
+                <line x1="270" y1="180" x2="330" y2="230" />
+                <line x1="-30" y1="230" x2="60" y2="210" />
+                
+                <line x1="220" y1="60" x2="250" y2="-10" />
+                <line x1="250" y1="290" x2="270" y2="180" />
+
+                <line x1="30" y1="50" x2="-20" y2="20" />
+                <line x1="280" y1="20" x2="220" y2="60" />
+              </g>
+
+              {/* Glowing Nodes (Dots) */}
+              <g fill="#7dd3fc">
+                <circle cx="30" cy="50" r="2.5" />
+                <circle cx="120" cy="100" r="3" />
+                <circle cx="220" cy="60" r="2" />
+                <circle cx="270" cy="180" r="2.5" />
+                <circle cx="160" cy="240" r="3" />
+                <circle cx="60" cy="210" r="2" />
+                <circle cx="150" cy="160" r="1.5" />
+              </g>
+              <g fill="#38bdf8" opacity="0.5">
+                <circle cx="30" cy="50" r="5" />
+                <circle cx="120" cy="100" r="6" />
+                <circle cx="160" cy="240" r="5" />
+              </g>
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#code-grid)" opacity="0.3" />
+          <rect width="100%" height="100%" fill="url(#tech-network)" opacity="0.4" />
         </svg>
         <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full blur-[220px]"
           style={{ background: "radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 65%)" }} />
