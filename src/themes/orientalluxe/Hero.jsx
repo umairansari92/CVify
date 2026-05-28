@@ -25,11 +25,17 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   // Build typing sequence from headline + slogans
   const slogans = user?.heroSlogans || [];
   const typeSequence = [];
-  if (headline) { typeSequence.push(headline, 2500); }
-  slogans.forEach((s) => {
-    const text = typeof s === "string" ? s : s?.text;
-    if (text) typeSequence.push(text, 2000);
-  });
+  if (slogans.length > 0) {
+    slogans.forEach((s) => {
+      const text = typeof s === "string" ? s : s?.text;
+      if (text) typeSequence.push(text, 2000);
+    });
+  } else if (headline) {
+    headline.split(",").forEach((s) => {
+      const trimmed = s.trim();
+      if (trimmed) typeSequence.push(trimmed, 2000);
+    });
+  }
   if (typeSequence.length === 0) typeSequence.push("Professional Portfolio", 3000);
 
   return (
