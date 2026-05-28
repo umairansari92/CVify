@@ -332,6 +332,16 @@ const PublicProfile = () => {
     color: "var(--text-primary)",
   };
 
+  const getSectionId = (item) => {
+    let id = item.toLowerCase();
+    if (isOrientalLuxeTheme) {
+      if (id === 'home') return 'hero-ol';
+      if (id === 'journey') return 'experience-ol';
+      return `${id}-ol`;
+    }
+    return id;
+  };
+
   return (
     <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
 
@@ -535,10 +545,10 @@ const PublicProfile = () => {
               {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
                 <a 
                   key={item} 
-                  href={`#${item.toLowerCase()}`} 
+                  href={`#${getSectionId(item)}`} 
                   onClick={(e) => {
                     e.preventDefault();
-                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-[10px] font-black uppercase tracking-widest transition-colors whitespace-nowrap"
                 >
@@ -581,10 +591,11 @@ const PublicProfile = () => {
               {['Home', 'About', 'Journey', 'Showcase', 'Contact'].map((item) => (
                 <a 
                   key={item} 
-                  href={`#${item.toLowerCase()}`} 
-                  onClick={() => {
+                  href={`#${getSectionId(item)}`} 
+                  onClick={(e) => {
+                    e.preventDefault();
                     setIsMenuOpen(false);
-                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="text-[var(--text-primary)] text-2xl font-black uppercase tracking-tighter hover:text-[var(--primary-color)] transition-colors"
                 >
