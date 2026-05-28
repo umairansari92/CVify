@@ -88,6 +88,7 @@ import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
 import OrientalLuxeTheme from "../themes/orientalluxe";
+import ThemeBackgroundFX from "../components/ThemeBackgroundFX";
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -631,6 +632,9 @@ const PublicProfile = () => {
         />
       ) : (
         <>
+          {/* ── Theme-Specific Background Pattern ── */}
+          <ThemeBackgroundFX themeName={theme.name} />
+
           <Hero 
             user={user} 
             isOwner={isOwner} 
