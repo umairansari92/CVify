@@ -11,13 +11,7 @@ const BackgroundFX = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
       {/* ── Layer 1: Islamic Khatim Geometric Pattern ── */}
-      <svg
-        className="absolute inset-0 w-full h-full"
-        style={{
-          maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, #000 30%, transparent 75%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, #000 30%, transparent 75%)",
-        }}
-      >
+      <svg className="absolute inset-0 w-full h-full text-[#b58953]">
         <defs>
           <pattern id="khatim-luxe" width="110" height="110" patternUnits="userSpaceOnUse">
             <polygon
@@ -35,7 +29,7 @@ const BackgroundFX = () => {
             </g>
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#khatim-luxe)" opacity="0.07" />
+        <rect width="100%" height="100%" fill="url(#khatim-luxe)" opacity="0.12" />
       </svg>
 
       {/* ── Layer 2: Ambient Copper Glow Orbs ── */}
