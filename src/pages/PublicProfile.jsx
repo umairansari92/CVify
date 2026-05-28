@@ -230,7 +230,12 @@ const PublicProfile = () => {
     setLocalTheme(newTheme);
     if (window.themeUpdateTimeout) clearTimeout(window.themeUpdateTimeout);
     window.themeUpdateTimeout = setTimeout(() => {
-      handleLiveUpdate({ themeSettings: newTheme });
+      // ✅ FIX: Ensure theme name is always included in the saved data
+      const themeToSave = {
+        ...newTheme,
+        name: newTheme.name || user?.themeSettings?.name || "CVIFY CLASSIC"
+      };
+      handleLiveUpdate({ themeSettings: themeToSave });
     }, 500);
   };
 
@@ -297,11 +302,22 @@ const PublicProfile = () => {
     </div>
   );
 
-  const baseTheme = localTheme || themePresets[0];
-  const fullTheme = themePresets.find(p => p.name === baseTheme.name || (baseTheme.name === "AHMED RAZA PORTFOLIO" && p.name === "ORIENTAL LUXE")) || themePresets[0];
+  // ✅ FIX: Load theme from database first, not just local state
+  const savedTheme = user?.themeSettings;
+  
+  // Better fallback logic - check if theme name exists first
+  let baseTheme = localTheme || savedTheme || themePresets[0];
+  
+  // Find matching preset by name, with better fallbacks
+  const fullTheme = savedTheme?.name 
+    ? themePresets.find(p => p.name === savedTheme.name) || themePresets[0]
+    : (baseTheme?.name 
+        ? themePresets.find(p => p.name === baseTheme.name) || themePresets[0]
+        : themePresets[0]);
+  
   const theme = { ...fullTheme, ...baseTheme };
   const isLight = ["#f8fafc", "#ffffff", "#f1f5f9", "#f0fdf4", "#fff7ed"].includes(theme.bodyBg?.toLowerCase());
-  const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE" || baseTheme.name === "AHMED RAZA PORTFOLIO";
+  const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE" || baseTheme?.name === "AHMED RAZA PORTFOLIO" || savedTheme?.name === "ORIENTAL LUXE";
 
   const themeStyles = {
     backgroundColor: theme.bodyBg,

@@ -43,7 +43,12 @@ const ProfilePage = () => {
     setSavingTheme(true);
     try {
       const formData = new FormData();
-      formData.append("themeSettings", JSON.stringify(newSettings));
+      // ✅ FIX: Always include the theme name so it persists across page reloads
+      const themeWithName = {
+        ...newSettings,
+        name: newSettings.name || user?.themeSettings?.name || "CVIFY CLASSIC"
+      };
+      formData.append("themeSettings", JSON.stringify(themeWithName));
       if (file) formData.append("bannerImage", file);
 
       const res = await api.patch("/auth/profile", formData, {
