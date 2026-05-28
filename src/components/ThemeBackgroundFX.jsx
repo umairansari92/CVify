@@ -34,15 +34,15 @@ const ThemeBackgroundFX = ({ themeName }) => {
                 points="30,2 58,17 58,47 30,62 2,47 2,17"
                 fill="none"
                 stroke="#1d4ed8"
-                strokeWidth="1.2"
+                strokeWidth="1"
               />
               <polygon
                 points="30,62 58,77 58,107 30,122 2,107 2,77"
                 fill="none"
                 stroke="#1d4ed8"
-                strokeWidth="1.2"
+                strokeWidth="1"
               />
-              <circle cx="30" cy="32" r="2.5" fill="#1d4ed8" opacity="0.7" />
+              <circle cx="30" cy="32" r="2.5" fill="#1d4ed8" opacity="0.4" />
             </pattern>
           </defs>
           <rect
@@ -57,7 +57,7 @@ const ThemeBackgroundFX = ({ themeName }) => {
           className="absolute top-0 left-0 w-[700px] h-[500px] rounded-full blur-[180px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 60%)",
           }}
         />
         {/* Blue glow — bottom right */}
@@ -65,7 +65,7 @@ const ThemeBackgroundFX = ({ themeName }) => {
           className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full blur-[160px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, rgba(147,51,234,0.08) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(147,51,234,0.08) 0%, transparent 60%)",
           }}
         />
       </div>
