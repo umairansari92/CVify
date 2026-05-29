@@ -40,11 +40,11 @@ const MidnightDevParticles = () => {
           events: {
             onHover: {
               enable: true,
-              mode: "grab",
+              mode: "repulse",
             },
           },
           modes: {
-            grab: {
+            repulse: {
               distance: 140,
               links: {
                 opacity: 0.8,
@@ -123,7 +123,7 @@ const ThemeBackgroundFX = ({ themeName }) => {
    */
   if (themeName === "MIDNIGHT DEV") {
     return (
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      <div className="fixed inset-0 pointer-events-auto z-0 overflow-hidden" aria-hidden="true">
         <div style={{
           maskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
           WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 40%, transparent 20%, black 80%)",
