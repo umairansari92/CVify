@@ -35,6 +35,24 @@ const MidnightDevParticles = () => {
       options={{
         background: { color: { value: "transparent" } },
         fpsLimit: 120,
+        interactivity: {
+          detectsOn: "window",
+          events: {
+            onHover: {
+              enable: true,
+              mode: "grab",
+            },
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              links: {
+                opacity: 0.8,
+                color: "#7dd3fc",
+              },
+            },
+          },
+        },
         particles: {
           color: { value: ["#7dd3fc", "#38bdf8"] },
           links: {
