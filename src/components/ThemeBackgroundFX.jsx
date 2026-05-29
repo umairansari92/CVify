@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
+import React from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
 /**
  * ThemeBackgroundFX — "Felt, Not Seen" principle
@@ -24,21 +24,14 @@ const Flower5 = ({ cx, cy, pr = 3, pl = 7, sw = 0.7, id }) =>
   ));
 
 const MidnightDevParticles = () => {
-  const [init, setInit] = useState(false);
-
-  useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
-
-  if (!init) return null;
+  const particlesInit = async (engine) => {
+    await loadFull(engine);
+  };
 
   return (
     <Particles
       id="tsparticles-midnight"
+      init={particlesInit}
       options={{
         background: { color: { value: "transparent" } },
         fpsLimit: 120,
