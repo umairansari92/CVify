@@ -6,7 +6,7 @@ import {
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
   BarChart3, GitBranch, TrendingUp, Heart,
-  AlertCircle
+  AlertCircle, Palette, Wand2, MousePointer, Settings2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
@@ -49,6 +49,14 @@ const Documentation = () => {
         { id: "diamonds", icon: <Gem size={16} />, label: "Diamond Economy" },
         { id: "competitors", icon: <Award size={16} />, label: "Why We Stand Out" },
         { id: "recruiter", icon: <Briefcase size={16} />, label: "For Recruiters & HR" },
+      ]
+    },
+    {
+      label: "Themes & Visual FX",
+      items: [
+        { id: "themes", icon: <Palette size={16} />, label: "All 7 Portfolio Themes" },
+        { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE (New!)" },
+        { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
       ]
     },
     {
@@ -257,9 +265,9 @@ const Documentation = () => {
         <p className="text-text-secondary text-[13px] leading-relaxed">
           Every profile has dynamic OG tags, Twitter cards, and <strong className="text-text-primary">JSON-LD structured data</strong> for Google Knowledge Graph integration. Sharing on LinkedIn generates a beautiful metadata card with user's headline and image.
         </p>
-        <SectionTitle>6 Premium Themes</SectionTitle>
+        <SectionTitle>7 Premium Themes</SectionTitle>
         <p className="text-text-secondary text-[13px] leading-relaxed">
-          CVify Classic, Midnight Dev, Corporate Gold, Creative Sunset, Slate Minimalist, and Emerald Leader — with customizable accent colors, card styles, and typography.
+          CVify Classic, Midnight Dev, Corporate Gold, Creative Sunset, Slate Minimalist, Emerald Leader, and the brand-new <strong className="text-amber-400">🕌 ORIENTAL LUXE</strong> — each with unique background animations, customizable accent colors, card styles, and interactive particle effects. All themes now support mouse-hover particle interactivity.
         </p>
       </>
     ),
@@ -314,6 +322,150 @@ const Documentation = () => {
           { left: "Junior", right: "Keywords 30% | Formatting 25% | Quantification 15% | Impact 15% | X-Factor 15%" },
           { left: "Mid-Level", right: "Keywords 25% | Formatting 20% | Quantification 25% | Impact 20% | X-Factor 10%" },
           { left: "Senior", right: "Keywords 20% | Formatting 15% | Quantification 30% | Impact 30% | X-Factor 5%" },
+        ]} />
+      </>
+    ),
+
+    themes: (
+      <>
+        <DocHeader title="All 7 Portfolio Themes" badge="Visual Design" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">7 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. Choose the one that matches your personal brand.
+        </p>
+
+        <div className="space-y-4 mb-8">
+          {[
+            { icon: "🌐", name: "CVify Classic", accent: "text-blue-400", border: "border-blue-500/20", bg: "bg-blue-500/5", desc: "The original CVify signature look. Clean dark navy background with blue accent tones. Best for developers, engineers, and tech professionals who want a polished, trustworthy look.", tags: ["Dark Mode", "Blue Accent", "Professional"] },
+            { icon: "🌙", name: "Midnight Dev", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "Built for coders. Deep midnight purple background with interactive particle field that reacts to your mouse cursor in repulse mode. Animated geometric grid overlay for an immersive feel.", tags: ["Dark Mode", "Particles FX", "Mouse Reactive", "Developers"] },
+            { icon: "💼", name: "Corporate Gold", accent: "text-yellow-400", border: "border-yellow-500/20", bg: "bg-yellow-500/5", desc: "Authority and prestige. Dark charcoal base with warm gold accents. Diagonal stripe overlay and classic typography. Perfect for executives, finance professionals, and senior management roles.", tags: ["Dark Mode", "Gold Accent", "Executive"] },
+            { icon: "🌅", name: "Creative Sunset", accent: "text-orange-400", border: "border-orange-500/20", bg: "bg-orange-500/5", desc: "Vibrant gradient energy. Warm orange-to-pink sunset tones with animated bokeh blobs in the background. Ideal for designers, artists, content creators, and startup founders.", tags: ["Dark Mode", "Gradient Blobs", "Creative"] },
+            { icon: "📋", name: "Slate Minimalist", accent: "text-slate-300", border: "border-slate-500/20", bg: "bg-slate-500/5", desc: "Precision in simplicity. Light gray background with barely-there noise texture. Ultra-clean typography with maximum readability. Best suited for consultants, academics, and corporate professionals.", tags: ["Light Mode", "Minimal", "Clean"] },
+            { icon: "🌿", name: "Emerald Leader", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Natural authority. Deep forest green palette exuding calm confidence and leadership. Great for sustainability professionals, project managers, and team leads.", tags: ["Dark Mode", "Green Accent", "Leadership"] },
+            { icon: "🕌", name: "ORIENTAL LUXE", accent: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5", desc: "The newest and most exotic theme. Ultra-dark near-black background (#090909) with warm gold (#b58953) accents. Geometric SVG mandala patterns float behind the profile using the Outfit font. Exudes luxury, sophistication, and cultural richness.", tags: ["Dark Mode", "Gold Luxury", "Geometric FX", "NEW!"] },
+          ].map((theme, i) => (
+            <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{theme.icon}</span>
+                  <h4 className={`font-black text-sm ${theme.accent}`}>{theme.name}</h4>
+                </div>
+                <div className="flex flex-wrap gap-1.5 justify-end">
+                  {theme.tags.map((tag, j) => (
+                    <span key={j} className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${theme.border} ${theme.accent} opacity-80`}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <p className="text-text-secondary text-[13px] leading-relaxed">{theme.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>How to Switch Themes</SectionTitle>
+        <Steps items={[
+          { step: "1", title: "Open Your Portfolio", desc: "Go to your Public Profile page (cvifypro.vercel.app/p/username)." },
+          { step: "2", title: "Click Theme Editor", desc: "Tap the palette button (🎨) in the bottom-right corner — available in both light and dark mode." },
+          { step: "3", title: "Select & Apply", desc: "Click any theme card to instantly preview it live on your profile. Your selection is saved automatically." },
+        ]} />
+      </>
+    ),
+
+    "oriental-luxe": (
+      <>
+        <DocHeader title="🕌 ORIENTAL LUXE Theme" badge="New Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-amber-400">ORIENTAL LUXE</strong> is CVify Pro's most premium and culturally distinctive portfolio theme — handcrafted for professionals who want to stand out with elegance, exclusivity, and a bold visual identity.
+        </p>
+
+        <SectionTitle>Visual Identity</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Palette size={18} />} color="amber" title="Ultra-Dark Palette"
+            desc="Near-black background (#090909 body, #101010 header) creates a luxurious canvas. Maximum contrast makes every element pop with premium clarity." />
+          <InfoCard icon={<Sparkles size={18} />} color="amber" title="Gold Accent System"
+            desc="Warm gold (#b58953) is used for all interactive elements, highlights, and hover states — evoking prestige, heritage, and high-end branding." />
+          <InfoCard icon={<Layout size={18} />} color="purple" title="Geometric SVG Backgrounds"
+            desc="Custom floating mandala-inspired SVG patterns are layered behind the profile content with subtle opacity, creating depth without distraction." />
+          <InfoCard icon={<Eye size={18} />} color="blue" title="Outfit Typography"
+            desc="Uses the modern 'Outfit' Google Font — geometric, clean, and versatile. Delivers both personality and professionalism in the same typeface." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-amber-500/5 border border-amber-500/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Custom geometric SVG mandala patterns (not particles or gradients)" },
+              { label: "Color Mode", val: "Extreme dark mode — darker than any other theme" },
+              { label: "Accent Color", val: "Warm Antique Gold (#b58953) — unique in the theme library" },
+              { label: "Card Style", val: "Glassmorphism — frosted glass effect on all profile cards" },
+              { label: "Font", val: "Outfit — modern geometric typeface from Google Fonts" },
+              { label: "Icon", val: "🕌 Mosque — representing Eastern cultural luxury and architecture" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-amber-400 w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Luxury Brand Managers", "Architects & Designers", "Finance & Banking", "Senior Executives", "International Professionals", "Creative Directors"].map((role, i) => (
+            <div key={i} className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl text-center">
+              <p className="text-amber-400 font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    particles: (
+      <>
+        <DocHeader title="Interactive Particles FX" badge="Visual Enhancement" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro portfolio themes now feature <strong className="text-text-primary">live, mouse-reactive particle animations</strong> as ambient background effects. Every particle canvas responds to visitor interaction — making your profile feel alive and truly premium.
+        </p>
+
+        <SectionTitle>How It Works</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<MousePointer size={18} />} color="purple" title="Repulse on Hover"
+            desc="When visitors move their mouse over the portfolio background, particles scatter away from the cursor in a smooth, organic repulse motion — then drift back to their positions." />
+          <InfoCard icon={<Wand2 size={18} />} color="blue" title="Powered by tsParticles"
+            desc="Built with the battle-tested tsparticles (loadFull) library. Uses React's Particles component for zero-lag rendering integrated with React lifecycle." />
+          <InfoCard icon={<Settings2 size={18} />} color="emerald" title="Theme-Specific Config"
+            desc="Each theme has its own particle count, color, size, and speed settings tuned to match the visual mood — subtle for Corporate Gold, vivid for Midnight Dev." />
+          <InfoCard icon={<Zap size={18} />} color="amber" title="Pointer-Events Enabled"
+            desc="The particle canvas wrapper uses pointer-events: auto so mouse events pass through to the canvas correctly. This was a key fix enabling full interactivity." />
+        </div>
+
+        <SectionTitle>Recent Fixes & Updates</SectionTitle>
+        <div className="space-y-3 mb-6">
+          {[
+            { tag: "FIX", color: "emerald", title: "Mouse Hover Now Works", desc: "Changed the ThemeBackgroundFX wrapper from pointer-events: none → pointer-events: auto across all themes, allowing the tsParticles canvas to receive mouse events." },
+            { tag: "UPDATE", color: "blue", title: "Switched to loadFull Engine", desc: "Replaced @tsparticles/slim with the full tsparticles package (loadFull). This provides the complete feature set including repulse, grab, and all interaction modes." },
+            { tag: "FIX", color: "amber", title: "Theme Editor Visibility", desc: "The Theme Switcher button (🎨) is now visible in all color modes — previously it was invisible in light themes due to a color contrast issue. Fixed with adaptive text/border colors." },
+            { tag: "NEW", color: "purple", title: "ORIENTAL LUXE Background FX", desc: "Added custom geometric SVG mandala patterns as background FX for the ORIENTAL LUXE theme, replacing the standard particle system with a unique visual language." },
+          ].map((item, i) => {
+            const colors = { emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400", blue: "bg-blue-500/10 border-blue-500/20 text-blue-400", amber: "bg-amber-500/10 border-amber-500/20 text-amber-400", purple: "bg-purple-500/10 border-purple-500/20 text-purple-400" };
+            return (
+              <div key={i} className={`p-4 rounded-2xl border ${colors[item.color]}`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${colors[item.color]}`}>{item.tag}</span>
+                  <p className="font-black text-sm text-text-primary">{item.title}</p>
+                </div>
+                <p className="text-text-secondary text-[13px] leading-relaxed">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <SectionTitle>Particle Settings by Theme</SectionTitle>
+        <ComparisonTable items={[
+          { left: "CVify Classic", right: "Blue particles, 80 count, 2px size, grab mode on hover" },
+          { left: "Midnight Dev", right: "Violet particles, 100 count, 2-4px size, repulse on hover" },
+          { left: "Corporate Gold", right: "Gold particles, 60 count, 1.5px size, subtle movement" },
+          { left: "Creative Sunset", right: "Orange/pink particles, 80 count, bokeh-style, attract mode" },
+          { left: "Emerald Leader", right: "Green particles, 70 count, soft glow, drift animation" },
+          { left: "ORIENTAL LUXE", right: "SVG mandala patterns (no particles) — geometric FX" },
         ]} />
       </>
     ),
