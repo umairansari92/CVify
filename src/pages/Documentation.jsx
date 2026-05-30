@@ -6,10 +6,11 @@ import {
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
   BarChart3, GitBranch, TrendingUp, Heart,
-  AlertCircle, Palette, Wand2, MousePointer, Settings2
+  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
+import { Helmet } from "react-helmet-async";
 
 const Documentation = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Documentation = () => {
       label: "Getting Started",
       items: [
         { id: "overview", icon: <Rocket size={16} />, label: "Platform Overview" },
+        { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
         { id: "setup", icon: <Zap size={16} />, label: "Quick Setup (3 Min)" },
       ]
     },
@@ -65,6 +67,28 @@ const Documentation = () => {
         { id: "tips", icon: <Star size={16} />, label: "Pro Tips (90+ Score)" },
         { id: "faq", icon: <Book size={16} />, label: "FAQ" },
         { id: "roadmap", icon: <TrendingUp size={16} />, label: "Future Roadmap" },
+      ]
+    },
+    // ─── TECHNOLOGY ───
+    {
+      label: "Technology",
+      items: [
+        { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
+      ]
+    },
+    // ─── SECURITY ───
+    {
+      label: "Security",
+      items: [
+        { id: "helmet", icon: <Shield size={16} />, label: "Helmet Middleware" },
+        { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
+      ]
+    },
+    // ─── ARCHITECTURE ───
+    {
+      label: "Architecture",
+      items: [
+        { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
       ]
     },
   ];
@@ -526,6 +550,228 @@ const Documentation = () => {
           <InfoCard icon={<Database size={16} />} color="blue" title="MongoDB over SQL" desc="Resume = nested tree. SQL needs 10+ joins. MongoDB fetches in one query." />
           <InfoCard icon={<Sparkles size={16} />} color="purple" title="Tailwind 4.0" desc="Zero-bloat. Only ships used classes. Enables Glassmorphism + Cyberpunk effects." />
           <InfoCard icon={<Layers size={16} />} color="amber" title="Redux Toolkit" desc="Essential for draft workflows. Connection lost mid-edit? Redux keeps data predictable." />
+        </div>
+      </>
+    ),
+
+    "project-structure": (
+      <>
+        <DocHeader title="Project Structure" badge="Architecture" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro is organized as a <strong className="text-text-primary">monorepo</strong> with a clear separation between the React SPA (Client), the Express API (Server), and deployment configuration.
+        </p>
+
+        {/* Folder Tree */}
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8 overflow-x-auto">
+          <pre className="text-[12px] text-slate-300 font-mono leading-relaxed whitespace-pre">{`CVify/
+├─ Client/                     # React SPA (Vite)
+│   ├─ src/
+│   │   ├─ pages/            # SPA routes (Documentation, PublicProfile, …)
+│   │   ├─ components/       # Reusable UI (ThemeBackgroundFX, InfoCard, …)
+│   │   ├─ themes/           # 7 premium themes + ORIENTAL LUXE
+│   │   ├─ utils/            # API wrapper, formatters
+│   │   └─ three/            # Three.js visualisations
+│   ├─ public/                # Static assets
+│   └─ vite.config.ts
+├─ Server/                     # Express API
+│   ├─ controllers/          # Business logic (auth, resume, ATS, …)
+│   ├─ models/               # Mongoose schemas
+│   ├─ routes/               # Express routers
+│   ├─ middlewares/          # Helmet, rate‑limit, error handling
+│   ├─ services/              # Email, PDF, background jobs
+│   ├─ utils/                # blockedDomains.js (disposable email blocking)
+│   └─ server.js              # Entry point, BFF integration
+├─ .env                       # Environment variables
+├─ package.json               # Monorepo dependencies
+└─ vercel.json                # Vercel deployment config`}</pre>
+        </div>
+
+        <SectionTitle>Key Directories Explained</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          <InfoCard icon={<Layout size={16} />} color="blue" title="Client/src/pages/" desc="Every SPA route lives here — Dashboard, Builder, PublicProfile, Documentation. Each page owns its own layout and data fetching." />
+          <InfoCard icon={<Cpu size={16} />} color="purple" title="Client/src/themes/" desc="7 modular theme folders, each with its own BackgroundFX.jsx particle/SVG config. Adding a new theme = adding one folder." />
+          <InfoCard icon={<Shield size={16} />} color="emerald" title="Server/middlewares/" desc="Helmet (security headers), express-rate-limit (abuse prevention), auth guard (JWT verification), and centralised errorHandler.js." />
+          <InfoCard icon={<Database size={16} />} color="amber" title="Server/utils/blockedDomains.js" desc="A curated Set of 200+ disposable/temporary email domains. Exported isDisposableEmail() is called on signup and referral to block abuse." />
+          <InfoCard icon={<Layers size={16} />} color="red" title="Server/server.js" desc="Express app entry point. Mounts Helmet globally, registers the BFF router (/api/v1/bff/dashboard), and bootstraps MongoDB Atlas connection." />
+          <InfoCard icon={<Globe size={16} />} color="blue" title="vercel.json" desc="Rewrites rule: all /* routes map to the Vite build output so React Router handles client-side navigation without 404s on refresh." />
+        </div>
+      </>
+    ),
+
+    technology: (
+      <>
+        <DocHeader title="Full Tech Stack" badge="Technology" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro is built on a <strong className="text-text-primary">modern, production-grade stack</strong> chosen for performance, developer experience, and scalability. Every library has a deliberate justification.
+        </p>
+
+        <SectionTitle>🎨 Front-End (React SPA)</SectionTitle>
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/[0.03]">
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Layer</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary">Technology</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Why Chosen</th>
+              </tr>
+            </thead>
+            <tbody className="text-[12px]">
+              {[
+                ["Framework", "React 19 + Vite", "Component-based UI, instant HMR, huge ecosystem"],
+                ["Bundler", "Vite (ESBuild)", "Near-zero config, sub-second cold starts"],
+                ["Routing", "react-router-dom v7", "Declarative nested routes, lazy loading"],
+                ["State", "Redux Toolkit", "Predictable state for draft workflows, undo/redo"],
+                ["Styling", "Tailwind CSS 4.0 + Custom CSS", "Zero-bloat, Glassmorphism, Cyberpunk effects"],
+                ["Icons", "lucide-react", "Tree-shakable modern SVG icon set"],
+                ["Animations", "framer-motion", "Declarative physics-based animations"],
+                ["Particles", "tsparticles (loadFull)", "Rich particle engine, repulse/hover modes"],
+                ["3-D", "three.js + @react-three/fiber", "Low-level WebGL, custom shaders"],
+                ["Forms", "React Hook Form + Yup", "Minimal re-renders, schema validation"],
+                ["HTTP", "axios (utils/api.js)", "Interceptors for auth token injection"],
+                ["SEO", "react-helmet-async", "Dynamic <head> tags, Open Graph, JSON-LD"],
+                ["Charts", "recharts", "Responsive analytics dashboard charts"],
+                ["Date", "date-fns", "Lightweight date formatting, no moment.js bloat"],
+                ["Alerts", "sweetalert2", "Beautiful branded confirmation dialogs"],
+                ["Toasts", "react-hot-toast", "Lightweight, stackable toast notifications"],
+              ].map(([layer, tech, why], i) => (
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 text-text-muted font-bold">{layer}</td>
+                  <td className="py-3 px-4 text-primary font-black">{tech}</td>
+                  <td className="py-3 px-4 text-text-secondary font-medium">{why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <SectionTitle>🛠️ Back-End (Node / Express API)</SectionTitle>
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-6">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/[0.03]">
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Layer</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary">Technology</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Why Chosen</th>
+              </tr>
+            </thead>
+            <tbody className="text-[12px]">
+              {[
+                ["Runtime", "Node.js 20 LTS", "Modern async I/O — handles 4× concurrent requests vs sync Python"],
+                ["Framework", "Express 4.x", "Minimalist, middleware-centric, battle-tested"],
+                ["Database", "MongoDB Atlas (Mongoose)", "Flexible schema for nested resume data, one-query fetches"],
+                ["Auth", "JWT (jsonwebtoken) + bcrypt", "Stateless tokens, secure password storage"],
+                ["AI", "Google Gemini 2.5 Flash", "Context-aware audit, cover letters, intent mode"],
+                ["Email", "Nodemailer", "SMTP abstraction, OTP & welcome emails"],
+                ["PDF (server)", "pdf-kit", "Stream-based PDF generation"],
+                ["Cron", "node-cron", "Scheduled analytics aggregation & cleanup jobs"],
+                ["Rate Limit", "express-rate-limit", "10 req/min auth, 30 req/min AI endpoints"],
+                ["CORS", "cors", "Cross-origin from Vite dev server & Vercel prod"],
+                ["Security", "helmet", "CSP, HSTS, X-Content-Type, X-Frame-Options headers"],
+                ["Anti-Abuse", "blockedDomains.js", "200+ disposable email domains blocked on signup"],
+                ["Logging", "morgan + winston", "HTTP access logs + structured app-level logs"],
+                ["Env", "dotenv", "Safe .env loading, never committed to git"],
+                ["Error", "errorHandler.js", "Centralised error responses, status codes"],
+              ].map(([layer, tech, why], i) => (
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 text-text-muted font-bold">{layer}</td>
+                  <td className="py-3 px-4 text-emerald-400 font-black">{tech}</td>
+                  <td className="py-3 px-4 text-text-secondary font-medium">{why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+
+    helmet: (
+      <>
+        <DocHeader title="Helmet Middleware" badge="Security" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-text-primary">Helmet</strong> is a collection of 14 Express middleware functions that set security-related HTTP response headers — the industry-standard first line of defence for any Node.js API.
+        </p>
+
+        <SectionTitle>How It's Integrated</SectionTitle>
+        <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">Helmet is registered <strong className="text-emerald-400">globally</strong> in <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Server/server.js</code> — before any route is mounted. This ensures every response, regardless of endpoint, carries the security headers.</p>
+          <pre className="text-[11px] font-mono text-slate-300 leading-relaxed whitespace-pre">{`// Server/server.js
+import helmet from 'helmet';
+app.use(helmet());  // Global — applied to ALL routes`}</pre>
+        </div>
+
+        <SectionTitle>HTTP Headers Helmet Enables</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          <InfoCard icon={<Shield size={16} />} color="blue" title="Content-Security-Policy (CSP)" desc="Restricts which scripts, styles, and sources the browser will load. Prevents XSS injection attacks that could steal user sessions or diamonds." />
+          <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="Strict-Transport-Security (HSTS)" desc="Forces browsers to use HTTPS exclusively for 1 year. Prevents SSL-stripping man-in-the-middle attacks." />
+          <InfoCard icon={<Eye size={16} />} color="purple" title="X-Content-Type-Options" desc="Prevents browsers from MIME-sniffing a response. Stops attackers from tricking browsers into treating text as scripts." />
+          <InfoCard icon={<Layers size={16} />} color="amber" title="X-Frame-Options" desc="Blocks embedding CVify Pro in iframes. Prevents clickjacking attacks where users think they're clicking our UI but are really interacting with a malicious overlay." />
+          <InfoCard icon={<Globe size={16} />} color="red" title="Referrer-Policy" desc="Controls how much referrer info is sent with requests. Protects user privacy when navigating from CVify Pro to external links." />
+          <InfoCard icon={<Zap size={16} />} color="blue" title="Permissions-Policy" desc="Disables powerful browser features (camera, microphone, geolocation) that CVify Pro doesn't use — reducing attack surface." />
+        </div>
+
+        <SectionTitle>Why Helmet vs Manual Header Setting?</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl">
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            Manually writing <code className="text-primary text-xs bg-primary/10 px-1.5 py-0.5 rounded">res.setHeader()</code> for every security header is error-prone and easy to forget. Helmet encapsulates 14 best-practice headers in a single <code className="text-primary text-xs bg-primary/10 px-1.5 py-0.5 rounded">app.use(helmet())</code> call — ensuring no header is accidentally omitted and keeping the codebase maintainable.
+          </p>
+        </div>
+      </>
+    ),
+
+    "disposable-email": (
+      <>
+        <DocHeader title="Disposable Email Blocking" badge="Anti-Abuse" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          To prevent platform abuse, bot registrations, and referral fraud, CVify Pro maintains a <strong className="text-text-primary">curated block-list of 200+ disposable and temporary email service domains</strong> — validated on both the client and server.
+        </p>
+
+        <SectionTitle>The Problem It Solves</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          <InfoCard icon={<Mail size={16} />} color="red" title="Fake Signups" desc="Services like Mailinator, Guerrilla Mail, and 10MinuteMail let anyone create a disposable inbox in seconds. Without blocking, bots can mass-register accounts to abuse the free diamond system." />
+          <InfoCard icon={<Users size={16} />} color="amber" title="Referral Fraud" desc="The diamond referral system rewards users for inviting colleagues. Disposable emails allow a single actor to create hundreds of fake accounts and farm diamonds dishonestly." />
+        </div>
+
+        <SectionTitle>Technical Implementation</SectionTitle>
+        <div className="space-y-4 mb-6">
+          <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+            <h4 className="font-black text-blue-400 text-sm mb-2">Server-Side (Primary Guard)</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed mb-3">Located at <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Server/utils/blockedDomains.js</code>. Exports an <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">isDisposableEmail(email)</code> function that checks the email domain against a JavaScript <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Set</code> for O(1) lookup speed.</p>
+            <pre className="text-[11px] font-mono text-slate-300 leading-relaxed whitespace-pre">{`// Server/utils/blockedDomains.js
+const blockedDomains = new Set([
+  "mailinator.com", "guerrillamail.com",
+  "10minutemail.com", /* 200+ more */
+]);
+
+export const isDisposableEmail = (email) => {
+  const domain = email.split('@')[1]?.toLowerCase();
+  return blockedDomains.has(domain);
+};`}</pre>
+          </div>
+          <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
+            <h4 className="font-black text-purple-400 text-sm mb-2">Client-Side (Immediate Feedback)</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">The same domain list is mirrored on the frontend for <strong className="text-text-primary">instant validation</strong> — the user sees an error before the form is even submitted, saving a round-trip to the server and improving UX.</p>
+          </div>
+          <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+            <h4 className="font-black text-emerald-400 text-sm mb-2">Where It's Called</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed"><code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">isDisposableEmail()</code> is invoked in the <strong>Auth Controller</strong> (on registration) and the <strong>Referral Service</strong> (on referral claim) — the two most abuse-prone entry points.</p>
+          </div>
+        </div>
+
+        <SectionTitle>Domain Sources</SectionTitle>
+        <ComparisonTable items={[
+          { left: "disposable-email-domains", right: "GitHub: disposable-email-domains/disposable-email-domains" },
+          { left: "ivolo/disposable-email-domains", right: "GitHub: ivolo/disposable-email-domains" },
+          { left: "Manual additions", right: "Observed abuse patterns during beta testing" },
+          { left: "Last updated", right: "2026-03-22 (future: scheduled auto-update job planned)" },
+        ]} />
+
+        <SectionTitle>Families Covered</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          {["Mailinator Family", "Guerrilla Mail", "10MinuteMail", "Temp-Mail", "YOPmail", "Trashmail", "Sharklasers", "Spamgourmet", "Dispostable", "ThrowAM", "AirMail", "Nada Email"].map((name, i) => (
+            <div key={i} className="p-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-center">
+              <p className="text-text-secondary font-bold text-[12px]">{name}</p>
+            </div>
+          ))}
         </div>
       </>
     ),
