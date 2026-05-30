@@ -563,7 +563,7 @@ const Documentation = () => {
 
         {/* Folder Tree */}
         <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8 overflow-x-auto">
-          <pre className="text-[12px] text-slate-300 font-mono leading-relaxed whitespace-pre">{`CVify/
+          <pre className="text-[12px] text-text-secondary font-mono leading-relaxed whitespace-pre">{`CVify/
 ├─ Client/                     # React SPA (Vite)
 │   ├─ src/
 │   │   ├─ pages/            # SPA routes (Documentation, PublicProfile, …)
@@ -694,7 +694,7 @@ const Documentation = () => {
         <SectionTitle>How It's Integrated</SectionTitle>
         <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl mb-6">
           <p className="text-text-secondary text-[13px] leading-relaxed mb-3">Helmet is registered <strong className="text-emerald-400">globally</strong> in <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Server/server.js</code> — before any route is mounted. This ensures every response, regardless of endpoint, carries the security headers.</p>
-          <pre className="text-[11px] font-mono text-slate-300 leading-relaxed whitespace-pre">{`// Server/server.js
+          <pre className="text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre">{`// Server/server.js
 import helmet from 'helmet';
 app.use(helmet());  // Global — applied to ALL routes`}</pre>
         </div>
@@ -736,7 +736,7 @@ app.use(helmet());  // Global — applied to ALL routes`}</pre>
           <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
             <h4 className="font-black text-blue-400 text-sm mb-2">Server-Side (Primary Guard)</h4>
             <p className="text-text-secondary text-[13px] leading-relaxed mb-3">Located at <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Server/utils/blockedDomains.js</code>. Exports an <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">isDisposableEmail(email)</code> function that checks the email domain against a JavaScript <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">Set</code> for O(1) lookup speed.</p>
-            <pre className="text-[11px] font-mono text-slate-300 leading-relaxed whitespace-pre">{`// Server/utils/blockedDomains.js
+            <pre className="text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre">{`// Server/utils/blockedDomains.js
 const blockedDomains = new Set([
   "mailinator.com", "guerrillamail.com",
   "10minutemail.com", /* 200+ more */
