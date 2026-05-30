@@ -22,8 +22,15 @@ const Documentation = () => {
       label: "Getting Started",
       items: [
         { id: "overview", icon: <Rocket size={16} />, label: "Platform Overview" },
-        { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
         { id: "setup", icon: <Zap size={16} />, label: "Quick Setup (3 Min)" },
+      ]
+    },
+    {
+      label: "Architecture & Tech",
+      items: [
+        { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
+        { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
+        { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
       ]
     },
     {
@@ -42,15 +49,13 @@ const Documentation = () => {
         { id: "magic-import", icon: <Sparkles size={16} />, label: "Magic AI Import" },
         { id: "intent-mode", icon: <Zap size={16} />, label: "AI Intent Mode" },
         { id: "job-matcher", icon: <Target size={16} />, label: "Job Matcher (JD Analysis)" },
-        { id: "ats", icon: <Target size={16} />, label: "ATS v4.0 Precision Engine" },
       ]
     },
     {
-      label: "Business",
+      label: "Security & Anti-Abuse",
       items: [
-        { id: "diamonds", icon: <Gem size={16} />, label: "Diamond Economy" },
-        { id: "competitors", icon: <Award size={16} />, label: "Why We Stand Out" },
-        { id: "recruiter", icon: <Briefcase size={16} />, label: "For Recruiters & HR" },
+        { id: "helmet", icon: <Shield size={16} />, label: "Helmet Middleware" },
+        { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
       ]
     },
     {
@@ -62,33 +67,19 @@ const Documentation = () => {
       ]
     },
     {
+      label: "Business",
+      items: [
+        { id: "diamonds", icon: <Gem size={16} />, label: "Diamond Economy" },
+        { id: "competitors", icon: <Award size={16} />, label: "Why We Stand Out" },
+        { id: "recruiter", icon: <Briefcase size={16} />, label: "For Recruiters & HR" },
+      ]
+    },
+    {
       label: "Resources",
       items: [
         { id: "tips", icon: <Star size={16} />, label: "Pro Tips (90+ Score)" },
         { id: "faq", icon: <Book size={16} />, label: "FAQ" },
         { id: "roadmap", icon: <TrendingUp size={16} />, label: "Future Roadmap" },
-      ]
-    },
-    // ─── TECHNOLOGY ───
-    {
-      label: "Technology",
-      items: [
-        { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
-      ]
-    },
-    // ─── SECURITY ───
-    {
-      label: "Security",
-      items: [
-        { id: "helmet", icon: <Shield size={16} />, label: "Helmet Middleware" },
-        { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
-      ]
-    },
-    // ─── ARCHITECTURE ───
-    {
-      label: "Architecture",
-      items: [
-        { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
       ]
     },
   ];
