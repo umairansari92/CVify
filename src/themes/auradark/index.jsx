@@ -792,11 +792,14 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
                   className="text-xl md:text-2xl font-bold uppercase tracking-tight mb-2"
                   style={{ color: tokens.colors.foreground }}
                 >
-                  {exp.company} — {exp.position}
+                  {exp.company} — {exp.role || exp.position}
                 </h3>
-                {exp.description && (
-                  <p className="text-sm max-w-2xl" style={{ color: tokens.colors.textDim }}>
-                    {exp.description}
+                {(exp.achievements || exp.description) && (
+                  <p 
+                    className="text-sm max-w-2xl whitespace-pre-wrap leading-relaxed" 
+                    style={{ color: tokens.colors.textDim }}
+                  >
+                    {exp.achievements || exp.description}
                   </p>
                 )}
               </div>
