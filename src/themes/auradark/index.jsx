@@ -1,41 +1,42 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { tokens } from "./tokens";
+import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
+import { ExternalLink, MapPin, Mail, Phone, Send } from "lucide-react";
+import InlineEdit from "../../components/profile/InlineEdit";
 
-// ────────────────────────────────────────────────────────────────
-//  LOADER  (0 → 100 counter + slim progress bar)
-// ────────────────────────────────────────────────────────────────
-const Loader = ({ onComplete }) => {
-  const [count, setCount] = useState(0);
+// ════════════════════════════════════════════════════════════════
+//  LOADER  — 0→100 counter + slim purple progress bar
+// ════════════════════════════════════════════════════════════════
+const Loader = ({ onComplete, userName }) => {
+  const [count, setCount] = React.useState(0);
 
-  useEffect(() => {
-    let start = 0;
+  React.useEffect(() => {
+    let val = 0;
     const duration = 2200;
     const step = 16;
     const increment = 100 / (duration / step);
-
     const timer = setInterval(() => {
-      start += increment;
-      if (start >= 100) {
+      val += increment;
+      if (val >= 100) {
         setCount(100);
         clearInterval(timer);
         setTimeout(onComplete, 300);
       } else {
-        setCount(Math.floor(start));
+        setCount(Math.floor(val));
       }
     }, step);
-
     return () => clearInterval(timer);
   }, [onComplete]);
 
   return (
     <motion.div
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
-      style={{ backgroundColor: "#000000" }}
+      style={{ backgroundColor: tokens.colors.background }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >
-      <div className="relative flex flex-col items-center gap-6 w-[340px]">
-        {/* Counter */}
+      <div className="flex flex-col items-center gap-6 w-[340px]">
+        {/* Giant counter */}
         <div className="flex items-baseline gap-1">
           <span
             className="font-black leading-none tabular-nums"
@@ -47,112 +48,104 @@ const Loader = ({ onComplete }) => {
           >
             {count}
           </span>
-          <span
-            className="font-light text-4xl"
-            style={{ color: tokens.colors.primary }}
-          >
+          <span className="text-4xl font-light" style={{ color: tokens.colors.primary }}>
             %
           </span>
         </div>
 
-        {/* Progress line */}
+        {/* Progress bar */}
         <div
-          className="w-full h-[1px] relative overflow-hidden"
+          className="w-full h-px relative overflow-hidden"
           style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
         >
           <motion.div
             className="absolute left-0 top-0 h-full"
-            style={{ backgroundColor: tokens.colors.primary }}
-            initial={{ width: "0%" }}
-            animate={{ width: `${count}%` }}
-            transition={{ duration: 0 }}
+            style={{ backgroundColor: tokens.colors.primary, width: `${count}%` }}
           />
         </div>
 
-        {/* Tagline */}
         <p
           className="text-[10px] tracking-[0.3em] uppercase text-center"
           style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
         >
           Engineering Digital Experiences
         </p>
-        <p
-          className="text-[9px] tracking-[0.2em] uppercase"
-          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-        >
-          {/* Will be user's name, but loader doesn't receive it */}
-          © 2025
-        </p>
+        {userName && (
+          <p
+            className="text-[9px] tracking-[0.2em] uppercase"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+          >
+            {userName} © {new Date().getFullYear()}
+          </p>
+        )}
       </div>
     </motion.div>
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  HERO  (full-screen portrait, 4-corner layout, CREATIVE bg)
-// ────────────────────────────────────────────────────────────────
-const Hero = ({ user }) => {
-  const nameParts = (user?.name || "John Doe").split(" ");
-  const firstName = nameParts[0];
-  const lastName = nameParts.slice(1).join(" ");
+// ════════════════════════════════════════════════════════════════
+//  HERO  — full-screen portrait, 4-corner layout
+// ════════════════════════════════════════════════════════════════
+const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
+  // Name — same fields as OrientalLuxe
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
+  const nameParts = fullName.split(" ");
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
 
-  const rawHeadline = user?.headline || "Software Engineer";
+  // Headline — split by comma for display, use first part for giant text
+  const rawHeadline = user?.headline || "";
   const shortHeadline = rawHeadline.includes(",")
     ? rawHeadline.split(",")[0].trim()
     : rawHeadline;
 
-  // pull up to 3 tags from skills
-  const tags = [];
-  if (user?.skills?.technical?.length) {
-    for (let i = 0; i < Math.min(3, user.skills.technical.length); i++) {
-      const s = user.skills.technical[i];
-      tags.push(typeof s === "string" ? s : s?.name || "");
-    }
-  }
-  if (!tags.length) tags.push("FRONTEND ENGINEER", "UI/UX ENTHUSIAST", "PROBLEM SOLVER");
+  // Tags — use skills.technical or skills array (same as OrientalLuxe)
+  const skillsArr = Array.isArray(user?.skills)
+    ? user.skills
+    : user?.skills?.technical || [];
+  const tags = skillsArr
+    .slice(0, 3)
+    .map((s) => (typeof s === "string" ? s : s?.name || ""))
+    .filter(Boolean);
 
-  const getSocialLabel = (url = "") => {
-    if (url.includes("github")) return "GITHUB";
-    if (url.includes("linkedin")) return "LINKEDIN";
-    if (url.includes("twitter") || url.includes("x.com")) return "TWITTER";
-    return "WEBSITE";
-  };
+  // Social links (same structure as OrientalLuxe Contact)
+  const socialLinks = user?.socialLinks || {};
 
-  const socialEntries = user?.socialLinks
-    ? Object.entries(user.socialLinks).filter(([, v]) => v)
-    : [];
+  const getSocialLabel = (key) => key.toUpperCase();
 
   return (
     <section
       className="relative w-full overflow-hidden"
       style={{ height: "100vh", minHeight: 700, backgroundColor: tokens.colors.background }}
     >
-      {/* TOP NAV MARQUEE - tags centered */}
-      <div
-        className="absolute top-0 left-0 right-0 z-40 flex items-center justify-center gap-8 px-20 py-6 pointer-events-none"
-        style={{ borderBottom: `1px solid ${tokens.colors.borderFaint}` }}
-      >
-        {tags.map((tag, i) => (
-          <React.Fragment key={i}>
-            <span
-              className="text-[9px] tracking-[0.3em] uppercase"
-              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
-            >
-              {tag}
-            </span>
-            {i < tags.length - 1 && (
+      {/* TOP: Tags marquee */}
+      {tags.length > 0 && (
+        <div
+          className="absolute top-0 left-0 right-0 z-40 flex items-center justify-center gap-8 px-20 py-6 pointer-events-none"
+          style={{ borderBottom: `1px solid ${tokens.colors.borderFaint}` }}
+        >
+          {tags.map((tag, i) => (
+            <React.Fragment key={i}>
               <span
-                className="w-1 h-1 rounded-full inline-block"
-                style={{ backgroundColor: tokens.colors.primary }}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+                className="text-[9px] tracking-[0.3em] uppercase"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
+              >
+                {tag}
+              </span>
+              {i < tags.length - 1 && (
+                <span
+                  className="w-1 h-1 rounded-full"
+                  style={{ backgroundColor: tokens.colors.primary, display: "inline-block" }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
 
-      {/* "CREATIVE" watermark behind photo */}
+      {/* "CREATIVE" watermark */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none select-none overflow-hidden">
-        <h2
+        <span
           className="font-black uppercase whitespace-nowrap leading-none"
           style={{
             fontFamily: tokens.fonts.display,
@@ -162,15 +155,15 @@ const Hero = ({ user }) => {
           }}
         >
           CREATIVE
-        </h2>
+        </span>
       </div>
 
-      {/* Portrait — fills center, fades at bottom */}
+      {/* Portrait — profileImage (same as OrientalLuxe About) */}
       <div className="absolute inset-0 flex items-end justify-center z-20 pointer-events-none overflow-hidden">
-        {user?.profilePicture ? (
+        {(user?.profileImage || user?.profilePicture) ? (
           <img
-            src={user.profilePicture}
-            alt={user.name}
+            src={user.profileImage || user.profilePicture}
+            alt={fullName}
             className="h-full object-contain object-bottom"
             style={{
               maxWidth: "60%",
@@ -180,46 +173,69 @@ const Hero = ({ user }) => {
             }}
           />
         ) : (
-          /* Fallback gradient silhouette */
           <div
-            className="w-80 h-[85%] rounded-t-full"
+            className="w-72 h-[80%] rounded-t-full flex items-end justify-center pb-8"
             style={{
-              background: `radial-gradient(ellipse at 50% 60%, ${tokens.colors.primary}22 0%, transparent 70%)`,
+              background: `radial-gradient(ellipse at 50% 70%, ${tokens.colors.primary}18 0%, transparent 70%)`,
             }}
-          />
+          >
+            <span
+              className="text-9xl font-black opacity-20"
+              style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
+            >
+              {firstName?.[0]}
+            </span>
+          </div>
         )}
       </div>
 
-      {/* 4-CORNER CONTENT (z-30 so it's above photo) */}
+      {/* 4-CORNER LAYOUT */}
       <div className="absolute inset-0 z-30 flex flex-col justify-between p-8 md:p-14 pt-24 md:pt-28">
         {/* TOP ROW */}
-        <div className="flex justify-between items-start pointer-events-auto">
-          {/* TOP LEFT: Name + title */}
+        <div className="flex justify-between items-start">
+          {/* TOP LEFT: Name + headline */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h1
-              className="leading-none tracking-tight uppercase font-black drop-shadow-2xl"
-              style={{
-                fontFamily: tokens.fonts.display,
-                fontSize: "clamp(1.6rem, 3.5vw, 3rem)",
-                color: tokens.colors.foreground,
+            <InlineEdit
+              isOwner={isOwner}
+              id="ad-hero-name"
+              value={fullName}
+              onSave={(v) => {
+                const parts = v.split(" ");
+                handleLiveUpdate?.({ firstName: parts[0], lastName: parts.slice(1).join(" ") });
               }}
             >
-              <span style={{ color: tokens.colors.primary }}>{firstName}</span>{" "}
-              {lastName}
-            </h1>
-            <p
-              className="mt-1 text-xs uppercase tracking-widest drop-shadow-md"
-              style={{ color: tokens.colors.textDim, fontFamily: tokens.fonts.mono }}
+              <h1
+                className="leading-none tracking-tight uppercase font-black drop-shadow-2xl"
+                style={{
+                  fontFamily: tokens.fonts.display,
+                  fontSize: "clamp(1.6rem, 3.5vw, 3rem)",
+                  color: tokens.colors.foreground,
+                }}
+              >
+                <span style={{ color: tokens.colors.primary }}>{firstName}</span>{" "}
+                {lastName}
+              </h1>
+            </InlineEdit>
+            <InlineEdit
+              isOwner={isOwner}
+              id="ad-hero-headline"
+              value={rawHeadline}
+              onSave={(v) => handleLiveUpdate?.({ headline: v })}
             >
-              {shortHeadline}
-            </p>
+              <p
+                className="mt-1 text-xs uppercase tracking-widest"
+                style={{ color: tokens.colors.textDim, fontFamily: tokens.fonts.mono }}
+              >
+                {shortHeadline || "Your Title"}
+              </p>
+            </InlineEdit>
           </motion.div>
 
-          {/* TOP RIGHT: italic quote */}
+          {/* TOP RIGHT: Quote (static design element like Kaneez) */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -227,7 +243,7 @@ const Hero = ({ user }) => {
             className="hidden md:block text-right"
           >
             <p
-              className="text-base md:text-xl italic font-medium leading-tight drop-shadow-md"
+              className="text-base md:text-xl italic font-medium leading-tight"
               style={{ fontFamily: tokens.fonts.display, color: tokens.colors.textDim }}
             >
               Design that speaks.
@@ -238,47 +254,54 @@ const Hero = ({ user }) => {
         </div>
 
         {/* BOTTOM ROW */}
-        <div className="flex justify-between items-end pointer-events-auto">
-          {/* BOTTOM LEFT: socials + bio */}
+        <div className="flex justify-between items-end">
+          {/* BOTTOM LEFT: Socials + Bio */}
           <motion.div
             className="flex flex-col gap-5 max-w-sm"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            {/* social links */}
-            {socialEntries.length > 0 && (
-              <div className="flex items-center gap-6 flex-wrap">
-                {socialEntries.slice(0, 4).map(([, url], i) => (
-                  <a
-                    key={i}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 group hover:-translate-y-0.5 transition-transform"
-                  >
-                    <span
-                      className="text-[10px] font-bold tracking-[0.2em] uppercase"
-                      style={{
-                        fontFamily: tokens.fonts.mono,
-                        color: tokens.colors.textDim,
-                      }}
+            {/* Social links */}
+            {Object.entries(socialLinks).filter(([, v]) => v).length > 0 && (
+              <div className="flex items-center gap-5 flex-wrap">
+                {Object.entries(socialLinks)
+                  .filter(([, url]) => url)
+                  .slice(0, 4)
+                  .map(([key, url]) => (
+                    <a
+                      key={key}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 hover:-translate-y-0.5 transition-transform"
                     >
-                      {getSocialLabel(url)}
-                    </span>
-                  </a>
-                ))}
+                      <span
+                        className="text-[10px] font-bold tracking-[0.2em] uppercase"
+                        style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
+                      >
+                        {getSocialLabel(key)}
+                      </span>
+                    </a>
+                  ))}
               </div>
             )}
 
-            {/* Bio */}
-            <p
-              className="text-[10px] uppercase tracking-wider leading-relaxed line-clamp-3 drop-shadow-md"
-              style={{ color: tokens.colors.textDim }}
+            {/* Bio — user?.bio */}
+            <InlineEdit
+              isOwner={isOwner}
+              id="ad-hero-bio"
+              value={user?.bio || ""}
+              type="textarea"
+              onSave={(v) => handleLiveUpdate?.({ bio: v })}
             >
-              {user?.summary ||
-                "Passionate about turning creative ideas into modern web experiences. I specialize in building pixel-perfect, responsive applications."}
-            </p>
+              <p
+                className="text-[10px] uppercase tracking-wider leading-relaxed line-clamp-3"
+                style={{ color: tokens.colors.textDim }}
+              >
+                {user?.bio || "Your professional bio will appear here..."}
+              </p>
+            </InlineEdit>
           </motion.div>
 
           {/* BOTTOM RIGHT: Giant role */}
@@ -296,7 +319,7 @@ const Hero = ({ user }) => {
                 color: tokens.colors.primary,
               }}
             >
-              {shortHeadline.split(" ")[0]}
+              {shortHeadline.split(" ")[0] || "DEVELOPER"}
               <br />
               <span style={{ color: tokens.colors.foreground }}>
                 {shortHeadline.split(" ").slice(1).join(" ")}
@@ -309,12 +332,21 @@ const Hero = ({ user }) => {
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  ABOUT  (left: giant name + bio + buttons + location | right: education timeline)
-// ────────────────────────────────────────────────────────────────
-const About = ({ user, setShowResumeModal }) => {
+// ════════════════════════════════════════════════════════════════
+//  ABOUT  — Giant name + bio + buttons | Education timeline (right)
+// ════════════════════════════════════════════════════════════════
+const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResumeModal }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Same fields as OrientalLuxe About.jsx
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
+  const nameParts = fullName.split(" ");
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
+
+  const bio = user?.bio || "";
+  const education = user?.education || [];
 
   return (
     <section
@@ -330,37 +362,54 @@ const About = ({ user, setShowResumeModal }) => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <div>
-            <p
-              className="text-xs tracking-[0.25em] uppercase mb-6"
-              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-            >
-              THE PROFILE / 01
-            </p>
+          {/* Section label */}
+          <p
+            className="text-xs tracking-[0.25em] uppercase"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+          >
+            THE PROFILE / 01
+          </p>
+
+          {/* Giant name */}
+          <InlineEdit
+            isOwner={isOwner}
+            id="ad-about-name"
+            value={fullName}
+            onSave={(v) => {
+              const parts = v.split(" ");
+              handleLiveUpdate?.({ firstName: parts[0], lastName: parts.slice(1).join(" ") });
+            }}
+          >
             <h2
               className="font-black uppercase leading-none tracking-tighter"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(3.5rem, 9vw, 8rem)",
+                fontSize: "clamp(3rem, 9vw, 8rem)",
                 color: tokens.colors.foreground,
               }}
             >
-              {user?.name?.split(" ")[0]}
+              {firstName}
               <br />
               <span style={{ color: tokens.colors.primary }}>
-                {user?.name?.split(" ").slice(1).join(" ")}.
+                {lastName}.
               </span>
             </h2>
-          </div>
+          </InlineEdit>
 
-          <p
-            className="text-base leading-relaxed"
-            style={{ color: tokens.colors.textDim, maxWidth: "520px" }}
+          {/* Bio */}
+          <InlineEdit
+            isOwner={isOwner}
+            id="ad-about-bio"
+            value={bio}
+            type="textarea"
+            onSave={(v) => handleLiveUpdate?.({ bio: v })}
           >
-            {user?.summary ||
-              "Passionate about turning creative ideas into modern web experiences."}
-          </p>
+            <p className="text-base leading-relaxed" style={{ color: tokens.colors.textDim, maxWidth: "520px" }}>
+              {bio || "Share your professional background here..."}
+            </p>
+          </InlineEdit>
 
+          {/* Buttons */}
           <div className="flex flex-wrap gap-4">
             {setShowResumeModal && (
               <button
@@ -376,7 +425,7 @@ const About = ({ user, setShowResumeModal }) => {
               </button>
             )}
             <a
-              href="#contact"
+              href="#contact-ad"
               className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest border transition-all hover:scale-105"
               style={{
                 borderColor: tokens.colors.borderStrong,
@@ -388,97 +437,90 @@ const About = ({ user, setShowResumeModal }) => {
             </a>
           </div>
 
+          {/* Location */}
           {user?.location && (
             <p
-              className="text-xs uppercase tracking-widest"
+              className="text-xs uppercase tracking-widest flex items-center gap-2"
               style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
             >
-              📍 {user.location} — OPEN TO REMOTE
+              <MapPin size={12} /> {user.location} — OPEN TO REMOTE
             </p>
           )}
         </motion.div>
 
         {/* RIGHT: Education timeline */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          {user?.education?.length > 0 && (
-            <div>
-              <p
-                className="text-xs tracking-[0.25em] uppercase mb-8 flex items-center gap-2"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-              >
-                EDUCATION
-              </p>
-              <div className="flex flex-col gap-10">
-                {user.education.map((edu, idx) => (
-                  <div key={edu._id || idx} className="flex gap-4">
-                    <div className="flex flex-col items-center pt-1">
-                      <div
-                        className="w-2 h-2 rounded-full mt-1 flex-shrink-0"
-                        style={{ backgroundColor: tokens.colors.textDim }}
-                      />
-                      {idx < user.education.length - 1 && (
-                        <div
-                          className="w-px flex-1 mt-2"
-                          style={{ backgroundColor: tokens.colors.borderFaint }}
-                        />
-                      )}
-                    </div>
-                    <div className="pb-6">
-                      <p
-                        className="text-[10px] uppercase tracking-widest mb-2"
-                        style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-                      >
-                        {edu.startYear || ""}
-                        {edu.endYear ? ` — ${edu.endYear}` : " — PRESENT"}
-                      </p>
-                      <h3
-                        className="text-xl font-bold uppercase tracking-tight mb-1"
-                        style={{ color: tokens.colors.foreground }}
-                      >
-                        {edu.school} — {edu.degree}
-                      </h3>
-                      {edu.description && (
-                        <p className="text-sm" style={{ color: tokens.colors.textDim }}>
-                          {edu.description}
-                        </p>
-                      )}
-                    </div>
+        {education.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <p
+              className="text-xs tracking-[0.25em] uppercase mb-8"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+            >
+              EDUCATION
+            </p>
+            <div className="flex flex-col gap-10">
+              {education.map((edu, idx) => (
+                <div key={edu._id || idx} className="flex gap-4">
+                  <div className="flex flex-col items-center pt-1">
+                    <div
+                      className="w-2 h-2 rounded-full mt-1 flex-shrink-0"
+                      style={{ backgroundColor: tokens.colors.textDim }}
+                    />
+                    {idx < education.length - 1 && (
+                      <div className="w-px flex-1 mt-2" style={{ backgroundColor: tokens.colors.borderFaint }} />
+                    )}
                   </div>
-                ))}
-              </div>
+                  <div className="pb-6">
+                    <p
+                      className="text-[10px] uppercase tracking-widest mb-2"
+                      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+                    >
+                      {edu.startYear || ""}{edu.endYear ? ` — ${edu.endYear}` : " — PRESENT"}
+                    </p>
+                    <h3
+                      className="text-xl font-bold uppercase tracking-tight mb-1"
+                      style={{ color: tokens.colors.foreground }}
+                    >
+                      {edu.school} — {edu.degree}
+                    </h3>
+                    {(edu.description || edu.fieldOfStudy) && (
+                      <p className="text-sm" style={{ color: tokens.colors.textDim }}>
+                        {edu.description || edu.fieldOfStudy}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </section>
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  EXPERIENCE  (same two-column style but for work)
-// ────────────────────────────────────────────────────────────────
-const Experience = ({ user }) => {
+// ════════════════════════════════════════════════════════════════
+//  EXPERIENCE  — vertical timeline
+// ════════════════════════════════════════════════════════════════
+const Experience = ({ user, isOwner, handleArrayUpdate }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const experience = user?.experience || [];
 
-  if (!user?.experience?.length) return null;
+  if (!experience.length) return null;
 
   return (
     <section
       ref={ref}
       className="w-full py-24 px-8 md:px-16 lg:px-24 border-t"
-      style={{
-        backgroundColor: tokens.colors.background,
-        borderColor: tokens.colors.borderFaint,
-      }}
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
       <div className="max-w-[1400px] mx-auto">
         <motion.p
-          className="text-xs tracking-[0.25em] uppercase mb-12 flex items-center gap-2"
+          className="text-xs tracking-[0.25em] uppercase mb-12"
           style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
@@ -487,7 +529,7 @@ const Experience = ({ user }) => {
           EXPERIENCE
         </motion.p>
         <div className="flex flex-col gap-10">
-          {user.experience.map((exp, idx) => (
+          {experience.map((exp, idx) => (
             <motion.div
               key={exp._id || idx}
               className="flex gap-4 pb-10 border-b"
@@ -497,10 +539,7 @@ const Experience = ({ user }) => {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
             >
               <div className="flex flex-col items-center pt-1">
-                <div
-                  className="w-2 h-2 rounded-full mt-1 flex-shrink-0"
-                  style={{ backgroundColor: tokens.colors.textDim }}
-                />
+                <div className="w-2 h-2 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: tokens.colors.textDim }} />
               </div>
               <div>
                 <p
@@ -531,46 +570,41 @@ const Experience = ({ user }) => {
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  SKILLS  (accordion list — numbered rows with expand arrows)
-// ────────────────────────────────────────────────────────────────
-const Skills = ({ user }) => {
+// ════════════════════════════════════════════════════════════════
+//  SKILLS  — numbered accordion rows + marquee
+// ════════════════════════════════════════════════════════════════
+const Skills = ({ user, isOwner }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
-  const services = [];
-  if (user?.skills?.technical?.length) {
-    user.skills.technical.forEach((s, i) => {
-      services.push({
-        num: String(i + 1).padStart(2, "0"),
-        name: typeof s === "string" ? s.toUpperCase() : (s?.name || "").toUpperCase(),
-      });
-    });
-  }
-  if (!services.length) {
-    ["FRONTEND DEVELOPMENT", "FIGMA TO CODE", "INTERACTIVE UI", "FULL-STACK MERN"].forEach(
-      (name, i) => services.push({ num: String(i + 1).padStart(2, "0"), name })
-    );
-  }
+  // Same normalization as OrientalLuxe Skills.jsx
+  const skillsArr = Array.isArray(user?.skills)
+    ? user.skills
+    : user?.skills?.technical || [];
 
-  // Marquee tags from all skills
-  const allSkills = [
-    ...(user?.skills?.technical || []),
-    ...(user?.skills?.soft || []),
-  ].map((s) => (typeof s === "string" ? s : s?.name)).filter(Boolean);
+  const skillNames = skillsArr
+    .map((s) => (typeof s === "string" ? s : s?.name || ""))
+    .filter(Boolean);
+
+  if (!skillNames.length) return null;
+
+  // All skills for the marquee (technical + strategic/soft)
+  const allSkillNames = [
+    ...(Array.isArray(user?.skills) ? user.skills : user?.skills?.technical || []),
+    ...(user?.skills?.strategic || []),
+  ]
+    .map((s) => (typeof s === "string" ? s : s?.name || ""))
+    .filter(Boolean);
 
   return (
     <section
       ref={ref}
       className="w-full border-t"
-      style={{
-        backgroundColor: tokens.colors.background,
-        borderColor: tokens.colors.borderFaint,
-      }}
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
-      {/* Skill rows */}
+      {/* Numbered rows */}
       <div>
-        {services.map((svc, idx) => (
+        {skillNames.map((skill, idx) => (
           <motion.div
             key={idx}
             className="flex items-center justify-between px-8 md:px-16 lg:px-24 py-8 border-b group cursor-default"
@@ -578,14 +612,14 @@ const Skills = ({ user }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: idx * 0.07 }}
-            whileHover={{ backgroundColor: "rgba(182,119,239,0.04)" }}
+            whileHover={{ backgroundColor: `${tokens.colors.primary}08` }}
           >
             <div className="flex items-center gap-8">
               <span
                 className="text-xs tabular-nums"
                 style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
               >
-                {svc.num}
+                {String(idx + 1).padStart(2, "0")}
               </span>
               <h3
                 className="font-black uppercase leading-none tracking-tighter"
@@ -595,35 +629,38 @@ const Skills = ({ user }) => {
                   color: tokens.colors.foreground,
                 }}
               >
-                {svc.name}
+                {skill.toUpperCase()}
               </h3>
             </div>
             <div className="flex items-center gap-3">
-              <button
+              <span
                 className="w-10 h-10 rounded-full border flex items-center justify-center text-lg transition-all group-hover:border-purple-500"
                 style={{ borderColor: tokens.colors.borderStrong, color: tokens.colors.textDim }}
               >
                 ↗
-              </button>
-              <button
+              </span>
+              <span
                 className="w-10 h-10 rounded-full border flex items-center justify-center text-xl transition-all group-hover:border-purple-500"
                 style={{ borderColor: tokens.colors.borderStrong, color: tokens.colors.textDim }}
               >
                 +
-              </button>
+              </span>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Infinite marquee of skill tags */}
-      {allSkills.length > 0 && (
+      {/* Marquee */}
+      {allSkillNames.length > 0 && (
         <div
           className="overflow-hidden py-5 border-t"
           style={{ borderColor: tokens.colors.borderFaint }}
         >
-          <div className="flex whitespace-nowrap" style={{ animation: "marquee 25s linear infinite" }}>
-            {[...allSkills, ...allSkills, ...allSkills].map((s, i) => (
+          <div
+            className="flex whitespace-nowrap"
+            style={{ animation: "ad-marquee 25s linear infinite" }}
+          >
+            {[...allSkillNames, ...allSkillNames, ...allSkillNames].map((s, i) => (
               <span key={i} className="flex items-center gap-4 mr-4">
                 <span
                   className="text-xs uppercase tracking-[0.3em]"
@@ -644,10 +681,10 @@ const Skills = ({ user }) => {
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  SHOWCASE  (full-screen slider: left text, right device mockup)
-// ────────────────────────────────────────────────────────────────
-const Showcase = ({ projects }) => {
+// ════════════════════════════════════════════════════════════════
+//  SHOWCASE  — fullscreen slider (project data same as OrientalLuxe)
+// ════════════════════════════════════════════════════════════════
+const Showcase = ({ projects, isOwner }) => {
   const [active, setActive] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
@@ -655,6 +692,12 @@ const Showcase = ({ projects }) => {
   if (!projects?.length) return null;
 
   const proj = projects[active];
+
+  // Support both techStack and technologies field names
+  const techList = proj?.techStack || proj?.technologies || [];
+  const liveUrl = proj?.liveUrl || proj?.liveLink;
+  const githubUrl = proj?.githubUrl || proj?.githubLink;
+  const image = proj?.image || proj?.thumbnail;
 
   return (
     <section
@@ -666,8 +709,14 @@ const Showcase = ({ projects }) => {
         minHeight: "100vh",
       }}
     >
-      {/* Counter top right */}
-      <div className="flex justify-end px-8 md:px-16 lg:px-24 pt-8">
+      {/* Section label + Counter */}
+      <div className="flex items-center justify-between px-8 md:px-16 lg:px-24 pt-12 pb-4">
+        <p
+          className="text-xs tracking-[0.25em] uppercase"
+          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+        >
+          CREATIVE WORKS
+        </p>
         <div className="flex items-center gap-3">
           <span
             className="text-xs tabular-nums"
@@ -691,14 +740,14 @@ const Showcase = ({ projects }) => {
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Content */}
       <motion.div
-        className="grid grid-cols-1 lg:grid-cols-2 items-center px-8 md:px-16 lg:px-24 py-16 gap-16"
+        className="grid grid-cols-1 lg:grid-cols-2 items-center px-8 md:px-16 lg:px-24 py-12 gap-16"
         initial={{ opacity: 0, y: 40 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8 }}
       >
-        {/* LEFT: project info */}
+        {/* LEFT: Project info */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -734,41 +783,59 @@ const Showcase = ({ projects }) => {
               {proj.title}
             </h2>
 
-            <div
-              className="w-12 h-px"
-              style={{ backgroundColor: tokens.colors.primary }}
-            />
+            <div className="w-12 h-px" style={{ backgroundColor: tokens.colors.primary }} />
 
-            <div>
-              <p
-                className="text-xs uppercase tracking-widest mb-2"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-              >
-                STACK & ARCHITECTURE
-              </p>
-              <p
-                className="text-sm font-bold uppercase tracking-widest"
-                style={{ color: tokens.colors.primary }}
-              >
-                {proj.technologies?.join(" / ") || "REACT / NODE.JS"}
-              </p>
-            </div>
-
-            {proj.liveUrl && (
-              <a
-                href={proj.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm uppercase tracking-widest font-bold w-fit hover:gap-4 transition-all"
-                style={{ color: tokens.colors.foreground }}
-              >
-                EXPLORE LIVE PROJECT ↗
-              </a>
+            {techList.length > 0 && (
+              <div>
+                <p
+                  className="text-xs uppercase tracking-widest mb-2"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+                >
+                  STACK & ARCHITECTURE
+                </p>
+                <p
+                  className="text-sm font-bold uppercase tracking-widest"
+                  style={{ color: tokens.colors.primary }}
+                >
+                  {techList.join(" / ")}
+                </p>
+              </div>
             )}
+
+            {proj.description && (
+              <p className="text-sm leading-relaxed" style={{ color: tokens.colors.textDim }}>
+                {proj.description}
+              </p>
+            )}
+
+            <div className="flex items-center gap-6 flex-wrap">
+              {liveUrl && (
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm uppercase tracking-widest font-bold hover:opacity-80 transition-all"
+                  style={{ color: tokens.colors.foreground }}
+                >
+                  EXPLORE LIVE PROJECT <ExternalLink size={14} />
+                </a>
+              )}
+              {githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm uppercase tracking-widest font-bold hover:opacity-80 transition-all"
+                  style={{ color: tokens.colors.textDim }}
+                >
+                  <FaGithub size={14} /> GITHUB
+                </a>
+              )}
+            </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* RIGHT: image */}
+        {/* RIGHT: Image */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active + "_img"}
@@ -779,13 +846,17 @@ const Showcase = ({ projects }) => {
             className="relative aspect-video rounded-xl overflow-hidden"
             style={{ backgroundColor: tokens.colors.backgroundFaint }}
           >
-            {proj.image ? (
-              <img src={proj.image} alt={proj.title} className="w-full h-full object-cover" />
+            {image ? (
+              <img src={image} alt={proj.title} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <span
-                  className="text-6xl font-black uppercase opacity-10"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
+                  className="font-black uppercase opacity-10"
+                  style={{
+                    fontFamily: tokens.fonts.display,
+                    fontSize: "clamp(3rem, 10vw, 8rem)",
+                    color: tokens.colors.foreground,
+                  }}
                 >
                   {proj.title?.charAt(0)}
                 </span>
@@ -795,17 +866,13 @@ const Showcase = ({ projects }) => {
         </AnimatePresence>
       </motion.div>
 
-      {/* Navigation buttons */}
+      {/* Prev/Next */}
       <div className="flex justify-center gap-4 pb-16">
         <button
           onClick={() => setActive((p) => Math.max(0, p - 1))}
           disabled={active === 0}
           className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
-          style={{
-            fontFamily: tokens.fonts.mono,
-            borderColor: tokens.colors.borderStrong,
-            color: tokens.colors.foreground,
-          }}
+          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
         >
           ← PREV
         </button>
@@ -813,11 +880,7 @@ const Showcase = ({ projects }) => {
           onClick={() => setActive((p) => Math.min(projects.length - 1, p + 1))}
           disabled={active === projects.length - 1}
           className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
-          style={{
-            fontFamily: tokens.fonts.mono,
-            borderColor: tokens.colors.borderStrong,
-            color: tokens.colors.foreground,
-          }}
+          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
         >
           NEXT →
         </button>
@@ -826,15 +889,30 @@ const Showcase = ({ projects }) => {
   );
 };
 
-// ────────────────────────────────────────────────────────────────
-//  CONTACT  (LET'S BUILD SOMETHING + copy email + socials)
-// ────────────────────────────────────────────────────────────────
-const Contact = ({ user }) => {
+// ════════════════════════════════════════════════════════════════
+//  CONTACT  — "LET'S BUILD SOMETHING" + copy email + socials list
+// ════════════════════════════════════════════════════════════════
+const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSending }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [copied, setCopied] = useState(false);
 
-  const handleCopyEmail = () => {
+  // Same social links structure as OrientalLuxe Contact.jsx
+  const socialLinks = user?.socialLinks || {};
+  const socials = [
+    { key: "linkedin", icon: FaLinkedin, label: "LINKEDIN", url: socialLinks.linkedin },
+    { key: "github",   icon: FaGithub,   label: "GITHUB",   url: socialLinks.github },
+    { key: "twitter",  icon: FaTwitter,  label: "TWITTER",  url: socialLinks.twitter },
+  ].filter((s) => s.url);
+
+  // Add any other social links not in the main list
+  const otherSocials = Object.entries(socialLinks)
+    .filter(([key, url]) => url && !["linkedin", "github", "twitter"].includes(key))
+    .map(([key, url]) => ({ key, label: key.toUpperCase(), url }));
+
+  const allSocials = [...socials, ...otherSocials];
+
+  const handleCopy = () => {
     if (user?.email) {
       navigator.clipboard.writeText(user.email);
       setCopied(true);
@@ -842,30 +920,22 @@ const Contact = ({ user }) => {
     }
   };
 
-  const getSocialLabel = (url = "") => {
-    if (url.includes("github")) return "GITHUB";
-    if (url.includes("linkedin")) return "LINKEDIN";
-    if (url.includes("twitter") || url.includes("x.com")) return "TWITTER";
-    if (url.includes("facebook")) return "FACEBOOK";
-    return "WEBSITE";
+  const inputStyle = {
+    backgroundColor: tokens.colors.backgroundFaint,
+    borderColor: tokens.colors.borderDim,
+    color: tokens.colors.foreground,
+    fontFamily: tokens.fonts.body,
   };
-
-  const socialEntries = user?.socialLinks
-    ? Object.entries(user.socialLinks).filter(([, v]) => v)
-    : [];
 
   return (
     <section
+      id="contact-ad"
       ref={ref}
-      id="contact"
       className="w-full py-32 px-8 md:px-16 lg:px-24 border-t"
-      style={{
-        backgroundColor: tokens.colors.background,
-        borderColor: tokens.colors.borderFaint,
-      }}
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-end">
-        {/* LEFT */}
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        {/* LEFT: "LET'S BUILD SOMETHING" */}
         <motion.div
           className="flex flex-col gap-8"
           initial={{ opacity: 0, y: 40 }}
@@ -876,7 +946,7 @@ const Contact = ({ user }) => {
             className="font-black uppercase leading-none tracking-tighter"
             style={{
               fontFamily: tokens.fonts.display,
-              fontSize: "clamp(3rem, 9vw, 8rem)",
+              fontSize: "clamp(3rem, 8vw, 7rem)",
               color: tokens.colors.foreground,
             }}
           >
@@ -890,30 +960,113 @@ const Contact = ({ user }) => {
             I am currently open to freelance projects and new opportunities.
           </p>
 
-          <button
-            onClick={handleCopyEmail}
-            className="flex items-center gap-3 w-fit px-7 py-3 rounded-full text-sm font-bold uppercase tracking-widest border transition-all hover:scale-105"
-            style={{
-              fontFamily: tokens.fonts.mono,
-              borderColor: tokens.colors.foreground,
-              color: tokens.colors.foreground,
-            }}
-          >
-            {copied ? "✓ COPIED!" : "COPY EMAIL"}
-          </button>
+          {user?.email && (
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-3 w-fit px-7 py-3 rounded-full text-sm font-bold uppercase tracking-widest border transition-all hover:scale-105"
+              style={{
+                fontFamily: tokens.fonts.mono,
+                borderColor: tokens.colors.foreground,
+                color: tokens.colors.foreground,
+              }}
+            >
+              <Mail size={14} />
+              {copied ? "✓ COPIED!" : "COPY EMAIL"}
+            </button>
+          )}
+
+          {/* Contact details */}
+          <div className="flex flex-col gap-3">
+            {user?.email && (
+              <a
+                href={`mailto:${user.email}`}
+                className="text-sm"
+                style={{ color: tokens.colors.textDim }}
+              >
+                {user.email}
+              </a>
+            )}
+            {user?.phoneNumber && (
+              <span className="text-sm" style={{ color: tokens.colors.textDim }}>
+                {user.phoneNumber}
+              </span>
+            )}
+            {user?.location && (
+              <span className="text-sm flex items-center gap-2" style={{ color: tokens.colors.textDim }}>
+                <MapPin size={12} /> {user.location}
+              </span>
+            )}
+          </div>
+
+          {/* Contact Form */}
+          {handleContactSubmit && (
+            <form onSubmit={handleContactSubmit} className="flex flex-col gap-3 mt-4 max-w-md">
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={contactForm?.name || ""}
+                  onChange={(e) => setContactForm?.({ ...contactForm, name: e.target.value })}
+                  required
+                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none"
+                  style={inputStyle}
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={contactForm?.email || ""}
+                  onChange={(e) => setContactForm?.({ ...contactForm, email: e.target.value })}
+                  required
+                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none"
+                  style={inputStyle}
+                />
+              </div>
+              <input
+                type="text"
+                placeholder="Subject"
+                value={contactForm?.subject || ""}
+                onChange={(e) => setContactForm?.({ ...contactForm, subject: e.target.value })}
+                required
+                className="w-full rounded-xl border px-4 py-3 text-sm outline-none"
+                style={inputStyle}
+              />
+              <textarea
+                placeholder="Your message..."
+                value={contactForm?.message || ""}
+                onChange={(e) => setContactForm?.({ ...contactForm, message: e.target.value })}
+                required
+                rows={4}
+                className="w-full resize-none rounded-xl border px-4 py-3 text-sm outline-none"
+                style={inputStyle}
+              />
+              <button
+                type="submit"
+                disabled={isSending}
+                className="self-start flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50"
+                style={{
+                  backgroundColor: tokens.colors.primary,
+                  color: "#000",
+                  fontFamily: tokens.fonts.mono,
+                }}
+              >
+                <Send size={14} />
+                {isSending ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          )}
         </motion.div>
 
-        {/* RIGHT: Socials vertical list */}
-        {socialEntries.length > 0 && (
+        {/* RIGHT: Social links vertical list */}
+        {allSocials.length > 0 && (
           <motion.div
             className="flex flex-col gap-0"
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {socialEntries.map(([, url], i) => (
+            {allSocials.map(({ key, label, url }) => (
               <a
-                key={i}
+                key={key}
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -924,7 +1077,7 @@ const Contact = ({ user }) => {
                   className="text-xl font-bold uppercase tracking-widest group-hover:text-purple-400 transition-colors"
                   style={{ fontFamily: tokens.fonts.display }}
                 >
-                  {getSocialLabel(url)}
+                  {label}
                 </span>
                 <span className="text-xl">↗</span>
               </a>
@@ -936,42 +1089,36 @@ const Contact = ({ user }) => {
   );
 };
 
-// ────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 //  FOOTER
-// ────────────────────────────────────────────────────────────────
-const Footer = ({ user }) => (
-  <footer
-    className="w-full px-8 md:px-16 lg:px-24 py-8 border-t flex flex-col md:flex-row justify-between items-center gap-4"
-    style={{
-      backgroundColor: tokens.colors.background,
-      borderColor: tokens.colors.borderFaint,
-    }}
-  >
-    <p
-      className="text-xs uppercase tracking-widest"
-      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+// ════════════════════════════════════════════════════════════════
+const Footer = ({ user }) => {
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
+  return (
+    <footer
+      className="w-full px-8 md:px-16 lg:px-24 py-8 border-t flex flex-col md:flex-row justify-between items-center gap-4"
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
-      © {new Date().getFullYear()} {user?.name}. All Rights Reserved.
-    </p>
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="text-xs uppercase tracking-widest hover:-translate-y-1 transition-transform"
-      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-    >
-      BACK TO TOP ↑
-    </button>
-    <p
-      className="text-xs uppercase tracking-widest"
-      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-    >
-      ENGINEERED IN PAKISTAN
-    </p>
-  </footer>
-);
+      <p className="text-xs uppercase tracking-widest" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}>
+        © {new Date().getFullYear()} {fullName}. All Rights Reserved.
+      </p>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="text-xs uppercase tracking-widest hover:-translate-y-1 transition-transform"
+        style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+      >
+        BACK TO TOP ↑
+      </button>
+      <p className="text-xs uppercase tracking-widest" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}>
+        ENGINEERED IN PAKISTAN
+      </p>
+    </footer>
+  );
+};
 
-// ────────────────────────────────────────────────────────────────
-//  ROOT: AuraDarkTheme
-// ────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+//  ROOT THEME SHELL  — matches OrientalLuxe prop signature exactly
+// ════════════════════════════════════════════════════════════════
 const AuraDarkTheme = ({
   user,
   projects,
@@ -988,6 +1135,8 @@ const AuraDarkTheme = ({
 }) => {
   const [loading, setLoading] = useState(true);
 
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
+
   return (
     <div
       className="relative min-h-screen overflow-x-hidden"
@@ -997,27 +1146,61 @@ const AuraDarkTheme = ({
         fontFamily: tokens.fonts.body,
       }}
     >
-      {/* Marquee CSS */}
+      {/* Marquee keyframe */}
       <style>{`
-        @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-33.333%) } }
+        @keyframes ad-marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-33.333%); }
+        }
       `}</style>
 
+      {/* Loader */}
       <AnimatePresence>
-        {loading && (
-          <Loader onComplete={() => setLoading(false)} />
-        )}
+        {loading && <Loader onComplete={() => setLoading(false)} userName={fullName} />}
       </AnimatePresence>
 
+      {/* Page content — hidden until loader done */}
       <div
         className="transition-opacity duration-1000"
         style={{ opacity: loading ? 0 : 1 }}
       >
-        <Hero user={user} />
-        <About user={user} setShowResumeModal={setShowResumeModal} />
-        <Experience user={user} />
-        <Skills user={user} />
-        <Showcase projects={projects} />
-        <Contact user={user} />
+        <Hero
+          user={user}
+          isOwner={isOwner}
+          handleLiveUpdate={handleLiveUpdate}
+          setShowResumeModal={setShowResumeModal}
+        />
+
+        <About
+          user={user}
+          isOwner={isOwner}
+          handleLiveUpdate={handleLiveUpdate}
+          handleArrayUpdate={handleArrayUpdate}
+          setShowResumeModal={setShowResumeModal}
+        />
+
+        {(isOwner || user?.experience?.length > 0) && (
+          <Experience
+            user={user}
+            isOwner={isOwner}
+            handleArrayUpdate={handleArrayUpdate}
+          />
+        )}
+
+        <Skills user={user} isOwner={isOwner} />
+
+        {(isOwner || projects?.length > 0) && (
+          <Showcase projects={projects} isOwner={isOwner} />
+        )}
+
+        <Contact
+          user={user}
+          contactForm={contactForm || { name: "", email: "", subject: "", message: "" }}
+          setContactForm={setContactForm || (() => {})}
+          handleContactSubmit={handleContactSubmit || ((e) => e.preventDefault())}
+          isSending={isSending || false}
+        />
+
         <Footer user={user} />
       </div>
     </div>
