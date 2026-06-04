@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
 import { tokens } from "./tokens";
 import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { ExternalLink, MapPin, Mail, Phone, Send } from "lucide-react";
@@ -247,6 +248,22 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
     ? rawHeadline.split(",")[0].trim()
     : rawHeadline;
 
+  // Build typing sequence for animation
+  const slogans = user?.heroSlogans || [];
+  const typeSequence = [];
+  if (slogans.length > 0) {
+    slogans.forEach((s) => {
+      const text = typeof s === "string" ? s : s?.text;
+      if (text) typeSequence.push(text, 2000);
+    });
+  } else if (rawHeadline) {
+    rawHeadline.split(",").forEach((s) => {
+      const trimmed = s.trim();
+      if (trimmed) typeSequence.push(trimmed, 2000);
+    });
+  }
+  if (typeSequence.length === 0) typeSequence.push(shortHeadline || "Professional Portfolio", 3000);
+
   // Giant role: max 2 words per line for clean layout
   const roleWords = shortHeadline.trim().split(" ").filter(Boolean);
   // Line 1 (purple): first word only — like Kaneez "FRONTEND"
@@ -411,12 +428,19 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               value={rawHeadline}
               onSave={(v) => handleLiveUpdate?.({ headline: v })}
             >
-              <p
-                className="mt-1 text-xs uppercase tracking-widest"
+              <div
+                className="mt-1 text-xs uppercase tracking-widest min-h-[20px]"
                 style={{ color: tokens.colors.textDim, fontFamily: tokens.fonts.mono }}
               >
-                {shortHeadline || "Your Title"}
-              </p>
+                <TypeAnimation
+                  sequence={typeSequence}
+                  wrapper="span"
+                  speed={50}
+                  repeat={Infinity}
+                  cursor={true}
+                  style={{ color: tokens.colors.primary }}
+                />
+              </div>
             </InlineEdit>
           </motion.div>
 
