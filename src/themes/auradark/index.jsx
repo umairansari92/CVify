@@ -323,12 +323,12 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       {/* "CREATIVE" watermark */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none select-none overflow-hidden">
         <span
-          className="font-black uppercase whitespace-nowrap leading-none"
+          className="font-black uppercase whitespace-nowrap leading-none w-full text-center"
           style={{
             fontFamily: tokens.fonts.display,
-            fontSize: "clamp(8rem, 22vw, 22rem)",
-            color: "rgba(255,255,255,0.04)",
-            letterSpacing: "-0.04em",
+            fontSize: "clamp(4rem, 13vw, 16rem)",
+            color: "rgba(255,255,255,0.06)",
+            letterSpacing: "-0.02em",
           }}
         >
           CREATIVE
