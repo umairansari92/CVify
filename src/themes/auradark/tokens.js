@@ -1,20 +1,20 @@
 export const tokens = {
   colors: {
-    background: "#050505", 
+    background: "#000000", 
     backgroundFaint: "#0a0a0a",
     foreground: "#ffffff", 
-    primary: "#B677EF", 
+    primary: "#B677EF",       // Kaneez purple
     primaryHover: "#C48DF2",
     textDim: "#a1a1aa", 
     textFaint: "#52525b", 
-    borderFaint: "rgba(255, 255, 255, 0.05)",
+    borderFaint: "rgba(255, 255, 255, 0.06)",
     borderDim: "rgba(255, 255, 255, 0.1)",
     borderStrong: "rgba(255, 255, 255, 0.2)",
   },
   fonts: {
-    display: "'Syne', sans-serif",
+    display: "'Syne', 'Inter', sans-serif",
     body: "'DM Sans', 'Inter', sans-serif",
-    mono: "'JetBrains Mono', monospace",
+    mono: "'JetBrains Mono', 'Courier New', monospace",
   },
   spacing: {
     sectionPadding: "py-32",
