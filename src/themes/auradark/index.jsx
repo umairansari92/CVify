@@ -414,7 +414,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                 className="leading-none tracking-tight uppercase font-black drop-shadow-2xl"
                 style={{
                   fontFamily: tokens.fonts.display,
-                  fontSize: "clamp(1.1rem, 1.8vw, 1.8rem)",
+                  fontSize: "clamp(1.5rem, 2.8vw, 2.8rem)",
                   color: tokens.colors.foreground,
                 }}
               >
@@ -429,7 +429,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               onSave={(v) => handleLiveUpdate?.({ headline: v })}
             >
               <div
-                className="mt-1 text-xs uppercase tracking-widest min-h-[20px]"
+                className="mt-1 text-sm md:text-base uppercase tracking-widest min-h-[24px]"
                 style={{ color: tokens.colors.textDim, fontFamily: tokens.fonts.mono }}
               >
                 <TypeAnimation
