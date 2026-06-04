@@ -411,14 +411,24 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               }}
             >
               <h1
-                className="leading-none tracking-tight uppercase font-black drop-shadow-2xl"
+                className="leading-none tracking-tight uppercase font-black"
                 style={{
                   fontFamily: tokens.fonts.display,
-                  fontSize: "clamp(1.5rem, 2.8vw, 2.8rem)",
+                  fontSize: "clamp(2rem, 4vw, 4rem)",
                   color: tokens.colors.foreground,
+                  textShadow: "0 10px 30px rgba(0,0,0,0.8)",
                 }}
               >
-                <span style={{ color: tokens.colors.primary }}>{firstName}</span>{" "}
+                <span 
+                  style={{ 
+                    background: `linear-gradient(135deg, ${tokens.colors.primary}, #E0B0FF)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    filter: `drop-shadow(0 0 15px ${tokens.colors.primary}60)`,
+                  }}
+                >
+                  {firstName}
+                </span>{" "}
                 {lastName}
               </h1>
             </InlineEdit>
@@ -429,7 +439,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               onSave={(v) => handleLiveUpdate?.({ headline: v })}
             >
               <div
-                className="mt-1 text-sm md:text-base uppercase tracking-widest min-h-[24px]"
+                className="mt-2 text-base md:text-lg uppercase tracking-[0.2em] font-semibold min-h-[28px]"
                 style={{ color: tokens.colors.textDim, fontFamily: tokens.fonts.mono }}
               >
                 <TypeAnimation
@@ -438,7 +448,11 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                   speed={50}
                   repeat={Infinity}
                   cursor={true}
-                  style={{ color: tokens.colors.primary }}
+                  style={{ 
+                    color: tokens.colors.primary,
+                    textShadow: `0 0 12px ${tokens.colors.primary}80`,
+                    letterSpacing: "0.25em"
+                  }}
                 />
               </div>
             </InlineEdit>
