@@ -622,7 +622,7 @@ const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResu
               className="font-black uppercase leading-none tracking-tighter"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(3rem, 9vw, 8rem)",
+                fontSize: "clamp(3rem, 6vw, 6rem)",
                 color: tokens.colors.foreground,
               }}
             >
