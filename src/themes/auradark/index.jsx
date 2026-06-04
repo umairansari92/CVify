@@ -326,7 +326,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
           className="font-black uppercase whitespace-nowrap leading-none w-full text-center"
           style={{
             fontFamily: tokens.fonts.display,
-            fontSize: "clamp(4rem, 10vw, 16rem)",
+            fontSize: "clamp(4rem, 15vw, 14rem)",
             color: "rgba(255,255,255,0.06)",
             letterSpacing: "-0.02em",
           }}
