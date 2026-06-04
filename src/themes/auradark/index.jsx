@@ -318,20 +318,45 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         </span>
       </div>
 
-      {/* Portrait — profileImage (same as OrientalLuxe About) */}
-      <div className="absolute inset-0 flex items-end justify-center z-20 pointer-events-none overflow-hidden">
+      {/* Portrait — profileImage */}
+      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-10 md:pb-24">
         {(user?.profileImage || user?.profilePicture) ? (
-          <img
-            src={user.profileImage || user.profilePicture}
-            alt={fullName}
-            className="h-full object-contain object-bottom"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="relative shadow-2xl"
             style={{
-              maxWidth: "60%",
-              maskImage: "linear-gradient(to top, transparent 0%, black 12%)",
-              WebkitMaskImage: "linear-gradient(to top, transparent 0%, black 12%)",
-              filter: "contrast(1.05) brightness(1.05)",
+              width: "clamp(260px, 28vw, 400px)",
+              height: "clamp(360px, 38vw, 550px)",
+              padding: "2px", // 2px border
+              background: `linear-gradient(135deg, ${tokens.colors.primary}, rgba(255,255,255,0.05), ${tokens.colors.primary}80)`,
+              borderRadius: "999px", // Oval/pill shape
             }}
-          />
+          >
+            <div 
+              className="w-full h-full overflow-hidden"
+              style={{
+                borderRadius: "999px",
+                backgroundColor: tokens.colors.background,
+              }}
+            >
+              <img
+                src={user.profileImage || user.profilePicture}
+                alt={fullName}
+                className="w-full h-full object-cover"
+                style={{ filter: "contrast(1.05) brightness(1.05)" }}
+              />
+            </div>
+            {/* Soft gradient fade at bottom to blend with background */}
+            <div 
+              className="absolute inset-x-0 bottom-0 h-1/4 z-10 pointer-events-none"
+              style={{
+                borderRadius: "0 0 999px 999px",
+                background: `linear-gradient(to top, ${tokens.colors.background}, transparent)`
+              }}
+            />
+          </motion.div>
         ) : (
           <div
             className="w-72 h-[80%] rounded-t-full flex items-end justify-center pb-8"
