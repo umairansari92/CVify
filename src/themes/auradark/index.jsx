@@ -93,11 +93,23 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   const firstName = nameParts[0] || "";
   const lastName = nameParts.slice(1).join(" ") || "";
 
-  // Headline — split by comma for display, use first part for giant text
+  // Headline — split by comma, use first part for giant text
   const rawHeadline = user?.headline || "";
   const shortHeadline = rawHeadline.includes(",")
     ? rawHeadline.split(",")[0].trim()
     : rawHeadline;
+
+  // Giant role: max 2 words per line for clean layout
+  const roleWords = shortHeadline.trim().split(" ").filter(Boolean);
+  // Line 1 (purple): first word only — like Kaneez "FRONTEND"
+  // Line 2 (white):  second word — like Kaneez "ENGINEER"
+  // If 3+ words: line1 = first 2 words, line2 = rest (capped at 2)
+  const roleLine1 = roleWords.length <= 2
+    ? roleWords[0] || "DEVELOPER"
+    : roleWords.slice(0, 2).join(" ");
+  const roleLine2 = roleWords.length <= 2
+    ? roleWords[1] || ""
+    : roleWords.slice(2, 4).join(" ");
 
   // Tags — use skills.technical or skills array (same as OrientalLuxe)
   const skillsArr = Array.isArray(user?.skills)
@@ -212,7 +224,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                 className="leading-none tracking-tight uppercase font-black drop-shadow-2xl"
                 style={{
                   fontFamily: tokens.fonts.display,
-                  fontSize: "clamp(1.6rem, 3.5vw, 3rem)",
+                  fontSize: "clamp(1.1rem, 1.8vw, 1.8rem)",
                   color: tokens.colors.foreground,
                 }}
               >
@@ -315,15 +327,19 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               className="font-black uppercase leading-[0.85] tracking-tighter drop-shadow-2xl"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(2.8rem, 8vw, 7rem)",
+                fontSize: "clamp(2rem, 5vw, 4.5rem)",
                 color: tokens.colors.primary,
               }}
             >
-              {shortHeadline.split(" ")[0] || "DEVELOPER"}
-              <br />
-              <span style={{ color: tokens.colors.foreground }}>
-                {shortHeadline.split(" ").slice(1).join(" ")}
-              </span>
+              {roleLine1}
+              {roleLine2 && (
+                <>
+                  <br />
+                  <span style={{ color: tokens.colors.foreground }}>
+                    {roleLine2}
+                  </span>
+                </>
+              )}
             </h2>
           </motion.div>
         </div>
