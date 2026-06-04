@@ -163,6 +163,21 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         fontPrimary: "Outfit",
       },
     },
+    {
+      id: "auradark",
+      name: "AURA DARK",
+      icon: <span className="text-2xl">✨</span>,
+      settings: {
+        headerBg: "#050505",
+        headerBgSecondary: "#101010",
+        bodyBg: "#000000",
+        accentColor: "#B677EF",
+        textPrimary: "#ffffff",
+        textSecondary: "#a1a1aa",
+        cardStyle: "minimal",
+        fontPrimary: "Syne",
+      },
+    },
   ];
 
   const paletteItems = [
@@ -182,6 +197,8 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     "JetBrains Mono",
     "Space Grotesk",
     "Playfair Display",
+    "Syne",
+    "DM Sans",
   ];
 
   return (

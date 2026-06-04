@@ -88,6 +88,7 @@ import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
 import OrientalLuxeTheme from "../themes/orientalluxe";
+import AuraDarkTheme from "../themes/auradark";
 import ThemeBackgroundFX from "../components/ThemeBackgroundFX";
 
 const PublicProfile = () => {
@@ -287,6 +288,7 @@ const PublicProfile = () => {
     { name: "SLATE MINIMALIST", headerBg: "#475569", headerBgSecondary: "#64748b", bodyBg: "#f1f5f9", fontPrimary: "Roboto", cardStyle: "minimal", icon: "🎨", textPrimary: "#334155", textSecondary: "#64748b", accentColor: "#0f172a" },
     { name: "EMERALD LEADER", headerBg: "#059669", headerBgSecondary: "#10b981", bodyBg: "#f0fdf4", fontPrimary: "Montserrat", cardStyle: "classic", icon: "🌿", textPrimary: "#064e3b", textSecondary: "#065f46", accentColor: "#059669" },
     { name: "ORIENTAL LUXE", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
+    { name: "AURA DARK", headerBg: "#050505", headerBgSecondary: "#101010", bodyBg: "#000000", fontPrimary: "Syne", cardStyle: "minimal", icon: "✨", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#B677EF" },
   ];
 
   if (loading) return (
@@ -319,6 +321,7 @@ const PublicProfile = () => {
   const theme = { ...fullTheme, ...baseTheme };
   const isLight = ["#f8fafc", "#ffffff", "#f1f5f9", "#f0fdf4", "#fff7ed"].includes(theme.bodyBg?.toLowerCase());
   const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE" || baseTheme?.name === "AHMED RAZA PORTFOLIO" || savedTheme?.name === "ORIENTAL LUXE";
+  const isAuraDarkTheme = theme.name === "AURA DARK" || baseTheme?.name === "AURA DARK" || savedTheme?.name === "AURA DARK";
 
   const themeStyles = {
     backgroundColor: theme.bodyBg,
@@ -344,7 +347,7 @@ const PublicProfile = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
+    <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme || isAuraDarkTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
 
       <Helmet>
         {/* Dynamic SEO Tags */}
@@ -615,7 +618,22 @@ const PublicProfile = () => {
         </AnimatePresence>
       </nav>
 
-      {isOrientalLuxeTheme ? (
+      {isAuraDarkTheme ? (
+        <AuraDarkTheme 
+          user={user}
+          projects={projects}
+          isOwner={isOwner}
+          handleLiveUpdate={handleLiveUpdate}
+          handleArrayUpdate={handleArrayUpdate}
+          setShowResumeModal={setShowResumeModal}
+          contactForm={contactForm}
+          setContactForm={setContactForm}
+          handleContactSubmit={handleContactSubmit}
+          isSending={isSending}
+          githubData={githubData}
+          githubLoading={githubLoading}
+        />
+      ) : isOrientalLuxeTheme ? (
         <OrientalLuxeTheme 
           user={user}
           projects={projects}
