@@ -464,18 +464,29 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             </InlineEdit>
           </motion.div>
 
-          {/* BOTTOM RIGHT: Giant role */}
+          {/* BOTTOM RIGHT: Giant role — font shrinks for longer words */}
           <motion.div
             className="text-right"
+            style={{ maxWidth: "50%" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
           >
             <h2
-              className="font-black uppercase leading-[0.85] tracking-tighter drop-shadow-2xl"
+              className="uppercase leading-[0.88] tracking-tighter drop-shadow-2xl font-black"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(2rem, 5vw, 4.5rem)",
+                // Shrink font proportionally: short words (~8 chars) get 3.5rem,
+                // longer words (12+ chars like "WEB DEVELOPER") get ~2.2rem
+                fontSize: (() => {
+                  const longest = Math.max(
+                    (roleLine1 || "").length,
+                    (roleLine2 || "").length
+                  );
+                  if (longest <= 8)  return "clamp(2.5rem, 4.5vw, 4rem)";
+                  if (longest <= 11) return "clamp(2rem, 3.5vw, 3.2rem)";
+                  return "clamp(1.6rem, 2.8vw, 2.6rem)";
+                })(),
                 color: tokens.colors.primary,
               }}
             >
