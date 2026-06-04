@@ -12,10 +12,11 @@ const Hero = ({ user }) => {
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(" ");
 
-  // Title / Role
-  const headline = user.headline || "Software Engineer";
-
-  // Tags for the top pill marquee (derived from skills or hardcoded fallbacks if empty)
+  // Title / Role - Handle extremely long comma-separated headlines
+  const rawHeadline = user.headline || "Software Engineer";
+  const shortHeadline = rawHeadline.includes(',') ? rawHeadline.split(',')[0] : rawHeadline;
+  
+  // Tags for the top pill marquee
   const tags = user.skills?.technical?.slice(0, 3) || ["DEVELOPER", "ENGINEER", "CREATIVE"];
 
   // Social Links mapping
@@ -81,10 +82,10 @@ const Hero = ({ user }) => {
                 {firstName.toUpperCase()} <span style={{ color: tokens.colors.foreground }}>{lastName.toUpperCase()}</span>
               </h1>
               <p 
-                className="text-sm font-light tracking-tight"
+                className="text-sm font-light tracking-tight max-w-md"
                 style={{ color: tokens.colors.textDim }}
               >
-                {headline}
+                {rawHeadline}
               </p>
             </motion.div>
 
@@ -146,9 +147,9 @@ const Hero = ({ user }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {headline.split(' ')[0]} <br />
+              {shortHeadline.split(' ')[0]} <br />
               <span style={{ color: tokens.colors.foreground }}>
-                {headline.split(' ').slice(1).join(' ')}
+                {shortHeadline.split(' ').slice(1).join(' ')}
               </span>
             </motion.h3>
           </div>
@@ -217,10 +218,10 @@ const Hero = ({ user }) => {
             <span style={{ color: tokens.colors.foreground }}>{lastName}</span>
           </h1>
           <p 
-            className="text-xs font-light tracking-widest mt-1.5 uppercase"
+            className="text-xs font-light tracking-widest mt-1.5 uppercase line-clamp-2"
             style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
           >
-            {headline}
+            {rawHeadline}
           </p>
         </div>
 
@@ -241,8 +242,8 @@ const Hero = ({ user }) => {
             className="text-[clamp(2.4rem,10vw,4rem)] font-black leading-[0.9] tracking-tighter uppercase"
             style={{ fontFamily: tokens.fonts.display, color: tokens.colors.primary }}
           >
-            {headline.split(' ')[0]}<br />
-            <span style={{ color: tokens.colors.foreground }}>{headline.split(' ').slice(1).join(' ')}</span>
+            {shortHeadline.split(' ')[0]}<br />
+            <span style={{ color: tokens.colors.foreground }}>{shortHeadline.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
 

@@ -13,7 +13,13 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-10">
         
         {/* Giant Header */}
-        <div className="mb-20">
+        <motion.div 
+          className="mb-20"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 
             className="text-5xl md:text-7xl lg:text-[8vw] font-black leading-[0.8] tracking-tighter uppercase mb-6"
             style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
@@ -24,9 +30,15 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
           <p className="text-xl font-light" style={{ color: tokens.colors.textDim }}>
             Have a project in mind? Let's talk about it.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-2 gap-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           
           {/* Contact Info */}
           <div className="space-y-12">
@@ -155,7 +167,7 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
             </form>
           </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

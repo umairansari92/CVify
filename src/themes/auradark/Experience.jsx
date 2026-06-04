@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { tokens } from "./tokens";
 import { Award } from "lucide-react";
 
@@ -27,8 +28,12 @@ const Experience = ({ user }) => {
               
               <div className="space-y-12">
                 {user.experience.map((exp, idx) => (
-                  <div 
+                  <motion.div 
                     key={exp._id || idx}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
                     className="group space-y-3 relative pl-8 border-l transition-colors"
                     style={{ borderColor: tokens.colors.borderFaint }}
                   >
@@ -57,7 +62,7 @@ const Experience = ({ user }) => {
                     >
                       {exp.description}
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>

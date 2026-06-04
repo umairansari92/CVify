@@ -68,8 +68,12 @@ const Showcase = ({ projects }) => {
           {/* Left Side: Scrolling Content */}
           <div>
             {projects.map((project, idx) => (
-              <div 
+              <motion.div 
                 key={project._id || idx}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ margin: "-200px" }}
+                transition={{ duration: 0.8 }}
                 className="project-item min-h-screen flex flex-col justify-center px-10 xl:px-14 py-20 transition-colors duration-500"
               >
                 <div className="flex items-center justify-between mb-8">
@@ -114,7 +118,7 @@ const Showcase = ({ projects }) => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 

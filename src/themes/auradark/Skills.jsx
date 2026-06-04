@@ -33,8 +33,12 @@ const Skills = ({ user }) => {
         {/* Accordion List */}
         <div className="flex flex-col border-t" style={{ borderColor: tokens.colors.borderDim }}>
           {topSkills.map((skill, idx) => (
-            <div 
+            <motion.div 
               key={idx} 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: idx * 0.1 }}
               className="group border-b overflow-hidden cursor-pointer"
               style={{ borderColor: tokens.colors.borderDim }}
             >
@@ -65,7 +69,7 @@ const Skills = ({ user }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

@@ -17,7 +17,13 @@ const About = ({ user, setShowResumeModal }) => {
       style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
       <div className="max-w-[1700px] mx-auto px-4 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           
           {/* Left Column: Huge Name & Bio */}
           <div className="lg:col-span-6 space-y-12">
@@ -92,7 +98,7 @@ const About = ({ user, setShowResumeModal }) => {
               We'll leave the right column empty here, and in index.jsx we can structure the grid. Or better yet, we just render About normally and render Education/Experience below it.
               Let's make About span the full width or just keep the left side if we don't pass the children. */}
               
-        </div>
+        </motion.div>
       </div>
     </section>
   );
