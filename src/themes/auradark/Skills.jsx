@@ -65,6 +65,9 @@ const Skills = ({ user }) => {
           from { transform: translate3d(0, 0, 0); }
           to   { transform: translate3d(-50%, 0, 0); }
         }
+        .strat-marquee-container:hover .strat-marquee-row {
+          animation-play-state: paused;
+        }
       `}</style>
 
       {/* Subtle Star Pattern Background */}
@@ -157,10 +160,10 @@ const Skills = ({ user }) => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <div className="relative w-full overflow-hidden flex">
+          <div className="relative w-full overflow-hidden flex strat-marquee-container cursor-pointer">
             {/* The animating row - doubled contents for seamless scroll */}
             <div 
-              className="flex whitespace-nowrap gap-16 text-2xl md:text-4xl font-black uppercase tracking-widest"
+              className="flex whitespace-nowrap gap-16 text-2xl md:text-4xl font-black uppercase tracking-widest strat-marquee-row"
               style={{
                 animation: "strat-marquee 25s linear infinite",
                 fontFamily: tokens.fonts.display,
