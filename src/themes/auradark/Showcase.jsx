@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { tokens } from "./tokens";
-import { Sparkles, ExternalLink } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const Showcase = ({ projects }) => {
   if (!projects || projects.length === 0) return null;
@@ -170,19 +170,18 @@ const Showcase = ({ projects }) => {
             {/* Explore Link */}
             <div className="w-full flex justify-end">
               <a 
-                href={projects[activeIndex]?.liveUrl || projects[activeIndex]?.liveLink || projects[activeIndex]?.link || "#"}
+                href={projects[activeIndex]?.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-3 pb-2 border-b transition-all duration-500 hover:border-white/40"
+                className="group flex items-center gap-6 pb-2 border-b transition-all duration-500"
                 style={{ borderColor: tokens.colors.borderDim }}
               >
                 <span 
-                  className="font-bold text-sm md:text-base uppercase tracking-widest transition-colors duration-500 group-hover:text-white"
-                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
+                  className="font-bold text-lg md:text-xl uppercase tracking-tighter transition-colors duration-500"
+                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.textDim }}
                 >
-                  EXPLORE LIVE PROJECT
+                  Explore Live Project
                 </span>
-                <ExternalLink size={14} style={{ color: tokens.colors.textDim }} className="group-hover:text-white transition-colors" />
               </a>
             </div>
 
