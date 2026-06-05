@@ -624,7 +624,7 @@ const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResu
               className="font-black uppercase leading-none tracking-tighter"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(3rem, 6vw, 6rem)",
+                fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
                 color: tokens.colors.foreground,
               }}
             >
@@ -688,55 +688,117 @@ const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResu
           )}
         </motion.div>
 
-        {/* RIGHT: Education timeline */}
-        {education.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <p
-              className="text-xs tracking-[0.25em] uppercase mb-8"
-              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+        {/* RIGHT: Education & Certifications timelines */}
+        <div className="flex flex-col gap-12">
+          {/* Education */}
+          {education.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              EDUCATION
-            </p>
-            <div className="flex flex-col gap-10">
-              {education.map((edu, idx) => (
-                <div key={edu._id || idx} className="flex gap-4">
-                  <div className="flex flex-col items-center pt-1">
-                    <div
-                      className="w-2 h-2 rounded-full mt-1 flex-shrink-0"
-                      style={{ backgroundColor: tokens.colors.textDim }}
-                    />
-                    {idx < education.length - 1 && (
-                      <div className="w-px flex-1 mt-2" style={{ backgroundColor: tokens.colors.borderFaint }} />
-                    )}
-                  </div>
-                  <div className="pb-6">
-                    <p
-                      className="text-[10px] uppercase tracking-widest mb-2"
-                      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-                    >
-                      {edu.startYear || ""}{edu.endYear ? ` — ${edu.endYear}` : " — PRESENT"}
-                    </p>
-                    <h3
-                      className="text-xl font-bold uppercase tracking-tight mb-1"
-                      style={{ color: tokens.colors.foreground }}
-                    >
-                      {edu.school} — {edu.degree}
-                    </h3>
-                    {(edu.description || edu.fieldOfStudy) && (
-                      <p className="text-sm" style={{ color: tokens.colors.textDim }}>
-                        {edu.description || edu.fieldOfStudy}
+              <p
+                className="text-xs tracking-[0.25em] uppercase mb-8"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              >
+                EDUCATION
+              </p>
+              <div className="flex flex-col gap-10">
+                {education.map((edu, idx) => (
+                  <div key={edu._id || idx} className="flex gap-4">
+                    <div className="flex flex-col items-center pt-1">
+                      <div
+                        className="w-2 h-2 rounded-full mt-1 flex-shrink-0"
+                        style={{ backgroundColor: tokens.colors.textDim }}
+                      />
+                      {idx < education.length - 1 && (
+                        <div className="w-px flex-1 mt-2" style={{ backgroundColor: tokens.colors.borderFaint }} />
+                      )}
+                    </div>
+                    <div className="pb-6">
+                      <p
+                        className="text-[10px] uppercase tracking-widest mb-2"
+                        style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+                      >
+                        {edu.startYear || ""}{edu.endYear ? ` — ${edu.endYear}` : " — PRESENT"}
                       </p>
+                      <h3
+                        className="text-xl font-bold uppercase tracking-tight mb-1"
+                        style={{ color: tokens.colors.foreground }}
+                      >
+                        {edu.school} — {edu.degree}
+                      </h3>
+                      {(edu.description || edu.fieldOfStudy) && (
+                        <p className="text-sm" style={{ color: tokens.colors.textDim }}>
+                          {edu.description || edu.fieldOfStudy}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Certifications */}
+          {user?.certifications && user.certifications.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <p
+                className="text-xs tracking-[0.25em] uppercase mb-8"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              >
+                CERTIFICATIONS
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {user.certifications.map((cert, idx) => (
+                  <div 
+                    key={cert._id || idx} 
+                    className="p-5 rounded-2xl border flex flex-col justify-between"
+                    style={{ 
+                      backgroundColor: "rgba(255, 255, 255, 0.01)", 
+                      borderColor: tokens.colors.borderFaint 
+                    }}
+                  >
+                    <div>
+                      <h4 
+                        className="text-sm font-bold uppercase tracking-tight mb-1"
+                        style={{ color: tokens.colors.foreground }}
+                      >
+                        {cert.name}
+                      </h4>
+                      <p 
+                        className="text-[10px] uppercase tracking-widest font-mono mb-2"
+                        style={{ color: tokens.colors.primary }}
+                      >
+                        {cert.issuer}
+                      </p>
+                      {cert.description && (
+                        <p className="text-xs" style={{ color: tokens.colors.textDim }}>
+                          {cert.description}
+                        </p>
+                      )}
+                    </div>
+                    {cert.link && (
+                      <a 
+                        href={cert.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 text-[9px] uppercase tracking-widest font-bold flex items-center gap-1 hover:text-purple-400 transition-colors"
+                        style={{ color: tokens.colors.textDim }}
+                      >
+                        View Verification ↗
+                      </a>
                     )}
                   </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -1080,7 +1142,7 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
             className="font-black uppercase leading-none tracking-tighter"
             style={{
               fontFamily: tokens.fonts.display,
-              fontSize: "clamp(3rem, 8vw, 7rem)",
+              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
               color: tokens.colors.foreground,
             }}
           >
@@ -1250,6 +1312,8 @@ const Footer = ({ user }) => {
   );
 };
 
+let loaderCompletedGlobally = false;
+
 // ════════════════════════════════════════════════════════════════
 //  ROOT THEME SHELL  — matches OrientalLuxe prop signature exactly
 // ════════════════════════════════════════════════════════════════
@@ -1267,8 +1331,11 @@ const AuraDarkTheme = ({
   githubData,
   githubLoading,
 }) => {
-  const [loading, setLoading] = useState(true);
-  const handleLoaderComplete = useCallback(() => setLoading(false), []);
+  const [loading, setLoading] = useState(!loaderCompletedGlobally);
+  const handleLoaderComplete = useCallback(() => {
+    setLoading(false);
+    loaderCompletedGlobally = true;
+  }, []);
 
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
 

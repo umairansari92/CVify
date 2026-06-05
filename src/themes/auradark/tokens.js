@@ -12,7 +12,7 @@ export const tokens = {
     borderStrong: "rgba(255, 255, 255, 0.2)",
   },
   fonts: {
-    display: "'Syne', 'Inter', sans-serif",
+    display: "ui-sans-serif, system-ui, -apple-system, sans-serif",
     body: "'DM Sans', 'Inter', sans-serif",
     mono: "'JetBrains Mono', 'Courier New', monospace",
   },
