@@ -876,40 +876,6 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
   );
 };
 
-                    fontSize: "clamp(3rem, 10vw, 8rem)",
-                    color: tokens.colors.foreground,
-                  }}
-                >
-                  {proj.title?.charAt(0)}
-                </span>
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Prev/Next */}
-      <div className="flex justify-center gap-4 pb-16">
-        <button
-          onClick={() => setActive((p) => Math.max(0, p - 1))}
-          disabled={active === 0}
-          className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
-          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
-        >
-          ← PREV
-        </button>
-        <button
-          onClick={() => setActive((p) => Math.min(projects.length - 1, p + 1))}
-          disabled={active === projects.length - 1}
-          className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
-          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
-        >
-          NEXT →
-        </button>
-      </div>
-    </section>
-  );
-};
 
 // ════════════════════════════════════════════════════════════════
 //  CONTACT  — "LET'S BUILD SOMETHING" + copy email + socials list
