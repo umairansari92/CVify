@@ -1,110 +1,148 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { tokens } from "./tokens";
-import { Plus, ArrowUpRight } from "lucide-react";
+
+const SkillBar = ({ name, level, delay }) => (
+  <motion.div 
+    className="mb-8"
+    initial={{ opacity: 0, y: 10 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay }}
+  >
+    <div className="flex justify-between items-center mb-3">
+      <span className="text-sm md:text-base font-bold tracking-wide" style={{ color: tokens.colors.foreground }}>
+        {name}
+      </span>
+      <span className="text-xs md:text-sm font-mono font-bold" style={{ color: tokens.colors.textDim }}>
+        {level}%
+      </span>
+    </div>
+    <div className="h-[3px] w-full bg-white/5 rounded-full overflow-hidden">
+      <motion.div
+        className="h-full rounded-full"
+        style={{ backgroundColor: tokens.colors.primary }}
+        initial={{ width: 0 }}
+        whileInView={{ width: `${level}%` }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, delay: delay + 0.2, ease: "easeOut" }}
+      />
+    </div>
+  </motion.div>
+);
 
 const Skills = ({ user }) => {
   if (!user || !user.skills) return null;
 
-  // Extract skills (handling different data structures)
-  const techSkills = Array.isArray(user.skills) 
-    ? user.skills 
-    : (user.skills?.technical || []);
-  
-  const softSkills = user.skills?.soft || [];
+  // Extract skills
+  const techSkills = Array.isArray(user.skills) ? user.skills : (user.skills?.technical || []);
+  const stratSkills = user.skills?.strategic || user.skills?.soft || [];
 
-  const allSkills = [...techSkills, ...softSkills].map(s => typeof s === 'string' ? s : s.name).filter(Boolean);
-  
-  // Just take the first few for the "Services" list
-  const topSkills = allSkills.slice(0, 4);
-  if (topSkills.length === 0) topSkills.push("FRONTEND DEVELOPMENT", "BACKEND ARCHITECTURE", "INTERACTIVE UI", "DATABASE DESIGN");
-
-  // For the marquee, we want a long list to scroll
-  const marqueeItems = [...allSkills, "REACT", "NODE.JS", "MONGODB", "EXPRESS"].slice(0, 8);
+  if (techSkills.length === 0 && stratSkills.length === 0) return null;
 
   return (
     <section 
-      id="services" 
-      className="pt-32 pb-16 cursor-default border-t"
-      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderDim }}
+      id="skills-ad" 
+      className="relative py-32 px-8 md:px-16 lg:px-24 border-t overflow-hidden"
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
-      <div className="max-w-[1600px] mx-auto px-4 md:px-12">
+      {/* Subtle Star Pattern Background */}
+      <div 
+        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2 28 28 2-28 2-2 28-2-28-28-2 28-2z' fill='%23FFFFFF' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+          backgroundSize: "60px 60px"
+        }}
+      />
+
+      <div className="max-w-[1400px] mx-auto relative z-10">
+        <motion.p
+          className="text-xs tracking-[0.25em] uppercase mb-4"
+          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          TOOLKIT
+        </motion.p>
         
-        {/* Accordion List */}
-        <div className="flex flex-col border-t" style={{ borderColor: tokens.colors.borderDim }}>
-          {topSkills.map((skill, idx) => (
+        <motion.h2
+          className="text-4xl md:text-5xl font-black tracking-tight mb-20 flex items-center gap-5"
+          style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+        >
+          <span className="w-1.5 h-10 rounded-full" style={{ backgroundColor: tokens.colors.primary }}></span>
+          Skills & Technologies
+        </motion.h2>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* TECHNICAL SKILLS PANEL */}
+          {techSkills.length > 0 && (
             <motion.div 
-              key={idx} 
-              initial={{ opacity: 0, y: 20 }}
+              className="p-8 md:p-14 rounded-[2rem] border backdrop-blur-sm"
+              style={{ 
+                backgroundColor: "rgba(255,255,255,0.01)", 
+                borderColor: tokens.colors.borderFaint,
+                boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+              }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="group border-b overflow-hidden cursor-pointer"
-              style={{ borderColor: tokens.colors.borderDim }}
             >
-              <div className="py-10 md:py-14 flex items-center justify-between transition-all duration-700">
-                <div className="flex items-center gap-12">
-                  <span 
-                    className="font-mono text-xs tracking-widest"
-                    style={{ color: tokens.colors.primary }}
-                  >
-                    0{idx + 1}
-                  </span>
-                  <h3 
-                    className="text-3xl md:text-5xl lg:text-[3.5vw] font-black uppercase tracking-tighter transition-colors duration-500"
-                    style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
-                  >
-                    {skill}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div 
-                    className="hidden md:flex w-16 h-16 rounded-full border items-center justify-center transition-all duration-700"
-                    style={{ borderColor: tokens.colors.borderDim, color: tokens.colors.textFaint }}
-                  >
-                    <ArrowUpRight className="w-8 h-8" />
-                  </div>
-                  <div className="flex items-center gap-2" style={{ color: tokens.colors.textFaint }}>
-                    <Plus />
-                  </div>
-                </div>
+              <h3 
+                className="text-sm font-black uppercase tracking-[0.2em] mb-12"
+                style={{ color: tokens.colors.primary }}
+              >
+                TECHNICAL
+              </h3>
+              <div>
+                {techSkills.map((skill, idx) => (
+                  <SkillBar 
+                    key={idx} 
+                    name={skill.name || skill} 
+                    level={skill.level || 80} 
+                    delay={idx * 0.1} 
+                  />
+                ))}
               </div>
             </motion.div>
-          ))}
-        </div>
+          )}
 
-        {/* Infinite Marquee */}
-        <div className="mt-12 overflow-hidden py-12 border-b whitespace-nowrap relative" style={{ borderColor: tokens.colors.borderDim }}>
-          
-          {/* Custom inline style for the marquee animation since we can't guarantee tailwind config has it */}
-          <style dangerouslySetInnerHTML={{__html: `
-            @keyframes marquee {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            .animate-marquee {
-              animation: marquee 20s linear infinite;
-              display: inline-flex;
-              white-space: nowrap;
-            }
-          `}} />
-
-          <div className="animate-marquee flex gap-16">
-            {/* Double the array for seamless infinite loop */}
-            {[...marqueeItems, ...marqueeItems].map((item, idx) => (
-              <div key={idx} className="flex items-center gap-6">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tokens.colors.primary }} />
-                <span 
-                  className="font-mono text-[15px] tracking-[0.4em] uppercase"
-                  style={{ color: tokens.colors.textDim }}
-                >
-                  {item}
-                </span>
+          {/* STRATEGIC SKILLS PANEL */}
+          {stratSkills.length > 0 && (
+            <motion.div 
+              className="p-8 md:p-14 rounded-[2rem] border backdrop-blur-sm"
+              style={{ 
+                backgroundColor: "rgba(255,255,255,0.01)", 
+                borderColor: tokens.colors.borderFaint,
+                boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <h3 
+                className="text-sm font-black uppercase tracking-[0.2em] mb-12"
+                style={{ color: tokens.colors.primary }}
+              >
+                STRATEGIC
+              </h3>
+              <div>
+                {stratSkills.map((skill, idx) => (
+                  <SkillBar 
+                    key={idx} 
+                    name={skill.name || skill} 
+                    level={skill.level || 75} 
+                    delay={(idx * 0.1) + 0.2} 
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </motion.div>
+          )}
         </div>
-
       </div>
     </section>
   );
