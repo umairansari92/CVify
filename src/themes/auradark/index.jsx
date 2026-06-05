@@ -910,7 +910,7 @@ const Showcase = ({ projects, isOwner }) => {
               className="font-black uppercase leading-none tracking-tighter"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+                fontSize: "clamp(1.4rem, 3.5vw, 3.5rem)",
                 color: tokens.colors.foreground,
               }}
             >
