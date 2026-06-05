@@ -92,14 +92,20 @@ const Showcase = ({ projects }) => {
                 </div>
                 
                 <h3 
-                  className="font-black tracking-tighter uppercase leading-[0.88] mb-8"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(1.6rem, 1.8vw, 2rem)" }}
+                  className="font-black tracking-tighter uppercase leading-[1] mb-4"
+                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(1.1rem, 1.4vw, 1.4rem)" }}
                 >
-                  <span className="block">{project.title.split(' ').slice(0, 2).join(' ')}</span>
-                  {project.title.split(' ').length > 2 && (
-                    <span className="block">{project.title.split(' ').slice(2).join(' ')}</span>
-                  )}
+                  {project.title}
                 </h3>
+
+                {project.description && (
+                  <p 
+                    className="text-sm leading-relaxed mb-6 max-w-md"
+                    style={{ color: tokens.colors.textDim }}
+                  >
+                    {project.description}
+                  </p>
+                )}
 
                 <div className="flex flex-col gap-6">
                   <div 
