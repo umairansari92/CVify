@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { tokens } from "./tokens";
@@ -177,7 +177,8 @@ const Loader = ({ onComplete, userName }) => {
       }
     }, step);
     return () => clearInterval(timer);
-  }, [onComplete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <motion.div
@@ -1267,6 +1268,7 @@ const AuraDarkTheme = ({
   githubLoading,
 }) => {
   const [loading, setLoading] = useState(true);
+  const handleLoaderComplete = useCallback(() => setLoading(false), []);
 
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
 
@@ -1289,7 +1291,7 @@ const AuraDarkTheme = ({
 
       {/* Loader */}
       <AnimatePresence>
-        {loading && <Loader onComplete={() => setLoading(false)} userName={fullName} />}
+        {loading && <Loader onComplete={handleLoaderComplete} userName={fullName} />}
       </AnimatePresence>
 
       {/* Page content — hidden until loader done */}
