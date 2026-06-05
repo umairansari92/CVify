@@ -61,8 +61,9 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 7 Portfolio Themes" },
-        { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE (New!)" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 8 Portfolio Themes" },
+        { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
+        { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK (New!)" },
         { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
       ]
     },
@@ -343,9 +344,9 @@ const Documentation = () => {
 
     themes: (
       <>
-        <DocHeader title="All 7 Portfolio Themes" badge="Visual Design" />
+        <DocHeader title="All 8 Portfolio Themes" badge="Visual Design" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">7 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. Choose the one that matches your personal brand.
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">8 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. Choose the one that matches your personal brand.
         </p>
 
         <div className="space-y-4 mb-8">
@@ -356,7 +357,8 @@ const Documentation = () => {
             { icon: "🌅", name: "Creative Sunset", accent: "text-orange-400", border: "border-orange-500/20", bg: "bg-orange-500/5", desc: "Vibrant gradient energy. Warm orange-to-pink sunset tones with animated bokeh blobs in the background. Ideal for designers, artists, content creators, and startup founders.", tags: ["Dark Mode", "Gradient Blobs", "Creative"] },
             { icon: "📋", name: "Slate Minimalist", accent: "text-slate-300", border: "border-slate-500/20", bg: "bg-slate-500/5", desc: "Precision in simplicity. Light gray background with barely-there noise texture. Ultra-clean typography with maximum readability. Best suited for consultants, academics, and corporate professionals.", tags: ["Light Mode", "Minimal", "Clean"] },
             { icon: "🌿", name: "Emerald Leader", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Natural authority. Deep forest green palette exuding calm confidence and leadership. Great for sustainability professionals, project managers, and team leads.", tags: ["Dark Mode", "Green Accent", "Leadership"] },
-            { icon: "🕌", name: "ORIENTAL LUXE", accent: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5", desc: "The newest and most exotic theme. Ultra-dark near-black background (#090909) with warm gold (#b58953) accents. Geometric SVG mandala patterns float behind the profile using the Outfit font. Exudes luxury, sophistication, and cultural richness.", tags: ["Dark Mode", "Gold Luxury", "Geometric FX", "NEW!"] },
+            { icon: "🕌", name: "ORIENTAL LUXE", accent: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5", desc: "Ultra-exotic and luxurious. Ultra-dark near-black background (#090909) with warm gold (#b58953) accents. Geometric SVG mandala patterns float behind the profile using the Outfit font. Exudes luxury, sophistication, and cultural richness.", tags: ["Dark Mode", "Gold Luxury", "Geometric FX"] },
+            { icon: "✨", name: "AURA DARK", accent: "text-purple-400", border: "border-purple-500/20", bg: "bg-purple-500/5", desc: "Pure darkness meets cosmic elegance. Absolute black background (#000000) with deep purple accents (#B677EF). Uses the modern Syne font for a cutting-edge aesthetic. Perfect for tech innovators, startup founders, and creators pushing boundaries.", tags: ["Dark Mode", "Purple Accent", "Minimal", "NEW!"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -384,9 +386,58 @@ const Documentation = () => {
       </>
     ),
 
+    "aura-dark": (
+      <>
+        <DocHeader title="✨ AURA DARK Theme" badge="New Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-purple-400">AURA DARK</strong> is CVify Pro's most minimalist and futuristic portfolio theme — engineered for tech professionals, startup founders, and creatives who want a distraction-free, cosmic aesthetic that lets their work speak.
+        </p>
+
+        <SectionTitle>Visual Identity</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Palette size={18} />} color="purple" title="Absolute Black Canvas"
+            desc="Pure black background (#000000) creates the ultimate premium minimalism. Requires zero light compensation, perfect for late-night viewing and reduces eye strain." />
+          <InfoCard icon={<Sparkles size={18} />} color="purple" title="Cosmic Purple Accents"
+            desc="Vibrant purple (#B677EF) is used for all interactive elements, links, and hover states — cosmic, electric, and unforgettable." />
+          <InfoCard icon={<Layout size={18} />} color="purple" title="Syne Typeface"
+            desc="Modern, geometric sans-serif from Google Fonts. Sharp angles and contemporary design convey innovation, tech expertise, and forward-thinking." />
+          <InfoCard icon={<Zap size={18} />} color="purple" title="Minimal Card Style"
+            desc="Ultra-clean card design with zero decoration. Borderless, shadow-free — every element is intentional and purposeful." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-purple-500/5 border border-purple-500/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Absolute black (#000000) — the darkest possible background" },
+              { label: "Color Mode", val: "Pure dark mode — zero light components" },
+              { label: "Accent Color", val: "Cosmic Purple (#B677EF) — energetic and memorable" },
+              { label: "Card Style", val: "Minimal — borderless, shadow-free design" },
+              { label: "Font", val: "Syne — modern geometric typeface from Google Fonts" },
+              { label: "Icon", val: "✨ Sparkles — representing cosmic energy and innovation" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-purple-400 w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Tech Innovators", "Startup Founders", "Creative Developers", "Digital Artists", "Future Thinkers", "Minimalist Professionals"].map((role, i) => (
+            <div key={i} className="p-3 bg-purple-500/5 border border-purple-500/15 rounded-xl text-center">
+              <p className="text-purple-400 font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
     "oriental-luxe": (
       <>
-        <DocHeader title="🕌 ORIENTAL LUXE Theme" badge="New Theme" />
+        <DocHeader title="🕌 ORIENTAL LUXE Theme" badge="Premium Theme" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
           <strong className="text-amber-400">ORIENTAL LUXE</strong> is CVify Pro's most premium and culturally distinctive portfolio theme — handcrafted for professionals who want to stand out with elegance, exclusivity, and a bold visual identity.
         </p>
