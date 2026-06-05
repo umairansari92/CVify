@@ -84,7 +84,7 @@ const Showcase = ({ projects }) => {
                     0{idx + 1}
                   </span>
                   <span 
-                    className="px-3 py-1 rounded-full border font-mono text-[9px] uppercase tracking-[0.18em]"
+                    className="px-3 py-1 rounded-full border font-mono text-[9px] uppercase tracking-[0.18 rem]"
                     style={{ borderColor: tokens.colors.borderFaint, color: tokens.colors.textFaint }}
                   >
                     {project.category || "Full-Stack"}
