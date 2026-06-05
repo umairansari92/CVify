@@ -401,6 +401,8 @@ const Documentation = () => {
             desc="Vibrant purple (#B677EF) is used for all interactive elements, links, and hover states — cosmic, electric, and unforgettable." />
           <InfoCard icon={<Layout size={18} />} color="purple" title="Syne Typeface"
             desc="Modern, geometric sans-serif from Google Fonts. Sharp angles and contemporary design convey innovation, tech expertise, and forward-thinking." />
+          <InfoCard icon={<GitBranch size={18} />} color="purple" title="GitHub Insight Panel"
+            desc="A dedicated GitHub Intelligence section shows live repository and contribution metrics, making your technical credibility visible on the spot." />
           <InfoCard icon={<Zap size={18} />} color="purple" title="Minimal Card Style"
             desc="Ultra-clean card design with zero decoration. Borderless, shadow-free — every element is intentional and purposeful." />
         </div>

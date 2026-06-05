@@ -5,6 +5,7 @@ import { tokens } from "./tokens";
 import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { ExternalLink, MapPin, Mail, Phone, Send } from "lucide-react";
 import InlineEdit from "../../components/profile/InlineEdit";
+import GithubStats from "../../components/profile/sections/GithubStats";
 import Skills from "./Skills";
 
 // ════════════════════════════════════════════════════════════════
@@ -1374,6 +1375,14 @@ const AuraDarkTheme = ({
           isOwner={isOwner}
           handleLiveUpdate={handleLiveUpdate}
           setShowResumeModal={setShowResumeModal}
+        />
+
+        {/* GitHub Insights (Theme-specific Intelligence Panel) */}
+        <GithubStats
+          githubUrl={user?.socialLinks?.github}
+          userSkills={user?.skills?.technical || user?.skills || []}
+          data={githubData}
+          loading={githubLoading}
         />
 
         <div id="about-ad">
