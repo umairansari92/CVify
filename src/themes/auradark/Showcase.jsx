@@ -84,7 +84,7 @@ const Showcase = ({ projects }) => {
                     0{idx + 1}
                   </span>
                   <span 
-                    className="px-3 py-1 rounded-full border font-mono text-[9px] uppercase tracking-[0.18 rem]"
+                    className="px-3 py-1 rounded-full border font-mono text-[9px] uppercase tracking-[0.18em]"
                     style={{ borderColor: tokens.colors.borderFaint, color: tokens.colors.textFaint }}
                   >
                     {project.category || "Full-Stack"}
@@ -93,7 +93,7 @@ const Showcase = ({ projects }) => {
                 
                 <h3 
                   className="font-black tracking-tighter uppercase leading-[0.88] mb-8"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(2.4rem, 4.2vw, 4.5rem)" }}
+                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(2.4rem, 2.2vw, 4.5rem)" }}
                 >
                   <span className="block">{project.title.split(' ').slice(0, 2).join(' ')}</span>
                   {project.title.split(' ').length > 2 && (
