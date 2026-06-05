@@ -65,6 +65,9 @@ const Skills = ({ user }) => {
           from { transform: translate3d(0, 0, 0); }
           to   { transform: translate3d(-50%, 0, 0); }
         }
+        .strat-marquee-row {
+          animation: strat-marquee 25s linear infinite;
+        }
         .strat-marquee-container:hover .strat-marquee-row {
           animation-play-state: paused;
         }
@@ -165,7 +168,6 @@ const Skills = ({ user }) => {
             <div 
               className="flex whitespace-nowrap gap-16 text-2xl md:text-4xl font-black uppercase tracking-widest strat-marquee-row"
               style={{
-                animation: "strat-marquee 25s linear infinite",
                 fontFamily: tokens.fonts.display,
                 color: tokens.colors.foreground,
               }}
