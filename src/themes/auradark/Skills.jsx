@@ -34,9 +34,22 @@ const SkillBar = ({ name, level, delay }) => (
 const Skills = ({ user }) => {
   if (!user || !user.skills) return null;
 
-  // Extract skills
-  const techSkills = Array.isArray(user.skills) ? user.skills : (user.skills?.technical || []);
-  const stratSkills = user.skills?.strategic || user.skills?.soft || [];
+  // Extract skills based on schema version
+  let techSkills = [];
+  let stratSkills = [];
+
+  if (Array.isArray(user.skills)) {
+    techSkills = user.skills.filter(s => s.category?.toLowerCase() === 'technical');
+    stratSkills = user.skills.filter(s => s.category?.toLowerCase() === 'strategic');
+    
+    // Fallback if no categories are assigned
+    if (techSkills.length === 0 && stratSkills.length === 0) {
+      techSkills = user.skills;
+    }
+  } else {
+    techSkills = user.skills?.technical || [];
+    stratSkills = user.skills?.strategic || user.skills?.soft || [];
+  }
 
   if (techSkills.length === 0 && stratSkills.length === 0) return null;
 
