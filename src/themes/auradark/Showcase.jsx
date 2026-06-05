@@ -93,7 +93,7 @@ const Showcase = ({ projects }) => {
                 
                 <h3 
                   className="font-black tracking-tighter uppercase leading-[0.88] mb-8"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(2.4rem, 2.2vw, 2.5rem)" }}
+                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(1.6rem, 1.8vw, 2rem)" }}
                 >
                   <span className="block">{project.title.split(' ').slice(0, 2).join(' ')}</span>
                   {project.title.split(' ').length > 2 && (
