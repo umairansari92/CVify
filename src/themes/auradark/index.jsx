@@ -5,6 +5,7 @@ import { tokens } from "./tokens";
 import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import { ExternalLink, MapPin, Mail, Phone, Send } from "lucide-react";
 import InlineEdit from "../../components/profile/InlineEdit";
+import Skills from "./Skills";
 
 // ════════════════════════════════════════════════════════════════
 //  NAVBAR  — Kaneez-style: hamburger (left) + CONTACT (right)
@@ -811,116 +812,7 @@ const Experience = ({ user, isOwner, handleArrayUpdate }) => {
   );
 };
 
-// ════════════════════════════════════════════════════════════════
-//  SKILLS  — numbered accordion rows + marquee
-// ════════════════════════════════════════════════════════════════
-const Skills = ({ user, isOwner }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Same normalization as OrientalLuxe Skills.jsx
-  const skillsArr = Array.isArray(user?.skills)
-    ? user.skills
-    : user?.skills?.technical || [];
-
-  const skillNames = skillsArr
-    .map((s) => (typeof s === "string" ? s : s?.name || ""))
-    .filter(Boolean);
-
-  if (!skillNames.length) return null;
-
-  // All skills for the marquee (technical + strategic/soft)
-  const allSkillNames = [
-    ...(Array.isArray(user?.skills) ? user.skills : user?.skills?.technical || []),
-    ...(user?.skills?.strategic || []),
-  ]
-    .map((s) => (typeof s === "string" ? s : s?.name || ""))
-    .filter(Boolean);
-
-  return (
-    <section
-      ref={ref}
-      className="w-full border-t"
-      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
-    >
-      {/* Numbered rows */}
-      <div>
-        {skillNames.map((skill, idx) => (
-          <motion.div
-            key={idx}
-            className="flex items-center justify-between px-8 md:px-16 lg:px-24 py-8 border-b group cursor-default"
-            style={{ borderColor: tokens.colors.borderFaint }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: idx * 0.07 }}
-            whileHover={{ backgroundColor: `${tokens.colors.primary}08` }}
-          >
-            <div className="flex items-center gap-8">
-              <span
-                className="text-xs tabular-nums"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-              >
-                {String(idx + 1).padStart(2, "0")}
-              </span>
-              <h3
-                className="font-black uppercase leading-none tracking-tighter"
-                style={{
-                  fontFamily: tokens.fonts.display,
-                  fontSize: "clamp(1.8rem, 5vw, 4rem)",
-                  color: tokens.colors.foreground,
-                }}
-              >
-                {skill.toUpperCase()}
-              </h3>
-            </div>
-            <div className="flex items-center gap-3">
-              <span
-                className="w-10 h-10 rounded-full border flex items-center justify-center text-lg transition-all group-hover:border-purple-500"
-                style={{ borderColor: tokens.colors.borderStrong, color: tokens.colors.textDim }}
-              >
-                ↗
-              </span>
-              <span
-                className="w-10 h-10 rounded-full border flex items-center justify-center text-xl transition-all group-hover:border-purple-500"
-                style={{ borderColor: tokens.colors.borderStrong, color: tokens.colors.textDim }}
-              >
-                +
-              </span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Marquee */}
-      {allSkillNames.length > 0 && (
-        <div
-          className="overflow-hidden py-5 border-t"
-          style={{ borderColor: tokens.colors.borderFaint }}
-        >
-          <div
-            className="flex whitespace-nowrap"
-            style={{ animation: "ad-marquee 25s linear infinite" }}
-          >
-            {[...allSkillNames, ...allSkillNames, ...allSkillNames].map((s, i) => (
-              <span key={i} className="flex items-center gap-4 mr-4">
-                <span
-                  className="text-xs uppercase tracking-[0.3em]"
-                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
-                >
-                  {s}
-                </span>
-                <span
-                  className="w-1 h-1 rounded-full inline-block"
-                  style={{ backgroundColor: tokens.colors.primary }}
-                />
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
-  );
-};
 
 // ════════════════════════════════════════════════════════════════
 //  SHOWCASE  — fullscreen slider (project data same as OrientalLuxe)
