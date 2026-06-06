@@ -1061,6 +1061,8 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
+            { title: "AURA DARK Theme", desc: "Cosmic minimal theme engineered for tech professionals and startup founders.", status: "NEW" },
+            { title: "GitHub Intelligence Panel", desc: "Real-time GitHub DNA insights, repository highlights, and language synthesis.", status: "NEW" },
             { title: "AI Job Matcher v1.0", desc: "Real-time JD analysis with missing keyword detection and strategy reports.", status: "ACTIVE" },
             { title: "Magic AI Import", desc: "Instant resume hydration from PDF/DOCX using deep semantic parsing.", status: "ACTIVE" },
             { title: "Intelligence Command Bar", desc: "Natural language resume optimization with Intent Mode.", status: "ACTIVE" },

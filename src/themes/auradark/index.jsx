@@ -395,9 +395,9 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       </div>
 
       {/* 4-CORNER LAYOUT */}
-      <div className="absolute inset-0 z-30 flex flex-col justify-between p-8 md:p-14 pt-24 md:pt-28">
+      <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 md:p-14 pt-20 md:pt-28">
         {/* TOP ROW */}
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0">
           {/* TOP LEFT: Name + headline */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -480,7 +480,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         </div>
 
         {/* BOTTOM ROW */}
-        <div className="flex justify-between items-end">
+        <div className="flex flex-col-reverse md:flex-row justify-between items-end gap-4 md:gap-0">
           {/* BOTTOM LEFT: Socials + Bio */}
           <motion.div
             className="flex flex-col gap-5 max-w-sm"
@@ -532,8 +532,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
 
           {/* BOTTOM RIGHT: Giant role — font shrinks for longer words */}
           <motion.div
-            className="text-right"
-            style={{ maxWidth: "50%" }}
+            className="w-full md:w-1/2 text-left md:text-right mt-6 md:mt-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
@@ -625,7 +624,7 @@ const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResu
               className="font-black uppercase leading-none tracking-tighter"
               style={{
                 fontFamily: tokens.fonts.display,
-                fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+                fontSize: "clamp(2rem, 5vw, 4.5rem)",
                 color: tokens.colors.foreground,
               }}
             >
@@ -1143,7 +1142,7 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
             className="font-black uppercase leading-none tracking-tighter"
             style={{
               fontFamily: tokens.fonts.display,
-              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              fontSize: "clamp(2rem, 5vw, 4.5rem)",
               color: tokens.colors.foreground,
             }}
           >
