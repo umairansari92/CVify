@@ -143,27 +143,31 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
         {/* RIGHT COLUMN: PORTRAIT */}
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-5 flex justify-center lg:justify-end relative mt-16 mx-auto lg:mt-0 lg:mx-0 w-full">
            {personalInfo.image && (
-             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20 overflow-hidden flex items-center justify-center">
-               <img src={personalInfo.image} alt="Profile" className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl" />
+             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] shadow-[0_20px_60px_rgba(0,0,0,0.4)] relative z-20 overflow-hidden">
+               {/* Image fills card completely — no gray background visible */}
+               <img src={personalInfo.image} alt="Profile" className="absolute inset-0 w-full h-full object-cover object-top" />
                
+               {/* Subtle gradient overlay at bottom for depth */}
+               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
+
                {/* Floating Badges */}
-               <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -right-4 top-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">
+               <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -right-4 top-1/4 p-3 rounded-full bg-[var(--card-bg)]/90 backdrop-blur-sm border border-[var(--card-border)] shadow-xl text-[var(--primary-color)] z-20">
                  <FaCheckCircle size={20} />
                </motion.div>
                <motion.div 
                  initial={{ x: 20, opacity: 0 }}
                  animate={{ x: 0, opacity: 1 }}
                  transition={{ delay: 1.2 }}
-                 className="absolute -right-8 bottom-1/3 bg-[var(--primary-color)] text-[var(--bg-color)] px-4 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-2xl rotate-12 z-40 hidden sm:block border-2 border-[var(--bg-color)]"
+                 className="absolute right-4 bottom-1/3 bg-[var(--primary-color)] text-white px-4 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-2xl z-20 hidden sm:block"
                >
                  Available for Hire ⚡
                </motion.div>
-               <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity, delay: 1 }} className="absolute -left-4 bottom-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">
+               <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity, delay: 1 }} className="absolute -left-4 bottom-1/4 p-3 rounded-full bg-[var(--card-bg)]/90 backdrop-blur-sm border border-[var(--card-border)] shadow-xl text-[var(--primary-color)] z-20">
                  <FaLayerGroup size={20} />
                </motion.div>
 
-               {/* Background Accent */}
-               <div className="absolute -inset-4 bg-gradient-to-tr from-[var(--primary-color)] to-transparent opacity-20 blur-2xl -z-10 rounded-3xl" />
+               {/* Accent glow ring */}
+               <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 pointer-events-none z-30" />
              </div>
            )}
 
