@@ -196,7 +196,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                       </div>
                       <p className="text-[9px] font-black uppercase tracking-tighter opacity-30">Impact</p>
                     </div>
-                    <a href={repo.url} target="_blank" rel="noreferrer" className="w-14 h-14 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl flex items-center justify-center hover:bg-[var(--primary-color)] hover:text-white text-[var(--text-primary)] transition-all shadow-xl group/link">
+                    <a href={repo.url} target="_blank" rel="noreferrer" aria-label={`View ${repo.name} on GitHub`} className="w-14 h-14 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl flex items-center justify-center hover:bg-[var(--primary-color)] hover:text-white text-[var(--text-primary)] transition-all shadow-xl group/link">
                       <ChevronRight size={20} className="group-hover/link:translate-x-1 transition-transform" />
                     </a>
                   </div>
@@ -213,7 +213,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                    <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 transition-all group/stat">
                      <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.stars || 0}</p>
                      <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Stars</p>

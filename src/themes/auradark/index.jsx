@@ -164,7 +164,7 @@ const Loader = ({ onComplete, userName }) => {
 
   React.useEffect(() => {
     let val = 0;
-    const duration = 2200;
+    const duration = 1400;
     const step = 16;
     const increment = 100 / (duration / step);
     const timer = setInterval(() => {
@@ -365,6 +365,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                 src={user.profileImage || user.profilePicture}
                 alt={fullName}
                 className="w-full h-full object-cover"
+                fetchPriority="high"
+                loading="eager"
                 style={{ filter: "contrast(1.05) brightness(1.05)" }}
               />
             </div>
@@ -921,16 +923,32 @@ const Showcase = ({ projects, isOwner }) => {
             {String(active + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
           </span>
           <div className="flex gap-1">
-            {projects.map((_, i) => (
+            {projects.map((proj_item, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
-                className="h-px transition-all"
+                aria-label={`Go to project ${i + 1}${proj_item?.title ? ': ' + proj_item.title : ''}`}
+                className="flex items-center justify-center transition-all"
                 style={{
-                  width: i === active ? "32px" : "12px",
-                  backgroundColor: i === active ? tokens.colors.primary : tokens.colors.borderStrong,
+                  width: "40px",
+                  height: "40px",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
                 }}
-              />
+              >
+                <span
+                  style={{
+                    display: "block",
+                    height: "2px",
+                    width: i === active ? "32px" : "12px",
+                    backgroundColor: i === active ? tokens.colors.primary : tokens.colors.borderStrong,
+                    transition: "width 0.3s ease, background-color 0.3s ease",
+                    borderRadius: "2px",
+                  }}
+                />
+              </button>
             ))}
           </div>
         </div>
@@ -1043,7 +1061,7 @@ const Showcase = ({ projects, isOwner }) => {
             style={{ backgroundColor: tokens.colors.backgroundFaint }}
           >
             {image ? (
-              <img src={image} alt={proj.title} className="w-full h-full object-cover" />
+              <img src={image} alt={proj.title} className="w-full h-full object-cover" loading="lazy" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <span
