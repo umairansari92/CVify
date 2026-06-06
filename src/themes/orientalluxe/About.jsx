@@ -82,14 +82,14 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
               style={{ background: `linear-gradient(135deg, ${tokens.colors.accent}40, transparent)` }}
             />
             <div
-              className="relative overflow-hidden rounded-2xl border"
+              className="relative overflow-hidden rounded-2xl border flex items-center justify-center bg-[#121212]"
               style={{ borderColor: tokens.colors.border, aspectRatio: "4/5" }}
             >
               {imageUrl ? (
                 <img
                   src={imageUrl}
                   alt="Portrait"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
               ) : (

@@ -1,223 +1,224 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import { tokens } from "./tokens";
-import { Sparkles } from "lucide-react";
 
-const Showcase = ({ projects }) => {
-  if (!projects || projects.length === 0) return null;
+const Showcase = ({ projects, isOwner }) => {
+  const [active, setActive] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
 
-  // We need to track scroll to change the active sticky image
-  const [activeIndex, setActiveIndex] = useState(0);
+  if (!projects?.length) return null;
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const projectElements = document.querySelectorAll('.project-item');
-      if (!projectElements.length) return;
+  const proj = projects[active];
 
-      let current = 0;
-      projectElements.forEach((el, idx) => {
-        const rect = el.getBoundingClientRect();
-        // If the top of the element is near the middle of the screen
-        if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-          current = idx;
-        }
-      });
-      setActiveIndex(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [projects]);
+  const techList = proj?.techStack || proj?.technologies || [];
+  const liveUrl = proj?.liveUrl || proj?.liveLink;
+  const githubUrl = proj?.githubUrl || proj?.githubLink;
+  const image = proj?.image || proj?.thumbnail;
 
   return (
-    <section 
-      id="projects" 
-      className="border-t relative"
-      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
+    <section
+      ref={ref}
+      className="w-full border-t"
+      style={{
+        backgroundColor: tokens.colors.background,
+        borderColor: tokens.colors.borderFaint,
+        minHeight: "100vh",
+      }}
     >
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-12 pt-16 md:pt-20 pb-10 md:pb-14">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-8">
-          <div>
-            <div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-5"
-              style={{ borderColor: `${tokens.colors.primary}4D`, backgroundColor: `${tokens.colors.primary}0D` }}
-            >
-              <Sparkles size={12} style={{ color: tokens.colors.primary }} />
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] font-bold" style={{ color: tokens.colors.primary }}>
-                Featured Projects
-              </span>
-              <Sparkles size={12} style={{ color: tokens.colors.primary }} />
-            </div>
-            <h2 
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[5vw] font-black leading-[0.92] tracking-tighter uppercase"
-              style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
-            >
-              Creative <br />
-              <span style={{ color: tokens.colors.primary }}>Works</span>
-            </h2>
-          </div>
-          <p className="font-light text-sm leading-relaxed sm:max-w-[200px] md:max-w-[240px] sm:text-right" style={{ color: tokens.colors.textDim }}>
-            A curated collection of projects showcasing innovative solutions.
-          </p>
-        </div>
-      </div>
-
-      <div className="hidden lg:block max-w-[1200px] mx-auto relative">
-        <div className="grid grid-cols-[1fr_1fr]">
-          
-          {/* Left Side: Scrolling Content */}
-          <div>
-            {projects.map((project, idx) => (
-              <motion.div 
-                key={project._id || idx}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ margin: "-200px" }}
-                transition={{ duration: 0.8 }}
-                className="project-item min-h-screen flex flex-col justify-center px-10 xl:px-14 py-20 transition-colors duration-500"
+      {/* Section label + Counter */}
+      <div className="flex items-center justify-between px-8 md:px-16 lg:px-24 pt-12 pb-4">
+        <p
+          className="text-xs tracking-[0.25em] uppercase"
+          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+        >
+          CREATIVE WORKS
+        </p>
+        <div className="flex items-center gap-3">
+          <span
+            className="text-xs tabular-nums"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
+          >
+            {String(active + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+          </span>
+          <div className="flex gap-1">
+            {projects.map((proj_item, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`Go to project ${i + 1}${proj_item?.title ? ': ' + proj_item.title : ''}`}
+                className="flex items-center justify-center transition-all"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                }}
               >
-                <div className="flex items-center justify-between mb-8">
-                  <span 
-                    className="font-mono font-bold text-xs tracking-widest transition-colors duration-500"
-                    style={{ color: activeIndex === idx ? tokens.colors.primary : tokens.colors.borderStrong }}
-                  >
-                    0{idx + 1}
-                  </span>
-                  <span 
-                    className="px-3 py-1 rounded-full border font-mono text-[9px] uppercase tracking-[0.18em]"
-                    style={{ borderColor: tokens.colors.borderFaint, color: tokens.colors.textFaint }}
-                  >
-                    {project.category || "Full-Stack"}
-                  </span>
-                </div>
-                
-                <h3 
-                  className="font-black tracking-tighter uppercase leading-[1] mb-4"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground, fontSize: "clamp(1.1rem, 1.4vw, 1.4rem)" }}
-                >
-                  {project.title}
-                </h3>
-
-                {project.description && (
-                  <p 
-                    className="text-sm leading-relaxed mb-6 max-w-md"
-                    style={{ color: tokens.colors.textDim }}
-                  >
-                    {project.description}
-                  </p>
-                )}
-
-                <div className="flex flex-col gap-6">
-                  <div 
-                    className="w-12 h-[2px] rounded-full transition-all duration-500"
-                    style={{ backgroundColor: activeIndex === idx ? tokens.colors.primary : tokens.colors.borderDim }}
-                  />
-                  <div className="flex flex-col gap-2">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: tokens.colors.textFaint }}>
-                      Stack & Architecture
-                    </span>
-                    <span 
-                      className="font-mono text-[11px] tracking-[0.2em] uppercase font-bold transition-colors duration-500"
-                      style={{ color: activeIndex === idx ? tokens.colors.primary : tokens.colors.textFaint }}
-                    >
-                      {project.technologies?.join(' / ') || "React / Node / MongoDB"}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
+                <span
+                  style={{
+                    display: "block",
+                    height: "2px",
+                    width: i === active ? "32px" : "12px",
+                    backgroundColor: i === active ? tokens.colors.primary : tokens.colors.borderStrong,
+                    transition: "width 0.3s ease, background-color 0.3s ease",
+                    borderRadius: "2px",
+                  }}
+                />
+              </button>
             ))}
           </div>
-
-          {/* Right Side: Sticky Image */}
-          <div className="sticky top-0 h-screen flex flex-col items-center justify-center px-8 xl:px-12 gap-6">
-            
-            {/* Pagination indicator top right */}
-            <div className="absolute top-10 right-10 flex items-center gap-6">
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] font-bold" style={{ color: tokens.colors.textFaint }}>
-                0{activeIndex + 1} <span className="mx-1" style={{ color: tokens.colors.borderStrong }}>/</span> 0{projects.length}
-              </span>
-              <div className="flex gap-2">
-                {projects.map((_, i) => (
-                  <div 
-                    key={i}
-                    className="h-[3px] rounded-full transition-all duration-700"
-                    style={{ 
-                      width: activeIndex === i ? "24px" : "6px",
-                      backgroundColor: activeIndex === i ? tokens.colors.primary : tokens.colors.borderDim
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Image Container */}
-            <div 
-              className="relative w-full rounded-2xl overflow-hidden"
-              style={{ aspectRatio: "16/10", maxHeight: "52vh", backgroundColor: tokens.colors.backgroundFaint }}
-            >
-              {projects.map((project, idx) => (
-                <img 
-                  key={idx}
-                  alt={project.title}
-                  src={project.image || "/project-placeholder.jpg"}
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
-                  style={{ opacity: activeIndex === idx ? 1 : 0 }}
-                />
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-            </div>
-
-            {/* Explore Link */}
-            <div className="w-full flex justify-end">
-              <a 
-                href={projects[activeIndex]?.link || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-6 pb-2 border-b transition-all duration-500"
-                style={{ borderColor: tokens.colors.borderDim }}
-              >
-                <span 
-                  className="font-bold text-lg md:text-xl uppercase tracking-tighter transition-colors duration-500"
-                  style={{ fontFamily: tokens.fonts.display, color: tokens.colors.textDim }}
-                >
-                  Explore Live Project
-                </span>
-              </a>
-            </div>
-
-          </div>
         </div>
       </div>
 
-      {/* Mobile View (Stacked) */}
-      <div className="lg:hidden flex flex-col gap-16 px-6 pb-20">
-        {projects.map((project, idx) => (
-          <div key={idx} className="flex flex-col gap-6">
-            <span className="font-mono font-bold text-xs tracking-widest" style={{ color: tokens.colors.primary }}>
-              0{idx + 1}
-            </span>
-            <h3 
-              className="text-3xl font-black uppercase tracking-tighter leading-none"
-              style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
-            >
-              {project.title}
-            </h3>
-            <div 
-              className="w-full rounded-xl overflow-hidden relative"
-              style={{ aspectRatio: "16/10", backgroundColor: tokens.colors.backgroundFaint }}
-            >
-              <img 
-                src={project.image || "/project-placeholder.jpg"} 
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
+      {/* Content */}
+      <motion.div
+        className="grid grid-cols-1 lg:grid-cols-2 items-center px-8 md:px-16 lg:px-24 py-12 gap-16"
+        initial={{ opacity: 0, y: 40 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8 }}
+      >
+        {/* LEFT: Project info */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col gap-6"
+          >
+            <div className="flex items-center gap-4">
+              <span
+                className="text-xs"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              >
+                {String(active + 1).padStart(2, "0")}
+              </span>
+              <span
+                className="text-xs uppercase tracking-widest"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+              >
+                {proj.category || "PROJECT"}
+              </span>
             </div>
-            <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold" style={{ color: tokens.colors.primary }}>
-              {project.technologies?.join(' / ') || "React / Tailwind / Node"}
-            </span>
-            <p className="text-sm" style={{ color: tokens.colors.textDim }}>{project.description}</p>
-          </div>
-        ))}
+
+            <h2
+              className="font-black uppercase leading-none tracking-tighter"
+              style={{
+                fontFamily: tokens.fonts.display,
+                fontSize: "clamp(1.4rem, 3.5vw, 3.5rem)",
+                color: tokens.colors.foreground,
+              }}
+            >
+              {proj.title}
+            </h2>
+
+            <div className="w-12 h-px" style={{ backgroundColor: tokens.colors.primary }} />
+
+            {techList.length > 0 && (
+              <div>
+                <p
+                  className="text-xs uppercase tracking-widest mb-2"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+                >
+                  STACK & ARCHITECTURE
+                </p>
+                <p
+                  className="text-sm font-bold uppercase tracking-widest"
+                  style={{ color: tokens.colors.primary }}
+                >
+                  {techList.join(" / ")}
+                </p>
+              </div>
+            )}
+
+            {proj.description && (
+              <p className="text-sm leading-relaxed" style={{ color: tokens.colors.textDim }}>
+                {proj.description}
+              </p>
+            )}
+
+            <div className="flex items-center gap-6 flex-wrap">
+              {liveUrl && (
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm uppercase tracking-widest font-bold hover:opacity-80 transition-all"
+                  style={{ color: tokens.colors.foreground }}
+                >
+                  EXPLORE LIVE PROJECT <ExternalLink size={14} />
+                </a>
+              )}
+              {githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm uppercase tracking-widest font-bold hover:opacity-80 transition-all"
+                  style={{ color: tokens.colors.textDim }}
+                >
+                  <FaGithub size={14} /> GITHUB
+                </a>
+              )}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* RIGHT: Image */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active + "_img"}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.5 }}
+            className="relative aspect-video rounded-xl overflow-hidden"
+            style={{ backgroundColor: tokens.colors.backgroundFaint }}
+          >
+            {image ? (
+              <img src={image} alt={proj.title} className="w-full h-full object-cover" loading="lazy" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span
+                  className="font-black uppercase opacity-10"
+                  style={{
+                    fontFamily: tokens.fonts.display,
+                    fontSize: "clamp(3rem, 10vw, 8rem)",
+                    color: tokens.colors.foreground,
+                  }}
+                >
+                  {proj.title?.charAt(0)}
+                </span>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Prev/Next */}
+      <div className="flex justify-center gap-4 pb-16">
+        <button
+          onClick={() => setActive((p) => Math.max(0, p - 1))}
+          disabled={active === 0}
+          className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
+          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
+        >
+          ← PREV
+        </button>
+        <button
+          onClick={() => setActive((p) => Math.min(projects.length - 1, p + 1))}
+          disabled={active === projects.length - 1}
+          className="px-8 py-3 text-xs uppercase tracking-widest font-bold border rounded-full transition-all disabled:opacity-30 hover:scale-105"
+          style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.borderStrong, color: tokens.colors.foreground }}
+        >
+          NEXT →
+        </button>
       </div>
     </section>
   );

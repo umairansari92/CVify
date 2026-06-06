@@ -45,10 +45,10 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-12 border-t border-[var(--card-border)]"
+        className="grid grid-cols-1 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-4 md:gap-8 pt-12 border-t border-[var(--card-border)] w-full"
       >
         {stats.map((stat, i) => (
-          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-[var(--primary-color)]/20 transition-all group">
+          <div key={i} className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-[var(--primary-color)]/20 transition-all group w-full sm:w-auto">
             <div className="text-[var(--primary-color)] opacity-60 group-hover:opacity-100 transition-all">
               {stat.icon}
             </div>
@@ -143,8 +143,8 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
         {/* RIGHT COLUMN: PORTRAIT */}
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="lg:col-span-5 flex justify-center lg:justify-end relative mt-16 mx-auto lg:mt-0 lg:mx-0 w-full">
            {personalInfo.image && (
-             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20">
-               <img src={personalInfo.image} alt="Profile" className="w-full h-full object-cover rounded-2xl" />
+             <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] p-2 bg-[var(--card-bg)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-20 overflow-hidden flex items-center justify-center">
+               <img src={personalInfo.image} alt="Profile" className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl" />
                
                {/* Floating Badges */}
                <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -right-4 top-1/4 p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl text-[var(--primary-color)]">

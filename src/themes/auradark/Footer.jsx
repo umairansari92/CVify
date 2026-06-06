@@ -2,26 +2,25 @@ import React from "react";
 import { tokens } from "./tokens";
 
 const Footer = ({ user }) => {
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
   return (
-    <footer 
-      className="py-8 border-t relative z-10"
+    <footer
+      className="w-full px-8 md:px-16 lg:px-24 py-8 border-t flex flex-col md:flex-row justify-between items-center gap-4"
       style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
     >
-      <div className="max-w-[1700px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
-        <span 
-          className="font-mono text-[9px] uppercase tracking-[0.3em]"
-          style={{ color: tokens.colors.textFaint }}
-        >
-          © {new Date().getFullYear()} {user?.name || "Portfolio"}. All rights reserved.
-        </span>
-        
-        <span 
-          className="font-mono text-[9px] uppercase tracking-[0.3em]"
-          style={{ color: tokens.colors.textFaint }}
-        >
-          Powered by CVify Pro
-        </span>
-      </div>
+      <p className="text-xs uppercase tracking-widest" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}>
+        © {new Date().getFullYear()} {fullName}. All Rights Reserved.
+      </p>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="text-xs uppercase tracking-widest hover:-translate-y-1 transition-transform"
+        style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+      >
+        BACK TO TOP ↑
+      </button>
+      <p className="text-xs uppercase tracking-widest" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}>
+        ENGINEERED IN PAKISTAN
+      </p>
     </footer>
   );
 };

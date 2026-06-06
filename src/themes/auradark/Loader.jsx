@@ -1,104 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { tokens } from "./tokens";
 
-const Loader = ({ onComplete }) => {
-  const [progress, setProgress] = useState(0);
+const Loader = ({ onComplete, userName }) => {
+  const [count, setCount] = React.useState(0);
 
-  useEffect(() => {
-    // Prevent scrolling while loading
-    document.body.style.overflow = "hidden";
-
-    const duration = 2000; // 2 seconds
-    const intervalTime = 20;
-    const steps = duration / intervalTime;
-    let currentStep = 0;
-
+  React.useEffect(() => {
+    let val = 0;
+    const duration = 1400;
+    const step = 16;
+    const increment = 100 / (duration / step);
     const timer = setInterval(() => {
-      currentStep++;
-      const nextProgress = Math.min(Math.round((currentStep / steps) * 100), 100);
-      
-      // Easing function for smoother progress
-      const easeOutQuart = 1 - Math.pow(1 - (nextProgress / 100), 4);
-      setProgress(Math.round(easeOutQuart * 100));
-
-      if (currentStep >= steps) {
+      val += increment;
+      if (val >= 100) {
+        setCount(100);
         clearInterval(timer);
-        setTimeout(() => {
-          document.body.style.overflow = "auto";
-          onComplete();
-        }, 600); // Wait a bit after reaching 100%
+        setTimeout(onComplete, 300);
+      } else {
+        setCount(Math.floor(val));
       }
-    }, intervalTime);
-
-    return () => {
-      clearInterval(timer);
-      document.body.style.overflow = "auto";
-    };
+    }, step);
+    return () => clearInterval(timer);
   }, [onComplete]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-6 overflow-hidden select-none touch-none origin-bottom"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
       style={{ backgroundColor: tokens.colors.background }}
-      initial={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: "-100%", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >
-      <div className="flex flex-col items-center justify-center w-full max-w-sm">
-        
-        {/* Number & Percentage */}
-        <motion.div 
-          className="text-[120px] md:text-[160px] leading-none font-black tabular-nums tracking-tighter mb-4 relative"
-          style={{ fontFamily: tokens.fonts.display, color: tokens.colors.foreground }}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {progress}
-          <span 
-            className="text-3xl md:text-5xl font-light absolute bottom-4 -right-12"
-            style={{ color: tokens.colors.primary }}
+      <div className="flex flex-col items-center gap-6 w-[340px]">
+        {/* Giant counter */}
+        <div className="flex items-baseline gap-1">
+          <span
+            className="font-black leading-none tabular-nums"
+            style={{
+              fontFamily: tokens.fonts.display,
+              fontSize: "clamp(5rem, 15vw, 9rem)",
+              color: tokens.colors.foreground,
+            }}
           >
+            {count}
+          </span>
+          <span className="text-4xl font-light" style={{ color: tokens.colors.primary }}>
             %
           </span>
-        </motion.div>
+        </div>
 
-        {/* Progress Bar Container */}
-        <motion.div 
-          className="w-full h-[2px] rounded-full overflow-hidden relative mb-8"
-          style={{ backgroundColor: tokens.colors.borderFaint }}
-          initial={{ opacity: 0, width: 0 }}
-          animate={{ opacity: 1, width: "100%" }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+        {/* Progress bar */}
+        <div
+          className="w-full h-px relative overflow-hidden"
+          style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
         >
-          {/* Active Progress Bar */}
-          <motion.div 
-            className="absolute inset-y-0 left-0 h-full origin-left rounded-full"
-            style={{ backgroundColor: tokens.colors.primary, width: `${progress}%` }}
+          <motion.div
+            className="absolute left-0 top-0 h-full"
+            style={{ backgroundColor: tokens.colors.primary, width: `${count}%` }}
           />
-        </motion.div>
+        </div>
 
-        {/* Text Details */}
-        <motion.div 
-          className="flex flex-col items-center gap-3 text-center"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+        <p
+          className="text-[10px] tracking-[0.3em] uppercase text-center"
+          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
         >
-          <span 
-            className="text-[10px] uppercase tracking-[0.4em] font-bold"
-            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textDim }}
-          >
-            Engineering Digital Experiences
-          </span>
-          <span 
-            className="text-[9px] uppercase tracking-widest mt-1 opacity-60"
+          Engineering Digital Experiences
+        </p>
+        {userName && (
+          <p
+            className="text-[9px] tracking-[0.2em] uppercase"
             style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
           >
-            Loading Environment © {new Date().getFullYear()}
-          </span>
-        </motion.div>
-
+            {userName} © {new Date().getFullYear()}
+          </p>
+        )}
       </div>
     </motion.div>
   );

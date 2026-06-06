@@ -1,73 +1,69 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { tokens } from "./tokens";
-import { Award } from "lucide-react";
 
-// In the Aura Dark theme, Experience is styled identically to Education (Timeline style)
-// So we just re-use the exact same timeline logic for the Experience prop.
-const Experience = ({ user }) => {
-  if (!user || !user.experience || user.experience.length === 0) return null;
+const Experience = ({ user, isOwner, handleArrayUpdate }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const experience = user?.experience || [];
+
+  if (!experience.length) return null;
 
   return (
-    <section className="bg-background pb-16" style={{ backgroundColor: tokens.colors.background }}>
-      <div className="max-w-[1700px] mx-auto px-4 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32">
-          
-          {/* Empty Left Column to align with About */}
-          <div className="hidden lg:block lg:col-span-6" />
-
-          {/* Right Column: Experience Timeline */}
-          <div className="lg:col-span-6">
-            <div className="space-y-12">
-              <div 
-                className="flex items-center gap-4 font-bold text-[10px] tracking-[0.4em] uppercase"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-              >
-                <Award size={16} /> EXPERIENCE
+    <section
+      ref={ref}
+      className="w-full py-24 px-8 md:px-16 lg:px-24 border-t"
+      style={{ backgroundColor: tokens.colors.background, borderColor: tokens.colors.borderFaint }}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        <motion.p
+          className="text-xs tracking-[0.25em] uppercase mb-12"
+          style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          EXPERIENCE
+        </motion.p>
+        <div className="flex flex-col gap-10">
+          {experience.map((exp, idx) => (
+            <motion.div
+              key={exp._id || idx}
+              className="flex gap-4 pb-10 border-b"
+              style={{ borderColor: tokens.colors.borderFaint }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: idx * 0.1 }}
+            >
+              <div className="flex flex-col items-center pt-1">
+                <div className="w-2 h-2 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: tokens.colors.textDim }} />
               </div>
-              
-              <div className="space-y-12">
-                {user.experience.map((exp, idx) => (
-                  <motion.div 
-                    key={exp._id || idx}
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    className="group space-y-3 relative pl-8 border-l transition-colors"
-                    style={{ borderColor: tokens.colors.borderFaint }}
+              <div>
+                <p
+                  className="text-[10px] uppercase tracking-widest mb-2"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textFaint }}
+                >
+                  {exp.startDate ? new Date(exp.startDate).getFullYear() : ""}
+                  {" — "}
+                  {exp.endDate ? new Date(exp.endDate).getFullYear() : "PRESENT"}
+                </p>
+                <h3
+                  className="text-xl md:text-2xl font-bold uppercase tracking-tight mb-2"
+                  style={{ color: tokens.colors.foreground }}
+                >
+                  {exp.company} — {exp.role || exp.position}
+                </h3>
+                {(exp.achievements || exp.description) && (
+                  <p 
+                    className="text-sm max-w-2xl whitespace-pre-wrap leading-relaxed" 
+                    style={{ color: tokens.colors.textDim }}
                   >
-                    <div 
-                      className="w-2 h-2 rounded-full absolute -left-[4.5px] top-1 transition-colors"
-                      style={{ backgroundColor: tokens.colors.borderStrong }}
-                    />
-                    
-                    <span 
-                      className="font-mono text-[10px] uppercase tracking-widest"
-                      style={{ color: tokens.colors.textFaint }}
-                    >
-                      {exp.startDate ? new Date(exp.startDate).getFullYear() : "START"} — {exp.endDate ? new Date(exp.endDate).getFullYear() : "PRESENT"}
-                    </span>
-                    
-                    <h3 
-                      className="text-2xl font-bold transition-colors"
-                      style={{ color: tokens.colors.foreground }}
-                    >
-                      {exp.company} - {exp.position}
-                    </h3>
-                    
-                    <p 
-                      className="text-sm max-w-md leading-relaxed"
-                      style={{ color: tokens.colors.textDim }}
-                    >
-                      {exp.description}
-                    </p>
-                  </motion.div>
-                ))}
+                    {exp.achievements || exp.description}
+                  </p>
+                )}
               </div>
-            </div>
-          </div>
-
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
