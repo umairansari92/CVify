@@ -1,8 +1,4 @@
-import React from "react";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
-
-/**
+import React, { useState, useEffect } from "react";/**
  * ThemeBackgroundFX — "Felt, Not Seen" principle
  *
  * Each theme gets a unique SVG geometric background pattern.
@@ -24,64 +20,73 @@ const Flower5 = ({ cx, cy, pr = 3, pl = 7, sw = 0.7, id }) =>
   ));
 
 const MidnightDevParticles = () => {
-  const particlesInit = async (engine) => {
-    await loadFull(engine);
-  };
+  const [nodes, setNodes] = useState([]);
+
+  useEffect(() => {
+    // Generate static nodes only on client to avoid hydration mismatch
+    const newNodes = Array.from({ length: 30 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      duration: 15 + Math.random() * 25,
+      delay: Math.random() * -30,
+      size: 2 + Math.random() * 4,
+      glow: Math.random() > 0.5 ? '#38bdf8' : '#7dd3fc',
+    }));
+    setNodes(newNodes);
+  }, []);
 
   return (
-    <Particles
-      id="tsparticles-midnight"
-      init={particlesInit}
-      options={{
-        background: { color: { value: "transparent" } },
-        fpsLimit: 120,
-        interactivity: {
-          detectsOn: "window",
-          events: {
-            onHover: {
-              enable: true,
-              mode: "repulse",
-            },
-          },
-          modes: {
-            repulse: {
-              distance: 140,
-              links: {
-                opacity: 0.8,
-                color: "#7dd3fc",
-              },
-            },
-          },
-        },
-        particles: {
-          color: { value: ["#7dd3fc", "#38bdf8"] },
-          links: {
-            color: "#38bdf8",
-            distance: 150,
-            enable: true,
-            opacity: 0.3,
-            width: 1,
-          },
-          move: {
-            direction: "none",
-            enable: true,
-            outModes: { default: "bounce" },
-            random: false,
-            speed: 0.8,
-            straight: false,
-          },
-          number: {
-            density: { enable: true, area: 800 },
-            value: 60,
-          },
-          opacity: { value: 0.5 },
-          shape: { type: "circle" },
-          size: { value: { min: 1, max: 3 } },
-        },
-        detectRetina: true,
-      }}
-      className="absolute inset-0 w-full h-full"
-    />
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <style>{`
+        @keyframes float-up-tech {
+          0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+          20% { opacity: 0.6; }
+          80% { opacity: 0.6; }
+          100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+        @keyframes pulse-tech-grid {
+          0% { opacity: 0.15; transform: scale(1); }
+          100% { opacity: 0.35; transform: scale(1.02); }
+        }
+        .tech-grid-bg {
+          position: absolute;
+          inset: -10%;
+          background-image: 
+            linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+          background-size: 60px 60px;
+          mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+          -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+          animation: pulse-tech-grid 8s ease-in-out infinite alternate;
+        }
+        .tech-node {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(1px);
+          animation: float-up-tech linear infinite;
+        }
+      `}</style>
+      
+      {/* Abstract Tech Network Grid */}
+      <div className="tech-grid-bg" />
+
+      {/* Floating Data Nodes */}
+      {nodes.map((node) => (
+        <div
+          key={node.id}
+          className="tech-node"
+          style={{
+            left: \`\${node.left}%\`,
+            width: \`\${node.size}px\`,
+            height: \`\${node.size}px\`,
+            backgroundColor: node.glow,
+            boxShadow: \`0 0 10px \${node.glow}, 0 0 20px \${node.glow}\`,
+            animationDuration: \`\${node.duration}s\`,
+            animationDelay: \`\${node.delay}s\`,
+          }}
+        />
+      ))}
+    </div>
   );
 };
 

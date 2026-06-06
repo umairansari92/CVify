@@ -67,31 +67,15 @@ import {
 } from "../features/profile/profileSlice";
 import { handleDownloadPDF } from "../utils/pdfExport";
 
-// Modular Sections (Hero and About are critical, others lazy)
-import Hero from "../components/profile/sections/Hero";
-import About from "../components/profile/sections/About";
-const Experience = lazy(() => import("../components/profile/sections/Experience"));
-const Education = lazy(() => import("../components/profile/sections/Education"));
-const Showcase = lazy(() => import("../components/profile/sections/Showcase"));
-const Skills = lazy(() => import("../components/profile/sections/Skills"));
-const Dossier = lazy(() => import("../components/profile/sections/Dossier"));
-const Interests = lazy(() => import("../components/profile/sections/Interests"));
-const Certifications = lazy(() => import("../components/profile/sections/Certifications"));
-const Testimonials = lazy(() => import("../components/profile/sections/Testimonials"));
-const Brands = lazy(() => import("../components/profile/sections/Brands"));
-const GithubStats = lazy(() => import("../components/profile/sections/GithubStats"));
-const Contact = lazy(() => import("../components/profile/sections/Contact"));
-const Footer = lazy(() => import("../components/profile/sections/Footer"));
-
 // Modular Components
 import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
-import ThemeBackgroundFX from "../components/ThemeBackgroundFX";
 // 🚀 OPT: Lazy-load heavy themes — not downloaded unless user has that theme active
 //         Saves ~115KB from initial JS bundle, improves FCP & TTI for all visitors
 const OrientalLuxeTheme = lazy(() => import("../themes/orientalluxe"));
 const AuraDarkTheme = lazy(() => import("../themes/auradark"));
+const StandardTheme = lazy(() => import("../themes/standard"));
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -679,132 +663,34 @@ const PublicProfile = () => {
           />
         </Suspense>
       ) : (
-        <>
-          {/* ── Theme-Specific Background Pattern ── */}
-          <ThemeBackgroundFX themeName={theme.name} />
-
-          <Hero 
-            user={user} 
-            isOwner={isOwner} 
-            theme={theme} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: theme.bodyBg }}>
+            <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: theme.accentColor, borderTopColor: 'transparent' }} />
+          </div>
+        }>
+          <StandardTheme
+            user={user}
+            projects={projects}
+            isOwner={isOwner}
+            theme={theme}
+            displayValue={displayValue}
+            handleLiveUpdate={handleLiveUpdate}
+            handleArrayUpdate={handleArrayUpdate}
+            setShowResumeModal={setShowResumeModal}
+            contactForm={contactForm}
+            setContactForm={setContactForm}
+            handleContactSubmit={handleContactSubmit}
+            isSending={isSending}
+            githubData={githubData}
+            githubLoading={githubLoading}
+            dispatch={dispatch}
+            deleteProjectThunk={deleteProjectThunk}
+            openProjectModalThunk={openProjectModalThunk}
+            ensureAbsoluteUrl={ensureAbsoluteUrl}
             analytics={analytics}
+            personalInfo={personalInfo}
           />
-
-          <Suspense fallback={null}>
-            <GithubStats 
-              githubUrl={user?.socialLinks?.github} 
-              userSkills={user?.skills?.technical || user?.skills || []} 
-              data={githubData}
-              loading={githubLoading}
-            />
-          </Suspense>
-
-          <Suspense fallback={null}>
-            <Brands user={user} isOwner={isOwner} />
-          </Suspense>
-
-          <About 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            setShowResumeModal={setShowResumeModal} 
-          />
-
-          <Suspense fallback={
-            <div className="py-20 text-center opacity-20 animate-pulse font-black uppercase tracking-[0.5em] text-[8px]">
-              Loading Intelligence...
-            </div>
-          }>
-            {(isOwner || (user.experience?.length > 0)) && (
-              <Experience 
-                user={user} 
-                isOwner={isOwner} 
-                displayValue={displayValue} 
-                handleLiveUpdate={handleLiveUpdate} 
-                handleArrayUpdate={handleArrayUpdate} 
-              />
-            )}
-
-            {(isOwner || (user.projects?.length > 0) || (user.portfolio?.length > 0)) && (
-              <Showcase 
-                user={user} 
-                isOwner={isOwner} 
-                projects={projects} 
-                displayValue={displayValue} 
-                handleArrayUpdate={handleArrayUpdate} 
-                dispatch={dispatch} 
-                deleteProjectThunk={deleteProjectThunk} 
-                openProjectModalThunk={openProjectModalThunk} 
-              />
-            )}
-
-            {(isOwner || (Array.isArray(user.skills) ? user.skills.length > 0 : (user.skills?.technical?.length > 0)) || (user.services?.length > 0)) && (
-              <Skills 
-                user={user} 
-                isOwner={isOwner} 
-                displayValue={displayValue} 
-                handleLiveUpdate={handleLiveUpdate} 
-                handleArrayUpdate={handleArrayUpdate} 
-                githubStats={githubData}
-                projectsCount={projects.length}
-              />
-            )}
-
-            {(isOwner || (user.education?.length > 0)) && (
-              <Education 
-                user={user} 
-                isOwner={isOwner} 
-                displayValue={displayValue} 
-                handleLiveUpdate={handleLiveUpdate} 
-                handleArrayUpdate={handleArrayUpdate} 
-              />
-            )}
-
-            {(isOwner || (user.certifications?.length > 0)) && (
-              <Certifications user={user} isOwner={isOwner} />
-            )}
-
-            {(isOwner || (user.achievements?.length > 0) || (user.languages?.length > 0)) && (
-              <Dossier 
-                user={user} 
-                isOwner={isOwner} 
-                displayValue={displayValue} 
-                handleLiveUpdate={handleLiveUpdate} 
-                handleArrayUpdate={handleArrayUpdate} 
-              />
-            )}
-
-            {(isOwner || (user.testimonials?.length > 0)) && (
-              <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
-            )}
-
-            {(isOwner || (user.interests?.length > 0)) && (
-              <Interests 
-                user={user} 
-                isOwner={isOwner} 
-                displayValue={displayValue} 
-                handleLiveUpdate={handleLiveUpdate} 
-                handleArrayUpdate={handleArrayUpdate} 
-              />
-            )}
-
-            <Contact 
-              user={user} 
-              isOwner={isOwner} 
-              contactForm={contactForm} 
-              setContactForm={setContactForm} 
-              handleContactSubmit={handleContactSubmit} 
-              isSending={isSending} 
-              handleLiveUpdate={handleLiveUpdate} 
-              ensureAbsoluteUrl={ensureAbsoluteUrl} 
-            />
-
-            <Footer personalInfo={personalInfo} />
-          </Suspense>
-        </>
+        </Suspense>
       )}
 
 
