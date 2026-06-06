@@ -213,7 +213,7 @@ const GithubStats = React.memo(({ githubUrl, userSkills = [], data, loading }) =
                    <p className="text-[11px] font-bold opacity-30 uppercase tracking-[0.2em]">Verified Lifecycle Proof</p>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                    <div className="p-6 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-[var(--primary-color)]/30 transition-all group/stat">
                      <p className="text-3xl font-black text-[var(--text-primary)] group-hover/stat:text-[var(--primary-color)] transition-colors">{stats.stars || 0}</p>
                      <p className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40 mt-1">Total Stars</p>

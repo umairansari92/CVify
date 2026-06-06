@@ -347,8 +347,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             transition={{ duration: 1, delay: 0.2 }}
             className="relative shadow-2xl"
             style={{
-              width: "clamp(340px, 45vw, 750px)",
-              height: "clamp(480px, 65vh, 850px)",
+              width: "clamp(280px, 85vw, 500px)",
+              aspectRatio: "3/4",
               padding: "2px", // 2px border
               background: `linear-gradient(135deg, ${tokens.colors.primary}, rgba(255,255,255,0.05), ${tokens.colors.primary}80)`,
               borderRadius: "999px", // Oval/pill shape
