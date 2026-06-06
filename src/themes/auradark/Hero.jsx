@@ -112,19 +112,18 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             }}
           >
             <div 
-              className="w-full h-full overflow-hidden flex items-center justify-center"
+              className="w-full h-full overflow-hidden"
               style={{
                 borderRadius: "999px",
-                backgroundColor: tokens.colors.background,
               }}
             >
               <img
                 src={user.profileImage || user.profilePicture}
                 alt={fullName}
-                className="max-w-full max-h-full w-auto h-auto object-contain"
+                className="w-full h-full object-cover object-top"
                 fetchPriority="high"
                 loading="eager"
-                style={{ filter: "contrast(1.05) brightness(1.05)", objectPosition: "center bottom" }}
+                style={{ filter: "contrast(1.05) brightness(1.05)" }}
               />
             </div>
             {/* Soft gradient fade at bottom to blend with background */}
