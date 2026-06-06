@@ -306,20 +306,6 @@ const PublicProfile = () => {
     { name: "AURA DARK", headerBg: "#050505", headerBgSecondary: "#101010", bodyBg: "#000000", fontPrimary: "Syne", cardStyle: "minimal", icon: "✨", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#B677EF" },
   ];
 
-  if (loading) return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
-      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  );
-
-  if (profileError || !user) return (
-    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center justify-center p-6 text-center italic">
-      <h1 className="text-8xl font-black mb-4 opacity-10">404</h1>
-      <p className="text-xl text-slate-400 mb-8">Professional Intelligence Not Found.</p>
-      <Link to="/" className="px-10 py-4 bg-blue-600 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">Back to Base</Link>
-    </div>
-  );
-
   // ✅ OPT: useMemo — only recomputes when localTheme or DB theme actually changes,
   //          not on every scroll/state update (was recalculating 60×/sec before)
   const savedTheme = user?.themeSettings;
@@ -363,6 +349,20 @@ const PublicProfile = () => {
     }
     return id;
   }, [isOrientalLuxeTheme]);
+
+  if (loading) return (
+    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+
+  if (profileError || !user) return (
+    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col items-center justify-center p-6 text-center italic">
+      <h1 className="text-8xl font-black mb-4 opacity-10">404</h1>
+      <p className="text-xl text-slate-400 mb-8">Professional Intelligence Not Found.</p>
+      <Link to="/" className="px-10 py-4 bg-blue-600 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">Back to Base</Link>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme || isAuraDarkTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
