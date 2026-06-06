@@ -76,13 +76,13 @@ const MidnightDevParticles = () => {
           key={node.id}
           className="tech-node"
           style={{
-            left: \`\${node.left}%\`,
-            width: \`\${node.size}px\`,
-            height: \`\${node.size}px\`,
+            left: `${node.left}%`,
+            width: `${node.size}px`,
+            height: `${node.size}px`,
             backgroundColor: node.glow,
-            boxShadow: \`0 0 10px \${node.glow}, 0 0 20px \${node.glow}\`,
-            animationDuration: \`\${node.duration}s\`,
-            animationDelay: \`\${node.delay}s\`,
+            boxShadow: `0 0 10px ${node.glow}, 0 0 20px ${node.glow}`,
+            animationDuration: `${node.duration}s`,
+            animationDelay: `${node.delay}s`,
           }}
         />
       ))}
