@@ -17,7 +17,10 @@ import {
   FaGem,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import ATSResult from "../components/ats/ATSResult"; // [V3]
+import ATSResult from "../components/ats/ATSResult";
+
+import Card from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 const ATSPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -34,7 +37,6 @@ const ATSPage = () => {
   const [marketMode, setMarketMode] = useState("Standard");
   const [experienceLevel, setExperienceLevel] = useState("Mid-Level");
   
-  // V2 Improvements
   const location = useLocation();
   const [userResumes, setUserResumes] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState(location.state?.preSelectedResumeId || "");
@@ -64,7 +66,6 @@ const ATSPage = () => {
 
     let action;
     if (selectedResumeId) {
-      // Platform Resume Analysis
       action = await dispatch(analyzePlatformResumeAsync({
         resumeId: selectedResumeId,
         jobDescription,
@@ -72,7 +73,6 @@ const ATSPage = () => {
         experienceLevel
       }));
     } else {
-      // File Upload Analysis
       const formData = new FormData();
       formData.append("resume", file);
       formData.append("jobDescription", jobDescription);
@@ -127,15 +127,15 @@ const ATSPage = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-text-primary tracking-tight">
-            Resume Intelligence Audit
+            ATS Intelligence Engine
           </h1>
-          <p className="text-text-secondary mt-1 font-medium italic opacity-70">
-            Scan your resume, match keywords, and get AI-driven scoring.
+          <p className="text-text-secondary mt-1 font-medium opacity-70">
+            Deep-scan your resume against job descriptions using our AI matching algorithm.
           </p>
         </div>
-        <div className="flex items-center gap-3 px-6 py-3 glass rounded-2xl border border-primary/20 shadow-xl shadow-primary/5">
-          <FaGem className="text-blue-400 animate-pulse" />
-          <span className="font-black text-text-primary">
+        <div className="flex items-center gap-3 px-6 py-3 bg-midground rounded-2xl border border-primary/20 shadow-xl shadow-primary/5">
+          <FaGem className="text-primary animate-pulse" />
+          <span className="font-black text-text-primary text-sm">
             {user?.diamonds || 0} Diamonds Available
           </span>
         </div>
@@ -144,22 +144,21 @@ const ATSPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Section */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="glass p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6">
+          <Card variant="glass" className="p-8 space-y-6 !border-white/5 shadow-2xl">
             {/* Resume Input - Selective */}
             <div className="space-y-4">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">
                 Step 1: Select or Upload Resume
               </label>
               
               <div className="grid grid-cols-1 gap-4">
-                {/* Platform Resume Selector */}
                 <select
                   value={selectedResumeId}
                   onChange={(e) => {
                     setSelectedResumeId(e.target.value);
-                    if (e.target.value) setFile(null); // Clear file if resume selected
+                    if (e.target.value) setFile(null);
                   }}
-                  className="w-full bg-background border border-border-subtle p-4 rounded-2xl font-bold text-sm outline-hidden focus:ring-2 ring-primary/20 transition-all cursor-pointer"
+                  className="w-full bg-bg-primary border border-border-subtle p-4 rounded-xl font-bold text-sm text-text-primary outline-none focus:border-primary transition-all cursor-pointer"
                 >
                   <option value="">-- Choose from your built resumes --</option>
                   {userResumes.map(r => (
@@ -170,32 +169,29 @@ const ATSPage = () => {
                 </select>
 
                 <div className="relative flex items-center justify-center py-2">
-                  <div className="border-t border-white/5 w-full"></div>
-                  <span className="absolute px-4 bg-midground text-[9px] font-black uppercase text-text-muted/40 tracking-widest">OR</span>
+                  <div className="border-t border-border-subtle w-full"></div>
+                  <span className="absolute px-4 bg-midground text-[10px] font-black uppercase text-text-muted tracking-widest">OR</span>
                 </div>
 
-                {/* File Upload */}
                 <div className="relative group">
                   <input
                     type="file"
                     onChange={(e) => {
                       handleFileChange(e);
-                      if (e.target.files[0]) setSelectedResumeId(""); // Clear selection if file uploaded
+                      if (e.target.files[0]) setSelectedResumeId("");
                     }}
                     accept=".pdf,.docx"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
                   <div
-                    className={`p-10 border-2 border-dashed rounded-2xl transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-white/10 hover:border-primary/20 bg-white/5"} ${selectedResumeId ? "opacity-30" : ""}`}
+                    className={`p-8 border-2 border-dashed rounded-xl transition-all flex flex-col items-center justify-center gap-4 text-center ${file ? "border-primary bg-primary/5" : "border-border-subtle hover:border-primary/30 bg-bg-primary"} ${selectedResumeId ? "opacity-40" : ""}`}
                   >
-                    <div
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${file ? "bg-primary text-white shadow-glow" : "bg-white/5 text-slate-400"}`}
-                    >
-                      <FaUpload size={20} />
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${file ? "bg-primary text-white shadow-glow-primary" : "bg-bg-secondary text-text-muted"}`}>
+                      <FaUpload size={18} />
                     </div>
                     <div>
-                      <p className="font-black text-xs text-text-primary">
-                        {file ? file.name : "Upload New File"}
+                      <p className="font-bold text-xs text-text-primary">
+                        {file ? file.name : "Upload External PDF/DOCX"}
                       </p>
                     </div>
                   </div>
@@ -205,20 +201,20 @@ const ATSPage = () => {
 
             {/* Job Description */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
-                Step 2: Job Description
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">
+                Step 2: Target Job Description
               </label>
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Paste the target job description here for accurate matching..."
-                className="w-full bg-background border border-border-subtle p-5 rounded-2xl focus:ring-4 ring-primary/10 transition-all font-medium text-sm h-48 resize-none leading-relaxed"
+                placeholder="Paste the target job description here for accurate keyword matching..."
+                className="w-full bg-bg-primary border border-border-subtle p-5 rounded-xl focus:border-primary transition-all font-medium text-sm h-48 resize-none text-text-primary leading-relaxed outline-none"
               />
               {!jobDescription.trim() && (
-                <div className="flex items-center gap-2 px-4 py-2.5 mt-2 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
-                  <FaExclamationTriangle className="text-amber-500 text-xs flex-shrink-0" />
-                  <p className="text-[10px] font-bold text-amber-500/80 leading-relaxed">
-                    No JD provided. Audit will use general industry standards for <span className="font-black text-amber-400">{experienceLevel}</span> level.
+                <div className="flex items-center gap-3 px-4 py-3 mt-2 bg-warning/10 border border-warning/20 rounded-xl">
+                  <FaExclamationTriangle className="text-warning text-xs shrink-0" />
+                  <p className="text-[11px] font-bold text-warning leading-relaxed">
+                    No JD provided. Audit will use general industry standards for <span className="font-black">{experienceLevel}</span> level.
                   </p>
                 </div>
               )}
@@ -226,7 +222,7 @@ const ATSPage = () => {
 
             {/* Experience Level */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">
                 Step 3: Experience Level
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -239,10 +235,10 @@ const ATSPage = () => {
                   <button
                     key={level.value}
                     onClick={() => setExperienceLevel(level.value)}
-                    className={`py-3 px-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    className={`py-3 px-4 rounded-xl text-[10px] font-bold tracking-widest transition-all border ${
                       experienceLevel === level.value
-                        ? "bg-primary text-white shadow-lg"
-                        : "bg-white/5 text-text-secondary hover:bg-white/10"
+                        ? "bg-primary/10 border-primary/40 text-primary shadow-glow-primary"
+                        : "bg-bg-primary border-border-subtle text-text-muted hover:border-border-strong hover:text-text-main"
                     }`}
                   >
                     {level.label}
@@ -253,7 +249,7 @@ const ATSPage = () => {
 
             {/* Market Mode */}
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">
                 Step 4: Market Mode
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -262,7 +258,11 @@ const ATSPage = () => {
                     <button
                       key={mode}
                       onClick={() => setMarketMode(mode)}
-                      className={`py-3 px-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${marketMode === mode ? "bg-primary text-white shadow-lg" : "bg-white/5 text-text-secondary hover:bg-white/10"}`}
+                      className={`py-3 px-4 rounded-xl text-[10px] font-bold tracking-widest transition-all border ${
+                        marketMode === mode 
+                        ? "bg-primary/10 border-primary/40 text-primary shadow-glow-primary" 
+                        : "bg-bg-primary border-border-subtle text-text-muted hover:border-border-strong hover:text-text-main"
+                      }`}
                     >
                       {mode}
                     </button>
@@ -271,21 +271,16 @@ const ATSPage = () => {
               </div>
             </div>
 
-             <button
+             <Button
+              variant="glow"
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full py-6 rounded-2xl bg-linear-to-r from-primary to-blue-600 text-white font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full !py-5 flex items-center justify-center gap-3 text-sm"
+              icon={loading ? FaSpinner : FaSearch}
             >
-              {loading ? (
-                <FaSpinner className="animate-spin" />
-              ) : (
-                <FaSearch className="group-hover:rotate-12 transition-transform" />
-              )}
-              <span className="tracking-[0.2em] font-black uppercase">
-                Run Intelligence Scan (50 💎)
-              </span>
-            </button>
-          </div>
+              {loading ? "Analyzing..." : "Run Intelligence Scan (50 💎)"}
+            </Button>
+          </Card>
         </div>
 
         {/* RIGHT: Results Section */}
@@ -293,18 +288,17 @@ const ATSPage = () => {
           {result ? (
             <ATSResult data={result} />
           ) : (
-            <div className="glass rounded-3xl border-2 border-dashed border-white/10 p-20 text-center flex flex-col items-center justify-center min-h-[500px]">
-              <div className="w-32 h-32 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-10 shadow-glow animate-pulse">
-                <FaSearch size={48} />
+            <Card variant="flat" className="border-2 border-dashed border-border-subtle p-20 text-center flex flex-col items-center justify-center min-h-[500px] bg-bg-secondary/50">
+              <div className="w-24 h-24 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-glow-primary animate-pulse">
+                <FaSearch size={32} />
               </div>
-              <h3 className="font-black text-3xl text-text-primary mb-4 tracking-tighter">
-                Audit Results Pending
+              <h3 className="font-bold text-2xl text-text-primary mb-3 tracking-tight">
+                Awaiting Data Input
               </h3>
-              <p className="font-medium text-text-muted opacity-60 max-w-sm mx-auto leading-relaxed">
-                Upload your resume and provide a job description to see your
-                performance score and actionable feedback.
+              <p className="text-sm font-medium text-text-muted max-w-sm mx-auto leading-relaxed">
+                Provide your resume and job description to initiate the AI scoring matrix and reveal optimization feedback.
               </p>
-            </div>
+            </Card>
           )}
         </div>
       </div>

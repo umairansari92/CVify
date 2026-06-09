@@ -572,7 +572,7 @@ const AdminDashboard = () => {
   const StatCard = ({ icon: Icon, label, value, gradient, iconColor, onClick }) => (
     <div 
       onClick={onClick}
-      className={`group premium-card p-6 relative overflow-hidden transition-all duration-300 ${onClick ? 'cursor-pointer hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/20' : ''}`}
+      className={`group bg-midground border border-border-subtle rounded-2xl p-6 relative overflow-hidden transition-all duration-300 ${onClick ? 'cursor-pointer hover:shadow-xl' : ''}`}
     >
       <div
         className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
@@ -676,7 +676,7 @@ const AdminDashboard = () => {
 
   // ─── Render ─────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen relative bg-mesh p-6 md:p-12 transition-colors duration-300">
+    <div className="min-h-screen relative bg-bg-primary p-6 md:p-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 animate-fadeIn">

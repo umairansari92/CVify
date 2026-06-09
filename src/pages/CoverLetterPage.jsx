@@ -17,6 +17,9 @@ import { toast } from "react-hot-toast";
 import { handleDownloadLetter } from "../utils/pdfExport";
 import Swal from "sweetalert2";
 
+import Card from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+
 const CoverLetterPage = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -84,7 +87,7 @@ const CoverLetterPage = () => {
           background: "var(--midground)",
           color: "var(--text-main)",
           customClass: {
-            popup: "glass",
+            popup: "glass-medium",
             confirmButton: "btn-primary",
             cancelButton: "btn-secondary",
           },
@@ -119,21 +122,21 @@ const CoverLetterPage = () => {
   };
 
   return (
-    <div className="p-4 lg:p-10 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="p-4 lg:p-10 max-w-7xl mx-auto space-y-8">
       {/* Page Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-text-primary tracking-tight">
-            Cover Letter Generator
+            Cover Letter AI
           </h1>
-          <p className="text-text-secondary mt-1 font-medium italic opacity-70">
-            Craft professional letters in seconds. Edit them to perfection.
+          <p className="text-text-secondary mt-1 font-medium opacity-70">
+            Generate tailored cover letters powered by AI, then edit and export as PDF.
           </p>
         </div>
-        <div className="flex items-center gap-3 px-6 py-3 glass rounded-2xl border border-primary/20 shadow-xl shadow-primary/5">
-          <FaGem className="text-blue-400 animate-bounce" />
-          <span className="font-black text-text-primary">
-            {user?.diamonds || 0} Diamonds Available
+        <div className="flex items-center gap-3 px-6 py-3 bg-midground rounded-2xl border border-primary/20">
+          <FaGem className="text-primary" />
+          <span className="font-bold text-text-primary text-sm">
+            {user?.diamonds || 0} Diamonds
           </span>
         </div>
       </div>
@@ -141,55 +144,53 @@ const CoverLetterPage = () => {
       {/* Two-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Input Form */}
-        <div className="lg:col-span-5 space-y-6 glass p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group lg:sticky lg:top-20">
-            <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+        <div className="lg:col-span-5 lg:sticky lg:top-20">
+          <Card variant="glass" className="p-6 lg:p-8 space-y-5 !border-white/5">
+            {/* Resume Select */}
+            <div>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-2">
+                Select Resume
+              </label>
+              <select
+                className="w-full bg-bg-primary border border-border-subtle p-3.5 rounded-xl font-bold text-sm text-text-primary outline-none focus:border-primary transition-all"
+                value={formData.resumeId}
+                onChange={(e) =>
+                  setFormData({ ...formData, resumeId: e.target.value })
+                }
+              >
+                {resumes.map((r) => (
+                  <option key={r._id} value={r._id}>
+                    {r.personalInfo.fullName} — {r.templateId}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <div className="space-y-4 relative z-10">
-              {/* Resume Select */}
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
-                  Select Resume
-                </label>
-                <select
-                  className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold text-text-primary"
-                  value={formData.resumeId}
-                  onChange={(e) =>
-                    setFormData({ ...formData, resumeId: e.target.value })
-                  }
-                >
-                  {resumes.map((r) => (
-                    <option key={r._id} value={r._id}>
-                      {r.personalInfo.fullName} — {r.templateId}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Job Title */}
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
-                  Job Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Senior Frontend Developer"
-                  className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold"
-                  value={formData.jobTitle}
-                  onChange={(e) =>
-                    setFormData({ ...formData, jobTitle: e.target.value })
-                  }
-                />
-              </div>
+            {/* Job Title */}
+            <div>
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-2">
+                Job Title
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Senior Frontend Developer"
+                className="w-full bg-bg-primary border border-border-subtle p-3.5 rounded-xl font-bold text-sm text-text-primary outline-none focus:border-primary transition-all"
+                value={formData.jobTitle}
+                onChange={(e) =>
+                  setFormData({ ...formData, jobTitle: e.target.value })
+                }
+              />
+            </div>
 
             {/* Company */}
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-2">
                 Company Name
               </label>
               <input
                 type="text"
                 placeholder="e.g. Google"
-                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-bold"
+                className="w-full bg-bg-primary border border-border-subtle p-3.5 rounded-xl font-bold text-sm text-text-primary outline-none focus:border-primary transition-all"
                 value={formData.companyName}
                 onChange={(e) =>
                   setFormData({ ...formData, companyName: e.target.value })
@@ -199,13 +200,13 @@ const CoverLetterPage = () => {
 
             {/* Job Description */}
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-2">
                 Job Description (Context for AI)
               </label>
               <textarea
                 rows="4"
                 placeholder="Paste the job description here for better AI tailoring..."
-                className="w-full bg-background border border-border-subtle p-3 rounded-xl focus:ring-2 ring-primary/20 transition-all font-medium text-sm resize-none"
+                className="w-full bg-bg-primary border border-border-subtle p-3.5 rounded-xl font-medium text-sm text-text-primary resize-none outline-none focus:border-primary transition-all leading-relaxed"
                 value={formData.jobDescription}
                 onChange={(e) =>
                   setFormData({ ...formData, jobDescription: e.target.value })
@@ -215,7 +216,7 @@ const CoverLetterPage = () => {
 
             {/* Tone */}
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">
+              <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary mb-2">
                 Tone
               </label>
               <div className="flex gap-2">
@@ -223,10 +224,10 @@ const CoverLetterPage = () => {
                   <button
                     key={t}
                     onClick={() => setFormData({ ...formData, tone: t })}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-black transition-all ${
+                    className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all border ${
                       formData.tone === t
-                        ? "bg-primary text-white shadow-lg"
-                        : "bg-white/5 text-text-secondary hover:bg-white/10"
+                        ? "bg-primary/10 border-primary/40 text-primary"
+                        : "bg-bg-primary border-border-subtle text-text-muted hover:text-text-main"
                     }`}
                   >
                     {t}
@@ -236,66 +237,56 @@ const CoverLetterPage = () => {
             </div>
 
             {/* Generate Buttons */}
-            <div className="pt-4 space-y-3">
-              <button
+            <div className="pt-2 space-y-3">
+              <Button
+                variant="glow"
                 onClick={() => handleGenerate("ai")}
                 disabled={loading}
-                className="w-full py-4 rounded-2xl bg-linear-to-r from-blue-600 to-cyan-600 text-white font-black shadow-xl shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group/btn disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full !py-4 flex items-center justify-center gap-3"
+                icon={loading ? FaSpinner : FaMagic}
               >
-                {loading ? (
-                  <FaSpinner className="animate-spin" />
-                ) : (
-                  <FaMagic className="group-hover/btn:rotate-12 transition-transform" />
-                )}
-                <span>Generate with AI (50 Diamonds)</span>
-              </button>
+                {loading ? "Generating..." : "Generate with AI (50 💎)"}
+              </Button>
 
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => handleGenerate("template")}
                 disabled={loading}
-                className="w-full py-4 rounded-2xl bg-linear-to-r from-emerald-600 to-green-600 text-white font-black shadow-xl shadow-green-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full !py-4 flex items-center justify-center gap-3 !bg-success/10 !text-success hover:!bg-success hover:!text-white !border-success/20"
+                icon={FaRegFileAlt}
               >
-                <FaRegFileAlt />
-                <span>Basic Template (Free)</span>
-              </button>
+                Basic Template (Free)
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* RIGHT: Live Editable Preview */}
         <div className="lg:col-span-7">
           {generatedLetter ? (
-            <div className="glass rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col">
+            <Card variant="elevated" className="overflow-hidden flex flex-col !p-0">
               {/* Preview Header */}
-              <div className="p-6 border-b border-white/5 bg-white/5">
+              <div className="p-6 border-b border-border-subtle bg-bg-secondary">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="text-2xl font-black text-text-primary uppercase tracking-tight">
+                    <h2 className="text-2xl font-black text-text-primary tracking-tight">
                       {generatedLetter.jobTitle}
                     </h2>
                     <p className="text-sm text-primary font-bold mt-1">
-                      {generatedLetter.companyName ||
-                        "Professional Application"}
+                      {generatedLetter.companyName || "Professional Application"}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 py-1 px-3 rounded-lg bg-primary/10 border border-primary/10">
-                    <span
-                      className={`text-[10px] font-black uppercase tracking-widest ${
-                        generatedLetter.type === "ai"
-                          ? "text-blue-400"
-                          : "text-emerald-400"
-                      }`}
-                    >
-                      {generatedLetter.type === "ai"
-                        ? "AI Generated"
-                        : "Template"}
-                    </span>
+                  <div className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest border ${
+                    generatedLetter.type === "ai"
+                      ? "bg-primary/10 border-primary/20 text-primary"
+                      : "bg-success/10 border-success/20 text-success"
+                  }`}>
+                    {generatedLetter.type === "ai" ? "AI Generated" : "Template"}
                   </div>
                 </div>
                 {!isEditing && (
-                  <p className="text-[11px] text-text-muted mt-3 opacity-50 italic">
-                    Click <strong>Edit</strong> below or double-click the text
-                    to manually customize.
+                  <p className="text-[11px] text-text-muted mt-3 opacity-50">
+                    Click <strong>Edit</strong> below or double-click the text to customize.
                   </p>
                 )}
               </div>
@@ -306,7 +297,7 @@ const CoverLetterPage = () => {
                   <textarea
                     value={editableContent}
                     onChange={(e) => setEditableContent(e.target.value)}
-                    className="w-full h-full min-h-[380px] bg-background border border-primary/20 p-4 rounded-2xl font-medium text-sm text-text-secondary leading-relaxed focus:ring-2 ring-primary/30 transition-all resize-none"
+                    className="w-full h-full min-h-[380px] bg-bg-primary border border-primary/20 p-4 rounded-xl font-medium text-sm text-text-secondary leading-relaxed focus:border-primary transition-all resize-none outline-none"
                     autoFocus
                   />
                 ) : (
@@ -321,27 +312,24 @@ const CoverLetterPage = () => {
               </div>
 
               {/* Action Bar */}
-              <div className="p-6 border-t border-white/5 bg-white/5 flex flex-wrap gap-3">
+              <div className="p-6 border-t border-border-subtle bg-bg-secondary flex flex-wrap gap-3">
                 {isEditing ? (
                   <>
-                    <button
+                    <Button
+                      variant="primary"
                       onClick={handleSaveEdit}
                       disabled={isSaving}
-                      className="flex-1 min-w-[120px] py-3 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="flex-1 min-w-[120px]"
+                      icon={isSaving ? FaSpinner : FaCheck}
                     >
-                      {isSaving ? (
-                        <FaSpinner className="animate-spin" />
-                      ) : (
-                        <FaCheck />
-                      )}
                       Save Changes
-                    </button>
+                    </Button>
                     <button
                       onClick={() => {
                         setEditableContent(generatedLetter.content);
                         setIsEditing(false);
                       }}
-                      className="flex-1 min-w-[120px] py-3 bg-white/5 text-text-secondary rounded-2xl font-black hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                      className="flex-1 min-w-[120px] py-3 bg-midground text-text-secondary rounded-xl font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-border-subtle"
                     >
                       <FaTimes /> Cancel
                     </button>
@@ -350,7 +338,7 @@ const CoverLetterPage = () => {
                   <>
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="flex-1 min-w-[100px] py-3 bg-white/5 text-text-secondary rounded-2xl font-black hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                      className="flex-1 min-w-[100px] py-3 bg-midground text-text-secondary rounded-xl font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-border-subtle"
                     >
                       <FaEdit /> Edit
                     </button>
@@ -359,36 +347,34 @@ const CoverLetterPage = () => {
                         navigator.clipboard.writeText(generatedLetter.content);
                         toast.success("Copied to clipboard!");
                       }}
-                      className="flex-1 min-w-[100px] py-3 bg-primary/10 text-primary rounded-2xl font-black hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
+                      className="flex-1 min-w-[100px] py-3 bg-primary/10 text-primary rounded-xl font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 border border-primary/20"
                     >
                       <FaCopy /> Copy
                     </button>
                     <button
-                      onClick={() =>
-                        handleDownloadLetter(generatedLetter, user)
-                      }
-                      className="flex-1 min-w-[100px] py-3 bg-secondary/10 text-secondary rounded-2xl font-black hover:bg-secondary hover:text-white transition-all flex items-center justify-center gap-2"
+                      onClick={() => handleDownloadLetter(generatedLetter, user)}
+                      className="flex-1 min-w-[100px] py-3 bg-success/10 text-success rounded-xl font-bold hover:bg-success hover:text-white transition-all flex items-center justify-center gap-2 border border-success/20"
                     >
-                      <FaDownload /> Download PDF
+                      <FaDownload /> PDF
                     </button>
                   </>
                 )}
               </div>
-            </div>
+            </Card>
           ) : (
             /* Empty State */
-            <div className="glass rounded-3xl border-2 border-dashed border-white/10 p-16 text-center flex flex-col items-center justify-center min-h-96">
-              <div className="w-24 h-24 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-glow">
-                <FaRegFileAlt size={40} />
+            <Card variant="flat" className="border-2 border-dashed border-border-subtle p-16 text-center flex flex-col items-center justify-center min-h-96 bg-bg-secondary/50">
+              <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-glow-primary">
+                <FaRegFileAlt size={32} />
               </div>
-              <h3 className="font-black text-2xl text-text-primary mb-3 tracking-tight">
+              <h3 className="font-bold text-2xl text-text-primary mb-3 tracking-tight">
                 Your Letter Will Appear Here
               </h3>
-              <p className="font-medium text-text-muted opacity-60 max-w-sm">
+              <p className="text-sm font-medium text-text-muted max-w-sm">
                 Fill in the form and click <strong>Generate</strong>. You can
                 then edit the result directly before downloading.
               </p>
-            </div>
+            </Card>
           )}
         </div>
       </div>

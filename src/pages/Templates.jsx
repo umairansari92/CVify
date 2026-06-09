@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ResumePreview from "../components/ResumePreview";
 import { handleDownloadPDF } from "../utils/pdfExport";
-import { FaFileDownload, FaEye } from "react-icons/fa";
+import { FaFileDownload, FaEye, FaTimes } from "react-icons/fa";
 import { initResumeWithData } from "../features/resume/resumeSlice";
+
+import Card from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 const dummyResume = {
   personalInfo: {
@@ -141,101 +144,101 @@ const Templates = () => {
   };
 
   return (
-    <div className="p-8 bg-slate-50 dark:bg-midnight min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-12">
-          <h1 className="text-4xl font-black text-primary dark:text-white tracking-tight underline decoration-action decoration-4 underline-offset-8">
-            CVify Template Showcase
-          </h1>
-          <p className="mt-4 text-slate-500 dark:text-slate-400 font-medium">
-            Explore all our professional resume templates with realistic dummy
-            data. Download the native PDF to see the high-fidelity output.
-          </p>
-        </header>
+    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+      <header className="mb-12">
+        <h1 className="text-3xl lg:text-4xl font-black text-text-primary tracking-tight">
+          Portfolio Lab
+        </h1>
+        <p className="mt-2 text-text-secondary font-medium opacity-70">
+          Explore all professional resume templates with realistic sample data.
+          Download the native PDF to preview.
+        </p>
+      </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {templates.map((tpl) => (
-            <div
-              key={tpl.id}
-              className="group bg-white dark:bg-slate-blue rounded-[2.5rem] shadow-premium border border-slate-100 dark:border-white/5 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
-            >
-              <div className="relative h-[450px] overflow-hidden bg-slate-50 dark:bg-midnight/30">
-                {/* Template Preview with Scale */}
-                <div className="absolute inset-x-0 top-0 flex justify-center scale-[0.55] origin-top transition-all duration-700 ease-out group-hover:scale-[0.6] group-hover:translate-y-[-10px]">
-                  <ResumePreview resume={dummyResume} templateId={tpl.id} />
-                </div>
-
-                {/* Bottom Fade Effect */}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white dark:from-slate-blue to-transparent z-10 pointer-events-none" />
-
-                {/* Overlay actions */}
-                <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 z-20">
-                  <button
-                    onClick={() => handleUseTemplate(tpl.id)}
-                    className="bg-primary text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl hover:bg-action transition-all transform hover:scale-105"
-                  >
-                    Select Design
-                  </button>
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => handleDownloadPDF(dummyResume, tpl.id)}
-                      className="p-4 bg-emerald-500 text-white rounded-2xl shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-110"
-                      title="Download Sample PDF"
-                    >
-                      <FaFileDownload size={20} />
-                    </button>
-                    <button
-                      className="p-4 bg-white text-primary rounded-2xl shadow-lg hover:bg-slate-50 transition-all transform hover:scale-110"
-                      onClick={() =>
-                        setSelectedTemplate({ ...tpl, data: dummyResume })
-                      }
-                      title="Zoom View"
-                    >
-                      <FaEye size={20} />
-                    </button>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {templates.map((tpl) => (
+          <Card
+            key={tpl.id}
+            variant="elevated"
+            className="group !p-0 overflow-hidden hover:-translate-y-1 transition-all duration-300"
+          >
+            <div className="relative h-[420px] overflow-hidden bg-bg-secondary">
+              {/* Template Preview with Scale */}
+              <div className="absolute inset-x-0 top-0 flex justify-center scale-[0.55] origin-top transition-all duration-500 group-hover:scale-[0.58]">
+                <ResumePreview resume={dummyResume} templateId={tpl.id} />
               </div>
 
-              <div className="p-8 flex justify-between items-center decoration-slate-200 bg-white/50 dark:bg-slate-blue/50 backdrop-blur-sm border-t border-slate-100 dark:border-white/5 relative z-30">
-                <div>
-                  <h3 className="text-xl font-black text-primary dark:text-white uppercase tracking-tight">
-                    {tpl.name}
-                  </h3>
-                  <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">
-                    AI-Optimized Layout
-                  </p>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-midnight flex items-center justify-center border border-slate-100 dark:border-white/5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-action animate-pulse"></div>
+              {/* Bottom Fade */}
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-midground to-transparent z-10 pointer-events-none" />
+
+              {/* Overlay actions */}
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 z-20">
+                <Button
+                  variant="glow"
+                  onClick={() => handleUseTemplate(tpl.id)}
+                  className="shadow-2xl"
+                >
+                  Select Design
+                </Button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleDownloadPDF(dummyResume, tpl.id)}
+                    className="p-3 bg-success text-white rounded-xl shadow-lg hover:bg-success/80 transition-all"
+                    title="Download Sample PDF"
+                  >
+                    <FaFileDownload size={16} />
+                  </button>
+                  <button
+                    className="p-3 bg-white text-bg-primary rounded-xl shadow-lg hover:bg-white/80 transition-all"
+                    onClick={() =>
+                      setSelectedTemplate({ ...tpl, data: dummyResume })
+                    }
+                    title="Zoom View"
+                  >
+                    <FaEye size={16} />
+                  </button>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+
+            <div className="p-6 flex justify-between items-center bg-midground border-t border-border-subtle">
+              <div>
+                <h3 className="text-lg font-bold text-text-primary tracking-tight">
+                  {tpl.name}
+                </h3>
+                <p className="text-[10px] font-bold text-text-muted mt-1 uppercase tracking-widest">
+                  AI-Optimized Layout
+                </p>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-bg-primary flex items-center justify-center border border-border-subtle">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
 
       {/* Fullscreen Overlay for Preview */}
       {selectedTemplate && (
-        <div className="fixed inset-0 z-50 bg-primary/95 backdrop-blur-md flex flex-col items-center p-10 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center p-6 lg:p-10 overflow-y-auto">
           <div className="max-w-4xl w-full flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-black text-white">
-              {selectedTemplate.name} Full Preview
+            <h2 className="text-2xl font-black text-white tracking-tight">
+              {selectedTemplate.name} — Full Preview
             </h2>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
                 onClick={() =>
                   handleDownloadPDF(dummyResume, selectedTemplate.id)
                 }
-                className="bg-success text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2"
+                className="bg-success text-white px-5 py-3 rounded-xl font-bold flex items-center gap-2 text-sm hover:bg-success/80 transition-all"
               >
-                <FaFileDownload /> Get Sample PDF
+                <FaFileDownload /> Get PDF
               </button>
               <button
                 onClick={() => setSelectedTemplate(null)}
-                className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold"
+                className="bg-danger text-white px-5 py-3 rounded-xl font-bold flex items-center gap-2 text-sm hover:bg-danger/80 transition-all"
               >
-                Close
+                <FaTimes /> Close
               </button>
             </div>
           </div>
