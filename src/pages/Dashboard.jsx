@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchDashboardData,
-} from "../features/dashboard/dashboardThunk";
-import { 
-  selectDashboardData, 
-  selectDashboardLoading, 
-  selectIsRefreshing 
-} from "../features/dashboard/dashboardSlice";
+import { fetchDashboardData } from "../features/dashboard/dashboardThunk";
+import { selectDashboardData, selectDashboardLoading, selectIsRefreshing } from "../features/dashboard/dashboardSlice";
 import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaSearchPlus, FaRocket, FaChartBar, FaAngleRight, FaEnvelopeOpenText } from "react-icons/fa";
 import { FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle, FiArrowRight, FiActivity } from "react-icons/fi";
@@ -20,18 +14,16 @@ import { m, AnimatePresence } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import api from "../api/axios";
 import { toast } from "react-hot-toast";
-import { 
-  deleteResume, 
-  cloneResume 
-} from "../features/resume/resumeThunk";
+import { deleteResume, cloneResume } from "../features/resume/resumeThunk";
 import { clearCurrentResume } from "../features/resume/resumeSlice";
 import QuestWidget from "../components/dashboard/QuestWidget";
 import { FaGem, FaFileSignature, FaShieldAlt } from "react-icons/fa";
 
-// Premium UI Components
-import PremiumButton from "../components/ui/PremiumButton";
-import GlassContainer from "../components/ui/GlassContainer";
-import SectionHeader from "../components/ui/SectionHeader";
+// New Executive UI Components
+import Card from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { Badge } from "../components/ui/Badge";
+import { MetricCard } from "../components/ui/MetricCard";
 import SkeletonLoader from "../components/ui/SkeletonLoader";
 
 const Dashboard = () => {
@@ -62,7 +54,7 @@ const Dashboard = () => {
       confirmButtonText: "Delete",
       background: "var(--midground)",
       color: "var(--text-main)",
-      customClass: { popup: "glass" },
+      customClass: { popup: "glass-medium" },
     });
 
     if (result.isConfirmed) {
@@ -90,7 +82,7 @@ const Dashboard = () => {
       background: "var(--midground)",
       color: "var(--text-main)",
       customClass: {
-        popup: "glass",
+        popup: "glass-medium",
         confirmButton: "btn-primary",
         cancelButton: "btn-secondary",
       },
@@ -107,7 +99,7 @@ const Dashboard = () => {
         showConfirmButton: false,
         background: "var(--midground)",
         color: "var(--text-main)",
-        customClass: { popup: "glass" },
+        customClass: { popup: "glass-medium" },
       });
     }
   };
@@ -127,7 +119,7 @@ const Dashboard = () => {
         showConfirmButton: false,
         background: "var(--midground)",
         color: "var(--text-main)",
-        customClass: { popup: "glass" },
+        customClass: { popup: "glass-medium" },
       });
     } else if (result.payload?.limitReached) {
       const confirm = await Swal.fire({
@@ -140,7 +132,7 @@ const Dashboard = () => {
         background: "var(--midground)",
         color: "var(--text-main)",
         customClass: {
-          popup: "glass",
+          popup: "glass-medium",
           confirmButton: "btn-primary",
           cancelButton: "btn-secondary",
         },
@@ -158,18 +150,6 @@ const Dashboard = () => {
   const handleScan = (id) => navigate("/ats", { state: { preSelectedResumeId: id } });
   const handleImprove = (id) => navigate("/ats", { state: { preSelectedResumeId: id, autoImprove: true } });
 
-  const renderAtsBadge = (score) => {
-    if (!score && score !== 0) return null;
-    const colorClass = score >= 80 ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : 
-                       score >= 60 ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
-                       "bg-red-500/10 text-red-500 border-red-500/20";
-    return (
-      <div className={`px-2 py-1 rounded-lg border ${colorClass} font-black text-[9px] tracking-widest uppercase`}>
-        ATS: {score}%
-      </div>
-    );
-  };
-
   if (loading && !resumes) {
     return (
       <div className="min-h-screen p-6 lg:p-12 space-y-12">
@@ -177,347 +157,145 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <SkeletonLoader className="h-48" count={3} />
         </div>
-        <SkeletonLoader className="h-[500px]" />
       </div>
     );
   }
 
+  // Derived metrics
+  const hiringProbability = user?.completionScore ? Math.min(Math.round(user.completionScore * 1.1), 99) : 45;
+  const healthScore = user?.completionScore || 0;
+
   return (
-    <div className="space-y-12 lg:space-y-20 pb-20">
-      {/* Elite Hero HUD Interface */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        <GlassContainer intensity="strong" className="lg:col-span-3 p-6 lg:p-10 relative overflow-hidden group border-[var(--card-border)]">
-          {/* HUD Mesh Layer */}
-          <div className="absolute inset-0 bg-mesh-pro opacity-40 pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 blur-[140px] rounded-full group-hover:bg-primary/20 transition-colors duration-1000" />
-          
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-10">
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 glass-soft rounded-full border-primary/20 hover:border-primary/40 transition-colors cursor-help group/status">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_var(--primary)]" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                    {economy?.tier || "PROFESSIONAL"} IDENTITY
-                  </span>
-                </div>
-                
-                {stats?.readyToClaimCount > 0 && (
-                  <m.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="px-4 py-2 glass-soft border-primary/30 text-primary text-[10px] font-black rounded-full shadow-glow-primary flex items-center gap-3"
-                  >
-                    <FiActivity className="animate-pulse" />
-                    ACCOUNT ACTIVE
-                  </m.div>
-                )}
-              </div>
-
-              <div className="max-w-xl">
-                <h1 className="text-3xl lg:text-4xl font-bold text-text-primary leading-tight mb-4 tracking-[-0.03em]">
-                  Welcome Back,<br />
-                  <span className="text-primary">{user?.name}</span>
-                </h1>
-                
-                <div className="flex flex-wrap items-center gap-6 mb-8">
-                  <div className="text-text-secondary font-semibold text-[13px] tracking-tight opacity-80 flex items-center gap-2 min-w-[220px]">
-                    <div className="w-4 h-[1px] bg-primary/30 shrink-0" />
-                    <TypeAnimation
-                      sequence={[
-                        "AI Workspace Active", 3000,
-                        "Intelligence Synchronized", 3000,
-                        "System Status: Elite", 3000
-                      ]}
-                      repeat={Infinity}
-                    />
-                  </div>
-                  <div className="hidden sm:block h-4 w-[1px] bg-card-border/40" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{resumes?.length || 0} Assets Found</span>
-                  </div>
-                </div>
-
-                <PremiumButton 
-                  onClick={handleCreateNew}
-                  icon={FiPlus}
-                  className="shadow-glow-primary"
-                >
-                  Create New Resume
-                </PremiumButton>
-              </div>
+    <div className="space-y-12 lg:space-y-16 pb-20 max-w-7xl mx-auto">
+      {/* 1. HERO SCORE SECTION */}
+      <Card variant="glass" className="relative p-10 lg:p-14 overflow-hidden glow-primary">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold text-text-primary mb-4 tracking-tight">
+              Good morning, {user?.name?.split(' ')[0] || "User"}.
+            </h1>
+            <div className="text-xl text-text-secondary font-medium flex gap-2 items-center">
+              You are <span className="text-primary font-bold">{hiringProbability}%</span> job-ready.
+            </div>
+            
+            <div className="mt-8 mb-8 text-text-muted text-sm flex items-center gap-3">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-glow-primary" />
+              <TypeAnimation
+                sequence={[
+                  "AI Workspace Active", 3000,
+                  "Intelligence Synchronized", 3000,
+                  "System Status: Elite", 3000
+                ]}
+                repeat={Infinity}
+                wrapper="span"
+              />
             </div>
 
-            {/* Circular Profile Integrity Focal Point */}
-            <div className="hidden lg:flex justify-end relative group/focal">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-[100px] rounded-full opacity-0 group-hover/focal:opacity-100 transition-opacity duration-1000" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-primary/10 rounded-full" />
-              
-              <div className="relative w-40 h-40 lg:w-44 lg:h-44">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="42"
-                    className="stroke-card-border fill-none"
-                    strokeWidth="8"
-                  />
-                  <m.circle
-                    cx="50"
-                    cy="50"
-                    r="42"
-                    fill="none"
-                    stroke="var(--primary)"
-                    strokeWidth="10"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: "0, 1000" }}
-                    animate={{ strokeDasharray: `${(user?.completionScore || 0) * 2.6389}, 1000` }}
-                    transition={{ duration: 2, ease: "circOut" }}
-                    className="shadow-glow-primary filter drop-shadow-[0_0_8px_var(--primary)]"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-4xl lg:text-5xl font-bold text-text-primary tracking-[-0.04em]">
-                    {user?.completionScore || 0}%
-                  </span>
-                  <span className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-40 mt-1">
-                    Profile
-                  </span>
-                </div>
+            <Button variant="glow" onClick={handleCreateNew} icon={FiPlus}>
+              Create New Resume
+            </Button>
+          </div>
+
+          <div className="flex justify-end items-center">
+            {/* Massive Score Ring for Hiring Probability */}
+            <div className="relative w-48 h-48 lg:w-56 lg:h-56">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" className="stroke-card-border fill-none" strokeWidth="6" />
+                <m.circle
+                  cx="50" cy="50" r="42" fill="none"
+                  stroke="var(--primary)" strokeWidth="8" strokeLinecap="round"
+                  initial={{ strokeDasharray: "0, 1000" }}
+                  animate={{ strokeDasharray: `${hiringProbability * 2.6389}, 1000` }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  className="filter drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-5xl lg:text-6xl font-bold text-text-primary tracking-tighter">
+                  {hiringProbability}<span className="text-2xl text-text-muted">%</span>
+                </span>
+                <span className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] mt-2">
+                  Probability
+                </span>
               </div>
             </div>
           </div>
-        </GlassContainer>
+        </div>
+      </Card>
 
-        <div className="lg:col-span-1">
+      {/* 2. KPI GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <MetricCard title="Career Health" value={`${healthScore}/100`} trend={5} subtext="from last week" icon={FiActivity} />
+        <MetricCard title="Active Resumes" value={resumes?.length || 0} icon={FaFileSignature} />
+        <MetricCard title="ATS Scans" value={stats?.totalScans || 0} icon={FaSearchPlus} />
+        <MetricCard title="Cover Letters" value={coverLetters?.length || 0} icon={FaEnvelopeOpenText} />
+      </div>
+
+      {/* 3. NEXT BEST ACTIONS & RECENT ACTIVITY */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <h2 className="text-xl font-bold text-text-primary tracking-tight">Active Resumes</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {resumes?.map((resume) => (
+              <Card key={resume.id} variant="elevated" className="!p-6 flex flex-col gap-6">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-bold text-text-primary truncate mb-1">{resume.title}</h3>
+                    <p className="text-xs text-text-muted uppercase tracking-wider">{resume.status}</p>
+                  </div>
+                  {resume.atsScore ? (
+                    <Badge variant={resume.atsScore > 75 ? "score" : "warning"}>
+                      ATS {resume.atsScore}
+                    </Badge>
+                  ) : null}
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button variant="ghost" className="flex-1 !bg-primary/5 hover:!bg-primary/10 !text-primary !h-10 text-xs" onClick={() => handleEdit(resume.id)} icon={FiEdit2}>
+                    Edit
+                  </Button>
+                  <Button variant="ghost" className="flex-1 !bg-white/5 hover:!bg-white/10 !h-10 text-xs" onClick={() => handleScan(resume.id)} icon={FaSearchPlus}>
+                    Scan
+                  </Button>
+                </div>
+              </Card>
+            ))}
+            {(!resumes || resumes.length === 0) && (
+              <div className="col-span-2 text-center p-12 border border-dashed border-border-subtle rounded-3xl text-text-muted">
+                No active resumes found. Create your first one to get started.
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold text-text-primary tracking-tight">Next Best Actions</h2>
+          <Card variant="default" className="!p-6 space-y-4 bg-bg-secondary/50">
+            <div className="p-4 rounded-xl bg-midground border border-border-subtle flex gap-4 items-start hover:border-primary/30 transition-colors cursor-pointer" onClick={() => navigate('/interview')}>
+              <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5"><FiZap size={14} /></div>
+              <div>
+                <p className="text-sm font-semibold text-text-primary mb-1">Practice Interview</p>
+                <p className="text-xs text-text-muted">Your interview readiness is holding back your hiring probability.</p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-midground border border-border-subtle flex gap-4 items-start hover:border-primary/30 transition-colors cursor-pointer" onClick={() => navigate('/ats')}>
+              <div className="w-8 h-8 rounded-full bg-warning/10 text-warning flex items-center justify-center shrink-0 mt-0.5"><FaSearchPlus size={14} /></div>
+              <div>
+                <p className="text-sm font-semibold text-text-primary mb-1">Improve ATS Score</p>
+                <p className="text-xs text-text-muted">Your latest resume scored 72%. Let's push it past 85%.</p>
+              </div>
+            </div>
+          </Card>
+
           <QuestWidget quests={dashboard.quests} />
         </div>
       </div>
 
-      {/* Bento Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
-           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow rotate-12 group-hover:rotate-0">
-              <FaRocket size={80} />
-           </div>
-           <SectionHeader 
-             title={`${user?.completionScore || 0}%`} 
-             subtitle="Profile Strength" 
-             badge="LIVE"
-             className="mb-0"
-           />
-           <div className="mt-8 flex items-center justify-between">
-              <div className="flex-1 h-1.5 bg-[var(--card-border)] rounded-full overflow-hidden">
-                <m.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${user?.completionScore || 0}%` }}
-                  className="h-full bg-primary" 
-                />
-              </div>
-           </div>
-        </GlassContainer>
-
-        <GlassContainer className="p-8 relative overflow-hidden group hover:shadow-hover transition-all duration-medium">
-           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-slow -rotate-12 group-hover:rotate-0">
-              <FaSearchPlus size={80} />
-           </div>
-           <SectionHeader 
-             title={stats?.totalScans || 0} 
-             subtitle="Intelligence Scans" 
-             badge="ENGINE"
-             className="mb-0"
-           />
-           <div className="mt-8 flex gap-1.5">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className={`h-1 flex-1 rounded-full ${i < (stats?.totalScans || 0) % 5 ? "bg-primary" : "bg-[var(--card-border)]"}`} />
-              ))}
-           </div>
-        </GlassContainer>
-
-        <GlassContainer className="p-10 relative overflow-hidden group hover:shadow-glow-success transition-all duration-700 border-[var(--card-border)]">
-           <div className="absolute -top-6 -right-6 p-8 opacity-[0.03] group-hover:opacity-10 transition-all duration-500 rotate-45 group-hover:rotate-0">
-              <FaShieldAlt size={100} />
-           </div>
-           <SectionHeader 
-             title="Verified" 
-             subtitle="Data Protection Active" 
-             badge="SECURITY"
-             className="mb-0"
-           />
-           <div className="mt-8 text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-2">
-              <div className="w-2 h-2 bg-success rounded-full shadow-glow-success" />
-              Verified & Secure Environment
-           </div>
-        </GlassContainer>
-      </div>
-
-      {/* Career Components Matrix */}
-      <div className="space-y-10">
-        <SectionHeader 
-          title="Professional Resumes" 
-          subtitle="Refined resume variations managed by the AI Engine."
-          badge={`${resumes?.length || 0} ACTIVE`}
-          icon={FaFileSignature}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {resumes?.map((resume) => (
-            <GlassContainer key={resume.id} intensity="medium" className="group p-0 min-h-[500px] h-auto hover:shadow-hover transition-all duration-medium flex flex-col border-[var(--card-border)] relative">
-              {/* Revision Banner HUD */}
-              <div className="h-44 relative group-hover:scale-[1.02] transition-transform duration-slow shrink-0 overflow-hidden">
-                <div className="absolute inset-0 bg-mesh opacity-20" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
-                {/* Visual ATS Indicator */}
-                <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-1">
-                   <div className="px-3 py-1.5 glass-strong rounded-lg border-white/10 text-[10px] font-bold text-text-primary tracking-tight">
-                     ATS READY
-                   </div>
-                   <div className="w-12 h-1 bg-primary/20 rounded-full overflow-hidden">
-                      <div className="w-4/5 h-full bg-primary" />
-                   </div>
-                </div>
-                <div className="absolute bottom-16 left-10 flex flex-col gap-3">
-                  <div className="flex gap-2">
-                    {renderAtsBadge(resume.atsScore)}
-                    <span className="bg-primary/20 text-text-primary text-[9px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[var(--card-border)] backdrop-blur-md">
-                      {resume.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-8 flex-1 flex flex-col -mt-10 relative z-10">
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-text-primary mb-1 truncate group-hover:text-primary transition-colors">{resume.title}</h3>
-                  <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.2em]">Premium Template</p>
-                </div>
-
-                <div className="flex-1 space-y-8">
-                   <div className="flex items-center gap-5 p-5 glass-soft rounded-2xl border-[var(--card-border)] group/revision">
-                      <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary transition-transform">
-                        <FiEdit2 size={18} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-black text-text-secondary uppercase tracking-[0.3em] mb-1 opacity-50">Last Modification</span>
-                        <span className="text-sm font-black text-text-primary">
-                          {new Date(resume.lastUpdated).toLocaleDateString(undefined, { month: "long", day: "numeric" })}
-                        </span>
-                      </div>
-                   </div>
-
-                   <div className="grid grid-cols-2 gap-4">
-                      <button onClick={() => handleScan(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 hover:text-primary transition-all border-[var(--card-border)]">
-                        <FaSearchPlus size={14} /> Analysis
-                      </button>
-                      <button onClick={() => handleImprove(resume.id)} className="flex items-center justify-center gap-3 p-4 glass-soft rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/10 hover:text-amber-500 transition-all border-[var(--card-border)]">
-                        <FiZap size={14} /> Optimize
-                      </button>
-                   </div>
-                </div>
-
-                <div className="flex items-center gap-3 pt-8">
-                  <PremiumButton onClick={() => handleEdit(resume.id)} className="flex-1 !py-4 !text-[10px] shadow-sm" icon={FiEdit2}>
-                    Open Builder
-                  </PremiumButton>
-                  <button onClick={() => handleDownloadPDF(resume, "Modern")} className="w-14 h-14 glass-soft rounded-2xl border-[var(--card-border)] flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
-                    <FiDownload size={20} />
-                  </button>
-                </div>
-              </div>
-            </GlassContainer>
-          ))}
-
-          {resumes?.length < 3 && (
-            <GlassContainer intensity="soft" onClick={handleCreateNew} className="border-2 border-dashed border-[var(--card-border)] flex flex-col items-center justify-center p-12 bg-primary/[0.02] cursor-pointer hover:border-primary/40 group transition-all min-h-[550px]">
-              <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 group-hover:glow-primary transition-all duration-500 mb-6">
-                <FiPlus size={36} />
-              </div>
-              <p className="font-black text-xs uppercase tracking-[0.4em] text-text-secondary group-hover:text-primary transition-colors text-center leading-relaxed">
-                Create New<br/><span className="text-[10px] opacity-50">Professional Resume</span>
-              </p>
-            </GlassContainer>
-          )}
-        </div>
-      </div>
-
-      {/* Synthesis Archive */}
-      <div className="space-y-10">
-        <SectionHeader 
-          title="Cover Letter Collection" 
-          subtitle="Artifacts generated through AI optimization."
-          badge={`${coverLetters?.length || 0} GENERATED`}
-          icon={FaEnvelopeOpenText}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {coverLetters?.map((letter) => (
-            <GlassContainer key={letter.id} onClick={() => { setSelectedLetter(letter); setIsPreviewOpen(true); }} className="group p-8 cursor-pointer hover:border-primary/40 transition-all flex flex-col relative overflow-hidden border-[var(--card-border)]">
-              <div className="absolute -top-10 -right-10 p-10 opacity-[0.02] group-hover:opacity-[0.08] transition-opacity duration-700">
-                 <FaEnvelopeOpenText size={120} />
-              </div>
-               
-              <div className="flex justify-between items-start mb-10">
-                 <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent glow-accent">
-                    <FaEnvelopeOpenText size={20} />
-                 </div>
-                <div className="w-1 h-1 bg-accent rounded-full animate-pulse shadow-[0_0_8px_var(--accent)]" />
-              </div>
-
-              <div className="flex-1">
-                 <h3 className="font-bold text-text-primary text-xl leading-[1.2] mb-2 line-clamp-2 group-hover:text-accent transition-colors tracking-tight">
-                   {letter.jobTitle}
-                 </h3>
-                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.2em] opacity-60">
-                   {letter.companyName}
-                 </p>
-              </div>
-
-              <div className="mt-12 pt-6 border-t border-[var(--card-border)] flex items-center justify-between">
-                 <div className="flex items-center gap-3 group/btn">
-                    <span className="text-[11px] font-black text-accent tracking-[0.3em] uppercase">View Details</span>
-                    <FiArrowRight className="text-accent group-hover/btn:translate-x-2 transition-transform" />
-                 </div>
-                 <button onClick={(e) => handleDeleteLetter(letter.id, e)} className="w-10 h-10 rounded-xl bg-red-500/5 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all opacity-10 hover:opacity-100">
-                    <FiTrash2 size={16} />
-                 </button>
-              </div>
-            </GlassContainer>
-          ))}
-        </div>
-      </div>
-
-      {/* Modals & Loaders */}
-      <AnimatePresence>
-        {isPreviewOpen && selectedLetter && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10">
-            <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsPreviewOpen(false)} className="fixed inset-0 bg-bg-secondary/90 backdrop-blur-xl transition-all" />
-            <m.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="glass-strong w-full max-w-4xl max-h-[90vh] rounded-3xl border-[var(--card-border)] flex flex-col relative z-20 overflow-hidden shadow-2xl">
-               <div className="p-12 border-b border-card-border flex justify-between items-start bg-[var(--glass-soft-bg)]">
-                  <div>
-                    <h3 className="text-[11px] font-black text-accent uppercase tracking-[0.4em] mb-4">Export Document</h3>
-                    <h3 className="font-black text-4xl lg:text-5xl text-text-primary tracking-tighter leading-none">{selectedLetter.jobTitle}</h3>
-                    <p className="mt-3 text-text-secondary font-bold text-lg opacity-60">{selectedLetter.companyName}</p>
-                  </div>
-                  <button onClick={() => setIsPreviewOpen(false)} className="w-14 h-14 glass-medium border-[var(--card-border)] rounded-2xl flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 transition-all active:scale-90">
-                    <FaTimes size={20} />
-                  </button>
-               </div>
-               <div className="p-12 overflow-y-auto font-medium text-text-secondary text-lg leading-relaxed whitespace-pre-wrap select-text custom-scrollbar space-y-6">
-                  {selectedLetter.content}
-               </div>
-               <div className="p-10 border-t border-[var(--card-border)] bg-[var(--glass-soft-bg)]">
-                  <PremiumButton onClick={() => handleDownloadLetter(selectedLetter, user)} className="w-full !py-6" icon={FaDownload}>
-                    Download as PDF
-                  </PremiumButton>
-               </div>
-            </m.div>
-          </div>
-        )}
-      </AnimatePresence>
-
       {isRefreshing && (
-        <div className="fixed bottom-12 right-12 z-[100] glass-strong px-10 py-5 rounded-full border-primary/30 flex items-center gap-6 shadow-glow-primary animate-float">
-          <FiRefreshCw className="animate-spin text-primary" size={20} />
-          <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary">Synchronizing...</span>
+        <div className="fixed bottom-12 right-12 z-[100] glass-strong px-6 py-3 rounded-full border-primary/30 flex items-center gap-3 shadow-glow-primary">
+          <FiRefreshCw className="animate-spin text-primary" size={16} />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Syncing</span>
         </div>
       )}
     </div>

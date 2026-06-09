@@ -9,82 +9,47 @@
   Themes: Daylight Executive & Midnight Pro
 */
 
-:root {
-  /* AI Career Workspace (Teal Identity) */
-  --primary: #0f9d8a;
-  --accent: #0b7d6e;
-  --success: #16a34a;
-  --warning: #f59e0b;
-  --danger: #dc2626;
+:root, .dark {
+  /* Executive Dark - Linear × Stripe × Perplexity */
+  --primary: #3b82f6; /* Electric Blue */
+  --accent: #06b6d4; /* Cyan Glow */
+  --success: #22c55e; /* Soft Green */
+  --warning: #f59e0b; /* Amber */
+  --danger: #ef4444; /* Muted Red */
 
-  --background: #f4f8f7; /* Soft premium white */
-  --midground: #ffffff; /* Cards/Modals */
-  --foreground: #eaf2f0; /* Sidebar background depth */
-
-  /* Semantic Tokens */
-  --bg-primary: var(--background);
-  --bg-secondary: var(--foreground);
-  --card-bg: rgba(255, 255, 255, 0.94);
-  --card-tint: rgba(15, 157, 138, 0.03); /* Extremely subtle green shade */
-  --card-border: #d9e7e3;
-  --text-primary: #0f172a; /* Rich navy black */
-  --text-secondary: #64748b; /* Elegant muted text */
-  --text-muted: #94a3b8; /* Metadata only */
-
-  /* Glass System Tokens */
-  --glass-soft-bg: rgba(255, 255, 255, 0.6);
-  --glass-medium-bg: rgba(255, 255, 255, 0.8);
-  --glass-strong-bg: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.7);
-
-  /* Premium Elevation System */
-  --elevation-1:
-    0 2px 6px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 157, 138, 0.08);
-  --elevation-2:
-    0 6px 18px rgba(15, 23, 42, 0.06), 0 18px 48px rgba(15, 157, 138, 0.12);
-  --elevation-3: 0 24px 64px rgba(15, 157, 138, 0.15);
-
-  --shadow-premium: var(--elevation-1);
-  --shadow-hover: var(--elevation-2);
-
-  /* Motion System */
-  --duration-fast: 180ms;
-  --duration-medium: 220ms;
-  --duration-slow: 400ms;
-  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.dark {
-  /* Midnight Pro (Teal Dark Mode) */
-  --primary: #14b8a6;
-  --accent: #0d9488;
-  --success: #10b981;
-
-  --background: #0f172a;
-  --midground: #1e293b;
-  --foreground: #020617;
+  --background: #09090b; /* Charcoal black */
+  --midground: #18181b; /* Layered dark gray */
+  --foreground: #000000;
 
   /* Semantic Tokens */
   --bg-primary: var(--background);
   --bg-secondary: var(--foreground);
-  --card-bg: rgba(30, 41, 59, 0.8);
-  --card-border: rgba(255, 255, 255, 0.06);
+  --card-bg: rgba(24, 24, 27, 0.6);
+  --card-tint: rgba(59, 130, 246, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
 
-  /* Glass System Tokens */
-  --glass-soft-bg: rgba(15, 23, 42, 0.4);
-  --glass-medium-bg: rgba(15, 23, 42, 0.6);
-  --glass-strong-bg: rgba(15, 23, 42, 0.8);
+  /* Glass System Tokens - Subtle */
+  --glass-soft-bg: rgba(24, 24, 27, 0.4);
+  --glass-medium-bg: rgba(24, 24, 27, 0.6);
+  --glass-strong-bg: rgba(24, 24, 27, 0.8);
   --glass-border: rgba(255, 255, 255, 0.06);
 
-  /* Elevation System */
+  /* Premium Elevation System - Soft shadows */
   --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.4);
   --elevation-2: 0 12px 36px rgba(0, 0, 0, 0.6);
   --elevation-3: 0 24px 48px rgba(0, 0, 0, 0.8);
 
   --shadow-premium: var(--elevation-1);
   --shadow-hover: var(--elevation-2);
+
+  /* Motion System */
+  --duration-fast: 150ms;
+  --duration-medium: 200ms;
+  --duration-slow: 350ms;
+  --ease-premium: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @theme {
@@ -111,13 +76,13 @@
   --shadow-ultimate: var(--elevation-3);
 
   --shadow-glow-primary:
-    0 0 40px rgba(15, 157, 138, 0.15), 0 0 80px rgba(15, 157, 138, 0.05);
-  --shadow-glow-accent: 0 0 30px rgba(11, 125, 110, 0.1);
+    0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.05);
+  --shadow-glow-accent: 0 0 30px rgba(6, 182, 212, 0.1);
 
-  --duration-fast: 180ms;
-  --duration-medium: 220ms;
-  --duration-slow: 400ms;
-  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-medium: 200ms;
+  --duration-slow: 350ms;
+  --ease-premium: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --animate-float: float 8s ease-in-out infinite;
   --animate-shimmer: shimmer 1.5s infinite;
