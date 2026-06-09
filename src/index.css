@@ -160,58 +160,7 @@
   z-index: 1;
 }
 
-.glass-soft::before,
-.glass-medium::before,
-.glass-strong::before {
-  content: " ";
-  position: absolute;
-  display: block;
-  width: 140px;
-  height: 400px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--primary),
-    var(--accent),
-    transparent
-  );
-  transition: opacity 400ms;
-  animation: rotation_9018 3500ms infinite linear;
-  animation-play-state: paused;
-  opacity: 0;
-  top: -50%;
-  left: 25%;
-  z-index: -2;
-}
 
-.glass-soft:hover::before,
-.glass-medium:hover::before,
-.glass-strong:hover::before {
-  opacity: 1;
-  animation-play-state: running;
-}
-
-.glass-soft::after,
-.glass-medium::after,
-.glass-strong::after {
-  position: absolute;
-  content: " ";
-  display: block;
-  inset: 1px;
-  background: inherit;
-  backdrop-filter: blur(40px);
-  z-index: -1;
-  border-radius: inherit;
-}
-
-@keyframes rotation_9018 {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 .sidebar-premium {
   @apply backdrop-blur-[16px] border-r border-border-subtle;
