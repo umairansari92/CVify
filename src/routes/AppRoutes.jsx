@@ -29,6 +29,9 @@ const AdminSettings = lazy(() => import("../pages/AdminSettings"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Maintenance = lazy(() => import("../pages/Maintenance"));
 const Documentation = lazy(() => import("../pages/Documentation"));
+const JobMatcher = lazy(() => import("../pages/JobMatcher"));
+const InterviewSimulator = lazy(() => import("../pages/InterviewSimulator"));
+const CareerRoadmap = lazy(() => import("../pages/CareerRoadmap"));
 
 import Layout from "../components/common/Layout";
 import LoadingScreen from "../components/common/LoadingScreen";
@@ -134,6 +137,9 @@ const AppRoutes = () => {
         <Route path="/ats" element={<ATSPage />} />
         <Route path="/referral" element={<ReferralPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/job-matcher" element={<JobMatcher />} />
+        <Route path="/interview" element={<InterviewSimulator />} />
+        <Route path="/roadmap" element={<CareerRoadmap />} />
         <Route
           path="/admin/dashboard"
           element={
