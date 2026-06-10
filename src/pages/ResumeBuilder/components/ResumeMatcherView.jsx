@@ -56,7 +56,7 @@ const ResumeMatcherView = () => {
     <div className="space-y-8 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-black tracking-tighter capitalize">Job Matcher</h2>
+          <h2 className="text-2xl font-black tracking-tighter capitalize text-slate-900 dark:text-white">Job Matcher</h2>
           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Optimize your resume for a specific role</p>
         </div>
       </div>
@@ -66,11 +66,11 @@ const ResumeMatcherView = () => {
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <Target size={18} />
           </div>
-          <h3 className="text-sm font-black uppercase tracking-widest">Paste Job Description</h3>
+          <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Paste Job Description</h3>
         </div>
 
         <textarea 
-          className="w-full h-64 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none font-medium"
+          className="w-full h-64 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none font-medium"
           placeholder="Paste the job title and requirements from LinkedIn, Indeed, etc..."
           value={jdText}
           onChange={(e) => setJdText(e.target.value)}
@@ -105,11 +105,11 @@ const ResumeMatcherView = () => {
                        <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={364.4} strokeDashoffset={364.4 - (364.4 * matchResult.score) / 100} className="text-primary" />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                       <span className="text-3xl font-black">{matchResult.score}%</span>
+                       <span className="text-3xl font-black text-slate-900 dark:text-white">{matchResult.score}%</span>
                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Match</span>
                     </div>
                  </div>
-                 <h4 className="text-sm font-black uppercase tracking-widest">Initial Match Score</h4>
+                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">Initial Match Score</h4>
               </div>
 
               <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-3xl p-8">
@@ -140,14 +140,13 @@ const ResumeMatcherView = () => {
                          <div className="mt-1 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform">
                             <CheckCircle2 size={12} />
                          </div>
-                         <p className="text-xs text-slate-300 font-medium leading-relaxed">{rec}</p>
+                         <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{rec}</p>
                       </div>
                     ))}
                  </div>
-              </div>
-           </div>
-        </div>
-      )}
+            </div>
+         </div>
+       )}
     </div>
   );
 };
