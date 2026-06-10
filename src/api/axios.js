@@ -1,5 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cleanAiError } from "../utils/aiErrorHelper";
 
 export const BASE_URL = import.meta.env.VITE_API_URL || "https://c-vify-backend.vercel.app/api";
 
@@ -21,6 +22,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
+
+    // Clean AI / Gemini-specific errors globally
+    if (error.response && error.response.data) {
+      if (error.response.data.message) {
+        error.response.data.message = cleanAiError(error.response.data.message);
+      }
+      if (error.response.data.error) {
+        error.response.data.error = cleanAiError(error.response.data.error);
+      }
+    }
+    if (error.message) {
+      error.message = cleanAiError(error.message);
+    }
+
     const data = error.response?.data;
     const message = data?.message || error.message || "An error occurred";
 
