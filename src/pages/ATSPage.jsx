@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import ATSResult from "../components/ats/ATSResult";
+import { Loader2, Sparkles } from "lucide-react";
 
 import Card from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
@@ -41,6 +42,30 @@ const ATSPage = () => {
   const [userResumes, setUserResumes] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState(location.state?.preSelectedResumeId || "");
   const [fetchingResumes, setFetchingResumes] = useState(false);
+
+  // ATS Scan steps animation
+  const [atsStep, setAtsStep] = useState(0);
+  const atsSteps = [
+    "Reading resume content...",
+    "Extracting experience headings...",
+    "Analyzing layout & formatting compatibility...",
+    "Measuring quantification rates...",
+    "Scoring bullet point verb strength & impact...",
+    "Evaluating keywords against job description...",
+    "Finalizing comprehensive ATS audit..."
+  ];
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      interval = setInterval(() => {
+        setAtsStep((prev) => (prev + 1) % atsSteps.length);
+      }, 1500);
+    } else {
+      setAtsStep(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -285,7 +310,31 @@ const ATSPage = () => {
 
         {/* RIGHT: Results Section */}
         <div className="lg:col-span-12 xl:col-span-7">
-          {result ? (
+          {loading ? (
+            <Card variant="glass" className="p-12 border border-white/10 text-center flex flex-col items-center justify-center min-h-[500px] rounded-[32px] bg-bg-secondary relative overflow-hidden">
+              <div className="relative mb-8">
+                 <Loader2 className="w-20 h-20 text-primary animate-spin opacity-20" />
+                 <div className="absolute inset-0 flex items-center justify-center">
+                    <Sparkles className="text-primary animate-pulse" size={32} />
+                 </div>
+              </div>
+              
+              <div className="text-center space-y-4 relative z-10">
+                <h3 className="text-lg font-black text-white transition-all animate-fadeIn">
+                  {atsSteps[atsStep]}
+                </h3>
+                <div className="flex items-center gap-1.5 justify-center">
+                   {atsSteps.map((_, i) => (
+                     <div 
+                        key={i} 
+                        className={`h-1.5 rounded-full transition-all duration-500 ${i <= atsStep ? "w-6 bg-primary" : "w-1.5 bg-slate-800"}`} 
+                     />
+                   ))}
+                </div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Our AI is scoring your ATS metrics...</p>
+              </div>
+            </Card>
+          ) : result ? (
             <ATSResult data={result} />
           ) : (
             <Card variant="flat" className="border-2 border-dashed border-border-subtle p-20 text-center flex flex-col items-center justify-center min-h-[500px] bg-bg-secondary/50">
