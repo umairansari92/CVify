@@ -68,13 +68,13 @@ const ResumeBuilderLayout = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-[#F8FAFC] dark:bg-[#0F172A] overflow-hidden flex">
+    <div className="h-screen w-full bg-bg-primary overflow-hidden flex">
       {/* Global Slim Sidebar (International SaaS Standard) */}
       <SlimSidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Unified Global Header */}
-        <nav className="h-20 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] flex items-center justify-between px-10 shrink-0 z-50">
+        <nav className="h-20 border-b border-white/5 bg-bg-secondary flex items-center justify-between px-10 shrink-0 z-50">
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-1">
@@ -82,21 +82,21 @@ const ResumeBuilderLayout = () => {
                 <FaChevronRight size={8} className="text-slate-300" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Engine</span>
               </div>
-              <h1 className="font-black text-xl tracking-tighter leading-none text-slate-900 dark:text-white">
+              <h1 className="font-black text-xl tracking-tighter leading-none text-white">
                 Resume Builder
               </h1>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/40 p-1.5 rounded-[1.25rem] border border-slate-200/50 dark:border-slate-700/50">
+          <div className="flex items-center gap-2 bg-slate-900/40 p-1.5 rounded-[1.25rem] border border-white/5">
             {["Content", "Designer", "Analyzer", "Matcher"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-8 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-500 ${
                   tab === activeTab 
-                    ? "bg-white dark:bg-slate-700 shadow-xl shadow-primary/20 text-primary scale-[1.05]" 
-                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                    ? "bg-slate-800 text-primary shadow-xl shadow-primary/20 scale-[1.05]" 
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 {tab}
@@ -113,7 +113,7 @@ const ResumeBuilderLayout = () => {
                 <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.25em] leading-none mb-1.5 opacity-70">
                   Reserve
                 </span>
-                <span className="text-[15px] font-black text-slate-900 dark:text-white leading-none tabular-nums">
+                <span className="text-[15px] font-black text-white leading-none tabular-nums">
                   {user?.diamonds || 0}
                 </span>
               </div>
@@ -122,7 +122,7 @@ const ResumeBuilderLayout = () => {
             <div className="flex items-center gap-3">
                <button 
                  onClick={() => setIsImportModalOpen(true)}
-                 className="flex items-center gap-2 px-6 py-3.5 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-slate-700 transition-all shadow-xl shadow-black/10"
+                 className="flex items-center gap-2 px-6 py-3.5 bg-slate-900 border border-white/5 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-black/10"
                >
                  <Sparkles size={14} className="text-primary" /> Magic Import
                </button>

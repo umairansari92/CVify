@@ -20,7 +20,7 @@ const LeftPanelNavigation = ({ activeSection, setActiveSection, setActiveTab }) 
   ];
 
   return (
-    <aside className="w-[240px] border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] flex flex-col shrink-0 overflow-y-auto no-scrollbar">
+    <aside className="w-[240px] border-r border-white/5 bg-bg-secondary flex flex-col shrink-0 overflow-y-auto no-scrollbar">
       <div className="p-6">
         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Resume Sections</h3>
         
@@ -36,10 +36,10 @@ const LeftPanelNavigation = ({ activeSection, setActiveSection, setActiveTab }) 
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
                   isActive 
                     ? "bg-primary/10 text-primary border border-primary/20" 
-                    : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    : "text-slate-400 hover:bg-white/5"
                 }`}
               >
-                <Icon size={18} className={isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-600 transition-colors"} />
+                <Icon size={18} className={isActive ? "text-primary" : "text-slate-500 group-hover:text-slate-300 transition-colors"} />
                 <span className={`text-[11px] font-black uppercase tracking-widest ${isActive ? "opacity-100" : "opacity-60"}`}>
                   {section.label}
                 </span>
@@ -51,8 +51,8 @@ const LeftPanelNavigation = ({ activeSection, setActiveSection, setActiveTab }) 
           })}
         </div>
 
-        <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
-           <div className="p-4 rounded-2xl bg-slate-900 border border-white/10 relative overflow-hidden group">
+        <div className="mt-12 pt-12 border-t border-white/5">
+           <div className="p-4 rounded-2xl bg-slate-900 border border-white/5 relative overflow-hidden group">
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-2 text-primary">

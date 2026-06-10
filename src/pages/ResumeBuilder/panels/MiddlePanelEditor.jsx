@@ -58,16 +58,16 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#F8FAFC] dark:bg-[#0F172A] relative overflow-hidden">
+    <div className="flex-1 flex flex-col bg-bg-primary relative overflow-hidden">
       {/* Intent Mode Bar (The AI Command Center) */}
       <div className="px-8 pt-8 pb-2 shrink-0">
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-[1.25rem] p-1.5 flex items-center gap-3 shadow-sm group focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-500">
+        <div className="bg-bg-secondary border border-white/5 rounded-[1.25rem] p-1.5 flex items-center gap-3 shadow-sm group focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-500">
           <div className="flex items-center gap-3 pl-4 flex-1">
             <Sparkles className="text-primary animate-pulse shrink-0" size={16} />
             <input 
               type="text" 
               placeholder="What should the AI do? e.g. 'Rewrite my summary to sound more executive'"
-              className="w-full bg-transparent border-none outline-none text-sm font-semibold text-slate-600 dark:text-slate-300 placeholder:text-slate-400 placeholder:font-medium"
+              className="w-full bg-transparent border-none outline-none text-sm font-semibold text-slate-300 placeholder:text-slate-500"
               value={intent}
               onChange={(e) => setIntent(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleExecuteAI()}
@@ -76,7 +76,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
           <button 
             onClick={handleExecuteAI}
             disabled={isExecuting || !intent}
-            className="px-6 py-2.5 bg-slate-900 dark:bg-primary text-white rounded-[1rem] text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 flex items-center gap-2 shadow-lg shadow-black/10 dark:shadow-primary/20"
+            className="px-6 py-2.5 bg-primary text-white rounded-[1rem] text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 flex items-center gap-2 shadow-lg shadow-primary/20"
           >
             {isExecuting ? (
               <>
@@ -85,7 +85,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
               </>
             ) : (
               <>
-                <Zap size={12} className="text-primary dark:text-white" />
+                <Zap size={12} className="text-white" />
                 <span>Execute AI (30 💎)</span>
               </>
             )}
@@ -101,12 +101,12 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
             <>
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h2 className="text-2xl font-black tracking-tighter capitalize">{activeSection}</h2>
+                  <h2 className="text-2xl font-black tracking-tighter capitalize text-white">{activeSection}</h2>
                   <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage your professional {activeSection}</p>
                 </div>
                 
                 <div className="flex items-center gap-2">
-                   <button className="p-3 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-red-500 transition-all">
+                   <button className="p-3 bg-bg-secondary border border-white/5 rounded-xl text-slate-400 hover:text-red-500 transition-all">
                      <Trash2 size={16} />
                    </button>
                     <button 
@@ -118,7 +118,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+              <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 shadow-sm">
                 {activeSection === "personal" && <PersonalInfoForm />}
                 {activeSection === "experience" && <ExperienceForm />}
                 {activeSection === "education" && <EducationForm />}
@@ -128,8 +128,8 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
               </div>
               
               {activeSection !== "personal" && (
-                <button className="w-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center gap-3 text-slate-400 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all group">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                <button className="w-full py-8 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center gap-3 text-slate-500 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all group">
+                  <div className="w-10 h-10 rounded-full bg-slate-900 border border-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                     <Plus size={20} />
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.2em]">Add New {activeSection} Entry</span>
@@ -154,18 +154,18 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
 
       {/* Floating Bottom Action Bar */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
-         <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-8">
+         <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/5 px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-8">
             <div className="flex flex-col">
               <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">ATS Readiness</span>
               <div className="flex items-center gap-3">
-                 <div className="w-24 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                 <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                     <div className="w-[85%] h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                  </div>
                  <span className="text-xs font-black text-emerald-500 italic">85%</span>
               </div>
             </div>
             
-            <div className="h-8 w-[1px] bg-slate-200 dark:border-slate-800" />
+            <div className="h-8 w-[1px] border-r border-white/5" />
             
             <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80 transition-opacity">
               <Sparkles size={14} /> Full AI Scan
