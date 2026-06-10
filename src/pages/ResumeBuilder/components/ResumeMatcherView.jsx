@@ -143,9 +143,10 @@ const ResumeMatcherView = () => {
                          <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{rec}</p>
                       </div>
                     ))}
-                 </div>
-            </div>
-         </div>
+                  </div>
+             </div>
+          </div>
+        </div>
        )}
     </div>
   );
