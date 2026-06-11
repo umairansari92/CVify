@@ -184,10 +184,11 @@ const ATSPage = () => {
                     if (e.target.value) setFile(null);
                   }}
                   className="w-full bg-bg-primary border border-border-subtle p-4 rounded-xl font-bold text-sm text-text-primary outline-none focus:border-primary transition-all cursor-pointer"
+                  style={{ colorScheme: "dark" }}
                 >
-                  <option value="">-- Choose from your built resumes --</option>
+                  <option value="" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>-- Choose from your built resumes --</option>
                   {userResumes.map(r => (
-                    <option key={r._id} value={r._id}>
+                    <option key={r._id} value={r._id} style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
                       {r.personalInfo?.fullName || "Untitled"} ({r.personalInfo?.jobTitle || "No Title"})
                     </option>
                   ))}

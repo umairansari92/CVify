@@ -36,13 +36,13 @@ const Header = ({ onMenuClick }) => {
 
       <div className="flex items-center gap-4 lg:gap-8 relative z-10">
         {/* Premium Diamond HUD */}
-        <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-xl border border-primary/20 group/diamonds hover:shadow-hover transition-all cursor-pointer">
+        <div className="flex items-center gap-3 px-4 py-2 bg-midground rounded-xl border border-primary/20 group/diamonds hover:shadow-hover transition-all cursor-pointer">
           <FaGem className="text-primary text-sm shadow-[0_0_15px_rgba(15,157,138,0.2)]" />
           <div className="flex flex-col">
-            <span className="text-[8px] font-bold text-text-muted uppercase tracking-[0.1em] leading-none mb-1 opacity-60">
+            <span className="text-[8px] font-bold text-text-secondary uppercase tracking-[0.1em] leading-none mb-1">
               Credits
             </span>
-            <span className="text-sm font-bold text-text-main leading-none tabular-nums">
+            <span className="text-sm font-bold text-text-primary leading-none tabular-nums">
               {user?.diamonds || 0}
             </span>
           </div>
