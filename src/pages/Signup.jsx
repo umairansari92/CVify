@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../features/auth/authThunk";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../components/common/Logo";
+import ThemeToggle from "../components/common/ThemeToggle";
 import { isDisposableEmail } from "../utils/blockedDomains";
 import { toast } from "react-hot-toast";
 import { formatAuthError } from "../utils/formatAuthError";
@@ -21,36 +22,49 @@ const Signup = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm({ defaultValues: { gender: "Male" } });
+  } = useForm({
+    defaultValues: {
+      gender: "Male",
+    },
+  });
 
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const firstName = watch("firstName");
   const lastName = watch("lastName");
   const password = watch("password");
 
-  useEffect(() => {
-    if (token) navigate("/dashboard");
-  }, [token, navigate]);
-
   // Autogenerate username
   useEffect(() => {
     if (!isEditingUsername && (firstName || lastName)) {
-      const generated = `${(firstName || "").toLowerCase()}${(lastName || "").toLowerCase()}`
-        .replace(/[^a-z0-9]/g, "")
-        .slice(0, 15);
-      if (generated) setValue("username", generated);
+      const generated =
+        `${(firstName || "").toLowerCase()}${(lastName || "").toLowerCase()}`
+          .replace(/[^a-z0-9]/g, "")
+          .slice(0, 15);
+      if (generated) {
+        setValue("username", generated);
+      }
     }
   }, [firstName, lastName, isEditingUsername, setValue]);
 
   const onSubmit = async (data) => {
+    // Frontend check for disposable emails
     if (isDisposableEmail(data.email)) {
-      toast.error("Temporary or disposable email addresses are not allowed. Please use a real email address.", {
-        duration: 5000,
-        icon: "🚫",
-      });
+      toast.error(
+        "Temporary or disposable email addresses are not allowed. Please use a real email address.",
+        {
+          duration: 5000,
+          icon: "🚫",
+        },
+      );
       return;
     }
-    if (data.profileImage && data.profileImage[0] && data.profileImage[0].size > 4 * 1024 * 1024) {
+
+    // Check profile image size
+    if (
+      data.profileImage &&
+      data.profileImage[0] &&
+      data.profileImage[0].size > 4 * 1024 * 1024
+    ) {
       toast.error("Profile image must be under 4MB.", { icon: "📁" });
       return;
     }
@@ -62,15 +76,25 @@ const Signup = () => {
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("gender", data.gender);
-    if (referralCode) formData.append("referredBy", referralCode);
-    if (data.profileImage && data.profileImage[0]) formData.append("profileImage", data.profileImage[0]);
+    if (referralCode) {
+      formData.append("referredBy", referralCode);
+    }
+
+    if (data.profileImage && data.profileImage[0]) {
+      formData.append("profileImage", data.profileImage[0]);
+    }
 
     try {
       const result = await dispatch(signupUser(formData));
       if (signupUser.fulfilled.match(result) && result.payload?.email) {
-        navigate("/verify-otp", { state: { email: result.payload.email }, replace: true });
+        navigate("/verify-otp", {
+          state: { email: result.payload.email },
+          replace: true,
+        });
       }
-    } catch (_) {}
+    } catch (_) {
+      // Error shown via auth slice
+    }
   };
 
   const passwordValidation = {
@@ -82,162 +106,255 @@ const Signup = () => {
   };
 
   const ValidationItem = ({ label, passed }) => (
-    <div className={`auth-val-item ${passed ? "passed" : ""}`}>
-      {passed ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3 opacity-40" />}
+    <div
+      className={`flex items-center gap-1.5 text-[10px] font-bold transition-colors ${passed ? "text-success" : "text-slate-400"}`}
+    >
+      {passed ? (
+        <CheckCircle2 className="w-3 h-3" />
+      ) : (
+        <XCircle className="w-3 h-3 opacity-40" />
+      )}
       {label}
     </div>
   );
 
+  const HelperTip = ({ text }) => (
+    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium ml-1 mt-1.5 animate-fadeIn">
+      {text}
+    </p>
+  );
+
   return (
-    <div className="auth-page-wrapper">
-      {/* Ambient Background Orbs */}
-      <div className="auth-orb auth-orb-1" />
-      <div className="auth-orb auth-orb-2" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-6 transition-colors duration-500 overflow-hidden relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
 
-      <div className="auth-container auth-signup-layout">
+      <div className="absolute top-6 right-6 z-20 text-text-primary">
+        <ThemeToggle />
+      </div>
 
-        {/* ─── SIGN-UP FORM (Right side in signup layout) ─── */}
-        <div className="auth-form-container auth-sign-up-form">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="auth-logo-wrap">
-              <Logo className="w-44" />
+      <div className="max-w-xl w-full relative z-10 animate-fadeIn my-12">
+        <div className="text-center mb-10 flex flex-col items-center">
+          <div className="flex items-center mb-4">
+            <Logo className="w-64" />
+          </div>
+          <p className="text-text-muted font-black uppercase tracking-[0.3em] text-[10px] opacity-60">
+            Join the Professional Ecosystem
+          </p>
+        </div>
+
+        <div className="bg-midground/80 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-premium border border-border-subtle transition-all duration-300">
+          <h2 className="text-3xl font-black text-text-main mb-8 text-center italic tracking-tight">
+            Create Space
+          </h2>
+
+          {error && (
+            <div className="bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 p-4 rounded-2xl text-xs font-bold mb-6 border border-red-100 dark:border-red-900/50 animate-shake">
+              {formatAuthError(error)}
             </div>
-            <h1>Join CVify Pro</h1>
-            <span>Join the Career Intelligence Ecosystem</span>
+          )}
 
-            {error && (
-              <div className="auth-error-box">{formatAuthError(error)}</div>
-            )}
-
-            {/* Name Row */}
-            <div className="auth-row-2">
-              <div className="auth-field">
-                <label>First Name</label>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                  First Name
+                </label>
                 <input
                   {...register("firstName", { required: true })}
                   placeholder="e.g. John"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
                 />
+                <HelperTip text="Use your legal first name for resumes" />
               </div>
-              <div className="auth-field">
-                <label>Last Name</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                  Last Name
+                </label>
                 <input
                   {...register("lastName", { required: true })}
                   placeholder="e.g. Doe"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
                 />
+                <HelperTip text="Professional last name as per ID" />
               </div>
             </div>
 
-            {/* Username */}
-            <div className="auth-field">
-              <label className="auth-label-flex">
-                <span>Username (URL Slug)</span>
+            <div className="space-y-2">
+              <label className="flex items-center justify-between text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                <span>Custom Username (URL SLUG)</span>
                 {!isEditingUsername && (
-                  <button type="button" onClick={() => setIsEditingUsername(true)} className="auth-edit-btn">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingUsername(true)}
+                    className="flex items-center gap-1 text-primary hover:underline lowercase"
+                  >
                     <Edit3 className="w-3 h-3" /> edit
                   </button>
                 )}
               </label>
-              <div className="auth-slug-wrap">
-                <div className="auth-slug-prefix">
-                  <AtSign className="w-4 h-4" />
-                  <span>cvify.pro/p/</span>
+              <div className="relative group">
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-text-muted/50 pointer-events-none">
+                  <AtSign className="w-4 h-4 text-primary/50" />
+                  <span className="text-sm font-bold opacity-30">
+                    cvify.pro/p/
+                  </span>
                 </div>
                 <input
                   {...register("username", {
                     required: true,
-                    pattern: { value: /^[a-z0-9._]+$/, message: "Small letters, numbers, . and _ only" },
+                    pattern: {
+                      value: /^[a-z0-9._]+$/,
+                      message: "Small letters, numbers, . and _ only",
+                    },
                   })}
                   readOnly={!isEditingUsername}
                   placeholder="your-handle"
-                  className={`auth-slug-input ${isEditingUsername ? "editing" : ""}`}
+                  className={`w-full pl-36 pr-6 py-4 rounded-2xl border-2 ${isEditingUsername ? "border-primary" : "border-border-subtle"} bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold lowercase`}
                 />
               </div>
-              {errors.username && <p className="auth-field-error">{errors.username.message}</p>}
+              {errors.username && (
+                <p className="text-[10px] text-red-500 font-bold ml-1">
+                  {errors.username.message}
+                </p>
+              )}
+              <HelperTip text="This will be your unique public profile link" />
             </div>
 
-            {/* Email */}
-            <div className="auth-field">
-              <label>Professional Email</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Professional Email
+              </label>
               <input
                 {...register("email", { required: true })}
-                type="email"
                 placeholder="name@company.com"
+                className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
               />
+              <HelperTip text="We will send a verification code to this email" />
             </div>
 
-            {/* Password */}
-            <div className="auth-field">
-              <label>Secure Password</label>
-              <input
-                type="password"
-                {...register("password", {
-                  required: "Password is required",
-                  pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{8,}$/,
-                    message: "Complete the checklist below for a strong password",
-                  },
-                })}
-                placeholder="••••••••"
-              />
-              {errors.password && <p className="auth-field-error">{errors.password.message}</p>}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                  Secure Password
+                </label>
+                <input
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{8,}$/,
+                      message:
+                        "Complete the checklist below for a strong password",
+                    },
+                  })}
+                  placeholder="••••••••"
+                  className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
+                />
+                <HelperTip text="Must be strong to protect your professional data" />
+              </div>
+
+              {errors.password && (
+                <p className="text-[10px] text-red-500 font-bold ml-1 animate-fadeIn">
+                  {errors.password.message}
+                </p>
+              )}
+
               {(password || errors.password) && (
-                <div className="auth-password-grid">
-                  <ValidationItem label="8 Characters" passed={passwordValidation.length} />
-                  <ValidationItem label="Uppercase (A-Z)" passed={passwordValidation.hasUpper} />
-                  <ValidationItem label="Lowercase (a-z)" passed={passwordValidation.hasLower} />
-                  <ValidationItem label="One Number" passed={passwordValidation.hasNumber} />
-                  <ValidationItem label="Special (@$!%*?&._)" passed={passwordValidation.hasSpecial} />
+                <div className="bg-slate-50 dark:bg-midnight/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50 grid grid-cols-2 gap-y-2 gap-x-4 animate-fadeIn">
+                  <ValidationItem
+                    label="8 Characters"
+                    passed={passwordValidation.length}
+                  />
+                  <ValidationItem
+                    label="Uppercase (A-Z)"
+                    passed={passwordValidation.hasUpper}
+                  />
+                  <ValidationItem
+                    label="Lowercase (a-z)"
+                    passed={passwordValidation.hasLower}
+                  />
+                  <ValidationItem
+                    label="One Number"
+                    passed={passwordValidation.hasNumber}
+                  />
+                  <ValidationItem
+                    label="Special (@$!%*?&._)"
+                    passed={passwordValidation.hasSpecial}
+                  />
                 </div>
               )}
             </div>
 
-            {/* Gender */}
-            <div className="auth-gender-row">
-              <label className="auth-radio-label">
-                <input type="radio" value="Male" {...register("gender")} />
-                <span>Male</span>
+            <div className="flex gap-8 justify-center py-2">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="radio"
+                  value="Male"
+                  {...register("gender")}
+                  className="w-5 h-5 text-primary border-border-subtle focus:ring-primary bg-foreground/5 transition-all cursor-pointer"
+                />
+                <span className="text-sm font-bold text-text-muted group-hover:text-primary transition-colors">
+                  Male
+                </span>
               </label>
-              <label className="auth-radio-label">
-                <input type="radio" value="Female" {...register("gender")} />
-                <span>Female</span>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="radio"
+                  value="Female"
+                  {...register("gender")}
+                  className="w-5 h-5 text-primary border-border-subtle focus:ring-primary bg-foreground/5 transition-all cursor-pointer"
+                />
+                <span className="text-sm font-bold text-text-muted group-hover:text-primary transition-colors">
+                  Female
+                </span>
               </label>
             </div>
 
-            {/* Profile Photo */}
-            <div className="auth-field">
-              <label>Identity Profile (Optional)</label>
-              <input
-                type="file"
-                {...register("profileImage")}
-                className="auth-file-input"
-                accept="image/*"
-              />
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
+                Identity Profile (Optional)
+              </label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  {...register("profileImage")}
+                  className="w-full text-xs text-text-muted file:mr-6 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer border-2 border-dashed border-border-subtle p-3 rounded-2xl"
+                />
+                <HelperTip text="A professional photo increases your selection chances by 40%" />
+              </div>
             </div>
 
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
+            <button
+              className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-primary/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
+              disabled={loading}
+            >
               {loading ? "Constructing Account..." : "Confirm Registration"}
             </button>
-
-            <div className="auth-footer-links">
-              <p>Existing member? <Link to="/login">Access Account</Link></p>
-              <Link to="/verify-otp" className="auth-verify-link">Verify your email →</Link>
-            </div>
           </form>
-        </div>
 
-        {/* ─── ANIMATED TOGGLE OVERLAY (Left on signup page) ─── */}
-        <div className="auth-toggle-container auth-toggle-left-side">
-          <div className="auth-toggle">
-            <div className="auth-toggle-panel auth-toggle-single">
-              <h1>Aesthetics. Agency. Authority.</h1>
-              <p>Access your live, SEO-optimized digital portfolio and get honest, context-aware AI coaching.</p>
-              <Link to="/login">
-                <button type="button" className="auth-ghost-btn">Sign In</button>
+          <div className="mt-10 pt-8 border-t border-border-subtle text-center space-y-3">
+            <p className="text-sm text-text-muted font-medium">
+              Existing member?{" "}
+              <Link
+                to="/login"
+                className="text-primary font-bold hover:underline transition-all"
+              >
+                Access Account
               </Link>
-            </div>
+            </p>
+            <p className="text-sm text-text-muted font-medium">
+              <Link
+                to="/verify-otp"
+                className="text-primary font-bold hover:underline transition-all"
+              >
+                Verify your email →
+              </Link>
+            </p>
           </div>
         </div>
-
       </div>
     </div>
   );

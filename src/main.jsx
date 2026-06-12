@@ -7,7 +7,6 @@ import { store } from "./app/store";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
 import "sweetalert2/dist/sweetalert2.min.css";
-import "./styles/auth.css";
 import { registerSW } from 'virtual:pwa-register';
 
 import { LazyMotion, domAnimation } from "framer-motion";
