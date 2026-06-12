@@ -35,6 +35,9 @@ const Sidebar = ({ onClose }) => {
     { path: "/roadmap", label: "Career Roadmap", icon: <FaMapSigns /> },
     { path: "/profile", label: "Profile", icon: <FaUser /> },
     { path: "/documentation", label: "Documentation", icon: <FaBook /> },
+    ...(user?.role === "admin"
+      ? [{ path: "/admin/dashboard", label: "Admin Panel", icon: <FaShieldAlt /> }]
+      : []),
   ];
 
   const adminItems = [
@@ -44,6 +47,7 @@ const Sidebar = ({ onClose }) => {
     { path: "/admin/ats-scans", label: "ATS Logs", icon: <FaChartLine /> },
     { path: "/admin/logs", label: "Activity Logs", icon: <FaFileAlt /> },
     { path: "/admin/settings", label: "System Settings", icon: <FaCog /> },
+    { path: "/", label: "Back to App", icon: <FaHome /> },
   ];
 
   const itemsToRender = isAdminArea ? adminItems : careerOsItems;
