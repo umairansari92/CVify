@@ -35,7 +35,7 @@ const Sidebar = ({ onClose }) => {
     { path: "/roadmap", label: "Career Roadmap", icon: <FaMapSigns /> },
     { path: "/profile", label: "Profile", icon: <FaUser /> },
     { path: "/documentation", label: "Documentation", icon: <FaBook /> },
-    ...(user?.role === "admin"
+    ...((user?.role === "admin" || user?.role === "superadmin")
       ? [{ path: "/admin/dashboard", label: "Admin Panel", icon: <FaShieldAlt /> }]
       : []),
   ];
