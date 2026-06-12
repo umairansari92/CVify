@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
+import Logo from "../components/common/Logo";
 import ThemeToggle from "../components/common/ThemeToggle";
 import { verifyOtp, resendOtp } from "../features/auth/authThunk";
 import { toast } from "react-hot-toast";
@@ -21,7 +21,7 @@ const VerifyOtp = () => {
   const { token, loading, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (token) navigate("/", { replace: true });
+    if (token) navigate("/dashboard", { replace: true });
   }, [token, navigate]);
 
   useEffect(() => {
@@ -85,43 +85,39 @@ const VerifyOtp = () => {
   const canSubmit = finalEmail && otpValues.join("").length === OTP_LENGTH;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-soft dark:bg-midnight p-6 transition-colors duration-500 overflow-hidden relative">
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-action/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-success/5 dark:bg-success/5 rounded-full blur-[120px] animate-pulse transition-delay-1000" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-6 transition-colors duration-500 overflow-hidden relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 dark:bg-accent/5 rounded-full blur-[120px] animate-pulse transition-delay-1000"></div>
 
-      <div className="absolute top-6 right-6 z-20">
+      <div className="absolute top-6 right-6 z-20 text-text-primary">
         <ThemeToggle />
       </div>
 
-      <div className="max-w-md w-full relative z-10 animate-fadeIn">
+      <div className="max-w-md w-full relative z-10 animate-fadeIn my-12">
         <div className="text-center mb-10 flex flex-col items-center">
-          <div className="flex items-end mb-4">
-            <img
-              src={logo}
-              alt="CVify Pro"
-              className="w-64 h-auto dark:brightness-110"
-            />
-            <span className="text-action dark:text-accent font-black text-4xl italic tracking-tighter mb-2 -ml-3 filter drop-shadow-md">Pro</span>
+          <div className="flex items-center mb-4">
+            <Logo className="w-64" />
           </div>
-          <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">
+          <p className="text-text-muted font-black uppercase tracking-[0.3em] text-[10px] opacity-60">
             Verify Your Email
           </p>
         </div>
 
-        <div className="bg-white/80 dark:bg-slate-blue/40 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-premium border border-white/20 dark:border-white/5 transition-all duration-300">
-          <h2 className="text-3xl font-bold text-primary dark:text-slate-50 mb-2 text-center dark:font-jakarta">
-            Enter verification code
+        <div className="bg-midground/80 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-premium border border-border-subtle transition-all duration-300">
+          <h2 className="text-3xl font-black text-text-main mb-2 text-center italic tracking-tight">
+            Verification Code
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-8">
+          <p className="text-text-muted text-sm text-center mb-8">
             We sent a 6-character code to{" "}
-            <span className="font-bold text-slate-700 dark:text-slate-200">
+            <span className="font-bold text-text-main">
               {finalEmail || "your email"}
             </span>
           </p>
 
           {!emailFromState && (
             <div className="space-y-2 mb-6">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-1">
                 Email
               </label>
               <input
@@ -129,7 +125,7 @@ const VerifyOtp = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. name@company.com"
-                className="w-full px-6 py-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-midnight/30 text-primary dark:text-slate-100 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all font-semibold"
+                className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold"
               />
             </div>
           )}
@@ -153,7 +149,7 @@ const VerifyOtp = () => {
                   value={val}
                   onChange={(e) => handleOtpChange(i, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(i, e)}
-                  className="w-11 h-14 sm:w-12 sm:h-14 text-center text-xl font-black rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-midnight/50 text-primary dark:text-slate-100 focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all"
+                  className="w-11 h-14 sm:w-12 sm:h-14 text-center text-xl font-black rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all"
                 />
               ))}
             </div>
@@ -161,21 +157,21 @@ const VerifyOtp = () => {
             <button
               type="submit"
               disabled={loading || !canSubmit}
-              className="w-full bg-action hover:bg-blue-600 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-action/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-primary/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 glow-btn"
             >
               {loading ? "Verifying..." : "Verify & Continue"}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/5 text-center">
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-2">
+          <div className="mt-8 pt-6 border-t border-border-subtle text-center">
+            <p className="text-sm text-text-muted font-medium mb-2">
               Didn&apos;t receive the code?
             </p>
             <button
               type="button"
               onClick={handleResend}
               disabled={resendCooldown > 0 || !finalEmail}
-              className="text-action dark:text-accent font-bold hover:underline transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-primary font-bold hover:underline transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {resendCooldown > 0
                 ? `Resend in ${resendCooldown}s`
@@ -186,7 +182,7 @@ const VerifyOtp = () => {
           <div className="mt-8 text-center">
             <Link
               to="/login"
-              className="text-sm text-slate-500 dark:text-slate-400 font-medium hover:text-action dark:hover:text-accent transition-all"
+              className="text-sm text-text-muted font-medium hover:text-primary transition-all"
             >
               Back to Login
             </Link>
