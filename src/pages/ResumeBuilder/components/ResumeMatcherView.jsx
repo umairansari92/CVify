@@ -119,7 +119,7 @@ const ResumeMatcherView = () => {
                  <div className="flex flex-wrap gap-2">
                     {matchResult.missingKeywords.map((kw, i) => (
                       <span key={i} className="px-4 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-500/10">
-                        + {kw}
+                        + {typeof kw === 'string' ? kw : kw.keyword}
                       </span>
                     ))}
                  </div>
