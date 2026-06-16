@@ -10,10 +10,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token && token !== "undefined") {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  // Token auth is handled via HttpOnly cookie (withCredentials: true above).
+  // Cookie is automatically forwarded by the browser on every request.
   // Let axios set Content-Type automatically for FormData
   return config;
 });
