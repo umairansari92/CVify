@@ -56,6 +56,7 @@ const Documentation = () => {
       items: [
         { id: "helmet", icon: <Shield size={16} />, label: "Helmet Middleware" },
         { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
+        { id: "security-v6", icon: <ShieldCheck size={16} />, label: "🔐 Security v6.0 (Latest)" },
       ]
     },
     {
@@ -824,10 +825,118 @@ export const isDisposableEmail = (email) => {
       <>
         <DocHeader title="Security, Compliance & Privacy" badge="Technical" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <InfoCard icon={<Shield size={16} />} color="emerald" title="Argon2 Hashing" desc="Winner of Password Hashing Competition. Resistant to GPU attacks — far superior to MD5/SHA-1." />
-          <InfoCard icon={<ShieldCheck size={16} />} color="blue" title="JWT + HttpOnly Cookies" desc="Signed, verified tokens. HttpOnly cookies prevent XSS session theft." />
+          <InfoCard icon={<Shield size={16} />} color="emerald" title="bcrypt + Pepper Hashing" desc="Passwords are hashed with bcrypt (cost 10) combined with a server-side PEPPER_KEY. Even if the database is breached, hashes cannot be cracked without the secret pepper." />
+          <InfoCard icon={<ShieldCheck size={16} />} color="blue" title="JWT + HttpOnly Cookies" desc="Signed, verified tokens issued as HttpOnly, Secure, SameSite=Lax cookies. Prevents XSS-based session theft. Fallback to Bearer header for backward compatibility." />
           <InfoCard icon={<Brain size={16} />} color="purple" title="Data Encryption" desc="Encrypted at rest in MongoDB Atlas. AI processing via Gemini over encrypted HTTPS. Zero retention for training." />
           <InfoCard icon={<FileText size={16} />} color="amber" title="File Security" desc="Resume uploads processed in memory (multer) — never stored on disk. Instant processing, immediate disposal." />
+        </div>
+      </>
+    ),
+
+    "security-v6": (
+      <>
+        <DocHeader title="🔐 Security v6.0 — Defense in Depth" badge="Latest Security Update" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-8">
+          In June 2026, CVify Pro underwent a comprehensive <strong className="text-text-primary">multi-layer security hardening</strong> following a surgical refactor approach. All changes are backward-compatible — existing users and sessions were not disrupted.
+        </p>
+
+        <SectionTitle>1. Rate Limiting (Auth Routes)</SectionTitle>
+        <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            A unified <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">authLimiter</code> is applied strictly to <strong className="text-text-primary">/login, /signup, /forgot-password, and /reset-password</strong>.
+          </p>
+          <ComparisonTable items={[
+            { left: "Window", right: "15 minutes" },
+            { left: "Max Attempts", right: "10 per IP + Email combination" },
+            { left: "Key Strategy", right: "Authenticated users: keyed by User ID. Others: IP + Email hash" },
+            { left: "OTP Routes", right: "Separate 5-minute / 3-attempt limiter" },
+          ]} />
+        </div>
+
+        <SectionTitle>2. NoSQL Injection Protection</SectionTitle>
+        <div className="p-5 bg-red-500/5 border border-red-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">express-mongo-sanitize</code> is registered globally immediately after <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">express.json()</code>. It strips Mongo operators (<code className="text-red-400 text-xs">$where</code>, <code className="text-red-400 text-xs">$gt</code>, etc.) from all request bodies, queries, and params before they reach any controller.
+          </p>
+        </div>
+
+        <SectionTitle>3. Password Validation Hardening</SectionTitle>
+        <div className="p-5 bg-amber-500/5 border border-amber-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            All password validation across <strong className="text-text-primary">signup, changePassword, resetPassword, and updateProfile</strong> now enforces a unified standard:
+          </p>
+          <div className="p-3 bg-black/20 rounded-xl font-mono text-xs text-amber-300">
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._])[A-Za-z\d@$!%*?&._]{'{8,72}'}$/
+          </div>
+          <p className="text-text-muted text-[12px] mt-3 italic">Min 8 characters, Max 72 characters. The 72-char cap mitigates bcrypt-based ReDoS attacks.</p>
+        </div>
+
+        <SectionTitle>4. Pepper Hashing + Lazy Migration</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="Server-Side Pepper"
+            desc="A cryptographically random 32-byte PEPPER_KEY is stored only on the server (.env / Vercel Env Vars) — never in the database. Passwords are hashed as bcrypt(password + pepper, 10)." />
+          <InfoCard icon={<Zap size={16} />} color="blue" title="Lazy Migration (Zero User Disruption)"
+            desc="On login, the system first tries the peppered hash. If it fails, it tries the legacy hash. If legacy succeeds, the password is silently re-hashed with pepper in the background. No user is locked out." />
+        </div>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-6">
+          <p className="text-[11px] font-black uppercase tracking-widest text-text-muted mb-3">Migration Flow</p>
+          <pre className="text-[12px] font-mono text-slate-300 leading-relaxed whitespace-pre">{`Login Attempt
+  ├─ bcrypt(password + PEPPER_KEY) → ✅ Match → Login
+  ├─ bcrypt(password + PEPPER_KEY) → ❌ Fail
+  │    └─ bcrypt(password) → ✅ Legacy Match
+  │         └─ Re-hash with pepper → Save → Login (seamless)
+  └─ Both fail → 401 Unauthorized`}</pre>
+        </div>
+
+        <SectionTitle>5. HttpOnly Cookie Auth</SectionTitle>
+        <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            JWT tokens are no longer stored in <code className="text-red-400 text-xs">localStorage</code>. On successful login or OTP verification, the server issues an <strong className="text-text-primary">HttpOnly cookie</strong>:
+          </p>
+          <ComparisonTable items={[
+            { left: "Cookie Name", right: "authToken" },
+            { left: "httpOnly", right: "true — JavaScript cannot read this cookie" },
+            { left: "secure", right: "true in production (HTTPS only)" },
+            { left: "sameSite", right: "lax — protects against CSRF" },
+            { left: "maxAge", right: "24 hours" },
+            { left: "Fallback", right: "Bearer Authorization header still works (backward compat)" },
+          ]} />
+        </div>
+
+        <SectionTitle>6. Secure Logout Endpoint</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            A new <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">POST /api/auth/logout</code> endpoint clears the <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">authToken</code> cookie server-side by setting it to an expired value. The Redux <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">logout()</code> action silently calls this endpoint as a fire-and-forget operation — no UI changes required.
+          </p>
+        </div>
+
+        <SectionTitle>7. Frontend Axios Alignment</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <InfoCard icon={<Layers size={16} />} color="amber" title="withCredentials: true"
+            desc="The global Axios instance now sends withCredentials: true on every request, ensuring the HttpOnly authToken cookie is automatically forwarded to the backend." />
+          <InfoCard icon={<Shield size={16} />} color="emerald" title="localStorage Token Removed"
+            desc="Only the JWT token was removed from localStorage. User profile data (Full name, Email, Location) persists unchanged. Redux state structure { user, token, isAuthenticated } is intact." />
+        </div>
+
+        <SectionTitle>Security Checklist</SectionTitle>
+        <div className="space-y-2">
+          {[
+            { done: true, label: "Rate limiting on all auth routes (IP + Email keyed)" },
+            { done: true, label: "NoSQL injection protection (express-mongo-sanitize)" },
+            { done: true, label: "Password length hardening (min 8, max 72 chars)" },
+            { done: true, label: "Server-side pepper hash (PEPPER_KEY in env)" },
+            { done: true, label: "Lazy migration for existing users (zero disruption)" },
+            { done: true, label: "HttpOnly cookie for JWT (prevents XSS theft)" },
+            { done: true, label: "Secure logout endpoint (server-side cookie clear)" },
+            { done: true, label: "Auth middleware: cookie-first, Bearer header fallback" },
+            { done: true, label: "Axios withCredentials: true (cookie forwarding)" },
+            { done: true, label: "XSS sanitization via custom xss middleware" },
+          ].map((item, i) => (
+            <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border text-[13px] ${item.done ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-white/[0.02] border-white/5'}`}>
+              <span className={`font-black text-xs ${item.done ? 'text-emerald-400' : 'text-text-muted'}`}>{item.done ? '✅' : '⬜'}</span>
+              <span className={item.done ? 'text-text-primary' : 'text-text-muted'}>{item.label}</span>
+            </div>
+          ))}
         </div>
       </>
     ),
@@ -1061,18 +1170,27 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
-            { title: "AURA DARK Theme", desc: "Cosmic minimal theme engineered for tech professionals and startup founders.", status: "NEW" },
-            { title: "GitHub Intelligence Panel", desc: "Real-time GitHub DNA insights, repository highlights, and language synthesis.", status: "NEW" },
+            { title: "Security v6.0 — Defense in Depth", desc: "Rate limiting (IP+Email keyed), NoSQL injection protection, password hardening (8–72 chars), pepper hashing with lazy migration, HttpOnly cookies, secure logout endpoint.", status: "NEW" },
+            { title: "Premium Dark Email Templates", desc: "All transactional emails (OTP, Password Reset, Portfolio Contact) redesigned to match the CVify Pro dark theme — deep dark background, teal accents, premium branding.", status: "NEW" },
+            { title: "Admin Panel Sidebar Fix", desc: "Admin users now see a persistent 'Admin Panel' link in the main sidebar. Admins inside the admin area see a 'Back to App' link for quick navigation.", status: "FIX" },
+            { title: "AURA DARK Theme", desc: "Cosmic minimal theme engineered for tech professionals and startup founders.", status: "ACTIVE" },
+            { title: "GitHub Intelligence Panel", desc: "Real-time GitHub DNA insights, repository highlights, and language synthesis.", status: "ACTIVE" },
             { title: "AI Job Matcher v1.0", desc: "Real-time JD analysis with missing keyword detection and strategy reports.", status: "ACTIVE" },
             { title: "Magic AI Import", desc: "Instant resume hydration from PDF/DOCX using deep semantic parsing.", status: "ACTIVE" },
             { title: "Intelligence Command Bar", desc: "Natural language resume optimization with Intent Mode.", status: "ACTIVE" },
           ].map((item, i) => (
-            <div key={i} className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex justify-between items-start gap-4">
+            <div key={i} className={`p-5 rounded-2xl flex justify-between items-start gap-4 border ${
+              item.status === "NEW" ? "bg-primary/5 border-primary/20" : item.status === "FIX" ? "bg-amber-500/5 border-amber-500/15" : "bg-emerald-500/5 border-emerald-500/10"
+            }`}>
               <div>
-                <p className="font-black text-emerald-400 text-sm">{item.title}</p>
+                <p className={`font-black text-sm ${
+                  item.status === "NEW" ? "text-primary" : item.status === "FIX" ? "text-amber-400" : "text-emerald-400"
+                }`}>{item.title}</p>
                 <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
               </div>
-              <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0">{item.status}</span>
+              <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0 ${
+                item.status === "NEW" ? "bg-primary text-white" : item.status === "FIX" ? "bg-amber-500/20 text-amber-400" : "bg-emerald-500/10 text-emerald-500"
+              }`}>{item.status}</span>
             </div>
           ))}
         </div>
