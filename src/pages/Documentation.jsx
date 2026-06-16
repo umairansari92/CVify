@@ -897,7 +897,7 @@ export const isDisposableEmail = (email) => {
             { left: "Cookie Name", right: "authToken" },
             { left: "httpOnly", right: "true — JavaScript cannot read this cookie" },
             { left: "secure", right: "true in production (HTTPS only)" },
-            { left: "sameSite", right: "lax — protects against CSRF" },
+            { left: "sameSite", right: "none — required for cross-origin subdomains (frontend & backend on different Vercel URLs). Must be used with Secure: true" },
             { left: "maxAge", right: "24 hours" },
             { left: "Fallback", right: "Bearer Authorization header still works (backward compat)" },
           ]} />
