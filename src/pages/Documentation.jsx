@@ -549,7 +549,7 @@ const Documentation = () => {
         <SectionTitle>The Problem (Before v1.0)</SectionTitle>
         <div className="p-5 bg-red-500/5 border border-red-500/10 rounded-2xl mb-6">
           <p className="text-text-secondary text-[13px] leading-relaxed italic">
-            "Previously, the dashboard had to hit 5 alag-alag APIs (Profile, Resumes, Letters, Stats, Economy) to render a single screen. This caused 'Network Waterfalls', where if one service was slow, the whole UI felt broken or 'jiggly' due to constant layout shifts."
+            "Previously, the dashboard had to hit 5 separate APIs (Profile, Resumes, Letters, Stats, Economy) to render a single screen. This caused 'Network Waterfalls', where if one service was slow, the whole UI felt broken or 'jiggly' due to constant layout shifts."
           </p>
         </div>
 
@@ -671,7 +671,7 @@ const Documentation = () => {
                 ["Animations", "framer-motion", "Declarative physics-based animations"],
                 ["Particles", "tsparticles (loadFull)", "Rich particle engine, repulse/hover modes"],
                 ["3-D", "three.js + @react-three/fiber", "Low-level WebGL, custom shaders"],
-                ["Forms", "React Hook Form + Yup", "Minimal re-renders, schema validation"],
+                ["Forms", "React Hook Form + Zod", "Minimal re-renders, schema validation"],
                 ["HTTP", "axios (utils/api.js)", "Interceptors for auth token injection"],
                 ["SEO", "react-helmet-async", "Dynamic <head> tags, Open Graph, JSON-LD"],
                 ["Charts", "recharts", "Responsive analytics dashboard charts"],
