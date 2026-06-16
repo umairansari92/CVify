@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, signupUser, verifyOtp, getMe } from "./authThunk";
+import api from "../../api/axios";
 
 const getSafeToken = () => {
-  const token = localStorage.getItem("token");
-  if (!token || token === "undefined") return null;
-  return token;
+  // Token is now primarily managed via HttpOnly cookies.
+  // We return null here so it doesn't read from localStorage,
+  // but if you have a legacy fallback mechanism you could read it.
+  // The user requested removing token storage from localStorage.
+  return null;
 };
 
 const saveUserToLocalStorage = (user, token) => {
-  if (token) {
-    localStorage.setItem("token", token);
-  }
+  // Token storage removed as per V6.0 SECURITY (HttpOnly cookies)
   if (user) {
     const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
     if (fullName) localStorage.setItem("Full name", fullName);
@@ -21,7 +22,7 @@ const saveUserToLocalStorage = (user, token) => {
 };
 
 const clearUserFromLocalStorage = () => {
-  localStorage.removeItem("token");
+  // Token storage removed as per V6.0 SECURITY (HttpOnly cookies)
   localStorage.removeItem("Full name");
   localStorage.removeItem("Email");
   localStorage.removeItem("Mobile Number");
@@ -41,6 +42,8 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       clearUserFromLocalStorage();
+      // Fire-and-forget to clear HttpOnly cookie on backend
+      api.post("/auth/logout").catch(console.error);
     },
     updateDiamonds(state, action) {
       if (state.user) state.user.diamonds = action.payload;
