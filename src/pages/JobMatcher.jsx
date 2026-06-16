@@ -353,7 +353,7 @@ const JobMatcher = () => {
                   <div className="flex flex-wrap gap-2">
                     {matchResult.missingKeywords.map((kw, i) => (
                       <span key={i} className="px-3 py-1.5 bg-warning/10 text-warning rounded-lg text-[9px] font-black uppercase tracking-widest border border-warning/20">
-                        + {kw}
+                        + {typeof kw === 'string' ? kw : kw.keyword}
                       </span>
                     ))}
                   </div>
