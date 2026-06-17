@@ -1261,9 +1261,9 @@ export const isDisposableEmail = (email) => {
         </button>
       </nav>
 
-      <div className="flex pt-16">
+      <div className="flex pt-24">
         {/* ── SIDEBAR (Desktop) ── */}
-        <aside className="hidden lg:block w-72 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto border-r border-border-subtle p-4 space-y-6 glass bg-background/40">
+        <aside className="hidden lg:block w-72 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto border-r border-border-subtle p-4 pb-12 space-y-6 glass bg-background/40">
           {navGroups.map((group) => (
             <div key={group.label}>
               <p className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted mb-2 px-4">{group.label}</p>
@@ -1279,7 +1279,7 @@ export const isDisposableEmail = (email) => {
           {mobileNav && (
             <motion.aside 
               initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }}
-              className="fixed left-0 top-16 w-72 h-[calc(100vh-64px)] z-40 overflow-y-auto border-r border-border-subtle p-4 space-y-6 bg-background lg:hidden"
+              className="fixed left-0 top-24 w-72 h-[calc(100vh-96px)] z-40 overflow-y-auto border-r border-border-subtle p-4 pb-12 space-y-6 bg-background lg:hidden"
             >
               {navGroups.map((group) => (
                 <div key={group.label}>
