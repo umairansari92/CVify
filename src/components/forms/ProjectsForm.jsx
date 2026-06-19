@@ -140,7 +140,7 @@ const ProjectsForm = () => {
             <div className="relative">
               <textarea
                 {...register(`projects.${index}.description.0`)}
-                maxLength={500}
+                maxLength={1000}
                 placeholder="Describe the project objectives and your role..."
                 className="input-premium h-44 resize-none leading-relaxed"
               />
