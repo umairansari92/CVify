@@ -44,8 +44,9 @@ api.interceptors.response.use(
       
       // Determine if we are on a public route where we shouldn't interrupt the user
       const isPublicRoute = window.location.pathname.startsWith("/p/");
+      const isAuthMe = error.config?.url?.includes("/auth/me");
 
-      if (!isPublicRoute) {
+      if (!isPublicRoute && !isAuthMe) {
         // Force login with a modal confirmation only on protected/app routes
         Swal.fire({
           icon: "error",

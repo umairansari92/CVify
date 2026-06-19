@@ -36,6 +36,7 @@ const authSlice = createSlice({
     token: getSafeToken(),
     loading: false,
     error: null,
+    isInitialized: false,
   },
   reducers: {
     logout(state) {
@@ -104,6 +105,7 @@ const authSlice = createSlice({
         if (token) {
           state.user = user;
           state.token = token;
+          state.isInitialized = true;
           saveUserToLocalStorage(user, token);
         }
       })
@@ -117,12 +119,14 @@ const authSlice = createSlice({
       .addCase(getMe.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.isInitialized = true;
         saveUserToLocalStorage(action.payload, state.token);
       })
       .addCase(getMe.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.token = null;
+        state.isInitialized = true;
         clearUserFromLocalStorage();
       });
   },

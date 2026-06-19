@@ -15,10 +15,8 @@ const App = () => {
   const currentUrl = `https://app-cvifypro.vercel.app${location.pathname}`;
 
   useEffect(() => {
-    if (token) {
-      dispatch(getMe());
-    }
-  }, [dispatch, token]);
+    dispatch(getMe());
+  }, [dispatch]);
 
   return (
     <>

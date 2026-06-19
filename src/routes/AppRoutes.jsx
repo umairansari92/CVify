@@ -38,50 +38,24 @@ import LoadingScreen from "../components/common/LoadingScreen";
 
 
 const ProtectedRoute = ({ children }) => {
-  const { token } = useSelector((state) => state.auth);
-  if (token) return children;
+  const { user, isInitialized } = useSelector((state) => state.auth);
 
-  const navigate = useNavigate();
+  if (!isInitialized) {
+    return <LoadingScreen />;
+  }
 
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      Swal.fire({
-        icon: "error",
-        title: "Access Denied",
-        text: "You must be logged in to access this page.",
-        confirmButtonText: "OK",
-      }).then(() => {
-        navigate("/login", { replace: true });
-      });
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [navigate]);
+  if (user) return children;
 
-  return null;
+  return <Navigate to="/login" replace />;
 };
 
 const AdminRoute = ({ children }) => {
-  const { user } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const { user, isInitialized } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (user && user.role !== "admin" && user.role !== "superadmin") {
-      Swal.fire({
-        icon: "error",
-        title: "Access Denied",
-        text: "You do not have admin privileges.",
-        confirmButtonText: "OK",
-      }).then(() => {
-        navigate("/dashboard", { replace: true });
-      });
-    }
-  }, [user, navigate]);
+  if (!isInitialized) return <LoadingScreen />;
 
   if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
-    return null;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
