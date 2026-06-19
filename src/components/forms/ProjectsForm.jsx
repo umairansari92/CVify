@@ -149,9 +149,9 @@ const ProjectsForm = () => {
                   Keep it concise and impact-oriented.
                 </p>
                 <span
-                  className={`text-[10px] font-black tracking-widest ${(watch(`projects.${index}.description.0`)?.length || 0) >= 450 ? "text-orange-500" : "text-text-muted"}`}
+                  className={`text-[10px] font-black tracking-widest ${(watch(`projects.${index}.description.0`)?.length || 0) >= 950 ? "text-orange-500" : "text-text-muted"}`}
                 >
-                  {watch(`projects.${index}.description.0`)?.length || 0} / 500
+                  {watch(`projects.${index}.description.0`)?.length || 0} / 1000
                 </span>
               </div>
             </div>
