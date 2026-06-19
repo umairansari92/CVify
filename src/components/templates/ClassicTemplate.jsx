@@ -100,15 +100,17 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
               <FaMapMarkerAlt /> {personalInfo.location}
             </span>
           )}
-          <a
-            href={personalInfo.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:underline mr-6 mb-2"
-            style={{ color: themeColor }}
-          >
-            <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
-          </a>
+          {personalInfo?.linkedin && (
+            <a
+              href={personalInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:underline mr-6 mb-2"
+              style={{ color: themeColor }}
+            >
+              <FaLinkedin /> {personalInfo.linkedin.replace(/^https?:\/\//, "")}
+            </a>
+          )}
           {personalInfo?.github && (
             <a
               href={personalInfo.github}
@@ -360,7 +362,7 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
       )}
 
       {/* Custom Sections */}
-      {data.customSections?.map((section, i) => (
+      {customSections?.map((section, i) => (
         <div key={i} className="mb-6">
           <h2
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
