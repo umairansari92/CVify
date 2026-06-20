@@ -71,6 +71,7 @@ import { handleDownloadPDF } from "../utils/pdfExport";
 import InlineEdit from "../components/profile/InlineEdit";
 import ThemePanel from "../components/profile/ThemePanel";
 import Card from "../components/ui/Card";
+import { AiAgentWidget } from "../components/AiAgentWidget";
 // 🚀 OPT: Lazy-load heavy themes — not downloaded unless user has that theme active
 //         Saves ~115KB from initial JS bundle, improves FCP & TTI for all visitors
 const OrientalLuxeTheme = lazy(() => import("../themes/orientalluxe"));
@@ -705,6 +706,9 @@ const PublicProfile = () => {
           <ThemePanel isOpen={showThemePanel} onClose={() => setShowThemePanel(false)} theme={theme} onUpdate={handleThemeUpdate} isUpdating={isUpdating} presets={themePresets} />
         </>
       )}
+
+      {/* ── AI Agent Widget ── */}
+      <AiAgentWidget candidateId={user?._id || username} />
     </div>
   );
 };
