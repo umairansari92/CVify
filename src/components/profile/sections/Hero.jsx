@@ -22,13 +22,13 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
     const stats = [
       { 
         label: "Recruiter Engagement", 
-        value: analytics.views != null ? `${analytics.views} Profile Views` : null, 
+        value: analytics?.views != null ? `${analytics.views} Profile Views` : null, 
         icon: <FaMagic size={14} />,
         field: null 
       },
       { 
         label: "Hiring Signals", 
-        value: (analytics.contactClicks != null || analytics.resumeDownloads != null) ? `${(analytics.contactClicks || 0) + (analytics.resumeDownloads || 0)} Signals Generated` : null, 
+        value: (analytics?.contactClicks != null || analytics?.resumeDownloads != null) ? `${(analytics?.contactClicks || 0) + (analytics?.resumeDownloads || 0)} Signals Generated` : null, 
         icon: <RocketIcon size={14} />,
         field: null 
       },

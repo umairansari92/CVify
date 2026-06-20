@@ -491,15 +491,15 @@ const PublicProfile = () => {
             </div>
             <div className="flex gap-8 px-4">
               <div className="text-center">
-                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.views || 0}</p>
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics?.views || 0}</p>
                 <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Recruiters Reached</p>
               </div>
               <div className="text-center">
-                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.resumeDownloads || 0}</p>
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics?.resumeDownloads || 0}</p>
                 <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Action Signals</p>
               </div>
               <div className="text-center">
-                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics.contactClicks || 0}</p>
+                <p className="text-sm font-black" style={{ color: "var(--text-primary)" }}>{analytics?.contactClicks || 0}</p>
                 <p className="text-[7px] font-bold opacity-40 uppercase tracking-tighter" style={{ color: "var(--text-secondary)" }}>Direct Outreach</p>
               </div>
             </div>
