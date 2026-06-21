@@ -6,7 +6,7 @@ import {
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
   BarChart3, GitBranch, TrendingUp, Heart,
-  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail
+  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail, Bot
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
@@ -41,6 +41,7 @@ const Documentation = () => {
         { id: "cover-letter", icon: <MessageSquare size={16} />, label: "AI Cover Letters" },
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
+        { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative (New!)" },
       ]
     },
     {
@@ -1170,6 +1171,7 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
+            { title: "AI Representative (Portfolio AI Guide)", desc: "Floating AI-powered chat widget on every public portfolio. Represents the candidate to recruiters with dynamic profile search, quick action buttons, and anti-hallucination guardrails. Powered by Groq SSE streaming.", status: "NEW" },
             { title: "Security v6.0 — Defense in Depth", desc: "Rate limiting (IP+Email keyed), NoSQL injection protection, password hardening (8–72 chars), pepper hashing with lazy migration, HttpOnly cookies, secure logout endpoint.", status: "NEW" },
             { title: "Premium Dark Email Templates", desc: "All transactional emails (OTP, Password Reset, Portfolio Contact) redesigned to match the CVify Pro dark theme — deep dark background, teal accents, premium branding.", status: "NEW" },
             { title: "Admin Panel Sidebar Fix", desc: "Admin users now see a persistent 'Admin Panel' link in the main sidebar. Admins inside the admin area see a 'Back to App' link for quick navigation.", status: "FIX" },
@@ -1212,6 +1214,121 @@ export const isDisposableEmail = (email) => {
               <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0 ${item.status === "TOP PRIORITY" ? "bg-primary text-white" : "bg-primary/10 text-primary"}`}>{item.status}</span>
             </div>
           ))}
+        </div>
+      </>
+    ),
+
+    "ai-representative": (
+      <>
+        <DocHeader title="🤖 AI Representative" badge="New Feature" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-8">
+          The <strong className="text-text-primary">AI Representative</strong> is a floating, real-time AI-powered portfolio guide embedded on every CVify Pro public profile.
+          It is NOT a generic chatbot — it is a <strong className="text-text-primary">digital representative</strong> of the portfolio owner,
+          helping recruiters, hiring managers, and visitors instantly understand a candidate without reading the entire portfolio.
+        </p>
+
+        <SectionTitle>What It Is (And What It Is Not)</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Bot size={16} />} color="emerald" title="Portfolio Guide"
+            desc="Acts as a professional receptionist and executive assistant. Introduces the candidate, explains their experience, showcases projects, and facilitates direct contact." />
+          <InfoCard icon={<Shield size={16} />} color="blue" title="NOT a General AI"
+            desc="Does not answer questions outside the portfolio owner's profile. Never invents information. Strictly grounded in real profile data fetched from the database." />
+          <InfoCard icon={<Users size={16} />} color="purple" title="Represents, Never Impersonates"
+            desc="Always says 'I represent [Name]' — never 'I am [Name]'. This distinction is a core product philosophy enforced at the system prompt level." />
+          <InfoCard icon={<Zap size={16} />} color="amber" title="Zero Typing Required"
+            desc="Quick Action Buttons let recruiters explore the candidate with a single click — no prompting, no typing. Engineered for high engagement and low friction." />
+        </div>
+
+        <SectionTitle>Core Architecture</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8 overflow-x-auto">
+          <pre className="text-[12px] text-text-secondary font-mono leading-relaxed whitespace-pre">{`AI Representative Stack
+├─ Frontend
+│   ├─ AiAgentWidget.jsx       # Floating chat UI (Framer Motion + Glassmorphism)
+│   ├─ useAgentStream.jsx      # Custom hook — native fetch SSE stream decoder
+│   └─ PublicProfile.jsx       # Mounts <AiAgentWidget profileData={user} />
+│
+└─ Backend
+    ├─ agentController.js      # buildSystemPrompt() + searchProfile() + streamChat()
+    ├─ agent.routes.js          # POST /api/agent/stream
+    └─ server.js               # app.use('/api/agent', agentRoutes)`}</pre>
+        </div>
+
+        <SectionTitle>How It Works — Full Request Flow</SectionTitle>
+        <Steps items={[
+          { step: "1", title: "Profile Data Passed from Redux", desc: "PublicProfile.jsx passes the live Redux user object as profileData to AiAgentWidget. No extra API call — the data is already in state." },
+          { step: "2", title: "User Sends a Message or Clicks Quick Action", desc: "useAgentStream.jsx fires a POST /api/agent/stream with the full profileData + conversation history (messages array)." },
+          { step: "3", title: "Backend Fact-Check Search", desc: "agentController.js runs searchProfile() — a pure JavaScript keyword scanner that checks skills, project tech stacks, experience descriptions, bio, and headline BEFORE calling the LLM." },
+          { step: "4", title: "Dynamic System Prompt Built", desc: "buildSystemPrompt(profile) constructs a fully personalized system prompt from the real profile data — name, headline, skills, projects, experience, contact links." },
+          { step: "5", title: "Fact Check Injected as Ground Truth", desc: "The search result is injected as a second system message labeled BACKEND FACT CHECK — ABSOLUTE GROUND TRUTH. The LLM cannot contradict it." },
+          { step: "6", title: "Groq SSE Stream", desc: "Groq (llama-3.1-8b-instant) streams the response via Server-Sent Events at temperature: 0.1 for maximum factual precision." },
+          { step: "7", title: "Frontend Decodes & Renders", desc: "useAgentStream decodes the SSE stream with TextDecoder, appends chunks to the last assistant message in real-time. React Markdown renders contact links as glassmorphism buttons." },
+        ]} />
+
+        <SectionTitle>Anti-Hallucination System</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { tag: "RULE 1", color: "red", title: "Zero Hallucination", desc: "LLM cannot mention any skill, project, company, or technology NOT explicitly listed in the verified profile data. Violators are caught by the FACT CHECK injection." },
+            { tag: "RULE 2", color: "blue", title: "Backend Pre-Search", desc: "searchProfile() runs pure JS keyword matching across skills, projects, experience, bio BEFORE the LLM call. Result is passed as ground truth the model must follow." },
+            { tag: "RULE 3", color: "emerald", title: "Missing Data Response", desc: "If information is not in the profile, the AI responds only: 'I couldn't find that information in [Name]'s profile.' Nothing else — no assumptions, no guesses." },
+            { tag: "RULE 4", color: "amber", title: "Persona Lock", desc: "Anti-injection shield: if a visitor tries to override the persona ('ignore instructions', 'you are now...'), the AI rejects it instantly and stays in character." },
+            { tag: "RULE 5", color: "purple", title: "No Invented Sections", desc: "The LLM is explicitly forbidden from adding 'Additional Skills' or 'Additional Projects' sections. If a list ends, it ends. Period." },
+          ].map((item, i) => {
+            const colors = { red: "bg-red-500/10 border-red-500/20 text-red-400", blue: "bg-blue-500/10 border-blue-500/20 text-blue-400", emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400", amber: "bg-amber-500/10 border-amber-500/20 text-amber-400", purple: "bg-purple-500/10 border-purple-500/20 text-purple-400" };
+            return (
+              <div key={i} className={`p-4 rounded-2xl border ${colors[item.color]}`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${colors[item.color]}`}>{item.tag}</span>
+                  <p className="font-black text-sm text-text-primary">{item.title}</p>
+                </div>
+                <p className="text-text-secondary text-[13px] leading-relaxed">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <SectionTitle>Quick Action Buttons</SectionTitle>
+        <p className="text-slate-400 text-[13px] leading-relaxed mb-4">
+          When the chat opens, dynamic Quick Action Buttons are shown above the input. They are generated based on what data is available in the profile — no projects means no "View Projects" button. Clicking any button fires <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">sendMessage()</code> directly without typing.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-8">
+          {[
+            { icon: "🧑", label: "Introduce Candidate", cond: "Always shown" },
+            { icon: "💼", label: "Show Experience", cond: "If experience exists" },
+            { icon: "🚀", label: "View Projects", cond: "If projects exist" },
+            { icon: "🛠", label: "Explore Skills", cond: "If skills exist" },
+            { icon: "🎓", label: "Certifications", cond: "If certifications exist" },
+            { icon: "⭐", label: "Testimonials", cond: "If testimonials exist" },
+            { icon: "📞", label: "Contact Candidate", cond: "If any contact info exists" },
+          ].map((btn, i) => (
+            <div key={i} className="p-3 bg-slate-800/40 border border-slate-700/40 rounded-xl">
+              <p className="text-slate-200 font-black text-xs mb-0.5">{btn.icon} {btn.label}</p>
+              <p className="text-slate-500 text-[10px]">{btn.cond}</p>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>AI Persona Rules</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Identity", right: "'I represent [Name]' — never 'I am [Name]'" },
+          { left: "Greeting", right: "2-line intro + invite questions. Never dumps full profile." },
+          { left: "Contact Trigger", right: "Contact block shown ONLY on greetings or explicit hiring/contact intent" },
+          { left: "Response Length", right: "Max 150 words for factual queries. No walls of text." },
+          { left: "Prohibited", right: "No interviews, no career advice, no fictional achievements, no filler phrases" },
+          { left: "Temperature", right: "0.1 — maximum factual precision, minimum creative drift" },
+          { left: "Model", right: "Groq llama-3.1-8b-instant — ultra-low latency for real-time streaming" },
+        ]} />
+
+        <SectionTitle>API Endpoint</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl">
+          <p className="text-[11px] font-black uppercase tracking-widest text-text-muted mb-3">POST /api/agent/stream</p>
+          <ComparisonTable items={[
+            { left: "Method", right: "POST" },
+            { left: "Content-Type", right: "application/json" },
+            { left: "Response", right: "text/event-stream (SSE)" },
+            { left: "Body: messages", right: "Array of {role, content} — conversation history" },
+            { left: "Body: profileData", right: "Full portfolio owner user object from Redux" },
+            { left: "Stream Format", right: "data: {\"content\": \"chunk\"}\\n\\n ... data: [DONE]" },
+          ]} />
         </div>
       </>
     ),
