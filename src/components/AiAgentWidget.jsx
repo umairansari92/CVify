@@ -45,9 +45,12 @@ const localIntents = {
   experience: ["experience", "job", "work", "history", "position", "company", "worked"],
   projects: ["project", "portfolio", "built", "apps", "cvify", "lifesync", "nikhaar"],
   skills: ["skills", "tech", "stack", "technologies", "expert", "expertise"],
-  services: ["services", "offering", "solutions", "hire"],
+  services: ["services", "offering", "solutions"],
   strategic: ["strategic", "mindset", "soft skills", "collaboration", "management", "problem solving"],
-  education: ["education", "degree", "university", "college", "school", "certifications", "certificate", "eaducation", "academic"]
+  education: ["education", "degree", "university", "college", "school", "certifications", "certificate", "eaducation", "academic"],
+  contact: ["contact", "email", "phone", "call", "reach", "message", "linkedin", "github", "social"],
+  location: ["location", "where", "based", "city", "country", "live", "address"],
+  availability: ["available", "availability", "hire", "freelance", "full-time", "part-time"]
 };
 
 const serializeExperience = (experience) => {
@@ -225,6 +228,86 @@ export const AiAgentWidget = ({ profileData }) => {
     if (hasIntent("education")) {
       addLocalMessage(userQuery, `Academic background and certifications:\n${serializeEducation(profileData.education, profileData.certifications)}`);
       return;
+    }
+
+    if (hasIntent("contact")) {
+      const links = [];
+      if (profileData.email) links.push(`- **Email:** [${profileData.email}](mailto:${profileData.email})`);
+      if (profileData.phoneNumber) links.push(`- **Phone:** [${profileData.phoneNumber}](tel:${profileData.phoneNumber})`);
+      if (profileData.socialLinks?.linkedin) links.push(`- **LinkedIn:** [Profile](${profileData.socialLinks.linkedin})`);
+      if (profileData.socialLinks?.github) links.push(`- **GitHub:** [Profile](${profileData.socialLinks.github})`);
+      
+      if (links.length > 0) {
+        addLocalMessage(userQuery, `You can reach out to **${ownerName}** via the following channels:\n${links.join('\n')}`);
+      } else {
+        addLocalMessage(userQuery, `I don't have direct contact information for **${ownerName}**, but you can use the contact form on this portfolio.`);
+      }
+      return;
+    }
+
+    if (hasIntent("location")) {
+      addLocalMessage(userQuery, profileData.location 
+        ? `**${ownerName}** is based in **${profileData.location}**.` 
+        : `I don't have a specific location listed for **${ownerName}**.`);
+      return;
+    }
+
+    if (hasIntent("availability")) {
+      addLocalMessage(userQuery, profileData.availability 
+        ? `**${ownerName}**'s current availability is: **${profileData.availability}**.` 
+        : `I don't have specific availability listed right now, but feel free to reach out via contact options!`);
+      return;
+    }
+
+    // ── DEEP SCANNING ENGINE (Zero-Latency NLP) ──
+    const stopWords = ["does", "do", "is", "can", "know", "knows", "has", "have", "he", "she", "they", "the", "a", "an",
+      "about", "any", "experience", "with", "in", "of", "and", "or", "for", "to", "what", "his", "her", "their",
+      "skills", "skill", "project", "projects", "work", "works", "tell", "me", "please", "show", "list", "give",
+      "hi", "hello", "hey", "contact", "how", "who", "where", "when", "why", "which", "summarize", "summary", "this", "candidate"];
+
+    const keywords = query.split(/\s+/).filter(w => w.length > 1 && !stopWords.includes(w));
+    
+    if (keywords.length > 0) {
+      // 1. Scan Skills
+      const techSkills = Array.isArray(profileData.skills) 
+        ? profileData.skills.filter(s => s.category?.toLowerCase() !== 'strategic').map(s => typeof s === "string" ? s : s.name).filter(Boolean) 
+        : [];
+      const matchedSkills = techSkills.filter(s => keywords.some(k => s.toLowerCase().includes(k) || k.includes(s.toLowerCase())));
+      
+      if (matchedSkills.length > 0) {
+        addLocalMessage(userQuery, `Yes, **${matchedSkills.join(", ")}** is part of ${ownerName}'s technical expertise.\n\nHere is the full technical stack:\n${techSkills.join(", ")}`);
+        return;
+      }
+
+      // 2. Scan Projects
+      const projects = Array.isArray(profileData.projects) ? profileData.projects : (Array.isArray(profileData.portfolio) ? profileData.portfolio : []);
+      const matchedProjects = projects.filter(p => 
+        keywords.some(k => 
+          (p.techStack && p.techStack.some(t => t.toLowerCase().includes(k))) ||
+          (p.title && p.title.toLowerCase().includes(k)) ||
+          (p.description && p.description.toLowerCase().includes(k)) ||
+          (p.name && p.name.toLowerCase().includes(k))
+        )
+      );
+      if (matchedProjects.length > 0) {
+        addLocalMessage(userQuery, `I found relevant projects in the portfolio:\n\n${serializeProjects(matchedProjects)}`);
+        return;
+      }
+
+      // 3. Scan Experience
+      const experience = Array.isArray(profileData.experience) ? profileData.experience : [];
+      const matchedExp = experience.filter(e => 
+        keywords.some(k => 
+          (e.company && e.company.toLowerCase().includes(k)) ||
+          (e.jobTitle && e.jobTitle.toLowerCase().includes(k)) ||
+          (e.role && e.role.toLowerCase().includes(k)) ||
+          (e.description && e.description.toLowerCase().includes(k))
+        )
+      );
+      if (matchedExp.length > 0) {
+        addLocalMessage(userQuery, `I found relevant work experience for **${ownerName}**:\n\n${serializeExperience(matchedExp)}`);
+        return;
+      }
     }
 
     // Default Fallback to Groq API
