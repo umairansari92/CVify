@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import { FaRobot } from 'react-icons/fa';
 import { useAgentStream } from '../hooks/useAgentStream';
 
 // ── Render contact/external links as premium glassmorphism buttons ──
@@ -483,24 +484,44 @@ export const AiAgentWidget = ({ profileData }) => {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative w-14 h-14 bg-slate-900 border border-teal-500/50 rounded-full flex items-center justify-center text-teal-400 shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_35px_rgba(20,184,166,0.45)] backdrop-blur-sm transition-shadow"
+        className="relative w-14 h-14 bg-slate-900 border-2 border-teal-500/50 rounded-full flex items-center justify-center text-teal-400 shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] backdrop-blur-sm transition-shadow group overflow-visible"
       >
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-500/10 to-transparent" />
+        {/* Neon Pulse Ring for "Online" Status */}
+        <div className="absolute inset-0 rounded-full border border-teal-400/50 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-500/10 to-transparent overflow-hidden">
+          {profileData?.profilePicture || profileData?.avatar ? (
+            <img 
+              src={profileData.profilePicture || profileData.avatar} 
+              alt="AI Rep" 
+              className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <FaRobot className="text-2xl drop-shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
+            </div>
+          )}
+        </div>
+
         {/* Unread indicator — visible before first open */}
         {!isOpen && messages.length === 0 && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-teal-400 rounded-full border-2 border-slate-900 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-teal-400 rounded-full border-2 border-slate-900 flex items-center justify-center z-10 shadow-[0_0_10px_rgba(20,184,166,0.8)]">
             <span className="text-[8px] font-black text-slate-900">1</span>
           </span>
         )}
         <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.svg key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </motion.svg>
-          ) : (
-            <motion.svg key="chat" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }} className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </motion.svg>
+          {isOpen && (
+            <motion.div 
+              key="close" 
+              initial={{ rotate: -90, opacity: 0 }} 
+              animate={{ rotate: 0, opacity: 1 }} 
+              exit={{ rotate: 90, opacity: 0 }} 
+              transition={{ duration: 0.15 }} 
+              className="absolute inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm rounded-full z-20"
+            >
+              <svg className="w-6 h-6 text-teal-400 drop-shadow-[0_0_5px_rgba(20,184,166,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.button>
