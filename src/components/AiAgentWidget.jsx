@@ -41,11 +41,12 @@ const MarkdownComponents = {
 
 // ── Local Knowledge Engine (Client-Side Hydration) ──
 const localIntents = {
-  intro: ["introduce", "who is", "about", "summary", "intro", "candidate"],
+  intro: ["introduce", "who is", "about", "summary", "intro"],
   experience: ["experience", "job", "work", "history", "position", "company", "worked"],
   projects: ["project", "portfolio", "built", "apps", "cvify", "lifesync", "nikhaar"],
   skills: ["skills", "tech", "stack", "technologies", "expert", "expertise"],
-  services: ["services", "offering", "strategic", "solutions", "hire"],
+  services: ["services", "offering", "solutions", "hire"],
+  strategic: ["strategic", "mindset", "soft skills", "collaboration", "management", "problem solving"],
   education: ["education", "degree", "university", "college", "school", "certifications", "certificate", "eaducation", "academic"]
 };
 
@@ -66,6 +67,14 @@ const serializeServices = (services) => {
     const title = typeof s === "string" ? s : s.title || s.name || "";
     const desc = s.description ? `: ${s.description.slice(0, 250)}${s.description.length > 250 ? '...' : ''}` : "";
     return `- **${title}**${desc}`;
+  }).join("\n");
+};
+
+const serializeStrategicSkills = (skills) => {
+  if (!Array.isArray(skills) || skills.length === 0) return "No strategic skills listed.";
+  return skills.map(s => {
+    const name = typeof s === "string" ? s : s.title || s.name || "";
+    return `- **${name}**`;
   }).join("\n");
 };
 
@@ -97,6 +106,9 @@ const serializeEducation = (education, certifications) => {
 const buildQuickActions = (profile) => {
   if (!profile) return [];
   const actions = [];
+  
+  const strategicSkills = Array.isArray(profile.strategic_skills) ? profile.strategic_skills : (Array.isArray(profile.strategicSkills) ? profile.strategicSkills : (Array.isArray(profile.skills) ? profile.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name) : []));
+  const services = Array.isArray(profile.services) ? profile.services : (Array.isArray(profile.servicesOffering) ? profile.servicesOffering : []);
 
   // Always present
   actions.push({ icon: '🧑', label: 'Introduce Candidate', prompt: `Give me a concise professional introduction of this candidate.` });
@@ -112,6 +124,14 @@ const buildQuickActions = (profile) => {
 
   if (Array.isArray(profile.skills) && profile.skills.length > 0) {
     actions.push({ icon: '🛠', label: 'Explore Skills', prompt: `What technologies and skills does this candidate have?` });
+  }
+
+  if (strategicSkills.length > 0) {
+    actions.push({ icon: '🧠', label: 'Strategic Skills', prompt: `What are their strategic skills?` });
+  }
+
+  if (services.length > 0) {
+    actions.push({ icon: '🤝', label: 'Services Offering', prompt: `What services does this candidate offer?` });
   }
 
   if (Array.isArray(profile.certifications) && profile.certifications.length > 0) {
@@ -176,8 +196,14 @@ export const AiAgentWidget = ({ profileData }) => {
     }
 
     if (hasIntent("services")) {
-      const services = profileData.strategic_skills || profileData.strategicSkills || profileData.services || profileData.servicesOffering;
-      addLocalMessage(userQuery, `Here are the strategic services and offerings:\n${serializeServices(services)}`);
+      const services = Array.isArray(profileData.services) ? profileData.services : (Array.isArray(profileData.servicesOffering) ? profileData.servicesOffering : []);
+      addLocalMessage(userQuery, `Here are the services and offerings:\n${serializeServices(services)}`);
+      return;
+    }
+
+    if (hasIntent("strategic")) {
+      const strategicSkills = Array.isArray(profileData.strategic_skills) ? profileData.strategic_skills : (Array.isArray(profileData.strategicSkills) ? profileData.strategicSkills : (Array.isArray(profileData.skills) ? profileData.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name) : []));
+      addLocalMessage(userQuery, `Here are the strategic skills and mindset attributes:\n${serializeStrategicSkills(strategicSkills)}`);
       return;
     }
 
@@ -188,8 +214,10 @@ export const AiAgentWidget = ({ profileData }) => {
     }
 
     if (hasIntent("skills")) {
-      const skills = profileData.skills;
-      const skillText = Array.isArray(skills) && skills.length > 0 ? skills.join(", ") : "No skills listed.";
+      const techSkills = Array.isArray(profileData.skills) 
+        ? profileData.skills.filter(s => s.category?.toLowerCase() !== 'strategic').map(s => typeof s === "string" ? s : s.name).filter(Boolean)
+        : [];
+      const skillText = techSkills.length > 0 ? techSkills.join(", ") : "No technical skills listed.";
       addLocalMessage(userQuery, `Core technical skills and expertise:\n${skillText}`);
       return;
     }
