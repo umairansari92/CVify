@@ -307,6 +307,41 @@ const Documentation = () => {
       </>
     ),
 
+    "ai-representative": (
+      <>
+        <DocHeader title="🤖 AI Representative (Smart Bot)" badge="Core Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Every CVify Pro portfolio features an elite <strong className="text-teal-400">Smart AI Representative</strong>. This is not a generic chatbot — it's a deeply integrated digital twin that holds your entire portfolio in memory, answering recruiter questions instantly with 0ms latency.
+        </p>
+        
+        <SectionTitle>Deep Client-Side NLP Engine</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          The bot runs a powerful <strong>Zero-Latency NLP scanner</strong> directly in the browser. It tokenizes user input, ignores stop words, and actively scans your local data (Skills, Projects, Experience, Contact, Location) to return instant factual answers without making API calls.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Zap size={16} />} color="emerald" title="0ms Local Hydration" desc="Queries like 'Does he know React?' are answered instantly by scanning the skills array locally." />
+          <InfoCard icon={<Brain size={16} />} color="purple" title="Agentic Cloud Fallback" desc="For abstract or complex conversational queries, the bot seamlessly falls back to the Groq API LLM." />
+          <InfoCard icon={<MessageSquare size={16} />} color="blue" title="Strict Formatting" desc="The bot is programmed to avoid filler text ('Sure! Here you go...'), outputting clean markdown bullet points only." />
+          <InfoCard icon={<Star size={16} />} color="amber" title="Persistent Actions" desc="Sticky matrix of quick-action buttons (Show Experience, View Projects, Explore Skills) remains accessible above the chat input." />
+        </div>
+
+        <SectionTitle>Elite UI & Personalization</SectionTitle>
+        <div className="p-5 bg-teal-500/5 border border-teal-500/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 text-[13px]">
+              <span className="font-black text-teal-400 w-28 flex-shrink-0">Dynamic Avatar</span>
+              <span className="text-text-secondary">The Floating Action Button (FAB) uses the candidate's actual profile picture with a pulsing neon ring to signify an "Online" presence.</span>
+            </div>
+            <div className="flex items-start gap-3 text-[13px]">
+              <span className="font-black text-teal-400 w-28 flex-shrink-0">Cyberpunk Fallback</span>
+              <span className="text-text-secondary">If no photo is available, it gracefully defaults to a futuristic glowing robot icon using sleek drop-shadows.</span>
+            </div>
+          </div>
+        </div>
+      </>
+    ),
+
     engine: (
       <>
         <DocHeader title="The 3-Layer ATS Intelligence Engine" badge="Technical" />
