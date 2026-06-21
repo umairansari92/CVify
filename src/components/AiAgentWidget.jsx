@@ -30,17 +30,21 @@ const MarkdownComponents = {
   p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />
 };
 
-export const AiAgentWidget = ({ candidateId = "default" }) => {
+export const AiAgentWidget = ({ profileData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const endOfMessagesRef = useRef(null);
+
+  const ownerName = profileData
+    ? [profileData.firstName, profileData.lastName].filter(Boolean).join(' ') || profileData.name || 'the candidate'
+    : 'the candidate';
   
-  // API endpoint would be defined based on your environment
+  // API endpoint falls back to relative proxy — works for both local and Vercel
   const apiUrl = import.meta.env.VITE_API_URL 
     ? `${import.meta.env.VITE_API_URL}/api/agent/stream` 
     : '/api/agent/stream';
     
-  const { messages, sendMessage, isTyping } = useAgentStream(apiUrl, candidateId);
+  const { messages, sendMessage, isTyping } = useAgentStream(apiUrl, profileData);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -72,7 +76,10 @@ export const AiAgentWidget = ({ candidateId = "default" }) => {
             <div className="px-5 py-4 border-b border-slate-700/50 bg-slate-800/50 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shadow-[0_0_10px_rgba(20,184,166,0.8)]"></div>
-                <h3 className="text-white font-semibold tracking-wide">AI Chief of Staff</h3>
+                <div>
+                  <h3 className="text-white font-semibold tracking-wide leading-none">{ownerName}'s AI Rep</h3>
+                  <p className="text-teal-400/60 text-[10px] tracking-widest uppercase mt-0.5">Ask me anything</p>
+                </div>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
@@ -85,8 +92,9 @@ export const AiAgentWidget = ({ candidateId = "default" }) => {
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: '#334155 transparent' }}>
               {messages.length === 0 && (
-                <div className="text-slate-400 text-sm text-center mt-10">
-                  <p>Ask me anything about the candidate's experience, skills, or contact info.</p>
+                <div className="text-slate-400 text-sm text-center mt-10 px-2 space-y-3">
+                  <p className="font-semibold text-slate-300">👋 Hi! I represent <span className="text-teal-400">{ownerName}</span></p>
+                  <p className="text-xs leading-relaxed">Ask me about their skills, projects, experience, or how to get in touch.</p>
                 </div>
               )}
               

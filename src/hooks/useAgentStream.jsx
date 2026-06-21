@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 
-export const useAgentStream = (apiUrl, candidateId) => {
+export const useAgentStream = (apiUrl, profileData) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
@@ -30,9 +30,9 @@ export const useAgentStream = (apiUrl, candidateId) => {
           'Content-Type': 'application/json',
           'Accept': 'text/event-stream',
         },
-        // Only send role and content to the API
+        // Send the full profile object — backend builds dynamic system prompt from it
         body: JSON.stringify({
-          candidateId,
+          profileData,
           messages: nextMessages.map(m => ({ role: m.role, content: m.content })),
         }),
         signal: abortControllerRef.current.signal,
@@ -100,7 +100,7 @@ export const useAgentStream = (apiUrl, candidateId) => {
     } finally {
       setIsTyping(false);
     }
-  }, [messages, apiUrl, candidateId]);
+  }, [messages, apiUrl, profileData]);
 
   return { messages, sendMessage, isTyping, error };
 };

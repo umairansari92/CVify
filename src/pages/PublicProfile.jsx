@@ -708,7 +708,7 @@ const PublicProfile = () => {
       )}
 
       {/* ── AI Agent Widget ── */}
-      <AiAgentWidget candidateId={user?._id || username} />
+      <AiAgentWidget profileData={user} />
     </div>
   );
 };
