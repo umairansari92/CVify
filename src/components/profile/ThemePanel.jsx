@@ -18,10 +18,10 @@ const ThemePanel = ({ isOpen, onClose, theme, onUpdate, isUpdating, presets }) =
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ x: 450, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 450, opacity: 0 }}
-          className="fixed right-6 top-1/2 -translate-y-1/2 z-[200] w-[24rem] md:w-[28rem] bg-slate-900/95 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.4)] p-8 overflow-hidden flex flex-col max-h-[85vh]"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -50, opacity: 0 }}
+          className="fixed right-6 top-48 z-[200] w-[24rem] md:w-[28rem] bg-slate-900/95 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.4)] p-8 overflow-hidden flex flex-col max-h-[75vh]"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-8 flex-shrink-0">

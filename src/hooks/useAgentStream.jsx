@@ -101,6 +101,16 @@ export const useAgentStream = (apiUrl, profileData) => {
       setIsTyping(false);
     }
   }, [messages, apiUrl, profileData]);
+  const addLocalMessage = useCallback((userText, assistantText) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setMessages(prev => [
+      ...prev,
+      { role: 'user', content: userText },
+      { role: 'assistant', content: assistantText }
+    ]);
+  }, []);
 
-  return { messages, sendMessage, isTyping, error };
+  return { messages, sendMessage, isTyping, error, addLocalMessage };
 };

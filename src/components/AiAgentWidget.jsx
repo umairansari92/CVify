@@ -39,6 +39,60 @@ const MarkdownComponents = {
   li: ({ node, ...props }) => <li className="flex gap-2 items-start"><span className="text-teal-400 mt-1 shrink-0">•</span><span {...props} /></li>,
 };
 
+// ── Local Knowledge Engine (Client-Side Hydration) ──
+const localIntents = {
+  intro: ["introduce", "who is", "about", "summary", "intro", "candidate"],
+  experience: ["experience", "job", "work", "history", "position", "company", "worked"],
+  projects: ["project", "portfolio", "built", "apps", "cvify", "lifesync", "nikhaar"],
+  skills: ["skills", "tech", "stack", "technologies", "expert", "expertise"],
+  services: ["services", "offering", "strategic", "solutions", "hire"],
+  education: ["education", "degree", "university", "college", "school", "certifications", "certificate", "eaducation", "academic"]
+};
+
+const serializeExperience = (experience) => {
+  if (!Array.isArray(experience) || experience.length === 0) return "No experience listed.";
+  return experience.map(e => {
+    const title = e.jobTitle || e.role || "Role";
+    const company = e.company || "Company";
+    const period = `${e.startDate || ""}${e.endDate ? " – " + e.endDate : " – Present"}`;
+    const desc = e.description ? `\n  ${e.description.slice(0, 250)}${e.description.length > 250 ? '...' : ''}` : "";
+    return `- **${title}** at ${company} (${period})${desc}`;
+  }).join("\n\n");
+};
+
+const serializeServices = (services) => {
+  if (!Array.isArray(services) || services.length === 0) return "No services listed.";
+  return services.map(s => {
+    const title = typeof s === "string" ? s : s.title || s.name || "";
+    const desc = s.description ? `: ${s.description.slice(0, 250)}${s.description.length > 250 ? '...' : ''}` : "";
+    return `- **${title}**${desc}`;
+  }).join("\n");
+};
+
+const serializeProjects = (projects) => {
+  if (!Array.isArray(projects) || projects.length === 0) return "No projects listed.";
+  return projects.map(p => {
+    const name = p.title || p.name || "Untitled";
+    const desc = p.description ? p.description.slice(0, 250) + (p.description.length > 250 ? '...' : '') : "";
+    const tech = p.techStack?.length ? ` | Tech: ${p.techStack.join(", ")}` : "";
+    const ghLink = p.githubLink ? ` | [GitHub](${p.githubLink})` : "";
+    const liveLink = p.liveLink ? ` | [Live](${p.liveLink})` : "";
+    return `- **${name}**: ${desc}${tech}${ghLink}${liveLink}`;
+  }).join("\n\n");
+};
+
+const serializeEducation = (education, certifications) => {
+  const eduLines = Array.isArray(education) ? education.map(e =>
+    `- **${e.degree || "Degree"}** — ${e.institution || "Institution"} (${e.graduationYear || e.endDate || ""})`
+  ) : [];
+  const certLines = Array.isArray(certifications) ? certifications.map(c => 
+    `- **${c.name || c.title || "Certificate"}**${c.issuer ? ` from ${c.issuer}` : ""}`
+  ) : [];
+  
+  const allLines = [...eduLines, ...certLines];
+  return allLines.length > 0 ? allLines.join("\n") : "No education or certifications listed.";
+};
+
 // ── Dynamically generates quick action buttons based on available profile data ──
 const buildQuickActions = (profile) => {
   if (!profile) return [];
@@ -91,7 +145,7 @@ export const AiAgentWidget = ({ profileData }) => {
     ? `${import.meta.env.VITE_API_URL}/api/agent/stream`
     : '/api/agent/stream';
 
-  const { messages, sendMessage, isTyping } = useAgentStream(apiUrl, profileData);
+  const { messages, sendMessage, isTyping, addLocalMessage } = useAgentStream(apiUrl, profileData);
 
   // Compute quick actions once when profile data is available
   const quickActions = useMemo(() => buildQuickActions(profileData), [profileData]);
@@ -103,16 +157,62 @@ export const AiAgentWidget = ({ profileData }) => {
     }
   }, [messages, isTyping]);
 
+  const handleSmartQuery = (userQuery) => {
+    if (!userQuery.trim()) return;
+    const query = userQuery.toLowerCase().trim();
+
+    // Helper to check intent matches
+    const hasIntent = (intentKey) => localIntents[intentKey].some(k => query.includes(k));
+
+    if (hasIntent("intro") || query === "hi" || query === "hello") {
+      const briefHeadline = profileData?.headline ? profileData.headline.split(",").slice(0, 2).join(" & ") : "Professional";
+      addLocalMessage(userQuery, `Hello! I represent **${ownerName}**, a ${briefHeadline}. What would you like to explore?`);
+      return;
+    }
+
+    if (hasIntent("experience")) {
+      addLocalMessage(userQuery, `Here is the work experience for **${ownerName}**:\n${serializeExperience(profileData.experience)}`);
+      return;
+    }
+
+    if (hasIntent("services")) {
+      const services = profileData.strategic_skills || profileData.strategicSkills || profileData.services || profileData.servicesOffering;
+      addLocalMessage(userQuery, `Here are the strategic services and offerings:\n${serializeServices(services)}`);
+      return;
+    }
+
+    if (hasIntent("projects")) {
+      const projects = Array.isArray(profileData.projects) ? profileData.projects : profileData.portfolio;
+      addLocalMessage(userQuery, `Notable projects in the portfolio:\n${serializeProjects(projects)}`);
+      return;
+    }
+
+    if (hasIntent("skills")) {
+      const skills = profileData.skills;
+      const skillText = Array.isArray(skills) && skills.length > 0 ? skills.join(", ") : "No skills listed.";
+      addLocalMessage(userQuery, `Core technical skills and expertise:\n${skillText}`);
+      return;
+    }
+
+    if (hasIntent("education")) {
+      addLocalMessage(userQuery, `Academic background and certifications:\n${serializeEducation(profileData.education, profileData.certifications)}`);
+      return;
+    }
+
+    // Default Fallback to Groq API
+    sendMessage(userQuery);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (input.trim()) {
-      sendMessage(input);
+      handleSmartQuery(input);
       setInput('');
     }
   };
 
   const handleQuickAction = (prompt) => {
-    sendMessage(prompt);
+    handleSmartQuery(prompt);
   };
 
   return (
@@ -175,31 +275,6 @@ export const AiAgentWidget = ({ profileData }) => {
                       I can help you quickly learn about their experience, projects, skills, and how to get in touch.
                     </p>
                   </div>
-
-                  {/* Quick Action Buttons */}
-                  {quickActions.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest px-1">Quick explore</p>
-                      <div className="flex flex-wrap gap-2">
-                        {quickActions.map((action, idx) => (
-                          <motion.button
-                            key={idx}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: idx * 0.05 }}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => handleQuickAction(action.prompt)}
-                            disabled={isTyping}
-                            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700/50 hover:border-teal-500/40 rounded-xl text-xs font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <span className="text-sm">{action.icon}</span>
-                            {action.label}
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </motion.div>
               )}
 
@@ -242,6 +317,26 @@ export const AiAgentWidget = ({ profileData }) => {
 
               <div ref={endOfMessagesRef} />
             </div>
+
+            {/* ── Persistent Quick Action Matrix ── */}
+            {profileData && quickActions.length > 0 && !isTyping && (
+              <div className="bg-slate-800/90 border-t border-slate-700/40 shrink-0 p-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
+                <div className="flex gap-2">
+                  {quickActions.map((action, idx) => (
+                    <motion.button
+                      key={idx}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleQuickAction(action.prompt)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/30 hover:bg-slate-700/70 text-slate-300 hover:text-teal-400 border border-slate-600/30 hover:border-teal-500/40 rounded-xl text-xs font-medium transition-all duration-200"
+                    >
+                      <span className="text-sm">{action.icon}</span>
+                      {action.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* ── Input Area ── */}
             <div className="p-3 bg-slate-800/50 border-t border-slate-700/40 shrink-0">
