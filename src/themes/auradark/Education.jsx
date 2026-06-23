@@ -55,7 +55,7 @@ const Education = ({ user }) => {
                         className="text-2xl font-bold transition-colors"
                         style={{ color: tokens.colors.foreground }}
                       >
-                        {edu.school} - {edu.degree}
+                        {edu.institution || edu.school} - {edu.degree}
                       </h3>
                       
                       <p 

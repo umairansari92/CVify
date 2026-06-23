@@ -150,12 +150,12 @@ const About = ({ user, isOwner, handleLiveUpdate, handleArrayUpdate, setShowResu
                       >
                         {edu.startYear || ""}{edu.endYear ? ` — ${edu.endYear}` : " — PRESENT"}
                       </p>
-                      <h3
-                        className="text-xl font-bold uppercase tracking-tight mb-1"
+                      <h4 
+                        className="font-bold text-[15px]"
                         style={{ color: tokens.colors.foreground }}
                       >
-                        {edu.school} — {edu.degree}
-                      </h3>
+                        {edu.institution || edu.school} — {edu.degree}
+                      </h4>
                       {(edu.description || edu.fieldOfStudy) && (
                         <p className="text-sm" style={{ color: tokens.colors.textDim }}>
                           {edu.description || edu.fieldOfStudy}

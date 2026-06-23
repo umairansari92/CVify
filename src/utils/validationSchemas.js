@@ -42,7 +42,9 @@ export const educationSchema = yup.object().shape({
     institution: yup.string().required('Institution is required'),
     degree: yup.string().required('Degree is required'),
     fieldOfStudy: yup.string().nullable(),
-    graduationDate: yup.string().required('Graduation date is required'),
+    startDate: yup.string().nullable(),
+    endDate: yup.string().nullable(),
+    isCurrent: yup.boolean(),
     description: yup.string().nullable(),
 });
 

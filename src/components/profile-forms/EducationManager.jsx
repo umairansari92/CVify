@@ -82,7 +82,7 @@ const EducationManager = () => {
         </div>
         <button
           type="button"
-          onClick={() => append({ school: '', degree: '', startDate: '', endDate: '', isCurrent: false, description: '' })}
+          onClick={() => append({ institution: '', degree: '', startDate: '', endDate: '', isCurrent: false, description: '' })}
           className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-black text-[10px] uppercase tracking-widest rounded-full border border-primary/20 transition-all flex items-center gap-2"
         >
           <FaPlus size={10} /> Add Education
@@ -96,9 +96,9 @@ const EducationManager = () => {
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">Institution / School</label>
                 <input
-                  {...register(`educations.${idx}.school`)}
+                  {...register(`educations.${idx}.institution`)}
                   placeholder="e.g. Stanford University"
-                  className={`w-full px-5 py-4 rounded-2xl border ${errors.educations?.[idx]?.school ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
+                  className={`w-full px-5 py-4 rounded-2xl border ${errors.educations?.[idx]?.institution ? 'border-red-500/50' : 'border-border-subtle'} bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm`}
                 />
               </div>
               <div className="space-y-2">
