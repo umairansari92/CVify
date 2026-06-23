@@ -63,9 +63,10 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 8 Portfolio Themes" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 9 Portfolio Themes" },
         { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
-        { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK (New!)" },
+        { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
+        { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK (New!)" },
         { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
       ]
     },
@@ -395,7 +396,8 @@ const Documentation = () => {
             { icon: "📋", name: "Slate Minimalist", accent: "text-slate-300", border: "border-slate-500/20", bg: "bg-slate-500/5", desc: "Precision in simplicity. Light gray background with barely-there noise texture. Ultra-clean typography with maximum readability. Best suited for consultants, academics, and corporate professionals.", tags: ["Light Mode", "Minimal", "Clean"] },
             { icon: "🌿", name: "Emerald Leader", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Natural authority. Deep forest green palette exuding calm confidence and leadership. Great for sustainability professionals, project managers, and team leads.", tags: ["Dark Mode", "Green Accent", "Leadership"] },
             { icon: "🕌", name: "ORIENTAL LUXE", accent: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5", desc: "Ultra-exotic and luxurious. Ultra-dark near-black background (#090909) with warm gold (#b58953) accents. Geometric SVG mandala patterns float behind the profile using the Outfit font. Exudes luxury, sophistication, and cultural richness.", tags: ["Dark Mode", "Gold Luxury", "Geometric FX"] },
-            { icon: "✨", name: "AURA DARK", accent: "text-purple-400", border: "border-purple-500/20", bg: "bg-purple-500/5", desc: "Pure darkness meets cosmic elegance. Absolute black background (#000000) with deep purple accents (#B677EF). Uses the modern Syne font for a cutting-edge aesthetic. Perfect for tech innovators, startup founders, and creators pushing boundaries.", tags: ["Dark Mode", "Purple Accent", "Minimal", "NEW!"] },
+            { icon: "✨", name: "AURA DARK", accent: "text-purple-400", border: "border-purple-500/20", bg: "bg-purple-500/5", desc: "Pure darkness meets cosmic elegance. Absolute black background (#000000) with deep purple accents (#B677EF). Uses the modern Syne font for a cutting-edge aesthetic. Perfect for tech innovators, startup founders, and creators pushing boundaries.", tags: ["Dark Mode", "Purple Accent", "Minimal"] },
+            { icon: "💻", name: "TERMINAL DARK", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "The 3D Developer Portfolio aesthetic reborn inside CVify Pro. Deep midnight blue background (#050816), sleek neon purple (#915eff) accents, a glowing profile avatar in the hero, timeline experience cards, and project cards with hashtag tech stacks. Perfect for developers who want a serious, high-impact first impression.", tags: ["Dark Mode", "Purple Neon", "Developer", "NEW!"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -517,6 +519,60 @@ const Documentation = () => {
           {["Luxury Brand Managers", "Architects & Designers", "Finance & Banking", "Senior Executives", "International Professionals", "Creative Directors"].map((role, i) => (
             <div key={i} className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl text-center">
               <p className="text-amber-400 font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    "terminal-dark": (
+      <>
+        <DocHeader title="💻 TERMINAL DARK Theme" badge="New Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-violet-400">TERMINAL DARK</strong> is CVify Pro's most developer-centric portfolio theme — an engineering-grade visual identity built for coders who want their portfolio to feel as polished and technical as their code.
+        </p>
+
+        <SectionTitle>Visual Identity</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Cpu size={18} />} color="purple" title="Midnight Blue Canvas"
+            desc="Deep #050816 background — darker than Midnight Dev, lighter than AURA DARK. Creates the perfect developer aesthetic without being overwhelmingly dark." />
+          <InfoCard icon={<Zap size={18} />} color="purple" title="Neon Purple Accents"
+            desc="Electric purple (#915eff) powers all interactive elements — buttons, borders, glow effects, timeline dots, and hover states. High-energy and memorable." />
+          <InfoCard icon={<Eye size={18} />} color="blue" title="Glowing Profile Avatar"
+            desc="The Hero section features the candidate's actual profile picture inside a glowing geometric container with double-rotated border frames and ambient pulse glow." />
+          <InfoCard icon={<Briefcase size={18} />} color="emerald" title="Vertical Timeline Experience"
+            desc="Work experience is rendered as a vertical left-border timeline with glowing purple dot markers and glassmorphic dark cards — each card hovers with a border highlight." />
+          <InfoCard icon={<Layers size={18} />} color="amber" title="Hashtag Tech Stack Projects"
+            desc="Project cards display screenshots, descriptions, and colorful hashtag-style tech stack labels (#react, #nodejs) — familiar to any developer browsing GitHub." />
+          <InfoCard icon={<Globe size={18} />} color="blue" title="Inter Typography"
+            desc="Clean, modern Inter font — the industry standard for developer tools and SaaS products. Ensures maximum readability for technical content." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-violet-500/5 border border-violet-500/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Midnight blue (#050816) with card base (#151030) — two-tone depth" },
+              { label: "Accent", val: "Electric neon purple (#915eff) with glow shadows" },
+              { label: "Hero Design", val: "Vertical line + dot intro text with glowing profile image on the right" },
+              { label: "Experience", val: "Left-border vertical timeline with purple neon dot markers" },
+              { label: "Projects", val: "Screenshot-first cards with colorful hashtag tech stack labels" },
+              { label: "Font", val: "Inter — the standard of modern developer tooling" },
+              { label: "Icon", val: "💻 Laptop — representing the developer craft" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-violet-400 w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Full-Stack Developers", "Software Engineers", "Open Source Contributors", "CS Students", "DevOps Engineers", "Tech Leads"].map((role, i) => (
+            <div key={i} className="p-3 bg-violet-500/5 border border-violet-500/15 rounded-xl text-center">
+              <p className="text-violet-400 font-black text-xs">{role}</p>
             </div>
           ))}
         </div>

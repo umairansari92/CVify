@@ -76,6 +76,7 @@ import { AiAgentWidget } from "../components/AiAgentWidget";
 //         Saves ~115KB from initial JS bundle, improves FCP & TTI for all visitors
 const OrientalLuxeTheme = lazy(() => import("../themes/orientalluxe"));
 const AuraDarkTheme = lazy(() => import("../themes/auradark"));
+const TerminalDarkTheme = lazy(() => import("../themes/terminaldark"));
 const StandardTheme = lazy(() => import("../themes/standard"));
 
 const PublicProfile = () => {
@@ -289,6 +290,7 @@ const PublicProfile = () => {
     { name: "EMERALD LEADER", headerBg: "#059669", headerBgSecondary: "#10b981", bodyBg: "#f0fdf4", fontPrimary: "Montserrat", cardStyle: "classic", icon: "🌿", textPrimary: "#064e3b", textSecondary: "#065f46", accentColor: "#059669" },
     { name: "ORIENTAL LUXE", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
     { name: "AURA DARK", headerBg: "#050505", headerBgSecondary: "#101010", bodyBg: "#000000", fontPrimary: "Syne", cardStyle: "minimal", icon: "✨", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#B677EF" },
+    { name: "TERMINAL DARK", headerBg: "#050816", headerBgSecondary: "#151030", bodyBg: "#050816", fontPrimary: "Inter", cardStyle: "glass", icon: "💻", textPrimary: "#ffffff", textSecondary: "#aaa6c3", accentColor: "#915eff" },
   ];
 
   // ✅ OPT: useMemo — only recomputes when localTheme or DB theme actually changes,
@@ -311,6 +313,7 @@ const PublicProfile = () => {
   );
   const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE";
   const isAuraDarkTheme = theme.name === "AURA DARK";
+  const isTerminalDarkTheme = theme.name === "TERMINAL DARK";
 
   const themeStyles = useMemo(() => ({
     backgroundColor: theme.bodyBg,
@@ -628,6 +631,27 @@ const PublicProfile = () => {
           </div>
         }>
           <AuraDarkTheme
+            user={user}
+            projects={projects}
+            isOwner={isOwner}
+            handleLiveUpdate={handleLiveUpdate}
+            handleArrayUpdate={handleArrayUpdate}
+            setShowResumeModal={setShowResumeModal}
+            contactForm={contactForm}
+            setContactForm={setContactForm}
+            handleContactSubmit={handleContactSubmit}
+            isSending={isSending}
+            githubData={githubData}
+            githubLoading={githubLoading}
+          />
+        </Suspense>
+      ) : isTerminalDarkTheme ? (
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#050816] flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-[#915eff] border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          <TerminalDarkTheme
             user={user}
             projects={projects}
             isOwner={isOwner}
