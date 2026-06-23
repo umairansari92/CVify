@@ -1,11 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
 import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
 
 const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
-  const firstName = user?.firstName || user?.name?.split(" ")[0] || "Developer";
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "";
+  const firstName = user?.firstName || user?.name?.split(" ")[0] || "Developer";
+
+  const rawHeadline = user?.headline || "";
+  const typeSequence = [];
+  if (rawHeadline) {
+    rawHeadline.split(",").forEach((s) => {
+      const trimmed = s.trim();
+      if (trimmed) typeSequence.push(trimmed, 2000);
+    });
+  }
+  if (typeSequence.length === 0) {
+    typeSequence.push("Building things", 2000, "Breaking bugs", 2000, "Shipping ideas", 2000);
+  }
 
   return (
     <section className="relative w-full h-screen mx-auto flex items-center justify-center overflow-hidden">
@@ -41,7 +54,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                   handleLiveUpdate?.({ firstName: parts[0], lastName: parts.slice(1).join(" ") });
                 }}
               >
-                <span className="text-[#915eff]">{firstName}</span>
+                <span className="text-[#915eff]">{fullName || "Developer"}</span>
               </InlineEdit>
             </h1>
 
@@ -51,9 +64,14 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               value={user?.headline || ""}
               onSave={(v) => handleLiveUpdate?.({ headline: v })}
             >
-              <p className="text-[#aaa6c3] font-medium lg:text-[25px] sm:text-[22px] xs:text-[18px] text-[16px] lg:leading-[35px] mt-4 max-w-lg">
-                {user?.headline || "Building things, breaking bugs, shipping ideas."}
-              </p>
+              <div className="text-[#aaa6c3] font-medium lg:text-[25px] sm:text-[22px] xs:text-[18px] text-[16px] lg:leading-[35px] mt-4 max-w-lg min-h-[70px] sm:min-h-[80px]">
+                <TypeAnimation
+                  sequence={typeSequence}
+                  wrapper="span"
+                  speed={50}
+                  repeat={Infinity}
+                />
+              </div>
             </InlineEdit>
 
             <div className="flex gap-4 mt-10">
