@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
+import InlineEdit from "../../components/profile/InlineEdit";
 
-const Experience = ({ user }) => {
+const Experience = ({ user, isOwner, handleArrayUpdate }) => {
   const experiences = user?.experience || [];
   if (experiences.length === 0) return null;
 
@@ -15,7 +16,7 @@ const Experience = ({ user }) => {
 
       <div className="mt-20 flex flex-col gap-8 relative border-l-4 border-[#915eff]/30 ml-4 md:ml-8">
         {experiences.map((exp, index) => (
-          <motion.div 
+          <motion.div
             key={index}
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -25,31 +26,57 @@ const Experience = ({ user }) => {
           >
             {/* Timeline Dot */}
             <div className="absolute -left-[26px] top-4 w-12 h-12 bg-[#151030] border-4 border-[#915eff] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(145,94,255,0.5)] z-10">
-               <Briefcase size={20} className="text-[#915eff]" />
+              <Briefcase size={20} className="text-[#915eff]" />
             </div>
 
             <div className="bg-[#151030] p-8 rounded-2xl border border-[#915eff]/20 hover:border-[#915eff]/60 transition-colors shadow-xl">
               <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
                 <div>
-                  <h3 className="text-white text-[24px] font-bold">{exp.jobTitle || exp.role}</h3>
-                  <p className="text-[#aaa6c3] text-[16px] font-semibold mt-1">{exp.company}</p>
+                  <h3 className="text-white text-[24px] font-bold">
+                    <InlineEdit
+                      isOwner={isOwner}
+                      id={`td-exp-role-${index}`}
+                      value={exp.jobTitle || exp.role || ""}
+                      onSave={(v) => handleArrayUpdate?.("experience", index, { jobTitle: v, role: v })}
+                    >
+                      {exp.jobTitle || exp.role}
+                    </InlineEdit>
+                  </h3>
+                  <p className="text-[#aaa6c3] text-[16px] font-semibold mt-1">
+                    <InlineEdit
+                      isOwner={isOwner}
+                      id={`td-exp-company-${index}`}
+                      value={exp.company || ""}
+                      onSave={(v) => handleArrayUpdate?.("experience", index, { company: v })}
+                    >
+                      {exp.company}
+                    </InlineEdit>
+                  </p>
                 </div>
                 <p className="text-[#915eff] font-medium text-[14px] tracking-wider mt-2 md:mt-0 uppercase bg-[#915eff]/10 px-3 py-1 rounded-full w-max">
-                  {exp.startDate} - {exp.endDate || "Present"}
+                  {exp.startDate} — {exp.endDate || "Present"}
                 </p>
               </div>
 
-              <ul className="mt-5 list-disc ml-5 space-y-2">
-                {exp.description ? exp.description.split('\n').filter(Boolean).map((desc, i) => (
-                  <li key={i} className="text-white-100 text-[14px] pl-1 tracking-wider text-[#aaa6c3]">
-                    {desc.replace(/^[-\*\s]+/, '')}
-                  </li>
-                )) : (
-                  <li className="text-white-100 text-[14px] pl-1 tracking-wider text-[#aaa6c3]">
-                    Led key initiatives and drove impactful results for the team.
-                  </li>
-                )}
-              </ul>
+              <InlineEdit
+                isOwner={isOwner}
+                id={`td-exp-desc-${index}`}
+                value={exp.description || exp.achievements || ""}
+                type="textarea"
+                onSave={(v) => handleArrayUpdate?.("experience", index, { description: v })}
+              >
+                <ul className="mt-5 list-none space-y-2">
+                  {(exp.description || exp.achievements || "")
+                    .split("\n")
+                    .filter(Boolean)
+                    .map((desc, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[#aaa6c3] text-[14px] leading-relaxed">
+                        <span className="text-[#915eff] mt-1 shrink-0">▸</span>
+                        {desc.replace(/^[-*•\s]+/, "")}
+                      </li>
+                    ))}
+                </ul>
+              </InlineEdit>
             </div>
           </motion.div>
         ))}

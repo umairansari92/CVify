@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Github, Globe } from "lucide-react";
+import InlineEdit from "../../components/profile/InlineEdit";
 
-const Showcase = ({ projects }) => {
+const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
   if (!projects || projects.length === 0) return null;
 
   return (
@@ -12,14 +13,12 @@ const Showcase = ({ projects }) => {
         <h2 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px]">Projects.</h2>
       </motion.div>
 
-      <div className="w-full flex">
-        <motion.p
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-          className="mt-3 text-[#aaa6c3] text-[17px] max-w-3xl leading-[30px]"
-        >
-          Following projects showcases my skills and experience through real-world examples of my work. Each project is briefly described with links to code repositories and live demos in it. It reflects my ability to solve complex problems, work with different technologies, and manage projects effectively.
-        </motion.p>
-      </div>
+      <motion.p
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+        className="mt-3 text-[#aaa6c3] text-[17px] max-w-3xl leading-[30px]"
+      >
+        Following projects showcase skills and experience through real-world examples. Each project is briefly described with links to code repositories and live demos.
+      </motion.p>
 
       <div className="mt-20 flex flex-wrap gap-7">
         {projects.map((project, index) => (
@@ -33,17 +32,16 @@ const Showcase = ({ projects }) => {
           >
             <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
               <img
-                src={project.image || project.imageUrl || project.coverImage || `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || 'Project')}`}
+                src={project.image || project.imageUrl || project.coverImage || `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || "Project")}`}
                 alt={project.title}
                 className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
-                onError={(e) => { e.target.src = `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || 'Project')}`; }}
+                onError={(e) => { e.target.src = `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || "Project")}`; }}
               />
-
               <div className="absolute inset-0 flex justify-end m-3 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {project.githubLink && (
                   <div
                     onClick={() => window.open(project.githubLink, "_blank")}
-                    className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer bg-slate-900/80 hover:bg-[#915eff] transition-colors"
+                    className="w-10 h-10 rounded-full flex justify-center items-center cursor-pointer bg-slate-900/80 hover:bg-[#915eff] transition-colors"
                   >
                     <Github size={20} className="text-white" />
                   </div>
@@ -51,7 +49,7 @@ const Showcase = ({ projects }) => {
                 {project.liveLink && (
                   <div
                     onClick={() => window.open(project.liveLink, "_blank")}
-                    className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer bg-slate-900/80 hover:bg-[#915eff] transition-colors"
+                    className="w-10 h-10 rounded-full flex justify-center items-center cursor-pointer bg-slate-900/80 hover:bg-[#915eff] transition-colors"
                   >
                     <Globe size={20} className="text-white" />
                   </div>
@@ -60,16 +58,32 @@ const Showcase = ({ projects }) => {
             </div>
 
             <div className="mt-5">
-              <h3 className="text-white font-bold text-[24px] group-hover:text-[#915eff] transition-colors">{project.title}</h3>
-              <p className="mt-2 text-[#aaa6c3] text-[14px] line-clamp-3">{project.description}</p>
+              <h3 className="text-white font-bold text-[24px] group-hover:text-[#915eff] transition-colors">
+                <InlineEdit
+                  isOwner={isOwner}
+                  id={`td-project-title-${index}`}
+                  value={project.title || ""}
+                  onSave={(v) => handleArrayUpdate?.("projects", index, { title: v })}
+                >
+                  {project.title}
+                </InlineEdit>
+              </h3>
+              <InlineEdit
+                isOwner={isOwner}
+                id={`td-project-desc-${index}`}
+                value={project.description || ""}
+                type="textarea"
+                onSave={(v) => handleArrayUpdate?.("projects", index, { description: v })}
+              >
+                <p className="mt-2 text-[#aaa6c3] text-[14px] line-clamp-3">{project.description}</p>
+              </InlineEdit>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {(project.techStack || []).map((tech, idx) => {
                 const colors = ["text-blue-400", "text-green-400", "text-pink-400", "text-orange-400", "text-purple-400"];
-                const colorClass = colors[idx % colors.length];
                 return (
-                  <p key={`${tech}-${idx}`} className={`text-[14px] font-mono ${colorClass}`}>
+                  <p key={`${tech}-${idx}`} className={`text-[14px] font-mono ${colors[idx % colors.length]}`}>
                     #{tech}
                   </p>
                 );

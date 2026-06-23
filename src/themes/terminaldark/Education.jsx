@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { GraduationCap } from "lucide-react";
+import InlineEdit from "../../components/profile/InlineEdit";
 
-const Education = ({ user }) => {
+const Education = ({ user, isOwner, handleArrayUpdate }) => {
   const education = user?.education || [];
   if (education.length === 0) return null;
 
@@ -29,8 +30,7 @@ const Education = ({ user }) => {
             const endDate = edu.endDate || edu.to || "Present";
             const description = edu.description || "";
             const logo = edu.logo || edu.institutionLogo || null;
-
-            const period = [startDate, endDate].filter(Boolean).join(" - ");
+            const period = [startDate, endDate].filter(Boolean).join(" – ");
 
             return (
               <motion.div
@@ -42,20 +42,55 @@ const Education = ({ user }) => {
                 className={`relative flex flex-col md:flex-row items-center gap-8 ${isLeft ? "md:flex-row" : "md:flex-row-reverse"}`}
               >
                 {/* Card */}
-                <div className={`flex-1 ${isLeft ? "md:pr-16 md:text-left" : "md:pl-16 md:text-left"}`}>
+                <div className={`flex-1 ${isLeft ? "md:pr-16" : "md:pl-16"}`}>
                   <div className="bg-[#151030] border border-[#915eff]/20 hover:border-[#915eff]/60 transition-colors rounded-2xl p-6 shadow-[0_0_20px_rgba(145,94,255,0.05)] hover:shadow-[0_0_30px_rgba(145,94,255,0.15)]">
-                    <h3 className="text-white font-black text-[20px] mb-1">{institution}</h3>
-                    {location && <p className="text-[#aaa6c3] text-sm mb-3">{location}</p>}
-                    <p className="text-[#915eff] font-bold text-sm mb-4 bg-[#915eff]/10 inline-block px-3 py-1 rounded-full">{degree}</p>
+                    <h3 className="text-white font-black text-[20px] mb-1">
+                      <InlineEdit
+                        isOwner={isOwner}
+                        id={`td-edu-institution-${index}`}
+                        value={institution}
+                        onSave={(v) => handleArrayUpdate?.("education", index, { institution: v })}
+                      >
+                        {institution}
+                      </InlineEdit>
+                    </h3>
+                    {location && (
+                      <InlineEdit
+                        isOwner={isOwner}
+                        id={`td-edu-location-${index}`}
+                        value={location}
+                        onSave={(v) => handleArrayUpdate?.("education", index, { location: v })}
+                      >
+                        <p className="text-[#aaa6c3] text-sm mb-3">{location}</p>
+                      </InlineEdit>
+                    )}
+                    <InlineEdit
+                      isOwner={isOwner}
+                      id={`td-edu-degree-${index}`}
+                      value={degree}
+                      onSave={(v) => handleArrayUpdate?.("education", index, { degree: v })}
+                    >
+                      <p className="text-[#915eff] font-bold text-sm mb-4 bg-[#915eff]/10 inline-block px-3 py-1 rounded-full">
+                        {degree}
+                      </p>
+                    </InlineEdit>
                     {description && (
-                      <ul className="mt-2 space-y-2">
-                        {description.split("\n").filter(Boolean).map((line, i) => (
-                          <li key={i} className="flex items-start gap-2 text-[#aaa6c3] text-[13px] leading-relaxed">
-                            <span className="text-[#915eff] mt-1 shrink-0">▸</span>
-                            {line.replace(/^[-*\s]+/, "")}
-                          </li>
-                        ))}
-                      </ul>
+                      <InlineEdit
+                        isOwner={isOwner}
+                        id={`td-edu-desc-${index}`}
+                        value={description}
+                        type="textarea"
+                        onSave={(v) => handleArrayUpdate?.("education", index, { description: v })}
+                      >
+                        <ul className="mt-2 space-y-2">
+                          {description.split("\n").filter(Boolean).map((line, i) => (
+                            <li key={i} className="flex items-start gap-2 text-[#aaa6c3] text-[13px] leading-relaxed">
+                              <span className="text-[#915eff] mt-1 shrink-0">▸</span>
+                              {line.replace(/^[-*\s]+/, "")}
+                            </li>
+                          ))}
+                        </ul>
+                      </InlineEdit>
                     )}
                   </div>
                 </div>
@@ -76,7 +111,7 @@ const Education = ({ user }) => {
                   )}
                 </div>
 
-                {/* Period for mobile */}
+                {/* Mobile period */}
                 <div className="md:hidden text-center">
                   <span className="text-[#915eff] text-xs font-bold bg-[#915eff]/10 px-3 py-1 rounded-full border border-[#915eff]/30">
                     {period}

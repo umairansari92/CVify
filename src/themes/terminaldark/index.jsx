@@ -15,6 +15,8 @@ const TerminalDarkTheme = ({
   user,
   projects,
   isOwner,
+  handleLiveUpdate,
+  handleArrayUpdate,
   setShowResumeModal,
   contactForm,
   setContactForm,
@@ -33,7 +35,12 @@ const TerminalDarkTheme = ({
       }}
     >
       <Nav setShowResumeModal={setShowResumeModal} user={user} />
-      <Hero user={user} isOwner={isOwner} setShowResumeModal={setShowResumeModal} />
+      <Hero
+        user={user}
+        isOwner={isOwner}
+        handleLiveUpdate={handleLiveUpdate}
+        setShowResumeModal={setShowResumeModal}
+      />
 
       {/* GitHub Stats */}
       <GithubStats
@@ -43,17 +50,31 @@ const TerminalDarkTheme = ({
         loading={githubLoading}
       />
 
-      <About user={user} />
-      <Experience user={user} />
-      <Education user={user} />
-      <Skills user={user} />
-      <Showcase projects={projects} />
-      
-      <Contact 
-         contactForm={contactForm || { name: "", email: "", message: "" }}
-         setContactForm={setContactForm || (() => {})}
-         handleContactSubmit={handleContactSubmit || ((e) => e.preventDefault())}
-         isSending={isSending}
+      <About user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} />
+
+      {(isOwner || user?.experience?.length > 0) && (
+        <Experience user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+      )}
+
+      {(isOwner || user?.education?.length > 0) && (
+        <Education user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+      )}
+
+      <Skills user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} />
+
+      {(isOwner || projects?.length > 0) && (
+        <Showcase
+          projects={projects}
+          isOwner={isOwner}
+          handleArrayUpdate={handleArrayUpdate}
+        />
+      )}
+
+      <Contact
+        contactForm={contactForm || { name: "", email: "", message: "" }}
+        setContactForm={setContactForm || (() => {})}
+        handleContactSubmit={handleContactSubmit || ((e) => e.preventDefault())}
+        isSending={isSending}
       />
 
       <Footer user={user} />

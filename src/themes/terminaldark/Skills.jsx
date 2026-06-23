@@ -1,13 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
+import InlineEdit from "../../components/profile/InlineEdit";
 
-const Skills = ({ user }) => {
-  const skills = user?.skills?.technical || user?.skills || [];
+const Skills = ({ user, isOwner, handleLiveUpdate }) => {
+  const skillsRaw = user?.skills?.technical || user?.skills || [];
+  const skills = Array.isArray(skillsRaw) ? skillsRaw : [];
   if (skills.length === 0) return null;
 
   return (
     <section id="skills-td" className="max-w-7xl mx-auto px-6 py-20">
-       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
         <p className="text-[#aaa6c3] text-[18px] uppercase tracking-wider">My technical stack</p>
         <h2 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px]">Skills.</h2>
       </motion.div>
@@ -31,7 +33,21 @@ const Skills = ({ user }) => {
                 ) : (
                   <span className="text-2xl mb-1 block">⚡</span>
                 )}
-                {name}
+                <InlineEdit
+                  isOwner={isOwner}
+                  id={`td-skill-${index}`}
+                  value={name || ""}
+                  onSave={(v) => {
+                    const updated = skills.map((s, i) =>
+                      i === index
+                        ? (typeof s === "string" ? v : { ...s, name: v })
+                        : s
+                    );
+                    handleLiveUpdate?.({ skills: updated });
+                  }}
+                >
+                  {name}
+                </InlineEdit>
               </div>
             </motion.div>
           );
