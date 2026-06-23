@@ -64,19 +64,132 @@ const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending }
           </form>
         </motion.div>
 
-        {/* Optional 3D Model Placeholder or Graphic */}
+        {/* Animated 3D Globe — CSS-only, zero dependencies */}
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           className="lg:flex-1 lg:h-auto md:h-[550px] h-[350px] flex justify-center items-center"
         >
-           <div className="w-full h-full rounded-2xl bg-[#151030]/50 border border-[#915eff]/20 flex items-center justify-center relative overflow-hidden">
-             {/* Simple geometric aesthetic for the right side */}
-             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at center, #915eff 2px, transparent 2px)', backgroundSize: '40px 40px' }} />
-             <div className="w-40 h-40 bg-[#915eff] rounded-full blur-[100px] animate-pulse" />
-             <p className="text-[#915eff] font-mono text-xl absolute z-10 rotate-90 tracking-widest opacity-30">CONNECT</p>
-           </div>
+          <style>{`
+            @keyframes td-globe-spin {
+              from { transform: rotate(0deg); }
+              to   { transform: rotate(360deg); }
+            }
+            @keyframes td-globe-spin-reverse {
+              from { transform: rotate(0deg); }
+              to   { transform: rotate(-360deg); }
+            }
+            @keyframes td-globe-spin-tilt {
+              from { transform: rotateX(60deg) rotate(0deg); }
+              to   { transform: rotateX(60deg) rotate(360deg); }
+            }
+            .td-globe-ring {
+              position: absolute;
+              border-radius: 50%;
+              border: 2px solid rgba(145, 94, 255, 0.55);
+            }
+          `}</style>
+
+          <div className="relative w-64 h-64 md:w-80 md:h-80" style={{ perspective: "800px" }}>
+            {/* Core glowing sphere */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: "radial-gradient(circle at 35% 35%, #7c3aed, #1e0a4a 70%, #050816)",
+                boxShadow: "0 0 60px rgba(145,94,255,0.5), inset 0 0 40px rgba(145,94,255,0.15)",
+              }}
+            />
+
+            {/* Continents-style blobs */}
+            <div className="absolute inset-0 rounded-full overflow-hidden opacity-30">
+              <div className="absolute top-[20%] left-[15%] w-[30%] h-[20%] bg-[#915eff]/50 rounded-full blur-sm" />
+              <div className="absolute top-[40%] left-[50%] w-[25%] h-[18%] bg-[#7c3aed]/60 rounded-full blur-sm" />
+              <div className="absolute top-[60%] left-[20%] w-[20%] h-[15%] bg-[#915eff]/40 rounded-full blur-sm" />
+              <div className="absolute top-[30%] left-[65%] w-[15%] h-[25%] bg-[#6d28d9]/50 rounded-full blur-sm" />
+            </div>
+
+            {/* Ring 1 — equatorial */}
+            <div
+              className="td-globe-ring"
+              style={{
+                width: "100%", height: "100%",
+                top: 0, left: 0,
+                transform: "rotateX(75deg)",
+                animation: "td-globe-spin 8s linear infinite",
+                borderColor: "rgba(145,94,255,0.7)",
+              }}
+            />
+
+            {/* Ring 2 — tilted */}
+            <div
+              className="td-globe-ring"
+              style={{
+                width: "90%", height: "90%",
+                top: "5%", left: "5%",
+                transform: "rotateX(55deg) rotateY(30deg)",
+                animation: "td-globe-spin-reverse 12s linear infinite",
+                borderColor: "rgba(167,139,250,0.5)",
+              }}
+            />
+
+            {/* Ring 3 — more tilted */}
+            <div
+              className="td-globe-ring"
+              style={{
+                width: "80%", height: "80%",
+                top: "10%", left: "10%",
+                transform: "rotateX(20deg) rotateY(60deg)",
+                animation: "td-globe-spin 6s linear infinite",
+                borderColor: "rgba(196,181,253,0.35)",
+                borderWidth: "1px",
+              }}
+            />
+
+            {/* Ring 4 — outer halo */}
+            <div
+              className="td-globe-ring"
+              style={{
+                width: "110%", height: "110%",
+                top: "-5%", left: "-5%",
+                transform: "rotateX(80deg)",
+                animation: "td-globe-spin-reverse 20s linear infinite",
+                borderColor: "rgba(145,94,255,0.2)",
+                borderWidth: "1px",
+              }}
+            />
+
+            {/* Orbit dot */}
+            <div
+              style={{
+                position: "absolute",
+                top: "50%", left: "50%",
+                width: "100%",
+                height: "100%",
+                marginLeft: "-50%",
+                marginTop: "-50%",
+                animation: "td-globe-spin 8s linear infinite",
+                transform: "rotateX(75deg)",
+              }}
+            >
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#915eff]"
+                style={{ boxShadow: "0 0 10px rgba(145,94,255,1)" }}
+              />
+            </div>
+
+            {/* Stars background dots */}
+            {[...Array(14)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-white rounded-full opacity-40"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                }}
+              />
+            ))}
+          </div>
         </motion.div>
 
       </div>
