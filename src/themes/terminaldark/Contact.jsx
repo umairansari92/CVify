@@ -4,8 +4,34 @@ import AnimatedGlobe from "./AnimatedGlobe";
 
 const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending }) => {
   return (
-    <section id="contact-td" className="max-w-7xl mx-auto px-6 py-20">
-      <div className="flex flex-col-reverse lg:flex-row gap-10 overflow-hidden">
+    <section id="contact-td" className="relative max-w-7xl mx-auto px-6 py-20 overflow-hidden">
+      
+      {/* Starfield particles spread across the entire section */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(60)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              width: `${Math.random() * 2 + 0.5}px`,
+              height: `${Math.random() * 2 + 0.5}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              opacity: Math.random() * 0.5 + 0.1,
+              animation: `twinkle ${Math.random() * 4 + 2}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 3}s`,
+            }}
+          />
+        ))}
+        <style>{`
+          @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(0.8); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+          }
+        `}</style>
+      </div>
+
+      <div className="relative z-10 flex flex-col-reverse lg:flex-row gap-10">
         
         {/* Form Container */}
         <motion.div 

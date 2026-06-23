@@ -24,7 +24,7 @@ function VibrantEarth() {
 
   return (
     <group ref={groupRef}>
-      <Sphere ref={earthRef} args={[1.8, 64, 64]}>
+      <Sphere ref={earthRef} args={[1.2, 64, 64]}>
         <meshStandardMaterial
           map={earthTexture}
           color="#ffffff"
@@ -39,12 +39,10 @@ function VibrantEarth() {
 export default function AnimatedGlobe() {
   return (
     <div className="w-full h-full relative" style={{ minHeight: '400px' }}>
-      <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }}>
         <ambientLight intensity={1.5} />
         <directionalLight position={[5, 3, 5]} intensity={2.5} color="#ffffff" />
         <pointLight position={[-10, -10, -10]} intensity={1.5} color="#c4b5fd" />
-
-        <Stars radius={100} depth={50} count={3000} factor={4} saturation={1} fade speed={2} />
 
         <Suspense fallback={null}>
           <VibrantEarth />

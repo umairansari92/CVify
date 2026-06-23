@@ -1,5 +1,6 @@
 import React from "react";
 import { tokens } from "./tokens";
+import Nav from "./Nav";
 import Hero from "./Hero";
 import About from "./About";
 import Education from "./Education";
@@ -33,6 +34,8 @@ const TerminalDarkTheme = ({
         color: tokens.colors.primary,
       }}
     >
+      <Nav user={user} setShowResumeModal={setShowResumeModal} />
+
       <Hero
         user={user}
         isOwner={isOwner}

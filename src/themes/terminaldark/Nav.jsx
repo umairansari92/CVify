@@ -33,6 +33,12 @@ const Nav = ({ setShowResumeModal, user }) => {
           Experience
         </li>
         <li 
+          onClick={() => document.getElementById('skills-td')?.scrollIntoView({ behavior: 'smooth' })}
+          className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
+        >
+          Skills
+        </li>
+        <li 
           onClick={() => document.getElementById('showcase-td')?.scrollIntoView({ behavior: 'smooth' })}
           className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
         >
