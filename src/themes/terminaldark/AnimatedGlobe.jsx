@@ -1,27 +1,31 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Sphere, MeshDistortMaterial } from '@react-three/drei';
+import React, { useRef, Suspense } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { OrbitControls, Stars, Sphere } from '@react-three/drei';
+import * as THREE from 'three';
 
-function SciFiGlobe() {
+function VibrantEarth() {
   const groupRef = useRef();
-  const coreRef = useRef();
-  const gridRef = useRef();
+  const earthRef = useRef();
   const outerRibbonRef1 = useRef();
   const outerRibbonRef2 = useRef();
+
+  // Load a highly visible, bright blue/green Earth texture
+  const earthTexture = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+  earthTexture.wrapS = THREE.RepeatWrapping;
+  earthTexture.wrapT = THREE.ClampToEdgeWrapping;
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     
-    // Float the entire group
+    // Smooth floating animation
     if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(t * 1.5) * 0.15;
+      groupRef.current.position.y = Math.sin(t * 1) * 0.1;
     }
     
-    // Core and grid rotation (Earth spin)
-    if (coreRef.current) coreRef.current.rotation.y = t * 0.15;
-    if (gridRef.current) gridRef.current.rotation.y = t * 0.15;
+    // Standard Earth rotation
+    if (earthRef.current) earthRef.current.rotation.y = t * 0.15;
     
-    // Abstract ribbons spinning in different directions
+    // Abstract ribbons spinning
     if (outerRibbonRef1.current) {
       outerRibbonRef1.current.rotation.y = -t * 0.2;
       outerRibbonRef1.current.rotation.x = t * 0.2;
@@ -37,45 +41,33 @@ function SciFiGlobe() {
 
   return (
     <group ref={groupRef}>
-      {/* 1. Solid Glowing Core */}
-      <Sphere ref={coreRef} args={[1.5, 64, 64]}>
+      {/* 1. Bright Earth Core */}
+      <Sphere ref={earthRef} args={[1.5, 64, 64]}>
         <meshStandardMaterial 
-          color="#0b081c" 
-          emissive="#2b145a"
-          emissiveIntensity={0.8}
+          map={earthTexture}
+          color="#ffffff" // pure white base so texture colors are vibrant
           roughness={0.4}
+          metalness={0.1}
         />
       </Sphere>
 
-      {/* 2. Globe Latitude/Longitude Grid */}
-      <Sphere ref={gridRef} args={[1.52, 24, 24]}>
+      {/* 2. Bright Tech Ribbon 1 */}
+      <Sphere ref={outerRibbonRef1} args={[1.75, 12, 12]}>
         <meshBasicMaterial 
           color="#915eff" 
           wireframe={true} 
           transparent={true} 
-          opacity={0.3} 
+          opacity={0.6} 
         />
       </Sphere>
 
-      {/* 3. Dynamic Outer Shield / Ribbon 1 */}
-      <Sphere ref={outerRibbonRef1} args={[1.75, 10, 10]}>
-        <MeshDistortMaterial 
-          color="#915eff" 
-          wireframe={true} 
-          transparent={true} 
-          opacity={0.5} 
-          distort={0.3} 
-          speed={2} 
-        />
-      </Sphere>
-
-      {/* 4. Outer Tech Ring / Ribbon 2 */}
-      <Sphere ref={outerRibbonRef2} args={[2.0, 6, 6]}>
+      {/* 3. Bright Tech Ribbon 2 */}
+      <Sphere ref={outerRibbonRef2} args={[2.0, 8, 8]}>
         <meshBasicMaterial 
-          color="#c4b5fd" 
+          color="#00f6ff" 
           wireframe={true} 
           transparent={true} 
-          opacity={0.15} 
+          opacity={0.4} 
         />
       </Sphere>
     </group>
@@ -86,17 +78,17 @@ export default function AnimatedGlobe() {
   return (
     <div className="w-full h-full relative" style={{ minHeight: '400px' }}>
       <Canvas camera={{ position: [0, 0, 5.5], fov: 45 }}>
-        {/* Lights */}
-        <ambientLight intensity={1} />
-        <pointLight position={[10, 10, 10]} intensity={3} color="#915eff" />
-        <pointLight position={[-10, -10, -10]} intensity={2} color="#c4b5fd" />
+        {/* Very Bright Lights so the Earth map is highly visible */}
+        <ambientLight intensity={2} />
+        <directionalLight position={[5, 3, 5]} intensity={2} color="#ffffff" />
+        <pointLight position={[-10, -10, -10]} intensity={1} color="#ffffff" />
         
-        {/* Deep Space Background Stars */}
         <Stars radius={100} depth={50} count={3000} factor={4} saturation={1} fade speed={2} />
         
-        <SciFiGlobe />
+        <Suspense fallback={null}>
+          <VibrantEarth />
+        </Suspense>
         
-        {/* Controls */}
         <OrbitControls 
           enableZoom={false} 
           enablePan={false}
