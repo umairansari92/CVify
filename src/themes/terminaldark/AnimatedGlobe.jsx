@@ -1,19 +1,26 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Sphere, MeshDistortMaterial } from '@react-three/drei';
+import React, { useRef, Suspense } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { OrbitControls, Stars, Sphere } from '@react-three/drei';
+import * as THREE from 'three';
 
-function GlobeMesh() {
-  const groupRef = useRef();
+function CustomGlobe() {
+  const globeGroupRef = useRef();
   const innerRef = useRef();
   const outerRef = useRef();
   const outerRingRef = useRef();
-  
+
+  // Load public Earth dark texture for sci-fi look
+  // You can replace this URL with your local image e.g., '/earth-map.png' if you place it in public/
+  const earthTexture = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe/example/img/earth-dark.jpg');
+  earthTexture.wrapS = THREE.RepeatWrapping;
+  earthTexture.wrapT = THREE.ClampToEdgeWrapping;
+
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     
     // Floating wave effect
-    if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(t * 1) * 0.1;
+    if (globeGroupRef.current) {
+      globeGroupRef.current.position.y = Math.sin(t * 1) * 0.1;
     }
     
     // Core smooth rotation
@@ -23,7 +30,7 @@ function GlobeMesh() {
     
     // Outer abstract wireframe shields/ribbons
     if (outerRef.current) {
-      outerRef.current.rotation.y = -t * 0.2;
+      outerRef.current.rotation.y = -t * 0.25;
       outerRef.current.rotation.x = t * 0.1;
       outerRef.current.rotation.z = Math.sin(t * 0.5) * 0.2;
     }
@@ -35,29 +42,26 @@ function GlobeMesh() {
   });
 
   return (
-    <group ref={groupRef}>
-      {/* 1. Inner Core (Distorted Glowing Sphere) */}
+    <group ref={globeGroupRef}>
+      {/* 1. Inner Globe Layer using Texture */}
       <Sphere ref={innerRef} args={[1.5, 64, 64]}>
-        <MeshDistortMaterial 
-          color="#151030" 
-          emissive="#4c1d95"
-          emissiveIntensity={0.8}
-          distort={0.15} 
-          speed={1.5} 
-          roughness={0.2}
-          metalness={0.8}
+        <meshStandardMaterial 
+          map={earthTexture}
+          roughness={0.2}             
+          metalness={0.7}             
+          color="#2a3b5c"
         />
       </Sphere>
 
       {/* 2. Primary Outer Shield / Ribbons (Wireframe Poly) */}
       <Sphere ref={outerRef} args={[1.7, 12, 12]}>
         <meshStandardMaterial 
-          color="#915eff" 
+          color="#4f46e5" 
           wireframe={true} 
           transparent={true} 
           opacity={0.4} 
           metalness={1}
-          roughness={0}
+          roughness={0.1}
         />
       </Sphere>
 
@@ -81,16 +85,17 @@ export default function AnimatedGlobe() {
     <div className="w-full h-full relative" style={{ minHeight: '350px' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         {/* Lights */}
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#915eff" />
         <directionalLight position={[-5, 5, 5]} intensity={1} color="#c4b5fd" />
         
         {/* Background Star Field Effect */}
-        <Stars radius={100} depth={50} count={2000} factor={3} saturation={0.5} fade speed={1} />
+        <Stars radius={100} depth={50} count={3000} factor={3} saturation={0.5} fade speed={1} />
         
-        <GlobeMesh />
+        <Suspense fallback={null}>
+          <CustomGlobe />
+        </Suspense>
         
-        {/* User zoom/rotation control karne ke liye but scroll disturbance roknay ke liye zoom off */}
         <OrbitControls enableZoom={false} autoRotate={true} autoRotateSpeed={1} />
       </Canvas>
     </div>
