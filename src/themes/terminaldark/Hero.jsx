@@ -67,14 +67,15 @@ const Hero = ({ user, isOwner, setShowResumeModal }) => {
             
             {/* Image Container */}
             <div className="absolute inset-0 bg-[#151030] rounded-2xl overflow-hidden border border-[#915eff]/50 shadow-[0_0_30px_rgba(145,94,255,0.3)] z-10 flex items-center justify-center">
-              {user?.profilePicture || user?.avatar ? (
+              {user?.profileImage || user?.profilePicture || user?.avatar ? (
                 <img 
-                  src={user.profilePicture || user.avatar} 
+                  src={user.profileImage || user.profilePicture || user.avatar} 
                   alt={firstName} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
+                  loading="eager"
                 />
               ) : (
-                <div className="text-6xl text-[#915eff] font-black">{firstName.charAt(0)}</div>
+                <div className="w-24 h-24 rounded-full bg-[#915eff] flex items-center justify-center text-4xl text-white font-black shadow-[0_0_30px_rgba(145,94,255,0.6)]">{firstName.charAt(0)}</div>
               )}
             </div>
 

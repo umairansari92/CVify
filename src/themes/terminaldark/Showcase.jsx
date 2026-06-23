@@ -33,9 +33,10 @@ const Showcase = ({ projects }) => {
           >
             <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
               <img
-                src={project.image || "https://via.placeholder.com/600x400/151030/915eff?text=Project"}
+                src={project.image || project.imageUrl || project.coverImage || `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || 'Project')}`}
                 alt={project.title}
                 className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => { e.target.src = `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || 'Project')}`; }}
               />
 
               <div className="absolute inset-0 flex justify-end m-3 gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
