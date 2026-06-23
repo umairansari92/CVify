@@ -10,7 +10,7 @@ const Nav = ({ setShowResumeModal, user }) => {
       <div className="flex items-center gap-2">
         <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#915eff]">
           <span className="text-white font-black text-xl">
-            {user?.firstName?.charAt(0) || user?.name?.charAt(0) || "D"}
+            {user?.firstName?.charAt(0) || user?.lastname?.charAt(0) || "D"}
           </span>
         </div>
         <p className="text-white text-[18px] font-bold cursor-pointer flex">
