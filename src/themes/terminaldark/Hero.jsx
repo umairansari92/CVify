@@ -75,12 +75,13 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             </InlineEdit>
 
             <div className="flex gap-4 mt-10">
-              <a href="#contact-td">
-                <button className="bg-[#915eff] hover:bg-[#7a4ce6] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(145,94,255,0.4)] hover:shadow-[0_0_25px_rgba(145,94,255,0.6)]">
-                  <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                  Hire Me
-                </button>
-              </a>
+              <button 
+                onClick={() => document.getElementById('contact-td')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#915eff] hover:bg-[#7a4ce6] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(145,94,255,0.4)] hover:shadow-[0_0_25px_rgba(145,94,255,0.6)]"
+              >
+                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                Hire Me
+              </button>
               <button
                 onClick={() => setShowResumeModal(true)}
                 className="bg-transparent border border-[#915eff] hover:bg-[#915eff]/10 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"

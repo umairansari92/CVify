@@ -20,17 +20,29 @@ const Nav = ({ setShowResumeModal, user }) => {
       </div>
 
       <ul className="list-none hidden sm:flex flex-row gap-10">
-        <li className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors">
-          <a href="#about-td">About</a>
+        <li 
+          onClick={() => document.getElementById('about-td')?.scrollIntoView({ behavior: 'smooth' })}
+          className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
+        >
+          About
         </li>
-        <li className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors">
-          <a href="#experience-td">Experience</a>
+        <li 
+          onClick={() => document.getElementById('experience-td')?.scrollIntoView({ behavior: 'smooth' })}
+          className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
+        >
+          Experience
         </li>
-        <li className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors">
-          <a href="#showcase-td">Projects</a>
+        <li 
+          onClick={() => document.getElementById('showcase-td')?.scrollIntoView({ behavior: 'smooth' })}
+          className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
+        >
+          Projects
         </li>
-        <li className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors">
-          <a href="#contact-td">Contact</a>
+        <li 
+          onClick={() => document.getElementById('contact-td')?.scrollIntoView({ behavior: 'smooth' })}
+          className="text-[#aaa6c3] hover:text-white text-[16px] font-medium cursor-pointer transition-colors"
+        >
+          Contact
         </li>
         <li>
           <button
