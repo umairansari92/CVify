@@ -2,7 +2,7 @@ import React from "react";
 import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Download, Mail } from "lucide-react";
-import InlineEdit from "../../../components/profile/InlineEdit";
+import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 
 const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {

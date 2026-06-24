@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import InlineEdit from "../../../components/profile/InlineEdit";
+import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 import { Terminal, Code, Cpu } from "lucide-react";
 
