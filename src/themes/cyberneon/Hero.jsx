@@ -94,7 +94,18 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             )}
           </div>
 
-          <p className="text-[#a1a1aa] text-base md:text-lg max-w-xl leading-relaxed mb-10 mx-auto md:mx-0">
+          <p 
+            className="max-w-xl mx-auto md:mx-0"
+            style={{ 
+              color: "#8892B0",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "16px",
+              fontWeight: 400,
+              lineHeight: "1.8",
+              marginBottom: "36px",
+              letterSpacing: "normal"
+            }}
+          >
             <InlineEdit
               value={bio}
               onSave={(val) => handleLiveUpdate({ bio: val })}
