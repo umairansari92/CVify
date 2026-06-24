@@ -72,6 +72,7 @@ const CyberNeonTheme = ({
         )}
 
         <Contact
+          user={user}
           contactForm={contactForm || { name: "", email: "", message: "" }}
           setContactForm={setContactForm || (() => {})}
           handleContactSubmit={handleContactSubmit || ((e) => e.preventDefault())}
