@@ -97,46 +97,87 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
   };
 
   const renderSkills = () => {
-    const skills = user?.skills?.technical || user?.skills || [];
-    if (skills.length === 0 && !isOwner) return <p className="text-[#a1a1aa] italic">No skills added yet.</p>;
+    const skillsData = user?.skills;
+
+    // Normalize into { Technical: [...], Strategic: [...] } or other categories
+    const categories = {};
+    if (skillsData && !Array.isArray(skillsData)) {
+      // Object format: { technical: [...], strategic: [...] }
+      if (skillsData.technical?.length) categories["Technical"] = skillsData.technical;
+      if (skillsData.strategic?.length) categories["Strategic"] = skillsData.strategic;
+    } else if (Array.isArray(skillsData)) {
+      skillsData.forEach((skill) => {
+        const name = typeof skill === "string" ? skill : skill?.name || "";
+        const level = typeof skill === "object" ? (skill?.level || skill?.skillLevel) : null;
+        const cat = (typeof skill === "object" && skill?.category) || "Technical";
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push({ name, level });
+      });
+    }
+
+    const categoryEntries = Object.entries(categories).filter(([, arr]) => arr?.length > 0);
+
+    if (categoryEntries.length === 0 && !isOwner) return (
+      <p className="text-[#a1a1aa] italic">No skills added yet.</p>
+    );
+
+    // Deterministic pseudo-random % — unique per skill name, stays consistent
+    const getPct = (name, level, idx, catIdx) => {
+      if (level && level > 0 && level <= 100) return level;
+      const str = typeof name === "string" ? name : "";
+      return 70 + ((str.length * 7 + idx * 13 + catIdx * 11) % 25);
+    };
 
     return (
-      <div className="space-y-6">
-        <h3 className="text-3xl font-bold text-white mb-8" style={{ fontFamily: tokens.fonts.heading }}>My Skills</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {skills.map((skill, idx) => {
-            const skillName = typeof skill === "string" ? skill : skill.name;
-            const skillLevel = typeof skill === "string" ? 80 : (skill.level || 80);
-            
-            return (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.05 }}
-                key={idx} 
-                className="bg-[#111] border border-[#222] p-4 rounded hover:border-[var(--primary-color)]/50 transition-colors group flex flex-col items-center justify-center gap-4 text-center h-32"
-              >
-                {/* Glowing ring representation of level */}
-                <div className="relative w-16 h-16 flex items-center justify-center">
-                   <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="32" cy="32" r="28" fill="none" stroke="#222" strokeWidth="4" />
-                      <circle 
-                        cx="32" cy="32" r="28" fill="none" 
-                        stroke="var(--primary-color)" 
-                        strokeWidth="4" 
-                        strokeDasharray="175" 
-                        strokeDashoffset={175 - (175 * skillLevel) / 100}
-                        className="transition-all duration-1000 ease-out"
-                      />
-                   </svg>
-                   <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-white group-hover:text-[var(--primary-color)] transition-colors">
-                     {skillLevel}%
-                   </span>
-                </div>
-                <h4 className="text-sm font-bold text-white tracking-wider uppercase">{skillName}</h4>
-              </motion.div>
-            );
-          })}
+      <div className="space-y-8">
+        <h3 className="text-3xl font-bold text-white" style={{ fontFamily: tokens.fonts.heading }}>
+          My Skills
+        </h3>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {categoryEntries.map(([category, skills], catIdx) => (
+            <div
+              key={category}
+              className="bg-[#111] border border-[#222] p-6 rounded-xl hover:border-[var(--primary-color)]/20 transition-colors"
+            >
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--primary-color)]/70 mb-6">
+                {category}
+              </h4>
+              <div className="space-y-5">
+                {skills.map((skill, i) => {
+                  const skillName = typeof skill === "string" ? skill : skill?.name || "";
+                  const skillLevel = getPct(skillName, skill?.level, i, catIdx);
+
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-medium text-white">{skillName}</span>
+                        <span className="text-xs font-mono text-[var(--primary-color)]">{skillLevel}%</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-[#222] overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${skillLevel}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1.2, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                          className="h-full rounded-full"
+                          style={{
+                            background: "linear-gradient(90deg, var(--primary-color), #00ffaa)",
+                            boxShadow: "0 0 8px rgba(0,255,204,0.4)"
+                          }}
+                        />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
