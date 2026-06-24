@@ -9,8 +9,12 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   const { firstName, lastName, headline, bio, socialLinks } = user || {};
   const fullName = [firstName, lastName].filter(Boolean).join(" ") || "Your Name";
 
-  // Build the sequence for typing animation
-  const slogans = user?.heroSlogans || [headline || "Frontend Developer"];
+  // Build the sequence for typing animation - one role at a time
+  const rawSlogans = user?.heroSlogans || [headline || "Full Stack Developer"];
+  // If it's a single long comma-separated string, split it into individual roles
+  const slogans = rawSlogans.length === 1 && rawSlogans[0]?.includes(",")
+    ? rawSlogans[0].split(",").map(s => s.trim()).filter(Boolean)
+    : rawSlogans;
   const typeSequence = slogans.flatMap(slogan => [slogan, 2000]);
 
   return (
@@ -59,18 +63,23 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             />
           </h1>
 
-          <div className="text-xl md:text-2xl text-[#a1a1aa] mb-6 flex items-center justify-center md:justify-start gap-2" style={{ fontFamily: tokens.fonts.mono }}>
-            <span>I am a</span>
-            {slogans.length > 0 && (
-              <span className="text-[var(--primary-color)] font-bold">
-                <TypeAnimation
-                  sequence={typeSequence.length > 0 ? typeSequence : ["Developer", 2000]}
-                  wrapper="span"
-                  cursor={true}
-                  repeat={Infinity}
-                  className="drop-shadow-[0_0_8px_rgba(0,255,204,0.4)]"
-                />
-              </span>
+          <div 
+            className="text-xl md:text-2xl text-[#a1a1aa] mb-6 flex items-center justify-center md:justify-start gap-2" 
+            style={{ fontFamily: tokens.fonts.mono }}
+          >
+            <span className="text-white font-bold">I'm a&nbsp;</span>
+            {typeSequence.length > 0 && (
+              <TypeAnimation
+                sequence={typeSequence}
+                wrapper="span"
+                cursor={true}
+                repeat={Infinity}
+                style={{ 
+                  color: "var(--primary-color)",
+                  fontWeight: "bold",
+                  filter: "drop-shadow(0 0 8px rgba(0,255,204,0.4))"
+                }}
+              />
             )}
           </div>
 
