@@ -22,9 +22,10 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center" style={{ fontFamily: tokens.fonts.heading }}>
-            <span className="text-[var(--primary-color)]">01. </span> About Me
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center" style={{ fontFamily: "Orbitron, monospace" }}>
+            <span className="text-white">About </span><span className="text-[var(--primary-color)]">Me</span>
           </h2>
+          <div className="w-16 h-1 mx-auto mb-12 rounded-full" style={{ background: "linear-gradient(90deg, var(--primary-color), transparent)" }}></div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Text & Stats */}

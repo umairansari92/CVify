@@ -14,7 +14,9 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
 
     return (
       <div className="space-y-6">
-        <h3 className="text-3xl font-bold text-white mb-8" style={{ fontFamily: tokens.fonts.heading }}>My Experience</h3>
+        <h3 className="text-3xl font-bold mb-8" style={{ fontFamily: "Orbitron, monospace" }}>
+          <span className="text-white">My </span><span className="text-[var(--primary-color)]">Experience</span>
+        </h3>
         {expList.map((exp, idx) => (
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
@@ -63,7 +65,9 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
 
     return (
       <div className="space-y-6">
-        <h3 className="text-3xl font-bold text-white mb-8" style={{ fontFamily: tokens.fonts.heading }}>My Education</h3>
+        <h3 className="text-3xl font-bold mb-8" style={{ fontFamily: "Orbitron, monospace" }}>
+          <span className="text-white">My </span><span className="text-[var(--primary-color)]">Education</span>
+        </h3>
         {eduList.map((edu, idx) => (
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
@@ -130,8 +134,8 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
 
     return (
       <div className="space-y-8">
-        <h3 className="text-3xl font-bold text-white" style={{ fontFamily: tokens.fonts.heading }}>
-          My Skills
+        <h3 className="text-3xl font-bold" style={{ fontFamily: "Orbitron, monospace" }}>
+          <span className="text-white">My </span><span className="text-[var(--primary-color)]">Skills</span>
         </h3>
 
         <div className="grid md:grid-cols-2 gap-8">
@@ -187,9 +191,10 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
     <section id="resume" className="py-20 px-6 relative z-10 bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold" style={{ fontFamily: tokens.fonts.heading }}>
-            <span className="text-[var(--primary-color)]">02. </span> Resume
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: "Orbitron, monospace" }}>
+            <span className="text-white">My </span><span className="text-[var(--primary-color)]">Resume</span>
           </h2>
+          <div className="w-16 h-1 mx-auto mb-4 rounded-full" style={{ background: "linear-gradient(90deg, var(--primary-color), transparent)" }}></div>
         </div>
 
         <div className="flex flex-col md:flex-row gap-12">

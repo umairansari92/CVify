@@ -16,10 +16,11 @@ const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending, 
     <section id="contact" className="py-20 px-6 relative z-10 bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: tokens.fonts.heading }}>
-            <span className="text-[var(--primary-color)]">04. </span> Get In Touch
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: "Orbitron, monospace" }}>
+            <span className="text-white">Get In </span><span className="text-[var(--primary-color)]">Touch</span>
           </h2>
-          <p className="text-[#a1a1aa] max-w-xl mx-auto">
+          <div className="w-16 h-1 mx-auto mb-4 rounded-full" style={{ background: "linear-gradient(90deg, var(--primary-color), transparent)" }}></div>
+          <p className="text-[#a1a1aa] max-w-xl mx-auto" style={{ fontFamily: "Inter, sans-serif" }}>
             Whether you have a question or just want to say hi, my inbox is always open!
           </p>
         </div>

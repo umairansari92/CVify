@@ -29,10 +29,11 @@ const Showcase = ({ projects, isOwner }) => {
     <section id="projects" className="py-20 px-6 relative z-10">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: tokens.fonts.heading }}>
-            <span className="text-[var(--primary-color)]">03. </span> My Projects
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: "Orbitron, monospace" }}>
+            <span className="text-white">My </span><span className="text-[var(--primary-color)]">Projects</span>
           </h2>
-          <p className="text-[#a1a1aa] font-mono text-sm max-w-xl mx-auto">Selected works & technical case studies.</p>
+          <div className="w-16 h-1 mx-auto mb-4 rounded-full" style={{ background: "linear-gradient(90deg, var(--primary-color), transparent)" }}></div>
+          <p className="text-[#a1a1aa] text-sm max-w-xl mx-auto" style={{ fontFamily: "Inter, sans-serif" }}>Selected works & technical case studies.</p>
         </div>
 
         <div className="relative">
