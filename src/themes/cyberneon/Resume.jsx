@@ -26,19 +26,31 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
             {/* Neon accent line */}
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--primary-color)]/20 group-hover:bg-[var(--primary-color)] transition-colors"></div>
             
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 gap-2">
               <div>
-                <h4 className="text-xl font-bold text-white">{exp.jobTitle}</h4>
+                <h4 className="text-xl font-bold text-white">{exp.role || exp.jobTitle}</h4>
                 <div className="flex items-center gap-2 text-[var(--primary-color)] font-mono text-sm mt-1">
-                  <Building2 size={14} /> {exp.companyName}
+                  <Building2 size={14} /> {exp.company || exp.companyName}
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-[#a1a1aa] text-sm bg-[#1a1a1a] px-3 py-1 rounded w-fit">
+              <div className="flex items-center gap-2 text-[#a1a1aa] text-sm bg-[#1a1a1a] px-3 py-1 rounded w-fit whitespace-nowrap">
                 <Calendar size={14} />
-                {exp.startDate ? new Date(exp.startDate).getFullYear() : "Past"} - {exp.current ? "Present" : (exp.endDate ? new Date(exp.endDate).getFullYear() : "Present")}
+                {exp.startDate} – {exp.isCurrent || exp.current ? "Present" : exp.endDate}
               </div>
             </div>
-            <p className="text-[#a1a1aa] text-sm leading-relaxed">{exp.description}</p>
+
+            {exp.achievements ? (
+              <div className="mt-2 space-y-1">
+                {exp.achievements.split("\n").filter(Boolean).map((line, li) => (
+                  <div key={li} className="flex gap-2 text-sm leading-relaxed text-[#a1a1aa]">
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--primary-color)]" />
+                    {line.replace(/^[-•]\s*/, "")}
+                  </div>
+                ))}
+              </div>
+            ) : exp.description ? (
+              <p className="text-[#a1a1aa] text-sm leading-relaxed mt-2">{exp.description}</p>
+            ) : null}
           </motion.div>
         ))}
       </div>
@@ -62,19 +74,22 @@ const Resume = ({ user, isOwner, handleArrayUpdate }) => {
           >
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--primary-color)]/20 group-hover:bg-[var(--primary-color)] transition-colors"></div>
             
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 gap-2">
               <div>
                 <h4 className="text-xl font-bold text-white">{edu.degree}</h4>
                 <div className="flex items-center gap-2 text-[var(--primary-color)] font-mono text-sm mt-1">
-                  <GraduationCap size={14} /> {edu.schoolName}
+                  <GraduationCap size={14} /> {edu.institution || edu.schoolName}
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-[#a1a1aa] text-sm bg-[#1a1a1a] px-3 py-1 rounded w-fit">
+              <div className="flex items-center gap-2 text-[#a1a1aa] text-sm bg-[#1a1a1a] px-3 py-1 rounded w-fit whitespace-nowrap">
                 <Calendar size={14} />
-                {edu.startDate ? new Date(edu.startDate).getFullYear() : "Past"} - {edu.endDate ? new Date(edu.endDate).getFullYear() : "Present"}
+                {edu.startYear || edu.startDate} – {edu.endYear || edu.endDate || "Present"}
               </div>
             </div>
-            {edu.grade && <p className="text-white font-mono text-sm">Grade: <span className="text-[var(--primary-color)]">{edu.grade}</span></p>}
+            {edu.description && (
+              <p className="text-[#a1a1aa] text-sm leading-relaxed mt-2">{edu.description}</p>
+            )}
+            {edu.grade && <p className="text-white font-mono text-sm mt-2">Grade: <span className="text-[var(--primary-color)]">{edu.grade}</span></p>}
           </motion.div>
         ))}
       </div>
