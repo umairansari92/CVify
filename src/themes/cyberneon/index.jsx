@@ -37,26 +37,69 @@ const CyberNeonTheme = ({
         "--font-mono": "'Space Mono', monospace",
       }}
     >
-      {/* Global heading font override for this theme */}
+      {/* Global typography override — matches Unsha's portfolio exactly */}
       <style>{`
-        .cyberneon-theme h1, 
-        .cyberneon-theme h2, 
-        .cyberneon-theme h3,
+        /* ── h1: Hero name (72px, 900wt) ── */
+        .cyberneon-theme h1 {
+          font-family: 'Orbitron', monospace;
+          font-weight: 900;
+          letter-spacing: -1px;
+          line-height: 1.1;
+        }
+
+        /* ── h2: Section titles — exactly as inspected ── */
+        .cyberneon-theme h2 {
+          font-family: 'Orbitron', monospace;
+          font-weight: 700;
+          font-size: 44.8px;
+          line-height: 1.6;
+          color: #CDD6F4;
+          margin-bottom: 20px;
+          text-align: center;
+          letter-spacing: normal;
+        }
+
+        /* ── h3: Sub-section/card titles ── */
+        .cyberneon-theme h3 {
+          font-family: 'Orbitron', monospace;
+          font-weight: 700;
+          font-size: 1.5rem;
+          line-height: 1.4;
+          color: #CDD6F4;
+        }
+
+        /* ── h4: Small headings ── */
         .cyberneon-theme h4 {
           font-family: 'Orbitron', monospace;
+          font-weight: 600;
+          color: #CDD6F4;
         }
+
+        /* ── Body text — Inter ── */
         .cyberneon-theme p,
-        .cyberneon-theme span,
         .cyberneon-theme li,
-        .cyberneon-theme label,
-        .cyberneon-theme input,
-        .cyberneon-theme textarea {
+        .cyberneon-theme label {
           font-family: 'Inter', sans-serif;
         }
-        .cyberneon-theme .font-mono,
+
+        /* ── Inputs/forms ── */
+        .cyberneon-theme input,
+        .cyberneon-theme textarea,
+        .cyberneon-theme select {
+          font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Monospace elements ── */
         .cyberneon-theme code,
-        .cyberneon-theme pre {
+        .cyberneon-theme pre,
+        .cyberneon-theme .font-mono {
           font-family: 'Space Mono', monospace;
+        }
+
+        /* ── Neon accent spans inside headings ── */
+        .cyberneon-theme h2 span.neon,
+        .cyberneon-theme h3 span.neon {
+          color: #00ffcc;
         }
       `}</style>
       <FloatingDevChars />
