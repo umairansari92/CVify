@@ -1,9 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { tokens } from "./tokens";
-import { Send, MapPin, Mail, Phone } from "lucide-react";
+import { Send, MapPin, Mail, Phone, Github, Linkedin, Twitter } from "lucide-react";
 
 const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending, user }) => {
+  const socialLinks = user?.socialLinks || {};
+
+  const socials = [
+    { key: "linkedin", icon: Linkedin, url: socialLinks.linkedin },
+    { key: "github", icon: Github, url: socialLinks.github },
+    { key: "twitter", icon: Twitter, url: socialLinks.twitter },
+  ].filter((s) => s.url);
+
   return (
     <section id="contact" className="py-20 px-6 relative z-10 bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto">
@@ -44,6 +52,23 @@ const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending, 
                 </div>
                 <h3 className="text-white font-bold mb-2">Location</h3>
                 <p className="text-[#a1a1aa] font-mono text-sm">{user.location}</p>
+              </div>
+            )}
+
+            {/* Social Icons */}
+            {socials.length > 0 && (
+              <div className="flex gap-4 pt-4 justify-center md:justify-start">
+                {socials.map((s) => (
+                  <a
+                    key={s.key}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full border border-[#222] bg-[#111] flex items-center justify-center text-[#a1a1aa] hover:text-[var(--primary-color)] hover:border-[var(--primary-color)] transition-all hover:shadow-[0_0_15px_rgba(0,255,204,0.3)]"
+                  >
+                    <s.icon size={20} />
+                  </a>
+                ))}
               </div>
             )}
           </div>
