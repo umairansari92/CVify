@@ -44,8 +44,14 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
           </div>
 
           <h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 leading-tight tracking-tight"
-            style={{ fontFamily: tokens.fonts.heading }}
+            className="mb-[18px] leading-[1.1]"
+            style={{ 
+              fontFamily: "Orbitron, monospace",
+              fontWeight: 900,
+              fontSize: "clamp(48px, 8vw, 72px)",
+              letterSpacing: "-1px",
+              lineHeight: "1.1"
+            }}
           >
             <InlineEdit
               value={firstName}
@@ -53,13 +59,18 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               isOwner={isOwner}
               placeholder="First Name"
               className="block"
+              style={{ color: "#CDD6F4" }}
             />
             <InlineEdit
               value={lastName}
               onSave={(val) => handleLiveUpdate({ lastName: val })}
               isOwner={isOwner}
               placeholder="Last Name"
-              className="block text-[var(--primary-color)] drop-shadow-[0_0_15px_rgba(0,255,204,0.3)]"
+              className="block"
+              style={{ 
+                color: "var(--primary-color)",
+                textShadow: "0 0 30px rgba(0,255,204,0.4)"
+              }}
             />
           </h1>
 
