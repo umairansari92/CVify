@@ -77,6 +77,7 @@ import { AiAgentWidget } from "../components/AiAgentWidget";
 const OrientalLuxeTheme = lazy(() => import("../themes/orientalluxe"));
 const AuraDarkTheme = lazy(() => import("../themes/auradark"));
 const TerminalDarkTheme = lazy(() => import("../themes/terminaldark"));
+const CyberNeonTheme = lazy(() => import("../themes/cyberneon"));
 const StandardTheme = lazy(() => import("../themes/standard"));
 
 const PublicProfile = () => {
@@ -291,6 +292,7 @@ const PublicProfile = () => {
     { name: "ORIENTAL LUXE", headerBg: "#101010", headerBgSecondary: "#181818", bodyBg: "#090909", fontPrimary: "Outfit", cardStyle: "glass", icon: "🕌", textPrimary: "#ffffff", textSecondary: "#a3a3a3", accentColor: "#b58953" },
     { name: "AURA DARK", headerBg: "#050505", headerBgSecondary: "#101010", bodyBg: "#000000", fontPrimary: "Syne", cardStyle: "minimal", icon: "✨", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#B677EF" },
     { name: "TERMINAL DARK", headerBg: "#050816", headerBgSecondary: "#151030", bodyBg: "#050816", fontPrimary: "Inter", cardStyle: "glass", icon: "💻", textPrimary: "#ffffff", textSecondary: "#aaa6c3", accentColor: "#915eff" },
+    { name: "CYBER NEON", headerBg: "#080808", headerBgSecondary: "#000000", bodyBg: "#0a0a0a", fontPrimary: "Orbitron", cardStyle: "glass", icon: "🟢", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#00ffcc" },
   ];
 
   // ✅ OPT: useMemo — only recomputes when localTheme or DB theme actually changes,
@@ -314,6 +316,7 @@ const PublicProfile = () => {
   const isOrientalLuxeTheme = theme.name === "ORIENTAL LUXE";
   const isAuraDarkTheme = theme.name === "AURA DARK";
   const isTerminalDarkTheme = theme.name === "TERMINAL DARK";
+  const isCyberNeonTheme = theme.name === "CYBER NEON";
 
   const themeStyles = useMemo(() => ({
     backgroundColor: theme.bodyBg,
@@ -353,7 +356,7 @@ const PublicProfile = () => {
   );
 
   return (
-    <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme || isAuraDarkTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
+    <div className={`min-h-screen bg-[var(--bg-primary)] overflow-x-hidden selection:bg-[var(--primary-color)] selection:text-gray-900 ${isOrientalLuxeTheme || isAuraDarkTheme || isCyberNeonTheme ? 'oriental-luxe-active' : ''}`} style={themeStyles}>
 
       <Helmet>
         {/* Dynamic SEO Tags */}
@@ -517,7 +520,7 @@ const PublicProfile = () => {
       )}
 
       {/* --- PREMIUM FLOATING NAVBAR (hidden for Aura Dark — it has its own) --- */}
-      {!isAuraDarkTheme && <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 flex justify-center ${scrolled ? 'pt-2 sm:pt-4' : 'pt-6 sm:pt-8'}`}>
+      {!(isAuraDarkTheme || isCyberNeonTheme) && <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 flex justify-center ${scrolled ? 'pt-2 sm:pt-4' : 'pt-6 sm:pt-8'}`}>
         <div className={`w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
           
           {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}
@@ -631,6 +634,27 @@ const PublicProfile = () => {
           </div>
         }>
           <AuraDarkTheme
+            user={user}
+            projects={projects}
+            isOwner={isOwner}
+            handleLiveUpdate={handleLiveUpdate}
+            handleArrayUpdate={handleArrayUpdate}
+            setShowResumeModal={setShowResumeModal}
+            contactForm={contactForm}
+            setContactForm={setContactForm}
+            handleContactSubmit={handleContactSubmit}
+            isSending={isSending}
+            githubData={githubData}
+            githubLoading={githubLoading}
+          />
+        </Suspense>
+      ) : isCyberNeonTheme ? (
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#080808] flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-[#00ffcc] border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          <CyberNeonTheme
             user={user}
             projects={projects}
             isOwner={isOwner}
