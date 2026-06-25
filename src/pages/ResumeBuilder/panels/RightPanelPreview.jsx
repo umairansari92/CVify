@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, startTransition } from "react";
 import { Maximize2, ZoomIn, ZoomOut, Monitor, Tablet, Smartphone, FileEdit, Eye } from "lucide-react";
 import PDFPreviewPanel from "../../../components/PDFPreviewPanel";
 import { getDOMTemplate } from "../../../components/templates/TemplateRegistry";
@@ -14,13 +14,13 @@ const RightPanelPreview = ({ resume }) => {
         <div className="flex items-center gap-2">
            <div className="flex items-center gap-1 p-1 bg-slate-950/60 rounded-lg border border-white/5">
               <button 
-                onClick={() => setViewMode("editor")}
+                onClick={() => startTransition(() => setViewMode("editor"))}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "editor" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
                 <FileEdit size={12} /> Editor
               </button>
               <button 
-                onClick={() => setViewMode("pdf")}
+                onClick={() => startTransition(() => setViewMode("pdf"))}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "pdf" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
                 <Eye size={12} /> PDF View
