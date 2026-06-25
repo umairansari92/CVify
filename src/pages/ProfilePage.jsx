@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, startTransition } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -210,7 +210,7 @@ const ProfilePage = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => startTransition(() => setActiveTab(tab.id))}
               className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl whitespace-nowrap transition-all duration-300 font-black text-xs uppercase tracking-widest ${
                 activeTab === tab.id
                   ? `bg-primary/10 text-primary border border-primary/30 shadow-lg`
