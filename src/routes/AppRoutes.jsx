@@ -123,6 +123,14 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/admin/analytics"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
           path="/admin/users/:id"
           element={
             <AdminRoute>
