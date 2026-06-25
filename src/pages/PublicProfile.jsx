@@ -747,7 +747,7 @@ const PublicProfile = () => {
       {user.isOwner && (
         <>
           <div className="fixed top-32 right-6 z-[120]">
-            <button onClick={() => startTransition(() => setShowThemePanel(!showThemePanel))} className="w-16 h-16 bg-[var(--primary-color)] text-white rounded-[2rem] shadow-2xl flex items-center justify-center hover:scale-110 transition-all group">
+            <button onClick={() => setTimeout(() => setShowThemePanel(!showThemePanel), 0)} className="w-16 h-16 bg-[var(--primary-color)] text-white rounded-[2rem] shadow-2xl flex items-center justify-center hover:scale-110 transition-all group">
               <FaPalette className="text-xl group-hover:rotate-12 transition-transform" />
             </button>
           </div>
