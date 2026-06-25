@@ -108,19 +108,29 @@ const PublicProfile = () => {
   }, [user?.projects, user?.portfolio, user?.username]);
 
   const slogans = user?.heroSlogans || [];
-  const personalInfo = { 
-    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "), 
-    image: user?.profileImage, 
+
+  // useMemo: personalInfo is passed to Hero (React.memo). Without this, a new
+  // object is created on every render, defeating memoization entirely.
+  const personalInfo = useMemo(() => ({
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+    image: user?.profileImage,
     jobTitle: user?.headline,
     objective: user?.bio,
     summary: user?.bio,
     location: user?.location,
     email: user?.email,
     phone: user?.phoneNumber
-  };
+  }), [user?.firstName, user?.lastName, user?.profileImage, user?.headline, user?.bio, user?.location, user?.email, user?.phoneNumber]);
+
   const branding = user?.branding || {};
   const isOwner = user?.isOwner;
-  const publicResumes = isOwner ? (user?.resumes || []) : (user?.resumes?.filter(r => r.isPublic === true) || []);
+
+  // Stable array reference — prevents Contact and other sections from re-rendering
+  // when unrelated state (e.g. isMenuOpen) changes.
+  const publicResumes = useMemo(
+    () => isOwner ? (user?.resumes || []) : (user?.resumes?.filter(r => r.isPublic === true) || []),
+    [isOwner, user?.resumes]
+  );
 
   const [localTheme, setLocalTheme] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -221,12 +231,14 @@ const PublicProfile = () => {
     } finally { setIsUpdating(false); }
   }, [user?.isOwner, username, dispatch]);
 
-  const handleArrayUpdate = (field, index, updatedItem) => {
-    if (!user.isOwner) return;
+  // Wrapped in useCallback so React.memo on child sections (Experience, Showcase etc.)
+  // actually prevents re-renders — unstable references defeat memoization.
+  const handleArrayUpdate = useCallback((field, index, updatedItem) => {
+    if (!user?.isOwner) return;
     const newArray = [...user[field]];
     newArray[index] = { ...newArray[index], ...updatedItem };
     handleLiveUpdate({ [field]: newArray });
-  };
+  }, [user, handleLiveUpdate]);
 
   const handleThemeUpdate = useCallback((newTheme) => {
     // ⚡ STEP 1: Apply CSS variables directly to the DOM — instant visual change,
@@ -255,22 +267,21 @@ const PublicProfile = () => {
     }, 500);
   }, [handleLiveUpdate, user?.themeSettings?.name]);
 
-  const handleTogglePublic = async (resumeId, currentStatus) => {
-    if (!user.isOwner) return;
+  const handleTogglePublic = useCallback(async (resumeId, currentStatus) => {
+    if (!user?.isOwner) return;
     try {
       const newStatus = !currentStatus;
       const updatedResumes = user.resumes.map(r => r._id === resumeId ? { ...r, isPublic: newStatus } : r);
       dispatch(updateActiveProfileLocally({ resumes: updatedResumes }));
-      
       await api.patch(`/resumes/${resumeId}`, { isPublic: newStatus });
       toast.success(newStatus ? "Resume Shared Publicly!" : "Resume Private.");
     } catch (err) {
       toast.error("Failed to update status.");
       dispatch(fetchPublicProfile(username));
     }
-  };
+  }, [user?.isOwner, user?.resumes, username, dispatch]);
 
-  const handleContactSubmit = async (e) => {
+  const handleContactSubmit = useCallback(async (e) => {
     e.preventDefault();
     if (isSending) return;
     setIsSending(true);
@@ -284,15 +295,15 @@ const PublicProfile = () => {
     } finally {
       setIsSending(false);
     }
-  };
+  }, [username, contactForm, isSending]);
 
-  const ensureAbsoluteUrl = (url) => {
+  const ensureAbsoluteUrl = useCallback((url) => {
     if (!url || typeof url !== "string") return "";
     const trimmed = url.trim();
     if (!trimmed) return "";
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("mailto:") || trimmed.startsWith("tel:")) return trimmed;
     return `https://${trimmed}`;
-  };
+  }, []);
 
   const themePresets = [
     { name: "CVIFY CLASSIC", headerBg: "#2563eb", headerBgSecondary: "#9333ea", bodyBg: "#f8fafc", fontPrimary: "Inter", cardStyle: "glass", icon: "⚡", textPrimary: "#0f172a", textSecondary: "#64748b", accentColor: "#2563eb" },

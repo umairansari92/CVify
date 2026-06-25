@@ -145,7 +145,14 @@ const Hero = React.memo(({ user, isOwner, theme, displayValue, handleLiveUpdate,
            {personalInfo.image && (
              <div className="w-[85%] sm:w-full max-w-sm md:max-w-md h-[380px] sm:h-[450px] md:h-[500px] lg:w-[420px] lg:h-[550px] rounded-3xl border border-[var(--card-border)] shadow-[0_20px_60px_rgba(0,0,0,0.4)] relative z-20 overflow-hidden">
                {/* Image fills card completely — no gray background visible */}
-               <img src={personalInfo.image} alt="Profile" className="absolute inset-0 w-full h-full object-cover object-top" />
+               <img 
+                 src={personalInfo.image} 
+                 alt={`${personalInfo.fullName} - Profile Photo`}
+                 className="absolute inset-0 w-full h-full object-cover object-top"
+                 fetchpriority="high"
+                 decoding="async"
+                 loading="eager"
+               />
                
                {/* Subtle gradient overlay at bottom for depth */}
                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
