@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { tokens } from "./tokens";
 import GithubStats from "../../components/profile/sections/GithubStats";
-import AuraDarkNav from "./Nav";
 import Loader from "./Loader";
 import Hero from "./Hero";
 import About from "./About";
@@ -69,8 +68,7 @@ const AuraDarkTheme = ({
         className="transition-opacity duration-1000"
         style={{ opacity: loading ? 0 : 1 }}
       >
-        {/* Minimal hamburger nav */}
-        <AuraDarkNav setShowResumeModal={setShowResumeModal} />
+        {/* Minimal hamburger nav removed — using universal premium navbar instead */}
 
         <Hero
           user={user}

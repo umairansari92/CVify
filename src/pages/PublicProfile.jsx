@@ -356,13 +356,27 @@ const PublicProfile = () => {
 
   const getSectionId = useCallback((item) => {
     const id = item.toLowerCase();
+    
     if (isOrientalLuxeTheme) {
       if (id === 'home') return 'hero-ol';
       if (id === 'journey') return 'experience-ol';
       return `${id}-ol`;
     }
+    
+    if (isAuraDarkTheme) {
+      if (id === 'home') return 'ad-hero-name';
+      if (id === 'journey') return 'experience-ad';
+      return `${id}-ad`;
+    }
+    
+    if (isCyberNeonTheme) {
+      if (id === 'journey') return 'resume';
+      if (id === 'showcase') return 'projects';
+      return id;
+    }
+    
     return id;
-  }, [isOrientalLuxeTheme]);
+  }, [isOrientalLuxeTheme, isAuraDarkTheme, isCyberNeonTheme]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -547,8 +561,8 @@ const PublicProfile = () => {
         </div>
       )}
 
-      {/* --- PREMIUM FLOATING NAVBAR (hidden for Aura Dark — it has its own) --- */}
-      {!(isAuraDarkTheme || isCyberNeonTheme) && <nav className="pub-nav fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 pt-6 sm:pt-8 flex justify-center">
+      {/* --- PREMIUM FLOATING NAVBAR (Universal for all themes) --- */}
+      <nav className="pub-nav fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 pt-6 sm:pt-8 flex justify-center">
         <div className="pub-nav-inner w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500">
           
           {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}

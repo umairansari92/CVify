@@ -1,7 +1,7 @@
 import React from "react";
 import { tokens } from "./tokens";
 import FloatingDevChars from "./FloatingDevChars";
-import Nav from "./Nav";
+// Nav removed — using universal premium navbar
 import Hero from "./Hero";
 import About from "./About";
 import Resume from "./Resume";
@@ -105,7 +105,7 @@ const CyberNeonTheme = ({
       <FloatingDevChars />
       
       <div className="relative z-10">
-        <Nav user={user} setShowResumeModal={setShowResumeModal} />
+        {/* Nav removed — using universal premium navbar */}
 
         <Hero
           user={user}
