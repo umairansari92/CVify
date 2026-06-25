@@ -59,32 +59,41 @@ const ProjectsManager = () => {
   const onSubmit = async (data) => {
     setSaving(true);
     try {
-      // Note: This implementation assumes the backend can handle the array of projects.
-      // For images, we would ideally need a specialized multi-part upload strategy.
-      // For now, we sync the text data first, and then handle images if any were added.
-      
-      const payload = {
-        projects: data.projects,
-        sectionNames: { ...user.sectionNames, projects: data.sectionName }
-      };
-
       // Handle image uploads if files exist
       const updatedProjects = [...data.projects];
       for (const [idx, file] of Object.entries(imageFiles)) {
         const fd = new FormData();
         fd.append("image", file);
-        // Assuming a specific endpoint for project image upload or we handle it in-line
         try {
             const imgRes = await api.post(`/auth/profile/projects/${idx}/image`, fd);
             if (imgRes.data.imageUrl) {
+                // Save to both legacy and new fields for compatibility
                 updatedProjects[idx].image = imgRes.data.imageUrl;
+                updatedProjects[idx].thumbnail = imgRes.data.imageUrl;
             }
         } catch (imgErr) {
             console.error(`Failed to upload image for project ${idx}`, imgErr);
         }
       }
 
-      const res = await api.patch("/auth/profile", { ...payload, projects: updatedProjects });
+      // Map frontend fields to match backend schema perfectly
+      const finalProjects = updatedProjects.map(p => ({
+        title: p.title,
+        description: p.description,
+        thumbnail: p.thumbnail || p.image || p.imageUrl,
+        liveLink: p.link || p.liveLink,
+        githubLink: p.github || p.githubLink,
+        techStack: Array.isArray(p.techStack) && p.techStack.length > 0 
+          ? p.techStack 
+          : (p.tech ? p.tech.split(',').map(s=>s.trim()) : [])
+      }));
+
+      const payload = {
+        projects: finalProjects,
+        sectionNames: { ...user.sectionNames, projects: data.sectionName }
+      };
+
+      const res = await api.patch("/auth/profile", payload);
       if (res.data.user) {
         dispatch(updateUser(res.data.user));
         setImageFiles({});
@@ -137,9 +146,9 @@ const ProjectsManager = () => {
                 className="h-56 bg-foreground/10 relative flex items-center justify-center group/img overflow-hidden cursor-pointer"
                 onClick={() => document.getElementById(`project-img-${idx}`).click()}
             >
-                {imageFiles[idx] || field.image ? (
+                {imageFiles[idx] || field.thumbnail || field.image ? (
                     <img 
-                        src={imageFiles[idx] ? URL.createObjectURL(imageFiles[idx]) : field.image} 
+                        src={imageFiles[idx] ? URL.createObjectURL(imageFiles[idx]) : (field.thumbnail || field.image)} 
                         alt="Project" 
                         className="w-full h-full object-cover group-hover/img:scale-105 transition-all duration-700" 
                     />

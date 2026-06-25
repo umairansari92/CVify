@@ -47,9 +47,9 @@ const Showcase = ({ projects, isOwner }) => {
           >
             {/* Image Side */}
             <div className="w-full lg:w-1/2 relative group rounded-lg overflow-hidden border border-[#222] aspect-video bg-[#080808]">
-              {currentProject.imageUrl || currentProject.image ? (
+              {currentProject.thumbnail || currentProject.imageUrl || currentProject.image ? (
                 <img 
-                  src={currentProject.imageUrl || currentProject.image} 
+                  src={currentProject.thumbnail || currentProject.imageUrl || currentProject.image} 
                   alt={currentProject.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-70 group-hover:opacity-100"
                 />

@@ -32,7 +32,7 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
           >
             <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
               <img
-                src={project.image || project.imageUrl || project.coverImage || `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || "Project")}`}
+                src={project.thumbnail || project.image || project.imageUrl || project.coverImage || `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || "Project")}`}
                 alt={project.title}
                 className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
                 onError={(e) => { e.target.src = `https://placehold.co/600x400/151030/915eff?text=${encodeURIComponent(project.title || "Project")}`; }}
