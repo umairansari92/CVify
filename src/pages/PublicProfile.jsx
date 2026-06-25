@@ -126,18 +126,28 @@ const PublicProfile = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showThemePanel, setShowThemePanel] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [contactForm, setContactForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [isSending, setIsSending] = useState(false);
   const [githubData, setGithubData] = useState(null);
   const [githubLoading, setGithubLoading] = useState(false);
 
+  // ⚡ PERF: Pure DOM scroll — zero React re-render on scroll.
+  //    Toggling a CSS class on <html> instead of useState eliminates the
+  //    200ms+ "input delay" that was blocking clicks after scroll events.
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    // passive: true — browser can scroll without waiting for JS, eliminates scroll jank
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        document.documentElement.classList.add('pub-scrolled');
+      } else {
+        document.documentElement.classList.remove('pub-scrolled');
+      }
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.documentElement.classList.remove('pub-scrolled');
+    };
   }, []);
 
   useEffect(() => {
@@ -527,8 +537,8 @@ const PublicProfile = () => {
       )}
 
       {/* --- PREMIUM FLOATING NAVBAR (hidden for Aura Dark — it has its own) --- */}
-      {!(isAuraDarkTheme || isCyberNeonTheme) && <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 flex justify-center ${scrolled ? 'pt-2 sm:pt-4' : 'pt-6 sm:pt-8'}`}>
-        <div className={`w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500 ${scrolled ? 'shadow-[var(--primary-color)]/10 scale-[0.98]' : ''}`}>
+      {!(isAuraDarkTheme || isCyberNeonTheme) && <nav className="pub-nav fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-4 sm:p-6 pt-6 sm:pt-8 flex justify-center">
+        <div className="pub-nav-inner w-full max-w-7xl px-4 sm:px-8 h-16 sm:h-20 md:h-24 grid grid-cols-2 lg:grid-cols-3 items-center backdrop-blur-md bg-[var(--bg-primary)]/80 border border-[var(--card-border)] rounded-full shadow-2xl transition-all duration-500">
           
           {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}
           <div 

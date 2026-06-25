@@ -55,16 +55,20 @@ const StandardTheme = ({
       />
 
       <Suspense fallback={null}>
-        <GithubStats 
-          githubUrl={user?.socialLinks?.github} 
-          userSkills={user?.skills?.technical || user?.skills || []} 
-          data={githubData}
-          loading={githubLoading}
-        />
+        <div className="cv-section">
+          <GithubStats 
+            githubUrl={user?.socialLinks?.github} 
+            userSkills={user?.skills?.technical || user?.skills || []} 
+            data={githubData}
+            loading={githubLoading}
+          />
+        </div>
       </Suspense>
 
       <Suspense fallback={null}>
-        <Brands user={user} isOwner={isOwner} />
+        <div className="cv-section">
+          <Brands user={user} isOwner={isOwner} />
+        </div>
       </Suspense>
 
       <About 
@@ -81,88 +85,106 @@ const StandardTheme = ({
         </div>
       }>
         {(isOwner || (user.experience?.length > 0)) && (
-          <Experience 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
+          <div className="cv-section">
+            <Experience 
+              user={user} 
+              isOwner={isOwner} 
+              displayValue={displayValue} 
+              handleLiveUpdate={handleLiveUpdate} 
+              handleArrayUpdate={handleArrayUpdate} 
+            />
+          </div>
         )}
 
         {(isOwner || (user.projects?.length > 0) || (user.portfolio?.length > 0)) && (
-          <Showcase 
-            user={user} 
-            isOwner={isOwner} 
-            projects={projects} 
-            displayValue={displayValue} 
-            handleArrayUpdate={handleArrayUpdate} 
-            dispatch={dispatch} 
-            deleteProjectThunk={deleteProjectThunk} 
-            openProjectModalThunk={openProjectModalThunk} 
-          />
+          <div className="cv-section">
+            <Showcase 
+              user={user} 
+              isOwner={isOwner} 
+              projects={projects} 
+              displayValue={displayValue} 
+              handleArrayUpdate={handleArrayUpdate} 
+              dispatch={dispatch} 
+              deleteProjectThunk={deleteProjectThunk} 
+              openProjectModalThunk={openProjectModalThunk} 
+            />
+          </div>
         )}
 
         {(isOwner || (Array.isArray(user.skills) ? user.skills.length > 0 : (user.skills?.technical?.length > 0)) || (user.services?.length > 0)) && (
-          <Skills 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-            githubStats={githubData}
-            projectsCount={projects.length}
-          />
+          <div className="cv-section">
+            <Skills 
+              user={user} 
+              isOwner={isOwner} 
+              displayValue={displayValue} 
+              handleLiveUpdate={handleLiveUpdate} 
+              handleArrayUpdate={handleArrayUpdate} 
+              githubStats={githubData}
+              projectsCount={projects.length}
+            />
+          </div>
         )}
 
         {(isOwner || (user.education?.length > 0)) && (
-          <Education 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
+          <div className="cv-section">
+            <Education 
+              user={user} 
+              isOwner={isOwner} 
+              displayValue={displayValue} 
+              handleLiveUpdate={handleLiveUpdate} 
+              handleArrayUpdate={handleArrayUpdate} 
+            />
+          </div>
         )}
 
         {(isOwner || (user.certifications?.length > 0)) && (
-          <Certifications user={user} isOwner={isOwner} />
+          <div className="cv-section">
+            <Certifications user={user} isOwner={isOwner} />
+          </div>
         )}
 
         {(isOwner || (user.achievements?.length > 0) || (user.languages?.length > 0)) && (
-          <Dossier 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
+          <div className="cv-section">
+            <Dossier 
+              user={user} 
+              isOwner={isOwner} 
+              displayValue={displayValue} 
+              handleLiveUpdate={handleLiveUpdate} 
+              handleArrayUpdate={handleArrayUpdate} 
+            />
+          </div>
         )}
 
         {(isOwner || (user.testimonials?.length > 0)) && (
-          <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
+          <div className="cv-section">
+            <Testimonials user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} displayValue={displayValue} />
+          </div>
         )}
 
         {(isOwner || (user.interests?.length > 0)) && (
-          <Interests 
-            user={user} 
-            isOwner={isOwner} 
-            displayValue={displayValue} 
-            handleLiveUpdate={handleLiveUpdate} 
-            handleArrayUpdate={handleArrayUpdate} 
-          />
+          <div className="cv-section">
+            <Interests 
+              user={user} 
+              isOwner={isOwner} 
+              displayValue={displayValue} 
+              handleLiveUpdate={handleLiveUpdate} 
+              handleArrayUpdate={handleArrayUpdate} 
+            />
+          </div>
         )}
 
-        <Contact 
-          user={user} 
-          isOwner={isOwner} 
-          contactForm={contactForm} 
-          setContactForm={setContactForm} 
-          handleContactSubmit={handleContactSubmit} 
-          isSending={isSending} 
-          handleLiveUpdate={handleLiveUpdate} 
-          ensureAbsoluteUrl={ensureAbsoluteUrl} 
-        />
+        <div className="cv-section">
+          <Contact 
+            user={user} 
+            isOwner={isOwner} 
+            contactForm={contactForm} 
+            setContactForm={setContactForm} 
+            handleContactSubmit={handleContactSubmit} 
+            isSending={isSending} 
+            handleLiveUpdate={handleLiveUpdate} 
+            ensureAbsoluteUrl={ensureAbsoluteUrl} 
+          />
+        </div>
 
         <Footer personalInfo={personalInfo} />
       </Suspense>
