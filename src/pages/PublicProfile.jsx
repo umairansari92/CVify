@@ -228,9 +228,11 @@ const PublicProfile = () => {
     if (newTheme.textSecondary) root.style.setProperty('--text-secondary', newTheme.textSecondary);
 
     // ⚡ STEP 2: Low-priority state update — UI stays responsive during React re-render
-    startTransition(() => {
-      setLocalTheme(newTheme);
-    });
+    setTimeout(() => {
+      startTransition(() => {
+        setLocalTheme(newTheme);
+      });
+    }, 0);
 
     // ⚡ STEP 3: Debounced server sync — doesn't block anything
     if (window.themeUpdateTimeout) clearTimeout(window.themeUpdateTimeout);
@@ -409,7 +411,7 @@ const PublicProfile = () => {
                     <h3 className="text-2xl font-black">Select Version</h3>
                     <p className="text-xs font-bold opacity-40 uppercase tracking-widest">Targeted for specific roles</p>
                   </div>
-                  <button onClick={() => setShowResumeModal(false)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
+                  <button onClick={() => setTimeout(() => setShowResumeModal(false), 0)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
                     <FaTimes />
                   </button>
                 </div>
@@ -420,7 +422,12 @@ const PublicProfile = () => {
                       <div className="flex flex-col gap-2 w-full" key={resume._id}>
                         <div className="flex items-center justify-between w-full">
                           <button 
-                            onClick={() => { handleDownloadPDF(resume, resume.templateId); setShowResumeModal(false); }}
+                            onClick={() => { 
+                              setTimeout(() => {
+                                handleDownloadPDF(resume, resume.templateId); 
+                                setShowResumeModal(false); 
+                              }, 0);
+                            }}
                             className="flex-1 p-8 bg-white/5 border border-white/10 hover:border-[var(--primary-color)]/50 rounded-[2rem] flex items-center justify-between group transition-all mr-2 relative overflow-hidden"
                           >
                             <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity">
@@ -446,7 +453,7 @@ const PublicProfile = () => {
                           
                           {isOwner && (
                             <button 
-                              onClick={() => handleTogglePublic(resume._id, resume.isPublic)}
+                              onClick={() => setTimeout(() => startTransition(() => handleTogglePublic(resume._id, resume.isPublic)), 0)}
                               className={`p-6 rounded-3xl border transition-all ${resume.isPublic ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" : "bg-white/5 border-white/10 text-white/40"}`}
                               title={resume.isPublic ? "Publicly Shared" : "Private (Hidden)"}
                             >
@@ -526,7 +533,7 @@ const PublicProfile = () => {
           {/* COLUMN A (LEFT): Premium CVify Logo with Shine Effect */}
           <div 
             className="flex items-center gap-4 cursor-pointer group" 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0)}
           >
             {/* App Icon */}
             <div className="relative flex items-center justify-center w-14 h-14 rounded-2xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
@@ -561,7 +568,9 @@ const PublicProfile = () => {
                   href={`#${getSectionId(item)}`} 
                   onClick={(e) => {
                     e.preventDefault();
-                    document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => {
+                      document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
+                    }, 0);
                   }}
                   className="text-[var(--text-secondary)] hover:text-[var(--primary-color)] text-[10px] font-black uppercase tracking-widest transition-colors whitespace-nowrap"
                 >
@@ -577,14 +586,14 @@ const PublicProfile = () => {
             )}
 
             <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setTimeout(() => startTransition(() => setIsMenuOpen(!isMenuOpen)), 0)}
               className="lg:hidden p-3 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-primary)] hover:bg-[var(--primary-color)]/20 transition-all"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             
             <button 
-              onClick={() => setShowResumeModal(true)}
+              onClick={() => setTimeout(() => startTransition(() => setShowResumeModal(true)), 0)}
               className="hidden md:flex px-6 py-3 bg-[var(--primary-color)] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_var(--primary-color)]/30"
             >
               Get CV
@@ -607,8 +616,10 @@ const PublicProfile = () => {
                   href={`#${getSectionId(item)}`} 
                   onClick={(e) => {
                     e.preventDefault();
-                    setIsMenuOpen(false);
-                    document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => {
+                      startTransition(() => setIsMenuOpen(false));
+                      document.getElementById(getSectionId(item))?.scrollIntoView({ behavior: 'smooth' });
+                    }, 0);
                   }}
                   className="text-[var(--text-primary)] text-2xl font-black uppercase tracking-tighter hover:text-[var(--primary-color)] transition-colors"
                 >
@@ -617,7 +628,14 @@ const PublicProfile = () => {
               ))}
               <hr className="border-[var(--card-border)]" />
               <button 
-                onClick={() => { setIsMenuOpen(false); setShowResumeModal(true); }}
+                onClick={() => { 
+                  setTimeout(() => {
+                    startTransition(() => {
+                      setIsMenuOpen(false); 
+                      setShowResumeModal(true); 
+                    });
+                  }, 0);
+                }}
                 className="w-full py-5 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest"
               >
                 Download Resume
@@ -751,7 +769,7 @@ const PublicProfile = () => {
               <FaPalette className="text-xl group-hover:rotate-12 transition-transform" />
             </button>
           </div>
-          <ThemePanel isOpen={showThemePanel} onClose={() => setShowThemePanel(false)} theme={theme} onUpdate={handleThemeUpdate} isUpdating={isUpdating} presets={themePresets} />
+          <ThemePanel isOpen={showThemePanel} onClose={() => setTimeout(() => startTransition(() => setShowThemePanel(false)), 0)} theme={theme} onUpdate={handleThemeUpdate} isUpdating={isUpdating} presets={themePresets} />
         </>
       )}
 
