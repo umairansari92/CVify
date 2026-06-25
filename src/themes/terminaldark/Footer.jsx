@@ -40,17 +40,13 @@ const Footer = ({ user }) => {
 
       {/* Bottom tagline */}
       <div className="mt-6 text-center">
-        <p className="text-[#aaa6c3] text-[13px]">
-          &copy; {new Date().getFullYear()} {fullName}. Built with{" "}
-          <span className="text-red-500 text-base">❤</span> using{" "}
-          <a
-            href="https://cvifypro.vercel.app"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#915eff] hover:underline font-semibold"
-          >
-            CVify Pro
-          </a>
+        <p className="text-[#aaa6c3] text-[13px] flex flex-col items-center gap-2">
+          <span>© 2026 DataVerse Technologies. All rights reserved.</span>
+          <span>
+            Powered by: <a href="https://dataversetechnologies.vercel.app/" target="_blank" rel="noreferrer" className="text-[#915eff] hover:underline font-semibold">DataVerse Technologies</a>
+            {" | "}
+            Designed & Developed by: <a href="https://app-cvifypro.vercel.app/p/umairansari92" target="_blank" rel="noreferrer" className="text-white hover:underline font-semibold">Umair Ahmed</a>
+          </span>
         </p>
       </div>
     </footer>

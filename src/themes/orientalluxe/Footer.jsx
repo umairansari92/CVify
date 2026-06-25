@@ -56,23 +56,34 @@ const Footer = ({ user }) => {
         )}
 
         {/* Copyright */}
-        <p
-          className="text-xs"
+        <div
+          className="text-xs flex flex-col items-center gap-2"
           style={{ color: tokens.colors.textMuted }}
         >
-          © {new Date().getFullYear()} {fullName}. Built with{" "}
-          <FaHeart className="inline text-red-500 mx-0.5" size={10} />{" "}
-          using{" "}
-          <a
-            href="https://app-cvifypro.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold transition-colors duration-200"
-            style={{ color: tokens.colors.accent }}
-          >
-            CVify Pro
-          </a>
-        </p>
+          <p>© 2026 DataVerse Technologies. All rights reserved.</p>
+          <p>
+            Powered by:{" "}
+            <a
+              href="https://dataversetechnologies.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold transition-colors duration-200"
+              style={{ color: tokens.colors.accent }}
+            >
+              DataVerse Technologies
+            </a>
+            <span className="mx-2 opacity-50">|</span>
+            Designed & Developed by:{" "}
+            <a
+              href="https://app-cvifypro.vercel.app/p/umairansari92"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold transition-colors duration-200 text-white"
+            >
+              Umair Ahmed
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
