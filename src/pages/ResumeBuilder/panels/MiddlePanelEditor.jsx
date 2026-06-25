@@ -110,7 +110,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
                      <Trash2 size={16} />
                    </button>
                     <button 
-                      onClick={onSave}
+                      onClick={() => onSave()}
                       className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                     >
                       <Save size={14} /> Save Section
