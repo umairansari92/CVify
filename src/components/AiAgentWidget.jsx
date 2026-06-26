@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { FaRobot } from 'react-icons/fa';
-import { useAgentStream } from '../hooks/useAgentStream';
+import { useAgentStream } from '../hooks/useAgentStream.jsx';
 
 // ── Premium link rendering for contact/social links ──────────────────
 const MarkdownComponents = {
