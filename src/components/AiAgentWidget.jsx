@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { FaRobot } from 'react-icons/fa';
 import { useAgentStream } from '../hooks/useAgentStream';
 
-// ── Render contact/external links as premium glassmorphism buttons ──
+// ── Premium link rendering for contact/social links ──────────────────
 const MarkdownComponents = {
   a: ({ node, ...props }) => {
     const isContactLink =
@@ -37,132 +37,63 @@ const MarkdownComponents = {
   },
   p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
   ul: ({ node, ...props }) => <ul className="space-y-1 my-1" {...props} />,
-  li: ({ node, ...props }) => <li className="flex gap-2 items-start"><span className="text-teal-400 mt-1 shrink-0">•</span><span {...props} /></li>,
+  li: ({ node, ...props }) => (
+    <li className="flex gap-2 items-start">
+      <span className="text-teal-400 mt-1 shrink-0">•</span>
+      <span {...props} />
+    </li>
+  ),
 };
 
-// ── Local Knowledge Engine (Client-Side Hydration) ──
-const localIntents = {
-  intro: ["introduce", "who is", "about", "summary", "intro"],
-  experience: ["experience", "job", "work", "history", "position", "company", "worked"],
-  projects: ["project", "portfolio", "built", "apps", "cvify", "lifesync", "nikhaar"],
-  skills: ["skills", "tech", "stack", "technologies", "expert", "expertise"],
-  services: ["services", "offering", "solutions"],
-  strategic: ["strategic", "mindset", "soft skills", "collaboration", "management", "problem solving"],
-  education: ["education", "degree", "university", "college", "school", "certifications", "certificate", "eaducation", "academic"],
-  contact: ["contact", "email", "phone", "call", "reach", "message", "linkedin", "github", "social"],
-  location: ["location", "where", "based", "city", "country", "live", "address"],
-  availability: ["available", "availability", "hire", "freelance", "full-time", "part-time"]
+// ── Parse [ACTIONS: Btn1 | Btn2 | Btn3] from LLM output ──────────────
+const parseActions = (text) => {
+  const match = text?.match(/\[ACTIONS:\s*([^\]]+)\]/);
+  if (!match) return { cleanText: text, actions: [] };
+
+  const rawButtons = match[1].split('|').map((b) => b.trim()).filter(Boolean);
+  const actions = rawButtons.map((label) => ({
+    label,
+    prompt: label.replace(/^[\p{Emoji}\s]+/u, '').trim(),
+  }));
+  const cleanText = text.replace(/\[ACTIONS:[^\]]+\]/g, '').trim();
+  return { cleanText, actions };
 };
 
-const serializeExperience = (experience) => {
-  if (!Array.isArray(experience) || experience.length === 0) return "No experience listed.";
-  return experience.map(e => {
-    const title = e.jobTitle || e.role || "Role";
-    const company = e.company || "Company";
-    const period = `${e.startDate || ""}${e.endDate ? " – " + e.endDate : " – Present"}`;
-    const desc = e.description ? `\n  ${e.description.slice(0, 250)}${e.description.length > 250 ? '...' : ''}` : "";
-    return `- **${title}** at ${company} (${period})${desc}`;
-  }).join("\n\n");
-};
-
-const serializeServices = (services) => {
-  if (!Array.isArray(services) || services.length === 0) return "No services listed.";
-  return services.map(s => {
-    const title = typeof s === "string" ? s : s.title || s.name || "";
-    const desc = s.description ? `: ${s.description.slice(0, 250)}${s.description.length > 250 ? '...' : ''}` : "";
-    return `- **${title}**${desc}`;
-  }).join("\n");
-};
-
-const serializeStrategicSkills = (skills) => {
-  if (!Array.isArray(skills) || skills.length === 0) return "No strategic skills listed.";
-  return skills.map(s => {
-    const name = typeof s === "string" ? s : s.title || s.name || "";
-    return `- **${name}**`;
-  }).join("\n");
-};
-
-const serializeProjects = (projects) => {
-  if (!Array.isArray(projects) || projects.length === 0) return "No projects listed.";
-  return projects.map(p => {
-    const name = p.title || p.name || "Untitled";
-    const desc = p.description ? p.description.slice(0, 250) + (p.description.length > 250 ? '...' : '') : "";
-    const tech = p.techStack?.length ? ` | Tech: ${p.techStack.join(", ")}` : "";
-    const ghLink = p.githubLink ? ` | [GitHub](${p.githubLink})` : "";
-    const liveLink = p.liveLink ? ` | [Live](${p.liveLink})` : "";
-    return `- **${name}**: ${desc}${tech}${ghLink}${liveLink}`;
-  }).join("\n\n");
-};
-
-const serializeEducation = (education, certifications) => {
-  const eduLines = Array.isArray(education) ? education.map(e =>
-    `- **${e.degree || "Degree"}** — ${e.institution || "Institution"} (${e.graduationYear || e.endDate || ""})`
-  ) : [];
-  const certLines = Array.isArray(certifications) ? certifications.map(c => 
-    `- **${c.name || c.title || "Certificate"}**${c.issuer ? ` from ${c.issuer}` : ""}`
-  ) : [];
-  
-  const allLines = [...eduLines, ...certLines];
-  return allLines.length > 0 ? allLines.join("\n") : "No education or certifications listed.";
-};
-
-// ── Dynamically generates quick action buttons based on available profile data ──
-const buildQuickActions = (profile) => {
+// ── Determine profession-aware initial buttons ────────────────────────
+const buildInitialQuickActions = (profile) => {
   if (!profile) return [];
   const actions = [];
-  
-  const strategicSkills = Array.isArray(profile.strategic_skills) ? profile.strategic_skills : (Array.isArray(profile.strategicSkills) ? profile.strategicSkills : (Array.isArray(profile.skills) ? profile.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name) : []));
-  const services = Array.isArray(profile.services) ? profile.services : (Array.isArray(profile.servicesOffering) ? profile.servicesOffering : []);
 
-  // Always present
-  actions.push({ icon: '🧑', label: 'Introduce Candidate', prompt: `Give me a concise professional introduction of this candidate.` });
+  const hasProjects =
+    (Array.isArray(profile.projects) && profile.projects.length > 0) ||
+    (Array.isArray(profile.portfolio) && profile.portfolio.length > 0);
+  const hasSkills = Array.isArray(profile.skills) && profile.skills.length > 0;
+  const hasServices =
+    (Array.isArray(profile.services) && profile.services.length > 0) ||
+    (Array.isArray(profile.servicesOffering) && profile.servicesOffering.length > 0);
+  const hasCerts = Array.isArray(profile.certifications) && profile.certifications.length > 0;
 
-  if (Array.isArray(profile.experience) && profile.experience.length > 0) {
-    actions.push({ icon: '💼', label: 'Show Experience', prompt: `Summarize ${[profile.firstName, profile.lastName].filter(Boolean).join(' ')}'s work experience.` });
-  }
+  actions.push({ label: '👤 About', prompt: 'Give me a professional introduction of this candidate.' });
+  actions.push({ label: '💼 Experience', prompt: 'Summarize the professional experience.' });
+  if (hasProjects) actions.push({ label: '🚀 Projects', prompt: 'Tell me about their featured projects.' });
+  if (hasSkills) actions.push({ label: '🛠 Skills', prompt: 'What are their technical skills and expertise?' });
+  if (hasServices) actions.push({ label: '🤝 Services', prompt: 'What services are offered?' });
+  if (hasCerts) actions.push({ label: '🎓 Certifications', prompt: 'Show their certifications.' });
+  actions.push({ label: '📞 Contact', prompt: 'How can I contact this person?' });
 
-  const projects = Array.isArray(profile.projects) ? profile.projects : (Array.isArray(profile.portfolio) ? profile.portfolio : []);
-  if (projects.length > 0) {
-    actions.push({ icon: '🚀', label: 'View Projects', prompt: `Show me the notable projects from this portfolio.` });
-  }
-
-  if (Array.isArray(profile.skills) && profile.skills.length > 0) {
-    actions.push({ icon: '🛠', label: 'Explore Skills', prompt: `What technologies and skills does this candidate have?` });
-  }
-
-  if (strategicSkills.length > 0) {
-    actions.push({ icon: '🧠', label: 'Strategic Skills', prompt: `What are their strategic skills?` });
-  }
-
-  if (services.length > 0) {
-    actions.push({ icon: '🤝', label: 'Services Offering', prompt: `What services does this candidate offer?` });
-  }
-
-  if (Array.isArray(profile.certifications) && profile.certifications.length > 0) {
-    actions.push({ icon: '🎓', label: 'Certifications', prompt: `What certifications does this candidate hold?` });
-  }
-
-  if (Array.isArray(profile.testimonials) && profile.testimonials.length > 0) {
-    actions.push({ icon: '⭐', label: 'Testimonials', prompt: `Show testimonials from this candidate's profile.` });
-  }
-
-  // Contact — show if any contact channel exists
-  const hasContact = profile.email || profile.phoneNumber ||
-    profile.socialLinks?.linkedin || profile.socialLinks?.github;
-  if (hasContact) {
-    actions.push({ icon: '📞', label: 'Contact Candidate', prompt: `How can I contact this candidate?` });
-  }
-
-  return actions;
+  return actions.slice(0, 6);
 };
 
 export const AiAgentWidget = ({ profileData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [dynamicActions, setDynamicActions] = useState([]);
   const endOfMessagesRef = useRef(null);
 
   const ownerName = profileData
-    ? [profileData.firstName, profileData.lastName].filter(Boolean).join(' ') || profileData.name || 'the candidate'
+    ? [profileData.firstName, profileData.lastName].filter(Boolean).join(' ') ||
+      profileData.name ||
+      'the candidate'
     : 'the candidate';
 
   const apiUrl = import.meta.env.VITE_API_URL
@@ -171,161 +102,50 @@ export const AiAgentWidget = ({ profileData }) => {
 
   const { messages, sendMessage, isTyping, addLocalMessage } = useAgentStream(apiUrl, profileData);
 
-  // Compute quick actions once when profile data is available
-  const quickActions = useMemo(() => buildQuickActions(profileData), [profileData]);
+  // Profession-aware initial quick actions
+  const initialActions = useMemo(() => buildInitialQuickActions(profileData), [profileData]);
 
-  // Auto-scroll to bottom
+  // After each assistant message, parse [ACTIONS:...] from the last message
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === 'assistant') {
+      const { actions } = parseActions(lastMsg.content);
+      if (actions.length > 0) {
+        setDynamicActions(actions);
+      }
+    }
+  }, [messages]);
+
+  // Auto-scroll
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isTyping]);
 
-  const handleSmartQuery = (userQuery) => {
+  const handleSend = (userQuery) => {
     if (!userQuery.trim()) return;
-    const query = userQuery.toLowerCase().trim();
-
-    // Helper to check intent matches
-    const hasIntent = (intentKey) => localIntents[intentKey].some(k => query.includes(k));
-
-    if (hasIntent("intro") || query === "hi" || query === "hello") {
-      const briefHeadline = profileData?.headline ? profileData.headline.split(",").slice(0, 2).join(" & ") : "Professional";
-      addLocalMessage(userQuery, `Hello! I represent **${ownerName}**, a ${briefHeadline}. What would you like to explore?`);
-      return;
-    }
-
-    if (hasIntent("experience")) {
-      addLocalMessage(userQuery, `Here is the work experience for **${ownerName}**:\n${serializeExperience(profileData.experience)}`);
-      return;
-    }
-
-    if (hasIntent("services")) {
-      const services = Array.isArray(profileData.services) ? profileData.services : (Array.isArray(profileData.servicesOffering) ? profileData.servicesOffering : []);
-      addLocalMessage(userQuery, `Here are the services and offerings:\n${serializeServices(services)}`);
-      return;
-    }
-
-    if (hasIntent("strategic")) {
-      const strategicSkills = Array.isArray(profileData.strategic_skills) ? profileData.strategic_skills : (Array.isArray(profileData.strategicSkills) ? profileData.strategicSkills : (Array.isArray(profileData.skills) ? profileData.skills.filter(s => s.category?.toLowerCase() === 'strategic').map(s => s.name) : []));
-      addLocalMessage(userQuery, `Here are the strategic skills and mindset attributes:\n${serializeStrategicSkills(strategicSkills)}`);
-      return;
-    }
-
-    if (hasIntent("projects")) {
-      const projects = Array.isArray(profileData.projects) ? profileData.projects : profileData.portfolio;
-      addLocalMessage(userQuery, `Notable projects in the portfolio:\n${serializeProjects(projects)}`);
-      return;
-    }
-
-    if (hasIntent("skills")) {
-      const techSkills = Array.isArray(profileData.skills) 
-        ? profileData.skills.filter(s => s.category?.toLowerCase() !== 'strategic').map(s => typeof s === "string" ? s : s.name).filter(Boolean)
-        : [];
-      const skillText = techSkills.length > 0 ? techSkills.join(", ") : "No technical skills listed.";
-      addLocalMessage(userQuery, `Core technical skills and expertise:\n${skillText}`);
-      return;
-    }
-
-    if (hasIntent("education")) {
-      addLocalMessage(userQuery, `Academic background and certifications:\n${serializeEducation(profileData.education, profileData.certifications)}`);
-      return;
-    }
-
-    if (hasIntent("contact")) {
-      const links = [];
-      if (profileData.email) links.push(`- **Email:** [${profileData.email}](mailto:${profileData.email})`);
-      if (profileData.phoneNumber) links.push(`- **Phone:** [${profileData.phoneNumber}](tel:${profileData.phoneNumber})`);
-      if (profileData.socialLinks?.linkedin) links.push(`- **LinkedIn:** [Profile](${profileData.socialLinks.linkedin})`);
-      if (profileData.socialLinks?.github) links.push(`- **GitHub:** [Profile](${profileData.socialLinks.github})`);
-      
-      if (links.length > 0) {
-        addLocalMessage(userQuery, `You can reach out to **${ownerName}** via the following channels:\n${links.join('\n')}`);
-      } else {
-        addLocalMessage(userQuery, `I don't have direct contact information for **${ownerName}**, but you can use the contact form on this portfolio.`);
-      }
-      return;
-    }
-
-    if (hasIntent("location")) {
-      addLocalMessage(userQuery, profileData.location 
-        ? `**${ownerName}** is based in **${profileData.location}**.` 
-        : `I don't have a specific location listed for **${ownerName}**.`);
-      return;
-    }
-
-    if (hasIntent("availability")) {
-      addLocalMessage(userQuery, profileData.availability 
-        ? `**${ownerName}**'s current availability is: **${profileData.availability}**.` 
-        : `I don't have specific availability listed right now, but feel free to reach out via contact options!`);
-      return;
-    }
-
-    // ── DEEP SCANNING ENGINE (Zero-Latency NLP) ──
-    const stopWords = ["does", "do", "is", "can", "know", "knows", "has", "have", "he", "she", "they", "the", "a", "an",
-      "about", "any", "experience", "with", "in", "of", "and", "or", "for", "to", "what", "his", "her", "their",
-      "skills", "skill", "project", "projects", "work", "works", "tell", "me", "please", "show", "list", "give",
-      "hi", "hello", "hey", "contact", "how", "who", "where", "when", "why", "which", "summarize", "summary", "this", "candidate"];
-
-    const keywords = query.split(/\s+/).filter(w => w.length > 1 && !stopWords.includes(w));
-    
-    if (keywords.length > 0) {
-      // 1. Scan Skills
-      const techSkills = Array.isArray(profileData.skills) 
-        ? profileData.skills.filter(s => s.category?.toLowerCase() !== 'strategic').map(s => typeof s === "string" ? s : s.name).filter(Boolean) 
-        : [];
-      const matchedSkills = techSkills.filter(s => keywords.some(k => s.toLowerCase().includes(k) || k.includes(s.toLowerCase())));
-      
-      if (matchedSkills.length > 0) {
-        addLocalMessage(userQuery, `Yes, **${matchedSkills.join(", ")}** is part of ${ownerName}'s technical expertise.\n\nHere is the full technical stack:\n${techSkills.join(", ")}`);
-        return;
-      }
-
-      // 2. Scan Projects
-      const projects = Array.isArray(profileData.projects) ? profileData.projects : (Array.isArray(profileData.portfolio) ? profileData.portfolio : []);
-      const matchedProjects = projects.filter(p => 
-        keywords.some(k => 
-          (p.techStack && p.techStack.some(t => t.toLowerCase().includes(k))) ||
-          (p.title && p.title.toLowerCase().includes(k)) ||
-          (p.description && p.description.toLowerCase().includes(k)) ||
-          (p.name && p.name.toLowerCase().includes(k))
-        )
-      );
-      if (matchedProjects.length > 0) {
-        addLocalMessage(userQuery, `I found relevant projects in the portfolio:\n\n${serializeProjects(matchedProjects)}`);
-        return;
-      }
-
-      // 3. Scan Experience
-      const experience = Array.isArray(profileData.experience) ? profileData.experience : [];
-      const matchedExp = experience.filter(e => 
-        keywords.some(k => 
-          (e.company && e.company.toLowerCase().includes(k)) ||
-          (e.jobTitle && e.jobTitle.toLowerCase().includes(k)) ||
-          (e.role && e.role.toLowerCase().includes(k)) ||
-          (e.description && e.description.toLowerCase().includes(k))
-        )
-      );
-      if (matchedExp.length > 0) {
-        addLocalMessage(userQuery, `I found relevant work experience for **${ownerName}**:\n\n${serializeExperience(matchedExp)}`);
-        return;
-      }
-    }
-
-    // Default Fallback to Groq API
+    setDynamicActions([]); // Clear old action buttons while AI is responding
     sendMessage(userQuery);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (input.trim()) {
-      handleSmartQuery(input);
+      handleSend(input);
       setInput('');
     }
   };
 
   const handleQuickAction = (prompt) => {
-    handleSmartQuery(prompt);
+    handleSend(prompt);
   };
+
+  // Active quick actions: use dynamicActions from LLM if available, else initialActions
+  const activeActions = dynamicActions.length > 0 ? dynamicActions : initialActions;
+
+  // Clean message content — strip [ACTIONS:...] from display
+  const getDisplayContent = (content) => parseActions(content).cleanText;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -336,7 +156,7 @@ export const AiAgentWidget = ({ profileData }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute bottom-20 right-0 w-80 sm:w-96 h-[560px] flex flex-col bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden"
+            className="absolute bottom-20 right-0 w-80 sm:w-96 h-[580px] flex flex-col bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.6)] overflow-hidden"
           >
             {/* ── Header ── */}
             <div className="px-5 py-4 border-b border-slate-700/40 bg-slate-800/60 flex justify-between items-center shrink-0">
@@ -349,10 +169,10 @@ export const AiAgentWidget = ({ profileData }) => {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold text-sm tracking-wide leading-none">
-                    {ownerName}'s AI Representative
+                    {ownerName}
                   </h3>
-                  <p className="text-teal-400/50 text-[10px] tracking-widest uppercase mt-0.5">
-                    Portfolio Guide · Online
+                  <p className="text-teal-400/60 text-[10px] tracking-widest uppercase mt-0.5">
+                    Portfolio Guide · Ready to assist
                   </p>
                 </div>
               </div>
@@ -371,21 +191,47 @@ export const AiAgentWidget = ({ profileData }) => {
               className="flex-1 overflow-y-auto p-4 space-y-3"
               style={{ scrollbarWidth: 'thin', scrollbarColor: '#334155 transparent' }}
             >
-              {/* Empty state: intro + quick action buttons */}
+              {/* Welcome state */}
               {messages.length === 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  {/* Intro card */}
-                  <div className="bg-slate-800/60 border border-slate-700/40 rounded-2xl rounded-tl-sm p-4 space-y-1">
-                    <p className="text-slate-200 text-sm font-medium">
-                      👋 Hi! I represent <span className="text-teal-400 font-semibold">{ownerName}</span>.
+                  <div className="bg-slate-800/60 border border-slate-700/40 rounded-2xl rounded-tl-sm p-4 space-y-2">
+                    <p className="text-slate-200 text-sm font-semibold">
+                      👋 Welcome!
+                    </p>
+                    <p className="text-slate-300 text-xs leading-relaxed">
+                      I'm the Portfolio Guide for{' '}
+                      <span className="text-teal-400 font-semibold">{ownerName}</span>.
                     </p>
                     <p className="text-slate-400 text-xs leading-relaxed">
-                      I can help you quickly learn about their experience, projects, skills, and how to get in touch.
+                      I can help you explore this professional profile without browsing every section manually — whether you're a recruiter, potential client, developer, or just curious.
                     </p>
+                    <p className="text-slate-300 text-xs font-medium mt-1">
+                      How would you like to get started?
+                    </p>
+                  </div>
+
+                  {/* Persona selector buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { label: '👔 I\'m a Recruiter', prompt: 'I am a recruiter evaluating this candidate for a role.' },
+                      { label: '🤝 Potential Client', prompt: 'I am a potential client interested in the services offered.' },
+                      { label: '💻 Developer', prompt: 'I am a developer and want to explore the technical projects and stack.' },
+                      { label: '👋 Just Browsing', prompt: 'Just give me a general overview of this portfolio.' },
+                    ].map((action, idx) => (
+                      <motion.button
+                        key={idx}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleQuickAction(action.prompt)}
+                        className="px-3 py-2 bg-slate-700/40 hover:bg-teal-500/20 text-slate-300 hover:text-teal-300 border border-slate-600/40 hover:border-teal-500/50 rounded-xl text-xs font-medium transition-all duration-200"
+                      >
+                        {action.label}
+                      </motion.button>
+                    ))}
                   </div>
                 </motion.div>
               )}
@@ -409,7 +255,7 @@ export const AiAgentWidget = ({ profileData }) => {
                       msg.content
                     ) : (
                       <ReactMarkdown components={MarkdownComponents}>
-                        {msg.content}
+                        {getDisplayContent(msg.content)}
                       </ReactMarkdown>
                     )}
                   </div>
@@ -430,19 +276,18 @@ export const AiAgentWidget = ({ profileData }) => {
               <div ref={endOfMessagesRef} />
             </div>
 
-            {/* ── Persistent Quick Action Matrix ── */}
-            {profileData && quickActions.length > 0 && !isTyping && (
+            {/* ── Contextual Quick Actions ── */}
+            {profileData && activeActions.length > 0 && !isTyping && messages.length > 0 && (
               <div className="bg-slate-800/90 border-t border-slate-700/40 shrink-0 p-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
                 <div className="flex gap-2">
-                  {quickActions.map((action, idx) => (
+                  {activeActions.map((action, idx) => (
                     <motion.button
-                      key={idx}
+                      key={`${action.label}-${idx}`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleQuickAction(action.prompt)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/30 hover:bg-slate-700/70 text-slate-300 hover:text-teal-400 border border-slate-600/30 hover:border-teal-500/40 rounded-xl text-xs font-medium transition-all duration-200"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/30 hover:bg-slate-700/70 text-slate-300 hover:text-teal-400 border border-slate-600/30 hover:border-teal-500/40 rounded-xl text-xs font-medium transition-all duration-200 whitespace-nowrap"
                     >
-                      <span className="text-sm">{action.icon}</span>
                       {action.label}
                     </motion.button>
                   ))}
@@ -472,7 +317,7 @@ export const AiAgentWidget = ({ profileData }) => {
                 </button>
               </form>
               <p className="text-center text-[9px] text-slate-600 mt-2 tracking-wide">
-                Powered by CVify Pro · AI Representative
+                Powered by CVify Pro · AI Portfolio Guide
               </p>
             </div>
           </motion.div>
@@ -486,13 +331,13 @@ export const AiAgentWidget = ({ profileData }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="relative w-14 h-14 bg-slate-900 border-2 border-teal-500/50 rounded-full flex items-center justify-center text-teal-400 shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_35px_rgba(20,184,166,0.5)] backdrop-blur-sm transition-shadow group overflow-visible"
       >
-        {/* Neon Pulse Ring for "Online" Status */}
+        {/* Neon Pulse Ring */}
         <div className="absolute inset-0 rounded-full border border-teal-400/50 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-500/10 to-transparent overflow-hidden">
           {profileData?.profilePicture || profileData?.avatar ? (
-            <img 
-              src={profileData.profilePicture || profileData.avatar} 
-              alt="AI Rep" 
+            <img
+              src={profileData.profilePicture || profileData.avatar}
+              alt="Portfolio Guide"
               className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
             />
           ) : (
@@ -502,7 +347,7 @@ export const AiAgentWidget = ({ profileData }) => {
           )}
         </div>
 
-        {/* Unread indicator — visible before first open */}
+        {/* Unread dot before first open */}
         {!isOpen && messages.length === 0 && (
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-teal-400 rounded-full border-2 border-slate-900 flex items-center justify-center z-10 shadow-[0_0_10px_rgba(20,184,166,0.8)]">
             <span className="text-[8px] font-black text-slate-900">1</span>
@@ -510,12 +355,12 @@ export const AiAgentWidget = ({ profileData }) => {
         )}
         <AnimatePresence mode="wait">
           {isOpen && (
-            <motion.div 
-              key="close" 
-              initial={{ rotate: -90, opacity: 0 }} 
-              animate={{ rotate: 0, opacity: 1 }} 
-              exit={{ rotate: 90, opacity: 0 }} 
-              transition={{ duration: 0.15 }} 
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
               className="absolute inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm rounded-full z-20"
             >
               <svg className="w-6 h-6 text-teal-400 drop-shadow-[0_0_5px_rgba(20,184,166,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
