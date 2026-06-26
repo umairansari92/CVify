@@ -31,6 +31,7 @@ const Documentation = () => {
         { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
         { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
         { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
+        { id: "ai-gateway", icon: <ShieldCheck size={16} />, label: "Enterprise AI Gateway (New!)" },
       ]
     },
     {
@@ -731,6 +732,52 @@ const Documentation = () => {
           <InfoCard icon={<Database size={16} />} color="amber" title="Server/utils/blockedDomains.js" desc="A curated Set of 200+ disposable/temporary email domains. Exported isDisposableEmail() is called on signup and referral to block abuse." />
           <InfoCard icon={<Layers size={16} />} color="red" title="Server/server.js" desc="Express app entry point. Mounts Helmet globally, registers the BFF router (/api/v1/bff/dashboard), and bootstraps MongoDB Atlas connection." />
           <InfoCard icon={<Globe size={16} />} color="blue" title="vercel.json" desc="Rewrites rule: all /* routes map to the Vite build output so React Router handles client-side navigation without 404s on refresh." />
+        </div>
+      </>
+    ),
+
+    "ai-gateway": (
+      <>
+        <DocHeader title="Enterprise AI Gateway" badge="Architecture" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          The CVify Pro AI backend has officially transitioned from a monolithic controller prototype to a highly resilient, <strong className="text-primary">Enterprise-Grade AI Gateway</strong>. It handles traffic routing, cost optimization, and safe fallback mechanisms gracefully, ensuring 100% uptime for users.
+        </p>
+
+        <SectionTitle>Why We Built It</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          <InfoCard icon={<Zap size={16} />} color="amber" title="Cost & Latency Optimization" desc="Why call an LLM when the answer is already in the database? The Gateway bypasses AI entirely for factual matches, saving $0.003 per query and returning results in 0ms." />
+          <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="Reliability & Graceful Degradation" desc="LLM APIs (like Groq or Gemini) can go down. The gateway provides automatic circuit breaking — seamlessly falling back to secondary providers before the user even notices a delay." />
+        </div>
+
+        <SectionTitle>Core Components (Platform Engineering)</SectionTitle>
+        <div className="space-y-4 mb-6">
+          <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+            <h4 className="font-black text-blue-400 text-sm mb-2">1. The Decision Engine & fuse.js</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed mb-3">Before touching the LLM, the <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">DecisionEngine.js</code> intercepts the request. It uses a fast regex filter followed by <strong className="text-text-primary">fuse.js (fuzzy matching)</strong> to scan the user's local projects, skills, and experience.</p>
+            <ul className="text-text-secondary text-[13px] space-y-2 ml-4 list-disc marker:text-blue-500">
+              <li>If Confidence <strong className="text-emerald-400">&gt;= 85%</strong>: AI is bypassed. Static response is returned instantly.</li>
+              <li>If Confidence <strong className="text-amber-400">&gt;= 40%</strong>: The factual match is injected into the prompt as Absolute Ground Truth.</li>
+            </ul>
+          </div>
+          <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
+            <h4 className="font-black text-purple-400 text-sm mb-2">2. Circuit Breaker & Provider Selector</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">CircuitBreaker.js</code> tracks API health. If Groq fails 3 times, the breaker trips to <strong>OPEN</strong> state. The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">ProviderSelector.js</code> then automatically routes all subsequent traffic to Gemini for 30 seconds (Cool-down period) before entering a <strong>HALF-OPEN</strong> state to test Groq again.</p>
+          </div>
+          <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+            <h4 className="font-black text-emerald-400 text-sm mb-2">3. Response Validator (Streaming Interceptor)</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">ResponseValidator.js</code> intercepts the AsyncIterable stream from the LLM <em>before</em> it hits the frontend. It cleans up malformed Markdown on the fly (e.g. converting <code>-Item</code> to <code>- Item</code>) and detects/logs hallucinated unverified URLs.</p>
+          </div>
+          <div className="p-5 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
+            <h4 className="font-black text-amber-400 text-sm mb-2">4. Observability & Governance</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">MetricsService.js</code> tracks total requests, fallback percentages, latency, and estimated provider costs per day. The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">PromptVersionManager.js</code> allows deterministic A/B testing (feature-flagging) of system prompts without database lookups using request ID hashing.</p>
+          </div>
+        </div>
+
+        <SectionTitle>The Extreme Controller Refactor</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            By delegating all business logic to these micro-services, the monolithic <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">agentController.js</code> was reduced from <strong>370+ lines</strong> down to a hyper-clean <strong>44 lines</strong>. It now only handles the SSE streaming loop and passes the <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">RequestContext</code> to the Decision Engine.
+          </p>
         </div>
       </>
     ),
