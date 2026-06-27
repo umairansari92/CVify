@@ -45,18 +45,49 @@ const MarkdownComponents = {
   ),
 };
 
+// ── Whitelisted action keywords — LLM buttons must contain one of these ──
+const ALLOWED_ACTION_KEYWORDS = [
+  'experience', 'projects', 'skills', 'education', 'resume', 'contact',
+  'services', 'certifications', 'timeline', 'achievements', 'github',
+  'linkedin', 'availability', 'about', 'summary', 'work', 'portfolio',
+  'role', 'latest', 'current', 'technical', 'career', 'industries',
+  'ai', 'web', 'apps', 'demos', 'live', 'leadership', 'highlights',
+  'browsing', 'introduction', 'hiring', 'client', 'developer',
+];
+
 // ── Parse [ACTIONS: Btn1 | Btn2 | Btn3] from LLM output ──────────────
 const parseActions = (text) => {
   const match = text?.match(/\[ACTIONS:\s*([^\]]+)\]/);
   if (!match) return { cleanText: text, actions: [] };
 
   const rawButtons = match[1].split('|').map((b) => b.trim()).filter(Boolean);
-  const actions = rawButtons.map((label) => ({
-    label,
-    prompt: label.replace(/^[\p{Emoji}\s]+/u, '').trim(),
-  }));
+  const actions = rawButtons
+    .filter((label) => {
+      // Security: only allow buttons whose label contains a known keyword
+      const normalized = label.toLowerCase();
+      return ALLOWED_ACTION_KEYWORDS.some((k) => normalized.includes(k));
+    })
+    .map((label) => ({
+      label,
+      prompt: label.replace(/^[\p{Emoji}\s]+/u, '').trim(),
+    }));
   const cleanText = text.replace(/\[ACTIONS:[^\]]+\]/g, '').trim();
   return { cleanText, actions };
+};
+
+// ── Contextual typing messages (rotated for natural feel) ─────────────
+const TYPING_MESSAGES = [
+  'Reviewing the portfolio…',
+  'Finding the most relevant information…',
+  'Preparing a concise summary…',
+  'Cross-referencing the profile…',
+  'Organising the key highlights…',
+];
+let typingMsgIndex = 0;
+const getTypingMessage = () => {
+  const msg = TYPING_MESSAGES[typingMsgIndex % TYPING_MESSAGES.length];
+  typingMsgIndex++;
+  return msg;
 };
 
 // ── Determine profession-aware initial buttons ────────────────────────
@@ -88,6 +119,7 @@ export const AiAgentWidget = ({ profileData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [dynamicActions, setDynamicActions] = useState([]);
+  const [typingMessage, setTypingMessage] = useState(TYPING_MESSAGES[0]);
   const endOfMessagesRef = useRef(null);
 
   const ownerName = profileData
@@ -125,7 +157,8 @@ export const AiAgentWidget = ({ profileData }) => {
 
   const handleSend = (userQuery) => {
     if (!userQuery.trim()) return;
-    setDynamicActions([]); // Clear old action buttons while AI is responding
+    setDynamicActions([]);
+    setTypingMessage(getTypingMessage()); // rotate contextual message
     sendMessage(userQuery);
   };
 
@@ -217,10 +250,10 @@ export const AiAgentWidget = ({ profileData }) => {
                   {/* Persona selector buttons */}
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { label: '👔 I\'m a Recruiter', prompt: 'I am a recruiter evaluating this candidate for a role.' },
+                      { label: '👔 Hiring Manager', prompt: 'I am a hiring manager evaluating this candidate for a role.' },
                       { label: '🤝 Potential Client', prompt: 'I am a potential client interested in the services offered.' },
-                      { label: '💻 Developer', prompt: 'I am a developer and want to explore the technical projects and stack.' },
-                      { label: '👋 Just Browsing', prompt: 'Just give me a general overview of this portfolio.' },
+                      { label: '💻 Technical Reviewer', prompt: 'I am a technical reviewer and want to explore the projects, architecture, and tech stack.' },
+                      { label: '👋 Explore Portfolio', prompt: 'Just give me a general overview of this portfolio.' },
                     ].map((action, idx) => (
                       <motion.button
                         key={idx}
@@ -262,13 +295,16 @@ export const AiAgentWidget = ({ profileData }) => {
                 </motion.div>
               ))}
 
-              {/* Typing indicator */}
+              {/* Contextual typing indicator */}
               {isTyping && messages[messages.length - 1]?.role !== 'assistant' && (
                 <div className="flex justify-start">
-                  <div className="bg-slate-800/80 border border-slate-700/40 rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1.5 items-center">
-                    <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" />
-                    <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
-                    <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
+                  <div className="bg-slate-800/80 border border-slate-700/40 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2.5">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" />
+                      <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
+                      <div className="w-1.5 h-1.5 bg-teal-400/70 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
+                    </div>
+                    <span className="text-slate-400 text-[11px] italic">{typingMessage}</span>
                   </div>
                 </div>
               )}
