@@ -1,9 +1,15 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 export const useAgentStream = (apiUrl, profileData) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
+  const [conversationId, setConversationId] = useState('');
+
+  useEffect(() => {
+    // Generate a unique session ID per visitor component mount
+    setConversationId(crypto.randomUUID());
+  }, []);
   
   const abortControllerRef = useRef(null);
 
@@ -30,8 +36,8 @@ export const useAgentStream = (apiUrl, profileData) => {
           'Content-Type': 'application/json',
           'Accept': 'text/event-stream',
         },
-        // Send the full profile object — backend builds dynamic system prompt from it
         body: JSON.stringify({
+          conversationId,
           profileData,
           messages: nextMessages.map(m => ({ role: m.role, content: m.content })),
         }),
