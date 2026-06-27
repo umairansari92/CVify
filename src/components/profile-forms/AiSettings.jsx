@@ -93,7 +93,7 @@ const AiSettings = () => {
               {/* Free Limits */}
               <div className="space-y-3">
                 <label className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] ml-1 opacity-60">
-                  Free AI Replies Per Visitor
+                  Global Daily Free AI Replies
                 </label>
                 <input
                   type="number"
@@ -104,7 +104,7 @@ const AiSettings = () => {
                   max="100"
                   className="w-full px-5 py-4 rounded-2xl border border-border-subtle bg-foreground/10 text-text-main focus:border-primary/50 outline-none transition-all font-semibold text-sm"
                 />
-                <p className="text-[9px] font-bold text-text-muted ml-2">Number of free answers the AI will give to a visitor before rate limiting.</p>
+                <p className="text-[9px] font-bold text-text-muted ml-2">Total number of free answers the AI will give per 24 hours across ALL visitors.</p>
               </div>
 
               {/* Action after limit */}
@@ -113,35 +113,55 @@ const AiSettings = () => {
                   Action After Limit Reached
                 </label>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <label className={`cursor-pointer flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all ${settings.afterFreeLimit === 'contact' ? 'border-primary bg-primary/10' : 'border-border-subtle bg-foreground/5 hover:bg-foreground/10'}`}>
-                    <input type="radio" name="afterFreeLimit" value="contact" checked={settings.afterFreeLimit === 'contact'} onChange={handleChange} className="hidden" />
-                    <FaEnvelope className={settings.afterFreeLimit === 'contact' ? 'text-primary' : 'text-text-muted'} size={24} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Show Contact Buttons</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label className={`cursor-pointer flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all ${settings.afterFreeLimit === 'smart_diamonds' ? 'border-primary bg-primary/10' : 'border-border-subtle bg-foreground/5 hover:bg-foreground/10'}`}>
+                    <input type="radio" name="afterFreeLimit" value="smart_diamonds" checked={settings.afterFreeLimit === 'smart_diamonds'} onChange={handleChange} className="hidden" />
+                    <FaGem className={settings.afterFreeLimit === 'smart_diamonds' ? 'text-primary' : 'text-text-muted'} size={24} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Smart Auto-Pay (Recommended)</span>
                   </label>
 
                   <label className={`cursor-pointer flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all ${settings.afterFreeLimit === 'diamonds' ? 'border-emerald-500 bg-emerald-500/10' : 'border-border-subtle bg-foreground/5 hover:bg-foreground/10'}`}>
                     <input type="radio" name="afterFreeLimit" value="diamonds" checked={settings.afterFreeLimit === 'diamonds'} onChange={handleChange} className="hidden" />
                     <FaGem className={settings.afterFreeLimit === 'diamonds' ? 'text-emerald-500' : 'text-text-muted'} size={24} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Auto-Pay with Diamonds</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Fixed Packages (Old System)</span>
                   </label>
 
                   <label className={`cursor-pointer flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all ${settings.afterFreeLimit === 'disable' ? 'border-rose-500 bg-rose-500/10' : 'border-border-subtle bg-foreground/5 hover:bg-foreground/10'}`}>
                     <input type="radio" name="afterFreeLimit" value="disable" checked={settings.afterFreeLimit === 'disable'} onChange={handleChange} className="hidden" />
                     <FaCommentSlash className={settings.afterFreeLimit === 'disable' ? 'text-rose-500' : 'text-text-muted'} size={24} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Block Chat</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Block Chat completely</span>
+                  </label>
+
+                  <label className={`cursor-pointer flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all ${settings.afterFreeLimit === 'contact' ? 'border-orange-500 bg-orange-500/10' : 'border-border-subtle bg-foreground/5 hover:bg-foreground/10'}`}>
+                    <input type="radio" name="afterFreeLimit" value="contact" checked={settings.afterFreeLimit === 'contact'} onChange={handleChange} className="hidden" />
+                    <FaEnvelope className={settings.afterFreeLimit === 'contact' ? 'text-orange-500' : 'text-text-muted'} size={24} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-center">Fake System Fault & Contact</span>
                   </label>
                 </div>
               </div>
+
+              {settings.afterFreeLimit === 'smart_diamonds' && (
+                <div className="p-6 bg-primary/5 border border-primary/20 rounded-2xl space-y-4">
+                  <div className="flex items-start gap-3">
+                    <FaGem className="text-primary mt-1" />
+                    <div>
+                      <p className="text-sm font-bold text-primary">Smart Tiered Auto-Deduction Active</p>
+                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mt-1 leading-relaxed">
+                        After {settings.freeQuestions} free queries, we offer a grace period of 2 free replies. Then it scales dynamically: 15💎 for first 5 extra, +5💎 for next 5, etc. Max 20 extra queries allowed.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {settings.afterFreeLimit === 'diamonds' && (
                 <div className="p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-4">
                   <div className="flex items-start gap-3">
                     <FaGem className="text-emerald-500 mt-1" />
                     <div>
-                      <p className="text-sm font-bold text-emerald-400">Diamond Auto-Deduction Active</p>
+                      <p className="text-sm font-bold text-emerald-400">Fixed Package Auto-Deduction</p>
                       <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mt-1 leading-relaxed">
-                        When a visitor exhausts their free limit, {settings.diamondCostPerPackage} diamonds will be deducted from your wallet automatically to grant them an additional {settings.repliesPerPackage} AI replies. If you run out of diamonds, the chat will default back to showing contact buttons.
+                        When global daily limit exhausts, {settings.diamondCostPerPackage} diamonds will be deducted from your wallet to grant {settings.repliesPerPackage} AI replies. No grace period.
                       </p>
                     </div>
                   </div>
