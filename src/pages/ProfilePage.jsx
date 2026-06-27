@@ -13,6 +13,7 @@ import {
   FaCheckCircle,
   FaRocket,
   FaChartLine,
+  FaRobot,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { updateUser } from "../features/auth/authSlice";
@@ -28,6 +29,7 @@ import SkillsServicesManager from "../components/profile-forms/SkillsServicesMan
 import CredentialsManager from "../components/profile-forms/CredentialsManager";
 import ProjectsManager from "../components/profile-forms/ProjectsManager";
 import SecuritySettings from "../components/profile-forms/SecuritySettings";
+import AiSettings from "../components/profile-forms/AiSettings";
 import ThemeEditor from "../components/profile/ThemeEditor";
 import CareerAnalytics from "../components/profile/CareerAnalytics";
 
@@ -99,6 +101,12 @@ const ProfilePage = () => {
       label: "Security",
       icon: <FaShieldAlt />,
       color: "slate",
+    },
+    {
+      id: "ai",
+      label: "AI Chat",
+      icon: <FaRobot />,
+      color: "emerald",
     },
     {
       id: "theme",
@@ -254,6 +262,7 @@ const ProfilePage = () => {
           {activeTab === "expertise" && <SkillsServicesManager />}
           {activeTab === "credentials" && <CredentialsManager />}
           {activeTab === "security" && <SecuritySettings />}
+          {activeTab === "ai" && <AiSettings />}
           {activeTab === "theme" && (
             <ThemeEditor
               settings={user?.themeSettings}
