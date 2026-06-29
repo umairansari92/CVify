@@ -24,6 +24,32 @@ const ResumeDesignerView = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Templates */}
+        <div className="md:col-span-2 bg-bg-secondary border border-white/5 rounded-3xl p-8 shadow-sm">
+           <div className="flex items-center gap-3 mb-6">
+              <Layout size={18} className="text-primary" />
+              <h3 className="text-sm font-black uppercase tracking-widest text-white">Layout Template</h3>
+           </div>
+           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {["classic", "modern", "professional", "technical", "executive", "minimal", "traditional", "bold", "elegant", "clear", "global", "elite"].map(template => (
+                <button 
+                  key={template}
+                  onClick={() => updateStyle("templateId", template)}
+                  className={`w-full py-4 px-2 rounded-2xl border transition-all flex flex-col items-center justify-center gap-2 ${
+                    (currentResume?.templateId || "classic") === template 
+                      ? "border-primary bg-primary/10 ring-2 ring-primary/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-105" 
+                      : "border-white/5 hover:bg-white/5 text-slate-400 hover:text-slate-300 hover:border-white/10"
+                  }`}
+                >
+                  <div className={`w-8 h-10 border-2 rounded shadow-sm ${
+                    (currentResume?.templateId || "classic") === template ? "border-primary bg-white" : "border-slate-700 bg-slate-800"
+                  }`} />
+                  <span className="text-[10px] font-black uppercase tracking-widest truncate w-full text-center">{template}</span>
+                </button>
+              ))}
+           </div>
+        </div>
+
         {/* Typography */}
         <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 shadow-sm">
            <div className="flex items-center gap-3 mb-6">
