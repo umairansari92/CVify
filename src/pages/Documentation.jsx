@@ -364,6 +364,18 @@ const Documentation = () => {
           <InfoCard icon={<Star size={16} />} color="amber" title="Persistent Actions" desc="Sticky matrix of quick-action buttons (Show Experience, View Projects, Explore Skills) remains accessible above the chat input." />
         </div>
 
+        <SectionTitle>Global Rate Limits & Smart Auto-Pay</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          To protect portfolio owners from malicious traffic spikes while maintaining a seamless visitor experience, the AI features a robust <strong>Global Daily Limit Architecture</strong>.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Shield size={16} />} color="rose" title="Global 24H Window" desc="Limits are calculated across all visitors combined for a 24-hour window, rather than per individual visitor, preventing mass automated drains." />
+          <InfoCard icon={<Gem size={16} />} color="emerald" title="Smart Tiered Auto-Pay" desc="After the initial free limit (default 5), a 2-query grace period is offered. Then, the system dynamically upgrades via Diamond tiers (15💎 for 5 queries, 20💎 for 10, etc.) up to a maximum hard cap." />
+          <InfoCard icon={<AlertCircle size={16} />} color="amber" title="Fake System Fault" desc="When limits are fully exhausted, the AI gracefully fails by claiming a 'Server Interruption', hiding the rate limit from visitors and presenting the candidate's direct contact list." />
+          <InfoCard icon={<Settings2 size={16} />} color="purple" title="Builder Dashboard Control" desc="Portfolio owners can toggle Smart Auto-Pay, fixed legacy packages, or completely block AI chat directly from the new AI Settings dashboard." />
+        </div>
+
         <SectionTitle>Elite UI & Personalization</SectionTitle>
         <div className="p-5 bg-teal-500/5 border border-teal-500/20 rounded-2xl mb-6">
           <div className="space-y-3">
