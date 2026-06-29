@@ -73,19 +73,19 @@ const DateRangePicker = ({
             disabled={isPresent}
             value={month}
             onChange={handleMonthChange}
-            className="w-full px-4 py-3 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 text-sm focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all cursor-pointer font-semibold disabled:opacity-30 disabled:cursor-not-allowed appearance-none"
+            className="w-full px-4 py-3 border-2 border-border-subtle rounded-2xl bg-midground text-text-main text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer font-bold disabled:opacity-30 disabled:cursor-not-allowed appearance-none"
           >
             {months.map((m) => (
               <option
                 key={m}
                 value={m}
-                className="bg-white dark:bg-midnight text-primary dark:text-slate-100"
+                className="bg-midground text-text-main font-bold"
               >
                 {m}
               </option>
             ))}
           </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-action transition-colors">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-primary transition-colors">
             <svg
               width="10"
               height="6"
@@ -110,19 +110,19 @@ const DateRangePicker = ({
             disabled={isPresent}
             value={year}
             onChange={handleYearChange}
-            className="w-full px-4 py-3 border-2 border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-blue/30 text-primary dark:text-slate-100 text-sm focus:border-action dark:focus:border-accent focus:ring-4 focus:ring-action/10 outline-none transition-all cursor-pointer font-semibold disabled:opacity-30 disabled:cursor-not-allowed appearance-none"
+            className="w-full px-4 py-3 border-2 border-border-subtle rounded-2xl bg-midground text-text-main text-sm focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all cursor-pointer font-bold disabled:opacity-30 disabled:cursor-not-allowed appearance-none"
           >
             {years.map((y) => (
               <option
                 key={y}
                 value={y}
-                className="bg-white dark:bg-midnight text-primary dark:text-slate-100"
+                className="bg-midground text-text-main font-bold"
               >
                 {y}
               </option>
             ))}
           </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-action transition-colors">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-primary transition-colors">
             <svg
               width="10"
               height="6"

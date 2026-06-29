@@ -394,7 +394,7 @@ const SkillsForm = () => {
   const interests = currentResume?.interests || [];
 
   const jobTitle = currentResume?.personalInfo?.jobTitle || "";
-  const themeColor = currentResume?.themeColor || "#0f172a";
+  const themeColor = currentResume?.themeColor || "#3b82f6";
   const suggestions = getSuggestions(jobTitle);
 
   const { loaded } = useSelector((state) => state.globalSkills);
