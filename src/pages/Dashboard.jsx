@@ -5,10 +5,11 @@ import { fetchDashboardData } from "../features/dashboard/dashboardThunk";
 import { selectDashboardData, selectDashboardLoading, selectIsRefreshing } from "../features/dashboard/dashboardSlice";
 import { handleDownloadPDF, handleDownloadLetter } from "../utils/pdfExport";
 import { FaEye, FaTrash, FaDownload, FaFileAlt, FaTimes, FaSearchPlus, FaRocket, FaChartBar, FaAngleRight, FaEnvelopeOpenText } from "react-icons/fa";
-import { FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle, FiArrowRight, FiActivity } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw, FiAlertCircle, FiArrowRight, FiActivity, FiShare2 } from "react-icons/fi";
 import { lazy, Suspense } from "react";
 const ThreeBackground = lazy(() => import("../components/three/ThreeBackground"));
 import Swal from "sweetalert2";
+import ShareResumeModal from "../components/dashboard/ShareResumeModal";
 
 import { m, AnimatePresence } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
@@ -38,6 +39,7 @@ const Dashboard = () => {
 
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [shareModalData, setShareModalData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchDashboardData());
@@ -258,6 +260,9 @@ const Dashboard = () => {
                   <Button variant="ghost" className="flex-1 !bg-white/5 hover:!bg-white/10 !h-10 text-xs" onClick={() => handleScan(resume.id)} icon={FaSearchPlus}>
                     Scan
                   </Button>
+                  <Button variant="ghost" className="flex-1 !bg-white/5 hover:!bg-white/10 !h-10 text-xs" onClick={() => setShareModalData(resume)} icon={FiShare2}>
+                    Share
+                  </Button>
                 </div>
               </Card>
             ))}
@@ -298,6 +303,19 @@ const Dashboard = () => {
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Syncing</span>
         </div>
       )}
+
+      <ShareResumeModal 
+        isOpen={!!shareModalData}
+        onClose={() => setShareModalData(null)}
+        resume={shareModalData}
+        onUpdate={(updatedResume) => {
+          // You can dispatch a Redux action to update the specific resume in the state
+          // e.g. dispatch(updateResumeInStore(updatedResume));
+          // For now, refreshing dashboard data or just updating local state:
+          dispatch(fetchDashboardData()); 
+          setShareModalData(updatedResume);
+        }}
+      />
     </div>
   );
 };
