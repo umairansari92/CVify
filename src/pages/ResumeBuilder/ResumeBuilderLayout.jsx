@@ -5,7 +5,7 @@ import { getResumeById } from "../../features/resume/resumeThunk";
 import { initNewResume, setResumeField } from "../../features/resume/resumeSlice";
 import SlimSidebar from "../../components/common/SlimSidebar";
 import { FaGem, FaUserCircle, FaChevronRight } from "react-icons/fa";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Edit2 } from "lucide-react";
 import LeftPanelNavigation from "./panels/LeftPanelNavigation";
 import MiddlePanelEditor from "./panels/MiddlePanelEditor";
 import RightPanelPreview from "./panels/RightPanelPreview";
@@ -82,13 +82,18 @@ const ResumeBuilderLayout = () => {
                 <FaChevronRight size={8} className="text-slate-300" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Engine</span>
               </div>
-              <input
-                type="text"
-                value={currentResume?.title || ""}
-                onChange={(e) => dispatch(setResumeField({ field: "title", value: e.target.value }))}
-                placeholder="Untitled Resume"
-                className="font-black text-xl tracking-tighter leading-none text-white bg-transparent border border-transparent hover:border-white/20 focus:border-primary focus:bg-slate-900/50 rounded px-2 py-1 -ml-2 outline-none transition-all w-64 md:w-80 truncate"
-              />
+              <div className="group relative flex items-center">
+                <input
+                  type="text"
+                  value={currentResume?.title || ""}
+                  onChange={(e) => dispatch(setResumeField({ field: "title", value: e.target.value }))}
+                  placeholder="Untitled Resume"
+                  className="font-black text-xl tracking-tighter leading-none text-white bg-slate-900/30 border border-white/10 hover:border-white/30 focus:border-primary focus:bg-slate-900/80 rounded-lg px-3 py-1.5 -ml-3 outline-none transition-all w-64 md:w-80 truncate peer"
+                />
+                <div className="absolute right-3 opacity-0 group-hover:opacity-100 peer-focus:opacity-100 transition-opacity pointer-events-none text-slate-400">
+                  <Edit2 size={14} />
+                </div>
+              </div>
             </div>
           </div>
           
