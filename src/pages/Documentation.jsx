@@ -41,8 +41,10 @@ const Documentation = () => {
         { id: "coach", icon: <Brain size={16} />, label: "AI Resume Coach PRO" },
         { id: "cover-letter", icon: <MessageSquare size={16} />, label: "AI Cover Letters" },
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
+        { id: "shareable-links", icon: <Globe size={16} />, label: "Public Shareable Links (New!)" },
+        { id: "document-identity", icon: <FileText size={16} />, label: "Document Identity (New!)" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
-        { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative (New!)" },
+        { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative" },
       ]
     },
     {
@@ -65,9 +67,10 @@ const Documentation = () => {
       label: "Themes & Visual FX",
       items: [
         { id: "themes", icon: <Palette size={16} />, label: "All 9 Portfolio Themes" },
+        { id: "resume-templates", icon: <Layout size={16} />, label: "12 Resume PDF Templates (New!)" },
         { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
         { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
-        { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK (New!)" },
+        { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK" },
         { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
       ]
     },
@@ -292,6 +295,39 @@ const Documentation = () => {
       </>
     ),
 
+    "shareable-links": (
+      <>
+        <DocHeader title="Public Shareable Links" badge="Core Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Every resume you create can now be instantly published as a standalone, read-only webpage. Perfect for sharing with recruiters via email, LinkedIn, or WhatsApp.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Globe size={16} />} color="blue" title="Unique Slugs" desc="Generates a secure, 12-character base64url slug for each shared document." />
+          <InfoCard icon={<Eye size={16} />} color="emerald" title="View Tracking" desc="Tracks the exact number of times recruiters have opened your resume link." />
+          <InfoCard icon={<ShieldCheck size={16} />} color="purple" title="Access Control" desc="Toggle sharing on or off instantly. Revoke access anytime." />
+          <InfoCard icon={<FileText size={16} />} color="amber" title="PDF Download Control" desc="Choose whether visitors are allowed to download the PDF version." />
+        </div>
+        <SectionTitle>Recruiter Experience (404 Fallback)</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          If you disable sharing after sending a link, recruiters won't see a broken page. They see a professional "This resume is no longer publicly available" screen with a call-to-action to create their own CVify Pro account — acting as a viral marketing loop.
+        </p>
+      </>
+    ),
+
+    "document-identity": (
+      <>
+        <DocHeader title="Document Identity (Titles)" badge="Core Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Manage multiple tailored resumes easily. Instead of every resume being named after your full name, CVify Pro now utilizes <strong className="text-primary">Document Identity</strong>.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<FileText size={16} />} color="emerald" title="Inline Editing" desc="Click the title in the Builder Header to rename your document instantly." />
+          <InfoCard icon={<GitBranch size={16} />} color="blue" title="Smart Cloning" desc="When duplicating a resume, the title automatically appends '(Copy)' to prevent naming collisions." />
+          <InfoCard icon={<Database size={16} />} color="purple" title="Future-Proof Architecture" desc="Document Identity acts as the primary anchor for future features like Folders, Search, and Version History." />
+        </div>
+      </>
+    ),
+
     profile: (
       <>
         <DocHeader title="User Profile & Dashboard" badge="Core Feature" />
@@ -423,6 +459,23 @@ const Documentation = () => {
           { step: "2", title: "Click Theme Editor", desc: "Tap the palette button (🎨) in the bottom-right corner — available in both light and dark mode." },
           { step: "3", title: "Select & Apply", desc: "Click any theme card to instantly preview it live on your profile. Your selection is saved automatically." },
         ]} />
+      </>
+    ),
+
+    "resume-templates": (
+      <>
+        <DocHeader title="12 Resume PDF Templates" badge="Core Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Beyond the live digital portfolio, CVify Pro provides a world-class PDF generation engine. You can now choose from 12 distinct, ATS-optimized layout templates directly inside the Resume Builder.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Layout size={18} />} color="blue" title="Real-Time Layout Switcher"
+            desc="The 'Designer' tab provides a visual grid of all 12 templates. Clicking any template instantly reformats your entire resume layout without losing any content." />
+          <InfoCard icon={<FileText size={18} />} color="purple" title="Intelligent Hydration"
+            desc="When generating the PDF or viewing a Public Link, the exact template layout you selected is perfectly preserved and applied to the render engine." />
+          <InfoCard icon={<Eye size={18} />} color="emerald" title="WYSIWYG Preview"
+            desc="What You See Is What You Get. The live preview in the builder shows exactly how the layout will respond to your content structure." />
+        </div>
       </>
     ),
 
