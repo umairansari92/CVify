@@ -304,16 +304,15 @@ const Dashboard = () => {
         </div>
       )}
 
-      <ShareResumeModal 
+      <ShareResumeModal
         isOpen={!!shareModalData}
         onClose={() => setShareModalData(null)}
         resume={shareModalData}
         onUpdate={(updatedResume) => {
-          // You can dispatch a Redux action to update the specific resume in the state
-          // e.g. dispatch(updateResumeInStore(updatedResume));
-          // For now, refreshing dashboard data or just updating local state:
-          dispatch(fetchDashboardData()); 
+          // Update local modal state immediately (optimistic, no flicker)
           setShareModalData(updatedResume);
+          // Re-fetch dashboard so the card's share state stays in sync with Redux store
+          dispatch(fetchDashboardData());
         }}
       />
     </div>

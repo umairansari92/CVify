@@ -85,7 +85,10 @@ const AppRoutes = () => {
       <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/share/resume/:id" element={<PublicResumeViewer />} />
+      {/* Public resume share page — uses slug, never DB ID */}
+      <Route path="/share/r/:slug" element={<PublicResumeViewer />} />
+      {/* Legacy redirect: old /share/resume/:id links go to home gracefully */}
+      <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
 
       {/* New Resume Builder (Full Screen) */}
       <Route
