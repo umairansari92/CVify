@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getResumeById } from "../../features/resume/resumeThunk";
-import { initNewResume } from "../../features/resume/resumeSlice";
+import { initNewResume, setResumeField } from "../../features/resume/resumeSlice";
 import SlimSidebar from "../../components/common/SlimSidebar";
 import { FaGem, FaUserCircle, FaChevronRight } from "react-icons/fa";
 import { Sparkles } from "lucide-react";
@@ -82,9 +82,13 @@ const ResumeBuilderLayout = () => {
                 <FaChevronRight size={8} className="text-slate-300" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Engine</span>
               </div>
-              <h1 className="font-black text-xl tracking-tighter leading-none text-white">
-                Resume Builder
-              </h1>
+              <input
+                type="text"
+                value={currentResume?.title || ""}
+                onChange={(e) => dispatch(setResumeField({ field: "title", value: e.target.value }))}
+                placeholder="Untitled Resume"
+                className="font-black text-xl tracking-tighter leading-none text-white bg-transparent border border-transparent hover:border-white/20 focus:border-primary focus:bg-slate-900/50 rounded px-2 py-1 -ml-2 outline-none transition-all w-64 md:w-80 truncate"
+              />
             </div>
           </div>
           

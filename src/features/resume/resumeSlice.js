@@ -24,6 +24,7 @@ const resumeSlice = createSlice({
     },
     initNewResume(state) {
       state.currentResume = {
+        title: "Untitled Resume",
         personalInfo: {
           fullName: "",
           email: "",
