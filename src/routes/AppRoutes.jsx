@@ -18,6 +18,7 @@ const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 const PublicProfile = lazy(() => import("../pages/PublicProfile"));
+const PublicResumeViewer = lazy(() => import("../pages/PublicResumeViewer"));
 const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
 const AdminUserDetail = lazy(() => import("../pages/AdminUserDetail"));
 const AdminResumes = lazy(() => import("../pages/AdminResumes"));
@@ -84,6 +85,7 @@ const AppRoutes = () => {
       <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/share/resume/:id" element={<PublicResumeViewer />} />
 
       {/* New Resume Builder (Full Screen) */}
       <Route

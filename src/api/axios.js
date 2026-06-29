@@ -43,10 +43,13 @@ api.interceptors.response.use(
       localStorage.removeItem("token");
       
       // Determine if we are on a public route where we shouldn't interrupt the user
-      const isPublicRoute = window.location.pathname.startsWith("/p/");
+      const isPublicRoute = 
+        window.location.pathname.startsWith("/p/") ||
+        window.location.pathname.startsWith("/share/");
       const isAuthMe = error.config?.url?.includes("/auth/me");
+      const isPublicApiCall = error.config?.url?.includes("/public/");
 
-      if (!isPublicRoute && !isAuthMe) {
+      if (!isPublicRoute && !isAuthMe && !isPublicApiCall) {
         // Force login with a modal confirmation only on protected/app routes
         Swal.fire({
           icon: "error",
@@ -64,6 +67,11 @@ api.interceptors.response.use(
       // Maintenance Mode Active
       window.location.href = "/maintenance";
     } else {
+      // Silently reject errors on public share/resume routes — the page handles them
+      const isPublicApiCall = error.config?.url?.includes("/public/");
+      if (isPublicApiCall) {
+        return Promise.reject(error);
+      }
       // Non-blocking toast for other errors
       Swal.fire({
         toast: true,
