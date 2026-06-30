@@ -72,7 +72,8 @@ const TerminalDarkTheme = ({
       )}
 
       <Contact
-        contactForm={contactForm || { name: "", email: "", message: "" }}
+        user={user}
+        contactForm={contactForm || { name: "", email: "", subject: "", message: "" }}
         setContactForm={setContactForm || (() => {})}
         handleContactSubmit={handleContactSubmit || ((e) => e.preventDefault())}
         isSending={isSending}
