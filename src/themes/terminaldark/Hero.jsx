@@ -21,18 +21,17 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   }
 
   return (
-    <section className="relative mx-auto flex min-h-screen w-full items-center justify-center overflow-hidden px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+    <section className="relative w-full h-screen mx-auto flex items-center justify-center overflow-hidden">
       {/* Background SVG Wave Pattern */}
-      <div className="pointer-events-none absolute inset-0 opacity-20">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
           <path d="M0,50 Q25,25 50,50 T100,50" fill="none" stroke={tokens.colors.accent} strokeWidth="0.5" />
           <path d="M0,60 Q25,35 50,60 T100,60" fill="none" stroke={tokens.colors.accent} strokeWidth="0.3" />
           <path d="M0,40 Q25,15 50,40 T100,40" fill="none" stroke={tokens.colors.accent} strokeWidth="0.4" />
         </svg>
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(145,94,255,0.16),_transparent_42%)]" />
 
-      <div className="z-10 mx-auto mt-8 flex w-full max-w-7xl flex-col items-center gap-16 lg:flex-row">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16 z-10 w-full mt-20">
         
         {/* Left Column: Intro */}
         <div className="flex flex-row items-start gap-5 flex-1">
@@ -75,17 +74,17 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               </div>
             </InlineEdit>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              <button
-                onClick={() => document.getElementById("contact-td")?.scrollIntoView({ behavior: "smooth" })}
-                className="flex items-center gap-2 rounded-xl bg-[#915eff] px-8 py-3 font-bold text-white shadow-[0_0_15px_rgba(145,94,255,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7a4ce6] hover:shadow-[0_0_25px_rgba(145,94,255,0.6)]"
+            <div className="flex gap-4 mt-10">
+              <button 
+                onClick={() => document.getElementById('contact-td')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#915eff] hover:bg-[#7a4ce6] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(145,94,255,0.4)] hover:shadow-[0_0_25px_rgba(145,94,255,0.6)]"
               >
-                <div className="h-2 w-2 animate-pulse rounded-full bg-white" />
+                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 Hire Me
               </button>
               <button
                 onClick={() => setShowResumeModal(true)}
-                className="flex items-center gap-2 rounded-xl border border-[#915eff] bg-transparent px-8 py-3 font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#915eff]/10"
+                className="bg-transparent border border-[#915eff] hover:bg-[#915eff]/10 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
               >
                 Download CV
               </button>

@@ -1,6 +1,6 @@
 import React, { useRef, Suspense } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls, Stars, Sphere } from '@react-three/drei';
+import { OrbitControls, Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 
 function VibrantEarth() {
@@ -17,14 +17,14 @@ function VibrantEarth() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(t * 0.8) * 0.12;
+      groupRef.current.position.y = Math.sin(t * 0.8) * 0.08;
     }
-    if (earthRef.current) earthRef.current.rotation.y = t * 0.15;
+    if (earthRef.current) earthRef.current.rotation.y = t * 0.12;
   });
 
   return (
     <group ref={groupRef}>
-      <Sphere ref={earthRef} args={[1.2, 64, 64]}>
+      <Sphere ref={earthRef} args={[1.0, 64, 64]}>
         <meshStandardMaterial
           map={earthTexture}
           color="#ffffff"
@@ -38,11 +38,11 @@ function VibrantEarth() {
 
 export default function AnimatedGlobe() {
   return (
-    <div className="w-full h-full relative" style={{ minHeight: '400px' }}>
-      <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }}>
-        <ambientLight intensity={1.5} />
-        <directionalLight position={[5, 3, 5]} intensity={2.5} color="#ffffff" />
-        <pointLight position={[-10, -10, -10]} intensity={1.5} color="#c4b5fd" />
+    <div className="relative h-full w-full overflow-hidden rounded-[1.5rem]" style={{ minHeight: '300px' }}>
+      <Canvas camera={{ position: [0, 0, 4.2], fov: 45 }}>
+        <ambientLight intensity={1.3} />
+        <directionalLight position={[5, 3, 5]} intensity={2.0} color="#ffffff" />
+        <pointLight position={[-10, -10, -10]} intensity={1.2} color="#c4b5fd" />
 
         <Suspense fallback={null}>
           <VibrantEarth />
