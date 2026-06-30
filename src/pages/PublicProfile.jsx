@@ -678,7 +678,7 @@ const PublicProfile = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </nav>}
+      </nav>
 
       {isAuraDarkTheme ? (
         <Suspense fallback={
