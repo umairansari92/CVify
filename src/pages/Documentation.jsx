@@ -66,12 +66,21 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 9 Portfolio Themes" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 10 Portfolio Themes" },
         { id: "resume-templates", icon: <Layout size={16} />, label: "12 Resume PDF Templates (New!)" },
         { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
         { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
         { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK" },
+        { id: "cyber-neon", icon: <Zap size={16} />, label: "🟢 CYBER NEON" },
         { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
+      ]
+    },
+    {
+      label: "UI & Performance",
+      items: [
+        { id: "universal-navbar", icon: <Layout size={16} />, label: "Universal Floating Navbar (New!)" },
+        { id: "footer-branding", icon: <Globe size={16} />, label: "Footer Branding (New!)" },
+        { id: "perf-optimizations", icon: <Zap size={16} />, label: "⚡ Frontend Performance (New!)" },
       ]
     },
     {
@@ -431,9 +440,9 @@ const Documentation = () => {
 
     themes: (
       <>
-        <DocHeader title="All 8 Portfolio Themes" badge="Visual Design" />
+        <DocHeader title="All 10 Portfolio Themes" badge="Visual Design" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">8 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. Choose the one that matches your personal brand.
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">10 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
         </p>
 
         <div className="space-y-4 mb-8">
@@ -446,7 +455,8 @@ const Documentation = () => {
             { icon: "🌿", name: "Emerald Leader", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Natural authority. Deep forest green palette exuding calm confidence and leadership. Great for sustainability professionals, project managers, and team leads.", tags: ["Dark Mode", "Green Accent", "Leadership"] },
             { icon: "🕌", name: "ORIENTAL LUXE", accent: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5", desc: "Ultra-exotic and luxurious. Ultra-dark near-black background (#090909) with warm gold (#b58953) accents. Geometric SVG mandala patterns float behind the profile using the Outfit font. Exudes luxury, sophistication, and cultural richness.", tags: ["Dark Mode", "Gold Luxury", "Geometric FX"] },
             { icon: "✨", name: "AURA DARK", accent: "text-purple-400", border: "border-purple-500/20", bg: "bg-purple-500/5", desc: "Pure darkness meets cosmic elegance. Absolute black background (#000000) with deep purple accents (#B677EF). Uses the modern Syne font for a cutting-edge aesthetic. Perfect for tech innovators, startup founders, and creators pushing boundaries.", tags: ["Dark Mode", "Purple Accent", "Minimal"] },
-            { icon: "💻", name: "TERMINAL DARK", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "The 3D Developer Portfolio aesthetic reborn inside CVify Pro. Deep midnight blue background (#050816), sleek neon purple (#915eff) accents, a glowing profile avatar in the hero, timeline experience cards, and project cards with hashtag tech stacks. Perfect for developers who want a serious, high-impact first impression.", tags: ["Dark Mode", "Purple Neon", "Developer", "NEW!"] },
+            { icon: "💻", name: "TERMINAL DARK", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "The 3D Developer Portfolio aesthetic reborn inside CVify Pro. Deep midnight blue background (#050816), sleek neon purple (#915eff) accents, a glowing profile avatar in the hero, timeline experience cards, and project cards with hashtag tech stacks. Perfect for developers who want a serious, high-impact first impression.", tags: ["Dark Mode", "Purple Neon", "Developer"] },
+            { icon: "🟢", name: "CYBER NEON", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Cutting-edge hacker aesthetic inspired by the Catppuccin design language. Near-black background (#080808) with electric neon green (#00ffcc) accents. Uses the Orbitron monospace font with glow effects on all interactive elements. Full GitHub stats integration and a sleek scrolling experience.", tags: ["Dark Mode", "Neon Green", "Hacker", "NEW!"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -639,6 +649,57 @@ const Documentation = () => {
           {["Full-Stack Developers", "Software Engineers", "Open Source Contributors", "CS Students", "DevOps Engineers", "Tech Leads"].map((role, i) => (
             <div key={i} className="p-3 bg-violet-500/5 border border-violet-500/15 rounded-xl text-center">
               <p className="text-violet-400 font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    "cyber-neon": (
+      <>
+        <DocHeader title="🟢 CYBER NEON Theme" badge="New Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-emerald-400">CYBER NEON</strong> is CVify Pro's most visually intense portfolio theme — a pure hacker aesthetic built for professionals who want an unforgettable, electric first impression. Inspired by the Catppuccin design language and cyberpunk UI trends.
+        </p>
+
+        <SectionTitle>Visual Identity</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Cpu size={18} />} color="emerald" title="Near-Black Canvas"
+            desc="Ultra-dark #080808 background — almost invisible seams between UI layers. Depth is created through contrast, not light, giving it a hacker terminal feel." />
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Electric Neon Green Accents"
+            desc="Vivid #00ffcc (electric cyan-green) powers all interactive elements — glowing links, hover borders, button outlines, and neon underlines on nav items." />
+          <InfoCard icon={<Layout size={18} />} color="blue" title="Orbitron Monospace Font"
+            desc="The iconic Orbitron font (used in sci-fi interfaces, electric vehicle dashboards) gives every heading an instant techy, futuristic authority." />
+          <InfoCard icon={<Globe size={18} />} color="purple" title="GitHub Stats Built-In"
+            desc="Full GitHub Intelligence Panel renders live repository count, top languages, and contribution activity — technical credibility baked into the theme." />
+          <InfoCard icon={<Eye size={18} />} color="amber" title="Floating Dev Characters FX"
+            desc="Animated floating code characters (symbols, brackets, operators) drift across the background — a subtle ambient effect that keeps the page feeling alive." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Near-black (#080808) — darker than TERMINAL DARK, lighter than AURA DARK" },
+              { label: "Accent Color", val: "Electric Neon Green (#00ffcc) — unique in the CVify theme library" },
+              { label: "Font", val: "Orbitron — futuristic monospace font from Google Fonts" },
+              { label: "Card Style", val: "Glassmorphism — subtle frosted glass on dark panels" },
+              { label: "Nav Links", val: "Glowing neon underline on hover — SSE-style animation" },
+              { label: "Icon", val: "🟢 Green Circle — representing active connectivity and live systems" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-emerald-400 w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Cybersecurity Experts", "Blockchain Developers", "Ethical Hackers", "Game Developers", "DevOps Engineers", "Tech Creatives"].map((role, i) => (
+            <div key={i} className="p-3 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-center">
+              <p className="text-emerald-400 font-black text-xs">{role}</p>
             </div>
           ))}
         </div>
@@ -1374,15 +1435,16 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
-            { title: "AI Representative (Portfolio AI Guide)", desc: "Floating AI-powered chat widget on every public portfolio. Represents the candidate to recruiters with dynamic profile search, quick action buttons, and anti-hallucination guardrails. Powered by Groq SSE streaming.", status: "NEW" },
-            { title: "Security v6.0 — Defense in Depth", desc: "Rate limiting (IP+Email keyed), NoSQL injection protection, password hardening (8–72 chars), pepper hashing with lazy migration, HttpOnly cookies, secure logout endpoint.", status: "NEW" },
-            { title: "Premium Dark Email Templates", desc: "All transactional emails (OTP, Password Reset, Portfolio Contact) redesigned to match the CVify Pro dark theme — deep dark background, teal accents, premium branding.", status: "NEW" },
-            { title: "Admin Panel Sidebar Fix", desc: "Admin users now see a persistent 'Admin Panel' link in the main sidebar. Admins inside the admin area see a 'Back to App' link for quick navigation.", status: "FIX" },
+            { title: "Universal Floating Navbar — All Themes", desc: "The premium pill-shaped floating navbar (previously only on Standard themes) is now the single universal navbar across ALL 10 themes. AuraDark and CyberNeon's old theme-specific navbars were removed and replaced. Navbar links dynamically map to the correct section IDs per theme.", status: "NEW" },
+            { title: "DataVerse Technologies Footer Branding", desc: "A consistent branded footer has been added across all 10 portfolio themes: 'Powered by DataVerse Technologies | Designed & Developed by Umair Ahmed | © 2026'. Both DataVerse and Umair Ahmed link to their respective public profiles.", status: "NEW" },
+            { title: "CYBER NEON Theme", desc: "10th premium portfolio theme — near-black (#080808) background with electric neon green (#00ffcc) accents, Orbitron monospace font, floating dev characters FX, and full GitHub stats integration. Hacker aesthetic for cybersecurity and blockchain professionals.", status: "NEW" },
+            { title: "Frontend Performance Optimizations", desc: "content-visibility:auto on all major profile sections, useCallback on all PublicProfile handlers, useMemo on personalInfo/publicResumes to prevent React.memo bypass, fetchpriority='high' on hero LCP image, font-display:swap + DNS prefetch for CDNs.", status: "NEW" },
+            { title: "AI Representative (Portfolio AI Guide)", desc: "Floating AI-powered chat widget on every public portfolio. Represents the candidate to recruiters with dynamic profile search, quick action buttons, and anti-hallucination guardrails. Powered by Groq SSE streaming.", status: "ACTIVE" },
+            { title: "Security v6.0 — Defense in Depth", desc: "Rate limiting (IP+Email keyed), NoSQL injection protection, password hardening (8–72 chars), pepper hashing with lazy migration, HttpOnly cookies, secure logout endpoint.", status: "ACTIVE" },
+            { title: "Premium Dark Email Templates", desc: "All transactional emails (OTP, Password Reset, Portfolio Contact) redesigned to match the CVify Pro dark theme — deep dark background, teal accents, premium branding.", status: "ACTIVE" },
             { title: "AURA DARK Theme", desc: "Cosmic minimal theme engineered for tech professionals and startup founders.", status: "ACTIVE" },
             { title: "GitHub Intelligence Panel", desc: "Real-time GitHub DNA insights, repository highlights, and language synthesis.", status: "ACTIVE" },
-            { title: "AI Job Matcher v1.0", desc: "Real-time JD analysis with missing keyword detection and strategy reports.", status: "ACTIVE" },
             { title: "Magic AI Import", desc: "Instant resume hydration from PDF/DOCX using deep semantic parsing.", status: "ACTIVE" },
-            { title: "Intelligence Command Bar", desc: "Natural language resume optimization with Intent Mode.", status: "ACTIVE" },
           ].map((item, i) => (
             <div key={i} className={`p-5 rounded-2xl flex justify-between items-start gap-4 border ${
               item.status === "NEW" ? "bg-primary/5 border-primary/20" : item.status === "FIX" ? "bg-amber-500/5 border-amber-500/15" : "bg-emerald-500/5 border-emerald-500/10"
@@ -1533,6 +1595,122 @@ export const isDisposableEmail = (email) => {
             { left: "Stream Format", right: "data: {\"content\": \"chunk\"}\\n\\n ... data: [DONE]" },
           ]} />
         </div>
+      </>
+    ),
+
+    "universal-navbar": (
+      <>
+        <DocHeader title="Universal Floating Navbar" badge="UI Update" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          In June 2026, CVify Pro made the <strong className="text-text-primary">premium pill-shaped floating navbar universal</strong> — it now renders identically across all 10 portfolio themes. Previously, AuraDark had a hamburger overlay menu and CyberNeon had its own top bar; both were removed in favour of the single shared navbar.
+        </p>
+
+        <SectionTitle>What Changed</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Layout size={18} />} color="blue" title="One Navbar, All Themes"
+            desc="The floating pill navbar (CVifyPro logo, nav links, Live Editor badge, Get CV button) now mounts from PublicProfile.jsx above all theme renders — no per-theme nav logic." />
+          <InfoCard icon={<Globe size={18} />} color="emerald" title="Smart Section ID Mapping"
+            desc="getSectionId() maps generic labels (Home, About, Journey, Showcase, Contact) to the correct DOM IDs per theme — e.g. AuraDark uses #experience-ad, CyberNeon uses #resume and #projects." />
+          <InfoCard icon={<Palette size={18} />} color="purple" title="Theme-Aware CSS Variables"
+            desc="Navbar uses var(--bg-primary), var(--primary-color), var(--card-border) — CSS variables set by each theme. AuraDark gets purple accents, CyberNeon gets neon green, automatically." />
+          <InfoCard icon={<Zap size={18} />} color="amber" title="Zero-Re-render Scroll"
+            desc="Scroll detection uses a pure DOM classList toggle (html.pub-scrolled) instead of React state — removing all scroll-triggered re-renders from the component tree entirely." />
+        </div>
+
+        <SectionTitle>Section ID Map by Theme</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Standard / TerminalDark", right: "#home · #about · #journey · #showcase · #contact" },
+          { left: "AuraDark", right: "#ad-hero-name · #about-ad · #experience-ad · #showcase-ad · #contact-ad" },
+          { left: "CyberNeon", right: "#home · #about · #resume (Journey) · #projects (Showcase) · #contact" },
+          { left: "OrientalLuxe", right: "#hero-ol · #about-ol · #experience-ol · #showcase-ol · #contact-ol" },
+        ]} />
+      </>
+    ),
+
+    "footer-branding": (
+      <>
+        <DocHeader title="Footer Branding" badge="UI Update" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Every CVify Pro portfolio theme now includes a consistent, branded footer section at the bottom of the page — establishing clear product ownership and attribution.
+        </p>
+
+        <SectionTitle>Footer Content</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-6">
+          <div className="space-y-3 text-[13px]">
+            <div className="flex items-start gap-3">
+              <span className="font-black text-primary w-36 flex-shrink-0">Line 1</span>
+              <span className="text-text-secondary">Powered by: <strong className="text-text-primary">DataVerse Technologies</strong> (links to dataversetechnologies.vercel.app)</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="font-black text-primary w-36 flex-shrink-0">Line 2</span>
+              <span className="text-text-secondary">Designed &amp; Developed by: <strong className="text-text-primary">Umair Ahmed</strong> (links to app-cvifypro.vercel.app/p/umairansari92)</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="font-black text-primary w-36 flex-shrink-0">Line 3</span>
+              <span className="text-text-secondary">© 2026 DataVerse Technologies. All rights reserved.</span>
+            </div>
+          </div>
+        </div>
+
+        <SectionTitle>Coverage</SectionTitle>
+        <ComparisonTable items={[
+          { left: "CVify Classic / Standard", right: "✅ Footer added" },
+          { left: "AURA DARK", right: "✅ Footer added (styled to match dark palette)" },
+          { left: "TERMINAL DARK", right: "✅ Footer added" },
+          { left: "CYBER NEON", right: "✅ Footer added" },
+          { left: "ORIENTAL LUXE", right: "✅ Footer added (gold accent on links)" },
+          { left: "Midnight Dev / Corporate Gold / Creative Sunset / Slate / Emerald", right: "✅ Footer added" },
+        ]} />
+      </>
+    ),
+
+    "perf-optimizations": (
+      <>
+        <DocHeader title="⚡ Frontend Performance Optimizations" badge="Performance" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          In June 2026, CVify Pro's Public Profile page underwent a focused performance engineering pass targeting <strong className="text-text-primary">INP (Interaction to Next Paint)</strong>, <strong className="text-text-primary">LCP (Largest Contentful Paint)</strong>, and unnecessary React re-renders. All changes are applied in <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">PublicProfile.jsx</code>.
+        </p>
+
+        <SectionTitle>1. CSS Scroll Class Toggle (INP Fix)</SectionTitle>
+        <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            Replaced <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">useState(scrolled)</code> with a pure DOM <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">classList.toggle</code> on the <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">&lt;html&gt;</code> element.
+          </p>
+          <pre className="text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre">{`// Before: Every scroll threshold change triggered a re-render
+const [scrolled, setScrolled] = useState(false);
+
+// After: Pure DOM — zero React involvement
+document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`}</pre>
+          <p className="text-text-muted text-[12px] mt-3">Navbar scroll animations moved to pure CSS: <code className="text-xs">html.pub-scrolled .pub-nav</code> — no React state, no re-renders.</p>
+        </div>
+
+        <SectionTitle>2. content-visibility: auto (Render Deferral)</SectionTitle>
+        <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl mb-6">
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            Applied <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">content-visibility: auto</code> with <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">contain-intrinsic-size</code> to all major profile sections via the <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">.cv-section</code> utility class. The browser skips painting offscreen sections until the user scrolls near them — significantly reducing initial render work.
+          </p>
+        </div>
+
+        <SectionTitle>3. Stable References (useCallback + useMemo)</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <InfoCard icon={<Zap size={16} />} color="emerald" title="useCallback on All Handlers"
+            desc="handleArrayUpdate, handleTogglePublic, handleContactSubmit, and ensureAbsoluteUrl are now wrapped in useCallback. This keeps their references stable, allowing React.memo on child sections to actually work." />
+          <InfoCard icon={<Brain size={16} />} color="blue" title="useMemo on Derived Objects"
+            desc="personalInfo (passed to Hero) and publicResumes were new object/array literals every render, silently defeating React.memo. Both are now wrapped in useMemo with precise dependency arrays." />
+        </div>
+
+        <SectionTitle>4. LCP Image Optimization</SectionTitle>
+        <ComparisonTable items={[
+          { left: "fetchpriority", right: "'high' — browser prioritizes this image above all others" },
+          { left: "decoding", right: "'async' — image decode does not block the main thread" },
+          { left: "loading", right: "'eager' — explicitly not lazy-loaded (it's above the fold)" },
+        ]} />
+
+        <SectionTitle>5. Font & Network Optimizations (index.html)</SectionTitle>
+        <ComparisonTable items={[
+          { left: "font-display", right: "'swap' — text visible immediately using fallback font while custom font loads" },
+          { left: "dns-prefetch", right: "Added for res.cloudinary.com and fonts.gstatic.com — pre-resolves DNS before images request" },
+        ]} />
       </>
     ),
 
