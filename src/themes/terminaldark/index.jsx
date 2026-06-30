@@ -27,9 +27,10 @@ const TerminalDarkTheme = ({
 }) => {
   return (
     <div
-      className="relative z-0 min-h-screen selection:bg-[#915eff] selection:text-white"
+      className="relative z-0 min-h-screen overflow-x-hidden selection:bg-[#915eff] selection:text-white"
       style={{
         backgroundColor: tokens.colors.background,
+        backgroundImage: "radial-gradient(circle at top, rgba(145, 94, 255, 0.12), transparent 35%)",
         fontFamily: tokens.fonts.body,
         color: tokens.colors.primary,
       }}

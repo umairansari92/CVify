@@ -7,15 +7,15 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
   if (!projects || projects.length === 0) return null;
 
   return (
-    <section id="showcase-td" className="max-w-7xl mx-auto px-6 py-20">
+    <section id="showcase-td" className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-10">
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <p className="text-[#aaa6c3] text-[18px] uppercase tracking-wider">My work</p>
-        <h2 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px]">Projects.</h2>
+        <p className="text-[18px] uppercase tracking-[0.35em] text-[#aaa6c3]">My work</p>
+        <h2 className="text-[30px] font-black text-white sm:text-[40px] md:text-[60px]">Projects.</h2>
       </motion.div>
 
       <motion.p
         initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-        className="mt-3 text-[#aaa6c3] text-[17px] max-w-3xl leading-[30px]"
+        className="mt-3 max-w-3xl text-[17px] leading-[30px] text-[#aaa6c3]"
       >
         Following projects showcase skills and experience through real-world examples. Each project is briefly described with links to code repositories and live demos.
       </motion.p>
@@ -28,7 +28,7 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="bg-[#151030] p-5 rounded-2xl sm:w-[360px] w-full border border-[#915eff]/20 hover:border-[#915eff]/60 transition-colors shadow-2xl group"
+            className="group w-full rounded-[1.5rem] border border-[#915eff]/20 bg-[#151030]/90 p-5 shadow-[0_0_25px_rgba(145,94,255,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-[#915eff]/60 sm:w-[360px]"
           >
             <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
               <img
@@ -58,7 +58,7 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
             </div>
 
             <div className="mt-5">
-              <h3 className="text-white font-bold text-[24px] group-hover:text-[#915eff] transition-colors">
+              <h3 className="text-[24px] font-bold text-white transition-colors group-hover:text-[#915eff]">
                 <InlineEdit
                   isOwner={isOwner}
                   id={`td-project-title-${index}`}
@@ -75,7 +75,7 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
                 type="textarea"
                 onSave={(v) => handleArrayUpdate?.("projects", index, { description: v })}
               >
-                <p className="mt-2 text-[#aaa6c3] text-[14px] line-clamp-3">{project.description}</p>
+                <p className="mt-2 line-clamp-3 text-[14px] text-[#aaa6c3]">{project.description}</p>
               </InlineEdit>
             </div>
 
