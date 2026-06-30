@@ -36,7 +36,7 @@ const Skills = ({ user, isOwner, handleLiveUpdate }) => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 border-[#151030] bg-[#151030]/90 shadow-[0_0_15px_rgba(145,94,255,0.1)] transition-all duration-300 hover:-translate-y-1 hover:border-[#915eff]"
+                className="w-28 h-28 flex flex-col items-center justify-center bg-[#151030] rounded-full shadow-[0_0_15px_rgba(145,94,255,0.1)] border-2 border-[#151030] hover:border-[#915eff] transition-all"
               >
                 <div className="text-[#915eff] font-black text-xs text-center px-2 break-words">
                   {icon ? (
@@ -71,7 +71,7 @@ const Skills = ({ user, isOwner, handleLiveUpdate }) => {
   };
 
   return (
-    <section id="skills-td" className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-10">
+    <section id="skills-td" className="max-w-7xl mx-auto px-6 py-20">
       {renderSkillBlock(technicalSkills, "My technical stack", "Technical Skills", "tech")}
       {renderSkillBlock(strategicSkills, "My core competencies", "Strategic Skills", "strat")}
     </section>

@@ -24,9 +24,9 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
   };
 
   return (
-    <section id="about-td" className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-10">
+    <section id="about-td" className="max-w-7xl mx-auto px-6 py-20">
       {/* Top: Text left + Photo right */}
-      <div className="mb-20 flex flex-col items-center gap-12 lg:flex-row lg:gap-20">
+      <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center mb-20">
         {/* Left: Text */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -34,8 +34,8 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
           viewport={{ once: true }}
           className="flex-1"
         >
-          <p className="mb-2 text-[16px] uppercase tracking-[0.35em] text-[#aaa6c3]">Introduction</p>
-          <h2 className="mb-6 text-[30px] font-black text-white sm:text-[40px] md:text-[60px]">
+          <p className="text-[#aaa6c3] text-[16px] uppercase tracking-widest mb-2">Introduction</p>
+          <h2 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px] mb-6">
             Overview.
           </h2>
           <InlineEdit
@@ -45,7 +45,7 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             type="textarea"
             onSave={(v) => handleLiveUpdate?.({ summary: v })}
           >
-            <p className="text-[17px] leading-[30px] text-[#aaa6c3]">
+            <p className="text-[#aaa6c3] text-[17px] leading-[30px]">
               {user?.summary || user?.bio || "Passionate professional with a knack for solving complex problems and delivering high-quality solutions."}
             </p>
           </InlineEdit>
@@ -58,11 +58,11 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
           viewport={{ once: true }}
           className="flex-shrink-0"
         >
-          <div className="relative h-72 w-64 lg:h-96 lg:w-80">
-            <div className="absolute inset-0 rounded-[2rem] bg-[#915eff] opacity-20 blur-[70px]" />
-            <div className="absolute inset-0 rotate-3 rounded-[2rem] border-2 border-[#915eff]/40" />
-            <div className="absolute inset-0 -rotate-2 rounded-[2rem] border-2 border-[#7c3aed]/30" />
-            <div className="absolute inset-0 z-10 overflow-hidden rounded-[2rem] border-2 border-[#915eff]/70 shadow-[0_0_40px_rgba(145,94,255,0.35)]">
+          <div className="relative w-64 h-72 lg:w-80 lg:h-96">
+            <div className="absolute inset-0 rounded-2xl bg-[#915eff] blur-[60px] opacity-20" />
+            <div className="absolute inset-0 rounded-2xl border-2 border-[#915eff]/40 rotate-3" />
+            <div className="absolute inset-0 rounded-2xl border-2 border-[#7c3aed]/30 -rotate-2" />
+            <div className="absolute inset-0 rounded-2xl overflow-hidden border-2 border-[#915eff]/70 shadow-[0_0_40px_rgba(145,94,255,0.4)] z-10">
               {profileImage ? (
                 <img
                   src={profileImage}
@@ -82,7 +82,7 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
 
       {/* Bottom: Service / Skill Cards */}
       {cards.length > 0 && (
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
           {cards.map((item, index) => {
             const name = typeof item === "string" ? item : (item.name || item.title || "");
             const icon = (typeof item === "object" && (item.icon || item.emoji)) || getIcon(name);
@@ -94,7 +94,7 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
                 whileHover={{ y: -6, scale: 1.03 }}
-                className="flex min-h-[180px] cursor-default flex-col items-center justify-center gap-4 rounded-[1.4rem] border border-[#915eff]/20 bg-[#151030]/90 p-6 text-center shadow-[0_0_15px_rgba(145,94,255,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#915eff]/70 hover:shadow-[0_0_25px_rgba(145,94,255,0.2)]"
+                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-[#151030] border border-[#915eff]/20 hover:border-[#915eff]/70 transition-all shadow-[0_0_15px_rgba(145,94,255,0.05)] hover:shadow-[0_0_25px_rgba(145,94,255,0.2)] text-center gap-4 cursor-default min-h-[180px]"
               >
                 <div className="w-16 h-16 rounded-full bg-[#1e0a4a] flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(145,94,255,0.3)] border border-[#915eff]/30">
                   {typeof icon === "string" && icon.match(/^https?:\/\//) ? (
