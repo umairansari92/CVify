@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import AnimatedGlobe from "./AnimatedGlobe";
 
-const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending }) => {
+const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSending }) => {
   return (
     <section id="contact-td" className="relative max-w-7xl mx-auto px-6 py-20 overflow-hidden">
       
@@ -43,6 +43,31 @@ const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending }
           <p className="text-[#aaa6c3] text-[18px] uppercase tracking-wider">Get in touch</p>
           <h3 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px]">Contact.</h3>
 
+          {user?.email || user?.phoneNumber || user?.location ? (
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {user?.email && (
+                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                  <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Email</p>
+                  <a href={`mailto:${user.email}`} className="text-white text-sm font-semibold break-all">
+                    {user.email}
+                  </a>
+                </div>
+              )}
+              {user?.phoneNumber && (
+                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                  <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Phone</p>
+                  <p className="text-white text-sm font-semibold break-all">{user.phoneNumber}</p>
+                </div>
+              )}
+              {user?.location && (
+                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                  <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Location</p>
+                  <p className="text-white text-sm font-semibold">{user.location}</p>
+                </div>
+              )}
+            </div>
+          ) : null}
+
           <form onSubmit={handleContactSubmit} className="mt-12 flex flex-col gap-8">
             <label className="flex flex-col">
               <span className="text-white font-medium mb-4">Your Name</span>
@@ -65,6 +90,18 @@ const Contact = ({ contactForm, setContactForm, handleContactSubmit, isSending }
                 value={contactForm.email}
                 onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                 placeholder="What's your web address?"
+                className="bg-[#050816] py-4 px-6 placeholder:text-[#aaa6c3] text-white rounded-lg outline-none border-none font-medium focus:ring-2 focus:ring-[#915eff]/50 transition-all shadow-inner"
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Subject</span>
+              <input
+                type="text"
+                required
+                name="subject"
+                value={contactForm.subject}
+                onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                placeholder="What is this message about?"
                 className="bg-[#050816] py-4 px-6 placeholder:text-[#aaa6c3] text-white rounded-lg outline-none border-none font-medium focus:ring-2 focus:ring-[#915eff]/50 transition-all shadow-inner"
               />
             </label>
