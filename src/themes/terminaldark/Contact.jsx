@@ -44,27 +44,29 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
           <h3 className="text-white font-black md:text-[60px] sm:text-[50px] xs:text-[40px] text-[30px]">Contact.</h3>
 
           {user?.email || user?.phoneNumber || user?.location ? (
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="mt-8 space-y-6">
               {user?.email && (
-                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-6">
                   <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Email</p>
-                  <a href={`mailto:${user.email}`} className="text-white text-sm font-semibold break-all">
+                  <a href={`mailto:${user.email}`} className="text-white text-sm font-semibold break-words">
                     {user.email}
                   </a>
                 </div>
               )}
-              {user?.phoneNumber && (
-                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
-                  <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Phone</p>
-                  <p className="text-white text-sm font-semibold break-all">{user.phoneNumber}</p>
-                </div>
-              )}
-              {user?.location && (
-                <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
-                  <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Location</p>
-                  <p className="text-white text-sm font-semibold">{user.location}</p>
-                </div>
-              )}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {user?.phoneNumber && (
+                  <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                    <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Phone</p>
+                    <p className="text-white text-sm font-semibold break-words">{user.phoneNumber}</p>
+                  </div>
+                )}
+                {user?.location && (
+                  <div className="rounded-2xl border border-[#915eff]/10 bg-[#0b0d1f]/80 p-5">
+                    <p className="text-[#aaa6c3] text-[12px] uppercase tracking-[0.3em] mb-3">Location</p>
+                    <p className="text-white text-sm font-semibold">{user.location}</p>
+                  </div>
+                )}
+              </div>
             </div>
           ) : null}
 
