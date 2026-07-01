@@ -135,7 +135,7 @@ const Contact = ({ user, contactForm, setContactForm, handleContactSubmit, isSen
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="lg:flex-1 lg:h-auto md:h-[550px] h-[350px] flex justify-center items-center"
+          className="lg:flex-1 lg:h-auto md:h-[600px] h-[400px] flex justify-center items-center"
         >
           <AnimatedGlobe />
         </motion.div>

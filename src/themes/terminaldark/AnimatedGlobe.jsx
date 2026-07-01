@@ -38,8 +38,8 @@ function VibrantEarth() {
 
 export default function AnimatedGlobe() {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[1.5rem]" style={{ minHeight: '300px' }}>
-      <Canvas camera={{ position: [0, 0, 4.2], fov: 45 }}>
+    <div className="relative h-full w-full" style={{ minHeight: '400px' }}>
+      <Canvas camera={{ position: [0, 0, 4.5], fov: 50 }}>
         <ambientLight intensity={1.3} />
         <directionalLight position={[5, 3, 5]} intensity={2.0} color="#ffffff" />
         <pointLight position={[-10, -10, -10]} intensity={1.2} color="#c4b5fd" />
