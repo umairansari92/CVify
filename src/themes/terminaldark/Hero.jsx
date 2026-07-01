@@ -21,7 +21,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   }
 
   return (
-    <section className="relative w-full h-screen mx-auto flex items-center justify-center overflow-hidden">
+    <section id="hero-td" className="relative w-full h-screen mx-auto flex items-center justify-center overflow-hidden">
       {/* Background SVG Wave Pattern */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">

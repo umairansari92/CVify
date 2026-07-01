@@ -368,6 +368,12 @@ const PublicProfile = () => {
       if (id === 'journey') return 'experience-ad';
       return `${id}-ad`;
     }
+
+    if (isTerminalDarkTheme) {
+      if (id === 'home') return 'hero-td';
+      if (id === 'journey') return 'experience-td';
+      return `${id}-td`;
+    }
     
     if (isCyberNeonTheme) {
       if (id === 'journey') return 'resume';
@@ -376,7 +382,7 @@ const PublicProfile = () => {
     }
     
     return id;
-  }, [isOrientalLuxeTheme, isAuraDarkTheme, isCyberNeonTheme]);
+  }, [isOrientalLuxeTheme, isAuraDarkTheme, isTerminalDarkTheme, isCyberNeonTheme]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
