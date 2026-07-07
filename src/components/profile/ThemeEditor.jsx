@@ -178,6 +178,21 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         fontPrimary: "Syne",
       },
     },
+    {
+      id: "monograph",
+      name: "MONOGRAPH",
+      icon: <span className="text-2xl">🖋️</span>,
+      settings: {
+        headerBg: "#000000",
+        headerBgSecondary: "#1C1917",
+        bodyBg: "#FAFAF9",
+        accentColor: "#000000",
+        textPrimary: "#292524",
+        textSecondary: "#78716C",
+        cardStyle: "minimal",
+        fontPrimary: "IBM Plex Sans",
+      },
+    },
   ];
 
   const paletteItems = [
@@ -199,6 +214,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     "Playfair Display",
     "Syne",
     "DM Sans",
+    "IBM Plex Sans",
   ];
 
   return (

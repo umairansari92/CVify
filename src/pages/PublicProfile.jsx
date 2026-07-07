@@ -79,6 +79,7 @@ const AuraDarkTheme = lazy(() => import("../themes/auradark"));
 const TerminalDarkTheme = lazy(() => import("../themes/terminaldark"));
 const CyberNeonTheme = lazy(() => import("../themes/cyberneon"));
 const StandardTheme = lazy(() => import("../themes/standard"));
+const MonographTheme = lazy(() => import("../themes/monograph"));
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -316,6 +317,7 @@ const PublicProfile = () => {
     { name: "AURA DARK", headerBg: "#050505", headerBgSecondary: "#101010", bodyBg: "#000000", fontPrimary: "Syne", cardStyle: "minimal", icon: "✨", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#B677EF" },
     { name: "TERMINAL DARK", headerBg: "#050816", headerBgSecondary: "#151030", bodyBg: "#050816", fontPrimary: "Inter", cardStyle: "glass", icon: "💻", textPrimary: "#ffffff", textSecondary: "#aaa6c3", accentColor: "#915eff" },
     { name: "CYBER NEON", headerBg: "#080808", headerBgSecondary: "#000000", bodyBg: "#0a0a0a", fontPrimary: "Orbitron", cardStyle: "glass", icon: "🟢", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#00ffcc" },
+    { name: "MONOGRAPH", headerBg: "#000000", headerBgSecondary: "#1C1917", bodyBg: "#FAFAF9", fontPrimary: "IBM Plex Sans", cardStyle: "minimal", icon: "🖋️", textPrimary: "#292524", textSecondary: "#78716C", accentColor: "#000000" },
   ];
 
   // ✅ OPT: useMemo — only recomputes when localTheme or DB theme actually changes,
@@ -340,6 +342,7 @@ const PublicProfile = () => {
   const isAuraDarkTheme = theme.name === "AURA DARK";
   const isTerminalDarkTheme = theme.name === "TERMINAL DARK";
   const isCyberNeonTheme = theme.name === "CYBER NEON";
+  const isMonographTheme = theme.name === "MONOGRAPH";
 
   const themeStyles = useMemo(() => ({
     backgroundColor: theme.bodyBg,
@@ -376,6 +379,11 @@ const PublicProfile = () => {
     }
     
     if (isCyberNeonTheme) {
+      if (id === 'journey') return 'resume';
+      if (id === 'showcase') return 'projects';
+    }
+    
+    if (isMonographTheme) {
       if (id === 'journey') return 'resume';
       if (id === 'showcase') return 'projects';
       return id;
@@ -756,6 +764,27 @@ const PublicProfile = () => {
           </div>
         }>
           <OrientalLuxeTheme
+            user={user}
+            projects={projects}
+            isOwner={isOwner}
+            handleLiveUpdate={handleLiveUpdate}
+            handleArrayUpdate={handleArrayUpdate}
+            setShowResumeModal={setShowResumeModal}
+            contactForm={contactForm}
+            setContactForm={setContactForm}
+            handleContactSubmit={handleContactSubmit}
+            isSending={isSending}
+            githubData={githubData}
+            githubLoading={githubLoading}
+          />
+        </Suspense>
+      ) : isMonographTheme ? (
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          <MonographTheme
             user={user}
             projects={projects}
             isOwner={isOwner}

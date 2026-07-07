@@ -66,8 +66,9 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 10 Portfolio Themes" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 11 Portfolio Themes" },
         { id: "resume-templates", icon: <Layout size={16} />, label: "12 Resume PDF Templates (New!)" },
+        { id: "monograph", icon: <FileText size={16} />, label: "🖋️ MONOGRAPH (Premium)" },
         { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
         { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
         { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK" },
