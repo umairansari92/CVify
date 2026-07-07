@@ -64,14 +64,17 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
 
             {/* Profile Image */}
             <div
-              className="w-full max-w-xs aspect-[4/5] overflow-hidden border flex items-center justify-center bg-[#EFEFED]"
-              style={{ borderColor: tokens.colors.borders }}
+              className="w-full max-w-xs aspect-square overflow-hidden border rounded-2xl flex items-center justify-center relative"
+              style={{
+                borderColor: tokens.colors.borders,
+                background: "radial-gradient(circle at center, rgba(0,0,0,0.03) 0%, transparent 100%)",
+              }}
             >
               {profileImage ? (
                 <img
                   src={profileImage}
                   alt={firstName || "Profile"}
-                  className="w-full h-full object-cover grayscale"
+                  className="w-full h-full object-contain p-2 grayscale hover:grayscale-0 transition-all duration-500"
                   loading="lazy"
                 />
               ) : (

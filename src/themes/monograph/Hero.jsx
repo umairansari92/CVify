@@ -202,14 +202,16 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               />
               {/* Image container */}
               <div
-                className="relative w-full aspect-square rounded-full overflow-hidden border-2"
-                style={{ borderColor: "#333333" }}
+                className="relative w-full aspect-square rounded-2xl overflow-hidden border border-[#333333] flex items-center justify-center"
+                style={{
+                  background: "radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 100%)",
+                }}
               >
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt={fullName || "Profile"}
-                    className="w-full h-full object-cover object-top grayscale"
+                    className="w-full h-full object-contain p-2 grayscale hover:grayscale-0 transition-all duration-500"
                     loading="eager"
                   />
                 ) : (
