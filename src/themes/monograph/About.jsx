@@ -4,15 +4,44 @@ import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
 
 const About = ({ user, isOwner, handleLiveUpdate }) => {
+  const bio = user?.bio || "";
+  const profileImage = user?.profileImage;
+  const firstName = user?.firstName || user?.name?.split(" ")?.[0] || "";
+  const experience = user?.experience || [];
+  const projects = user?.projects || user?.portfolio || [];
+  const skills = Array.isArray(user?.skills)
+    ? user.skills
+    : [...(user?.skills?.technical || []), ...(user?.skills?.soft || []), ...(user?.skills?.tools || [])];
+
+  // Derived stats — computed dynamically from real data (no hardcoding)
+  const yearsOfExp = experience.length > 0
+    ? Math.max(
+        ...experience.map((e) => {
+          const startYear = e.startDate
+            ? new Date(e.startDate).getFullYear()
+            : e.from
+            ? parseInt(e.from)
+            : new Date().getFullYear();
+          return new Date().getFullYear() - startYear;
+        })
+      )
+    : 0;
+
+  const stats = [
+    { value: yearsOfExp > 0 ? `${yearsOfExp}+` : "—", label: "Years Experience" },
+    { value: projects.length > 0 ? `${projects.length}` : "—", label: "Projects Built" },
+    { value: skills.length > 0 ? `${skills.length}+` : "—", label: "Technologies" },
+  ];
+
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       className="w-full py-24 md:py-32"
       style={{ backgroundColor: tokens.colors.paper, color: tokens.colors.primaryText }}
     >
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-12 gap-20">
-        
-        {/* Left Column (Section Title) */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-12 gap-16 lg:gap-20">
+
+        {/* Left Column — Section Label */}
         <div className="md:col-span-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -20,76 +49,97 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 
+            <h2
               className="text-xs uppercase tracking-[0.2em] mb-4"
               style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}
             >
               Background
             </h2>
-            <h3 
-              className="text-3xl font-bold leading-tight"
+            <h3
+              className="text-3xl font-bold leading-tight mb-8"
               style={{ fontFamily: tokens.fonts.heading }}
             >
               About Me
             </h3>
+
+            {/* Profile Image */}
+            <div
+              className="w-full max-w-xs aspect-[4/5] overflow-hidden border flex items-center justify-center bg-[#EFEFED]"
+              style={{ borderColor: tokens.colors.borders }}
+            >
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt={firstName || "Profile"}
+                  className="w-full h-full object-cover grayscale"
+                  loading="lazy"
+                />
+              ) : (
+                <div
+                  className="flex h-full w-full items-center justify-center text-6xl font-bold"
+                  style={{ color: tokens.colors.muted }}
+                >
+                  {(firstName?.[0] || "?").toUpperCase()}
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
 
-        {/* Right Column (Content) */}
-        <div className="md:col-span-8">
+        {/* Right Column — Bio + Stats */}
+        <div className="md:col-span-8 flex flex-col justify-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="prose prose-lg max-w-none"
-            style={{ fontFamily: tokens.fonts.body, color: tokens.colors.primaryText }}
+            className="text-lg leading-relaxed mb-16"
+            style={{ color: tokens.colors.primaryText, fontFamily: tokens.fonts.body }}
           >
-            <p className="leading-relaxed whitespace-pre-wrap text-lg text-[#292524]">
-              <InlineEdit
-                value={user?.about || "I am a passionate developer focused on crafting clean, editorial interfaces."}
-                onSave={(val) => handleLiveUpdate("about", null, val)}
-                isOwner={isOwner}
-                multiline
-                placeholder="Write your story here..."
-              />
-            </p>
+            <InlineEdit
+              isOwner={isOwner}
+              id="mg-about-bio"
+              value={bio}
+              type="textarea"
+              onSave={(v) => handleLiveUpdate({ bio: v })}
+            >
+              <p className="whitespace-pre-wrap">
+                {bio || (isOwner
+                  ? <span className="italic opacity-40">Click here to add your bio…</span>
+                  : "A developer passionate about clean interfaces and scalable systems."
+                )}
+              </p>
+            </InlineEdit>
           </motion.div>
 
-          {/* Quick Stats or Metadata (Optional) */}
-          <motion.div 
+          {/* Dynamic Stats Row */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-16 grid grid-cols-2 sm:grid-cols-3 gap-8 pt-8 border-t"
+            className="grid grid-cols-3 gap-8 pt-8 border-t"
             style={{ borderColor: tokens.colors.borders }}
           >
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] mb-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}>Years Active</p>
-              <p className="text-xl font-bold" style={{ fontFamily: tokens.fonts.mono }}>
-                <InlineEdit
-                  value={user?.yearsOfExperience || "5+"}
-                  onSave={(val) => handleLiveUpdate("yearsOfExperience", null, val)}
-                  isOwner={isOwner}
-                  placeholder="e.g. 5+"
-                />
-              </p>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] mb-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}>Main Focus</p>
-              <p className="text-xl font-bold" style={{ fontFamily: tokens.fonts.mono }}>
-                <InlineEdit
-                  value={user?.header?.currentRole || "Engineering"}
-                  onSave={(val) => handleLiveUpdate("header", "currentRole", val)}
-                  isOwner={isOwner}
-                  placeholder="Focus area"
-                />
-              </p>
-            </div>
+            {stats.map((stat, i) => (
+              <div key={i}>
+                <p
+                  className="text-2xl font-bold mb-1"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primaryText }}
+                >
+                  {stat.value}
+                </p>
+                <p
+                  className="text-[10px] uppercase tracking-[0.15em]"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}
+                >
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </motion.div>
-
         </div>
+
       </div>
     </section>
   );
