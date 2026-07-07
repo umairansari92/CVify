@@ -189,7 +189,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-              className="relative w-64 md:w-72 lg:w-80"
+              className="relative w-72 md:w-80 lg:w-96"
             >
               {/* Subtle ring behind image */}
               <div
@@ -201,24 +201,18 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                 }}
               />
               {/* Image container */}
-              <div
-                className="relative w-full aspect-square rounded-2xl overflow-hidden border border-[#333333] flex items-center justify-center"
-                style={{
-                  background: "radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 100%)",
-                }}
-              >
+              <div className="relative w-full aspect-square flex items-center justify-center">
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt={fullName || "Profile"}
-                    className="w-full h-full object-contain p-2 grayscale hover:grayscale-0 transition-all duration-500"
+                    className="w-full h-full object-contain grayscale hover:grayscale-0 transition-all duration-500"
                     loading="eager"
                   />
                 ) : (
                   <div
                     className="flex h-full w-full items-center justify-center text-6xl font-bold"
                     style={{
-                      backgroundColor: "#111",
                       color: tokens.colors.muted,
                       fontFamily: tokens.fonts.heading,
                     }}
