@@ -62,25 +62,23 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
               About Me
             </h3>
 
-            {/* Profile Image */}
-            <div className="relative w-full max-w-sm lg:max-w-md aspect-square flex items-center justify-center">
-              <div
-                className="absolute inset-0 opacity-10 blur-3xl"
-                style={{
-                  background: "radial-gradient(circle at center, rgba(0,0,0,0.5) 0%, transparent 70%)",
-                }}
-              />
+            {/* Profile Image with Faded Edges */}
+            <div className="relative w-full max-w-sm lg:max-w-md flex items-center justify-center">
               {profileImage ? (
                 <img
                   src={profileImage}
                   alt={firstName || "Profile"}
-                  className="relative w-full h-full object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                  className="relative w-full h-auto max-h-[500px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
+                  style={{
+                    WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)",
+                    maskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)"
+                  }}
                   loading="lazy"
                 />
               ) : (
                 <div
-                  className="relative flex h-full w-full items-center justify-center text-6xl font-bold"
-                  style={{ color: tokens.colors.muted }}
+                  className="relative flex h-64 w-64 rounded-full items-center justify-center text-6xl font-bold"
+                  style={{ backgroundColor: "#EFEFED", color: tokens.colors.muted }}
                 >
                   {(firstName?.[0] || "?").toUpperCase()}
                 </div>

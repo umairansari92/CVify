@@ -189,30 +189,26 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-              className="relative w-72 md:w-80 lg:w-96"
+              className="relative w-full max-w-sm md:max-w-md lg:max-w-lg flex flex-col items-center"
             >
-              {/* Subtle ring behind image */}
-              <div
-                className="absolute inset-0 rounded-full opacity-10"
-                style={{
-                  background:
-                    "radial-gradient(circle, #D6D3D1 0%, transparent 70%)",
-                  transform: "scale(1.1)",
-                }}
-              />
-              {/* Image container */}
-              <div className="relative w-full aspect-square flex items-center justify-center">
+              {/* Image container with mask to fade edges */}
+              <div className="relative w-full flex items-center justify-center">
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt={fullName || "Profile"}
-                    className="w-full h-full object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                    className="w-full h-auto max-h-[500px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
+                    style={{
+                      WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)",
+                      maskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)"
+                    }}
                     loading="eager"
                   />
                 ) : (
                   <div
-                    className="flex h-full w-full items-center justify-center text-6xl font-bold"
+                    className="flex h-64 w-64 items-center justify-center text-6xl font-bold rounded-full"
                     style={{
+                      backgroundColor: "#111",
                       color: tokens.colors.muted,
                       fontFamily: tokens.fonts.heading,
                     }}
