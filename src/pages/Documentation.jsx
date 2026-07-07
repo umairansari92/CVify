@@ -45,6 +45,7 @@ const Documentation = () => {
         { id: "document-identity", icon: <FileText size={16} />, label: "Document Identity (New!)" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
         { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative" },
+        { id: "ai-representative-v2", icon: <Bot size={16} />, label: "🤖 AI Rep — Deep Dive (New!)" },
       ]
     },
     {
@@ -1484,7 +1485,7 @@ export const isDisposableEmail = (email) => {
       </>
     ),
 
-    "ai-representative": (
+    "ai-representative-v2": (
       <>
         <DocHeader title="🤖 AI Representative" badge="New Feature" />
         <p className="text-slate-300 text-[15px] leading-relaxed mb-8">

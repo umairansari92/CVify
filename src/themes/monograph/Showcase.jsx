@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
-import AddProjectForm from "../../components/profile-forms/AddProjectForm";
 
 const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
   return (
@@ -41,7 +40,7 @@ const Showcase = ({ projects, isOwner, handleArrayUpdate }) => {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <AddProjectForm />
+              <p className="text-xs italic" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}>Edit projects via your dashboard.</p>
             </motion.div>
           )}
         </div>
