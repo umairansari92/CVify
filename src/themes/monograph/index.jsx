@@ -46,6 +46,7 @@ const MonographTheme = ({
 
       {(isOwner || projects?.length > 0) && (
         <Showcase
+          user={user}
           projects={projects}
           isOwner={isOwner}
           handleArrayUpdate={handleArrayUpdate}
