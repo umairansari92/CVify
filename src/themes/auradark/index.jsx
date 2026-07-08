@@ -8,6 +8,10 @@ import About from "./About";
 import Experience from "./Experience";
 import Showcase from "./Showcase";
 import Skills from "./Skills";
+import Certifications from "./Certifications";
+import Dossier from "./Dossier";
+import Testimonials from "./Testimonials";
+import Interests from "./Interests";
 import Contact from "./Contact";
 import Footer from "./Footer";
 
@@ -114,6 +118,14 @@ const AuraDarkTheme = ({
             <Showcase projects={projects} isOwner={isOwner} />
           </div>
         )}
+
+        <Certifications user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Dossier user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Testimonials user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Interests user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
 
         <Contact
           user={user}

@@ -6,6 +6,10 @@ import Experience from "./Experience";
 import Showcase from "./Showcase";
 import Skills from "./Skills";
 import Education from "./Education";
+import Certifications from "./Certifications";
+import Dossier from "./Dossier";
+import Testimonials from "./Testimonials";
+import Interests from "./Interests";
 import Contact from "./Contact";
 import Footer from "./Footer";
 import BackgroundFX from "./BackgroundFX";
@@ -110,6 +114,14 @@ const OrientalLuxeTheme = ({
             handleArrayUpdate={handleArrayUpdate}
           />
         )}
+
+        <Certifications user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Dossier user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Testimonials user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Interests user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
 
         {/* 2-Column Contact with Form */}
         <Contact

@@ -6,6 +6,10 @@ import Hero from "./Hero";
 import About from "./About";
 import Resume from "./Resume";
 import Showcase from "./Showcase";
+import Certifications from "./Certifications";
+import Dossier from "./Dossier";
+import Testimonials from "./Testimonials";
+import Interests from "./Interests";
 import Contact from "./Contact";
 import Footer from "./Footer";
 import GithubStats from "../../components/profile/sections/GithubStats";
@@ -139,6 +143,14 @@ const CyberNeonTheme = ({
             handleArrayUpdate={handleArrayUpdate}
           />
         )}
+
+        <Certifications user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Dossier user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Testimonials user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
+
+        <Interests user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
 
         <Contact
           user={user}
