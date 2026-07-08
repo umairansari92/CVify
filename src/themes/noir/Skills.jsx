@@ -48,16 +48,16 @@ const ServiceCard = ({ service, index }) => (
       borderColor: tokens.colors.border,
     }}
   >
-    {/* Dynamic Red Fill slide-up on hover */}
+    {/* Dynamic Red Fill slide-up on hover — slow 900ms */}
     <div
-      className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+      className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
       style={{ backgroundColor: tokens.colors.accent }}
       aria-hidden="true"
     />
 
     {/* Glow spotlight behind fill */}
     <div
-      className="absolute top-0 right-0 w-24 h-24 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-600 z-[1]"
+      className="absolute top-0 right-0 w-24 h-24 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-[900ms] z-[1]"
       style={{ background: `radial-gradient(circle, rgba(255,255,255,0.2) 20%, transparent)` }}
       aria-hidden="true"
     />
