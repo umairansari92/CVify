@@ -80,8 +80,6 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             </div>
           </div>
         </motion.div>
-          </div>
-        </motion.div>
       </div>
 
       {/* ── Verification Proof ── */}
