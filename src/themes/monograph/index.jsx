@@ -50,7 +50,7 @@ const MonographTheme = ({
         loading={githubLoading}
       />
 
-      <About user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} />
+      <About user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} setShowResumeModal={setShowResumeModal} />
 
       {(isOwner || user?.experience?.length > 0 || user?.education?.length > 0) && (
         <Resume user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />

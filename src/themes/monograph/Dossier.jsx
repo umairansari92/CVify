@@ -44,7 +44,7 @@ const Dossier = ({ user, isOwner, handleArrayUpdate }) => {
           
           {/* Honors & Awards */}
           {achievements.length > 0 && (
-            <div className={`lg:col-span-${languages.length > 0 ? '8' : '12'}`}>
+            <div className={languages.length > 0 ? "lg:col-span-8" : "lg:col-span-12"}>
               <h4 
                 className="text-lg uppercase tracking-widest mb-10 pb-4 border-b"
                 style={{ fontFamily: tokens.fonts.mono, borderColor: '#333' }}
@@ -94,7 +94,7 @@ const Dossier = ({ user, isOwner, handleArrayUpdate }) => {
 
           {/* Languages */}
           {languages.length > 0 && (
-            <div className={`lg:col-span-${achievements.length > 0 ? '4' : '12'}`}>
+            <div className={achievements.length > 0 ? "lg:col-span-4" : "lg:col-span-12"}>
               <h4 
                 className="text-lg uppercase tracking-widest mb-10 pb-4 border-b"
                 style={{ fontFamily: tokens.fonts.mono, borderColor: '#333' }}

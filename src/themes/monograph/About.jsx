@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
 
-const About = ({ user, isOwner, handleLiveUpdate }) => {
+const About = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
   const bio = user?.bio || "";
   const profileImage = user?.profileImage;
   const firstName = user?.firstName || user?.name?.split(" ")?.[0] || "";
@@ -121,7 +121,7 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-3 gap-8 pt-8 border-t"
+            className="grid grid-cols-3 gap-8 pt-8 border-t mb-16"
             style={{ borderColor: tokens.colors.borders }}
           >
             {stats.map((stat, i) => (
@@ -140,6 +140,47 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
                 </p>
               </div>
             ))}
+          </motion.div>
+
+          {/* Verification Proof & Dossier Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-10"
+          >
+            {(user?.branding?.verificationStats?.atsScore || user?.branding?.verificationStats?.dataPoints) && (
+              <div className="p-8 border flex flex-col md:flex-row items-center justify-between gap-8" style={{ borderColor: tokens.colors.borders }}>
+                <div className="flex flex-col items-start gap-1">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: tokens.colors.muted, fontFamily: tokens.fonts.mono }}>Verification Proof</p>
+                  <p className="text-xl font-bold uppercase tracking-widest" style={{ fontFamily: tokens.fonts.heading }}>Verified by CVify</p>
+                </div>
+                
+                <div className="flex items-center gap-8 md:gap-12 text-center">
+                  {user?.branding?.verificationStats?.atsScore && (
+                    <div>
+                      <p className="text-3xl font-bold" style={{ fontFamily: tokens.fonts.mono }}>{user.branding.verificationStats.atsScore}%</p>
+                      <p className="text-[9px] uppercase tracking-[0.2em]" style={{ color: tokens.colors.muted, fontFamily: tokens.fonts.mono }}>Avg. ATS Score</p>
+                    </div>
+                  )}
+                  {user?.branding?.verificationStats?.dataPoints && (
+                    <div>
+                      <p className="text-3xl font-bold" style={{ fontFamily: tokens.fonts.mono }}>{user.branding.verificationStats.dataPoints}</p>
+                      <p className="text-[9px] uppercase tracking-[0.2em]" style={{ color: tokens.colors.muted, fontFamily: tokens.fonts.mono }}>Data Points</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <button 
+              onClick={() => setShowResumeModal && setShowResumeModal(true)} 
+              className="w-full md:w-auto px-12 py-5 text-[10px] font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border hover:bg-black hover:text-white"
+              style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.primaryText }}
+            >
+              Access Full Professional Dossier
+            </button>
           </motion.div>
         </div>
 
