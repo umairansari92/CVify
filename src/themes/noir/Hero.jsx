@@ -1,24 +1,20 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 
 /**
- * NOIR — Centered Hero Section (Matching Image 2 Layout)
+ * NOIR — Centered Hero Section (Pixel-Based Scroll Animations)
  *
- * Changes applied:
- * 1. Centered all elements (tagline, huge username, TypeAnimation, bio, buttons) in a single flex column.
- * 2. Placed everything inside one z-30 container to prevent any clipping, layout shift, or overlay bugs.
- * 3. Tagline: "EXECUTION OVER WORDS" centered at the top.
- * 4. Massive bold name: "UMAIR AHMED" centered.
- * 5. TypeAnimation centered in accent color.
- * 6. Responsive buttons centered at the bottom.
- * 7. Background: Pure black (#000000) with a subtle radial grid pattern and the red glow spotlight.
+ * Major fixes:
+ * 1. Switch useTransform input from relative scrollYProgress to absolute scrollY (pixel-based).
+ *    This completely eliminates caching/hydration glitches where text was initialized transparent.
+ * 2. Removed duplicate Name containers. The centered title, name, bio, and buttons are unified.
+ * 3. Mount animations ensure everything is visible on page load.
  */
 
 const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }) => {
-  const containerRef = useRef(null);
   const [time, setTime] = useState("");
 
   // Clock
@@ -34,44 +30,42 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
     return () => clearInterval(id);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  // Use absolute scrollY in pixels instead of scrollYProgress to make it bulletproof
+  const { scrollY } = useScroll();
 
-  // ── Converging photos (z-10 background layer) ──
-  const img1X       = useTransform(scrollYProgress, [0, 1], [0,  240]);
-  const img1Y       = useTransform(scrollYProgress, [0, 1], [0,  180]);
-  const img1Rotate  = useTransform(scrollYProgress, [0, 1], [-12, 2]);
-  const img1Scale   = useTransform(scrollYProgress, [0, 1], [1, 0.55]);
-  const img1Opacity = useTransform(scrollYProgress, [0, 0.6, 0.9], [0.85, 0.5, 0]);
+  // ── Converging background photos scroll mappings ──
+  const img1X       = useTransform(scrollY, [0, 500], [0,  240]);
+  const img1Y       = useTransform(scrollY, [0, 500], [0,  180]);
+  const img1Rotate  = useTransform(scrollY, [0, 500], [-12, 2]);
+  const img1Scale   = useTransform(scrollY, [0, 500], [1, 0.55]);
+  const img1Opacity = useTransform(scrollY, [0, 350, 500], [0.85, 0.5, 0]);
 
-  const img2X       = useTransform(scrollYProgress, [0, 1], [0, -220]);
-  const img2Y       = useTransform(scrollYProgress, [0, 1], [0,  200]);
-  const img2Rotate  = useTransform(scrollYProgress, [0, 1], [14, -2]);
-  const img2Scale   = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const img2Opacity = useTransform(scrollYProgress, [0, 0.6, 0.9], [0.85, 0.5, 0]);
+  const img2X       = useTransform(scrollY, [0, 500], [0, -220]);
+  const img2Y       = useTransform(scrollY, [0, 500], [0,  200]);
+  const img2Rotate  = useTransform(scrollY, [0, 500], [14, -2]);
+  const img2Scale   = useTransform(scrollY, [0, 500], [1, 0.5]);
+  const img2Opacity = useTransform(scrollY, [0, 350, 500], [0.85, 0.5, 0]);
 
-  const img3X       = useTransform(scrollYProgress, [0, 1], [0,  200]);
-  const img3Y       = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const img3Rotate  = useTransform(scrollYProgress, [0, 1], [-16, -4]);
-  const img3Scale   = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const img3Opacity = useTransform(scrollYProgress, [0, 0.6, 0.9], [0.85, 0.5, 0]);
+  const img3X       = useTransform(scrollY, [0, 500], [0,  200]);
+  const img3Y       = useTransform(scrollY, [0, 500], [0, -160]);
+  const img3Rotate  = useTransform(scrollY, [0, 500], [-16, -4]);
+  const img3Scale   = useTransform(scrollY, [0, 500], [1, 0.5]);
+  const img3Opacity = useTransform(scrollY, [0, 350, 500], [0.85, 0.5, 0]);
 
-  const img4X       = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const img4Y       = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const img4Rotate  = useTransform(scrollYProgress, [0, 1], [10, 16]);
-  const img4Scale   = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const img4Opacity = useTransform(scrollYProgress, [0, 0.6, 0.9], [0.85, 0.5, 0]);
+  const img4X       = useTransform(scrollY, [0, 500], [0, -200]);
+  const img4Y       = useTransform(scrollY, [0, 500], [0, -160]);
+  const img4Rotate  = useTransform(scrollY, [0, 500], [10, 16]);
+  const img4Scale   = useTransform(scrollY, [0, 500], [1, 0.5]);
+  const img4Opacity = useTransform(scrollY, [0, 350, 500], [0.85, 0.5, 0]);
 
-  // Center column scale and fade on scroll
-  const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.9, 0]);
-  const heroY       = useTransform(scrollYProgress, [0, 0.6], [0, -30]);
+  // Center text scroll transitions
+  const textOpacity = useTransform(scrollY, [0, 350], [1, 0]);
+  const textY       = useTransform(scrollY, [0, 350], [0, -40]);
 
-  // Scroll indicator & HUD dock fade
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-  const hudOpacity       = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  // Clock + HUD + Indicator transitions
+  const metaOpacity = useTransform(scrollY, [0, 150], [0.45, 0]);
+  const indicatorOpacity = useTransform(scrollY, [0, 100], [0.4, 0]);
+  const hudOpacity       = useTransform(scrollY, [0, 250], [1, 0]);
 
   // Data
   const profileImage = user?.profileImage;
@@ -84,7 +78,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
   const signalsCount = (analytics?.contactClicks || 0) + (analytics?.resumeDownloads || 0);
   const availability = user?.availability || "Available for Opportunities";
 
-  // TypeAnimation sequences
+  // TypeAnimation sequence from user headline
   const rawHeadline  = user?.headline || "Full Stack Developer, UI Engineer, SaaS Builder";
   const typeSequence = [];
   rawHeadline.split(",").forEach((s) => {
@@ -103,10 +97,9 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
 
   return (
     <section
-      ref={containerRef}
       id="hero"
-      className="relative"
-      style={{ height: "200vh", backgroundColor: tokens.colors.bg }}
+      className="relative overflow-hidden"
+      style={{ height: "130vh", backgroundColor: tokens.colors.bg }}
     >
       {/* Google Fonts */}
       <link
@@ -226,22 +219,29 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
           
           {/* Top meta clock */}
           {(cityName || time) && (
-            <div className="flex items-center gap-2 mb-6 pointer-events-none">
+            <motion.div
+              style={{ opacity: metaOpacity }}
+              className="flex items-center gap-2 mb-6 pointer-events-none"
+            >
               <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: tokens.colors.accent }} />
               <span
-                className="text-[9px] tracking-widest uppercase font-bold opacity-45"
+                className="text-[9px] tracking-widest uppercase font-bold"
                 style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
               >
                 {cityName}{cityName && time ? " · " : ""}{time}
               </span>
-            </div>
+            </motion.div>
           )}
 
+          {/* Unified Text Block (Mount animation guarantees it renders instantly) */}
           <motion.div
-            style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            style={{ opacity: textOpacity, y: textY }}
             className="flex flex-col items-center text-center gap-5 w-full"
           >
-            {/* Centered Spaced Tagline */}
+            {/* Spaced Tagline */}
             <span
               className="text-[10px] font-black uppercase tracking-[0.45em] opacity-40 mb-1"
               style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.mono }}
@@ -249,7 +249,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               EXECUTION OVER WORDS
             </span>
 
-            {/* Huge Centered Username */}
+            {/* Huge Username */}
             <h1
               className="select-none font-black uppercase leading-none tracking-tight text-white text-5xl md:text-8xl flex flex-wrap justify-center gap-x-4 gap-y-2"
               style={{ fontFamily: tokens.fonts.heading }}
@@ -275,7 +275,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               </InlineEdit>
             </h1>
 
-            {/* Centered TypeAnimation Subtitle */}
+            {/* TypeAnimation Subtitle */}
             <div
               className="text-lg md:text-xl font-medium tracking-wide min-h-[1.8em]"
               style={{ color: tokens.colors.accent, fontFamily: tokens.fonts.heading }}
@@ -290,7 +290,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               <span style={{ color: tokens.colors.accent }}>_</span>
             </div>
 
-            {/* Centered Bio */}
+            {/* Bio Paragraph */}
             <InlineEdit
               isOwner={isOwner}
               id="noir-hero-bio"
@@ -306,7 +306,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               </p>
             </InlineEdit>
 
-            {/* Centered Premium CTA Buttons */}
+            {/* CTA Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
               <button
                 onClick={() => scrollTo("work")}
