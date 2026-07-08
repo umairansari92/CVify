@@ -503,6 +503,55 @@ const Documentation = () => {
       </>
     ),
 
+    monograph: (
+      <>
+        <DocHeader title="🖋️ MONOGRAPH Theme" badge="Premium Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-white">MONOGRAPH</strong> is CVify Pro's premier editorial theme — designed for authors, journalists, researchers, and professionals who demand a high-contrast, typographic-first presentation that reads like a premium magazine.
+        </p>
+
+        <SectionTitle>Visual Identity</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Palette size={18} />} color="slate" title="Editorial Contrast"
+            desc="Stark black headers (#000000) against an off-white reading canvas (#FAFAF9) provide maximum readability and a sophisticated print-like aesthetic." />
+          <InfoCard icon={<FileText size={18} />} color="slate" title="IBM Plex Sans Typography"
+            desc="A highly legible, neo-grotesque typeface that brings a modern yet intellectual feel to every section of your portfolio." />
+          <InfoCard icon={<Layout size={18} />} color="slate" title="Brutalist Borders"
+            desc="Sharp, high-contrast borders and dividers separate content blocks, mimicking editorial grids found in high-end publications." />
+          <InfoCard icon={<Zap size={18} />} color="slate" title="Monochromatic Elegance"
+            desc="Zero flashy colors. Focuses entirely on content hierarchy, whitespace, and stark contrast to make your professional achievements the sole focus." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-white/5 border border-white/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Two-tone: Solid black header, warm off-white body (#FAFAF9)" },
+              { label: "Color Mode", val: "High-contrast Light Mode" },
+              { label: "Accent Color", val: "Absolute Black (#000000)" },
+              { label: "Card Style", val: "Editorial — sharp borders, bold titles, structured grids" },
+              { label: "Font", val: "IBM Plex Sans — intellectual and highly readable" },
+              { label: "Icon", val: "🖋️ Fountain Pen — representing authorship and editorial quality" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-white w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Writers & Authors", "Journalists", "Researchers", "Academics", "Legal Professionals", "Editorial Designers"].map((role, i) => (
+            <div key={i} className="p-3 bg-white/5 border border-white/15 rounded-xl text-center">
+              <p className="text-white font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
     "aura-dark": (
       <>
         <DocHeader title="✨ AURA DARK Theme" badge="New Theme" />
