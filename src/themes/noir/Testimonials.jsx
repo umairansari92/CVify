@@ -46,7 +46,7 @@ const Testimonials = ({ user, isOwner }) => {
                   <img src={test.image} alt={test.author} className="w-10 h-10 rounded-full object-cover grayscale" />
                 ) : (
                   <div className="w-10 h-10 rounded-full flex items-center justify-center border" style={{ borderColor: tokens.colors.border, backgroundColor: 'rgba(255,255,255,0.02)' }}>
-                    <span className="text-xs font-medium" style={{ color: tokens.colors.secondary }}>{test.author.charAt(0)}</span>
+                    <span className="text-xs font-medium" style={{ color: tokens.colors.secondary }}>{test.author?.charAt(0)}</span>
                   </div>
                 )}
                 <div className="flex flex-col">
