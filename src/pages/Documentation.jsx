@@ -6,7 +6,7 @@ import {
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
   BarChart3, GitBranch, TrendingUp, Heart,
-  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail, Bot
+  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail, Bot, Moon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
@@ -67,8 +67,9 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 11 Portfolio Themes" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 12 Portfolio Themes" },
         { id: "resume-templates", icon: <Layout size={16} />, label: "12 Resume PDF Templates (New!)" },
+        { id: "noir", icon: <Moon size={16} />, label: "🌑 NOIR (Flagship)" },
         { id: "monograph", icon: <FileText size={16} />, label: "🖋️ MONOGRAPH (Premium)" },
         { id: "oriental-luxe", icon: <Wand2 size={16} />, label: "🕌 ORIENTAL LUXE" },
         { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
