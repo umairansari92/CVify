@@ -442,9 +442,9 @@ const Documentation = () => {
 
     themes: (
       <>
-        <DocHeader title="All 11 Portfolio Themes" badge="Visual Design" />
+        <DocHeader title="All 12 Portfolio Themes" badge="Visual Design" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">11 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">12 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
         </p>
 
         <div className="space-y-4 mb-8">
@@ -460,6 +460,7 @@ const Documentation = () => {
             { icon: "💻", name: "TERMINAL DARK", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "The 3D Developer Portfolio aesthetic reborn inside CVify Pro. Deep midnight blue background (#050816), sleek neon purple (#915eff) accents, a glowing profile avatar in the hero, timeline experience cards, and project cards with hashtag tech stacks. Perfect for developers who want a serious, high-impact first impression.", tags: ["Dark Mode", "Purple Neon", "Developer"] },
             { icon: "🟢", name: "CYBER NEON", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Cutting-edge hacker aesthetic inspired by the Catppuccin design language. Near-black background (#080808) with electric neon green (#00ffcc) accents. Uses the Orbitron monospace font with glow effects on all interactive elements. Full GitHub stats integration and a sleek scrolling experience.", tags: ["Dark Mode", "Neon Green", "Hacker", "NEW!"] },
             { icon: "🖋️", name: "MONOGRAPH", accent: "text-slate-300", border: "border-white/20", bg: "bg-white/5", desc: "CVify Pro's premier editorial theme. Stark black headers against an off-white reading canvas with brutalist borders and IBM Plex Sans typography. Designed for authors, journalists, researchers, and professionals who demand a high-contrast, typographic-first presentation that reads like a premium magazine.", tags: ["Light Mode", "High Contrast", "Editorial", "NEW!"] },
+            { icon: "🌑", name: "NOIR", accent: "text-orange-500", border: "border-orange-500/20", bg: "bg-orange-500/5", desc: "Flagship premium minimalist dark theme. Absolute black background, Satoshi typography, custom motion system, and subtle orange accents.", tags: ["Dark Mode", "Minimal", "Premium", "Flagship"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -549,6 +550,47 @@ const Documentation = () => {
               <p className="text-white font-black text-xs">{role}</p>
             </div>
           ))}
+        </div>
+      </>
+    ),
+
+    noir: (
+      <>
+        <DocHeader title="🌑 NOIR Theme" badge="Flagship Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-white">NOIR</strong> is CVify Pro's flagship premium dark theme. Inspired by modern minimalist developer portfolios and contemporary product design systems, it prioritizes whitespace, typography, and a calm, confident presentation.
+        </p>
+
+        <SectionTitle>Visual Identity & Philosophy</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Palette size={18} />} color="orange" title="Absolute Minimal"
+            desc="Deep black background (#060606) with off-white text and subtle near-invisible gradient overlays to maintain a calm hero area." />
+          <InfoCard icon={<FileText size={18} />} color="orange" title="Typography First"
+            desc="Utilizes Satoshi for main text and headings, paired with GeistMono for labels, numbers, and code elements." />
+          <InfoCard icon={<Layout size={18} />} color="orange" title="Structured Grid"
+            desc="Strict 12-column desktop, 8-column tablet, and 1-column mobile layout system with consistent Y-axis spacing (96px, 80px, 64px)." />
+          <InfoCard icon={<Zap size={18} />} color="orange" title="Custom Motion System"
+            desc="Carefully designed motion with specific duration (300ms, 450ms, 700ms) and easeOut easing. Features a subtle desktop-only custom cursor." />
+        </div>
+
+        <SectionTitle>What Makes It Different</SectionTitle>
+        <div className="p-5 bg-white/5 border border-white/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Deep Black (#060606) with 10% visible aurora" },
+              { label: "Color Mode", val: "Minimalist Dark Mode" },
+              { label: "Accent Color", val: "Vivid Orange/Red (#FF2E0C)" },
+              { label: "Card Style", val: "Minimal — relying on border-y and border-white/5" },
+              { label: "Font", val: "Satoshi + GeistMono" },
+              { label: "Icon", val: "🌑 New Moon — representing the calm, deep dark aesthetic" },
+              { label: "Interactivity", val: "Desktop custom pointer, scroll-based image scaling (1 to 1.08x)" },
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-white w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </>
     ),

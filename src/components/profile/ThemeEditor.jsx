@@ -193,6 +193,21 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         fontPrimary: "IBM Plex Sans",
       },
     },
+    {
+      id: "noir",
+      name: "NOIR",
+      icon: <span className="text-2xl">🌑</span>,
+      settings: {
+        headerBg: "#060606",
+        headerBgSecondary: "#000000",
+        bodyBg: "#000000",
+        accentColor: "#FF2E0C",
+        textPrimary: "#F0F0F0",
+        textSecondary: "rgba(240, 240, 240, 0.7)",
+        cardStyle: "minimal",
+        fontPrimary: "Satoshi",
+      },
+    },
   ];
 
   const paletteItems = [
@@ -215,6 +230,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
     "Syne",
     "DM Sans",
     "IBM Plex Sans",
+    "Satoshi",
   ];
 
   return (

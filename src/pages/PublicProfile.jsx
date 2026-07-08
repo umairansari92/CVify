@@ -80,6 +80,7 @@ const TerminalDarkTheme = lazy(() => import("../themes/terminaldark"));
 const CyberNeonTheme = lazy(() => import("../themes/cyberneon"));
 const StandardTheme = lazy(() => import("../themes/standard"));
 const MonographTheme = lazy(() => import("../themes/monograph"));
+const NoirTheme = lazy(() => import("../themes/noir"));
 
 const PublicProfile = () => {
   const { username } = useParams();
@@ -318,6 +319,7 @@ const PublicProfile = () => {
     { name: "TERMINAL DARK", headerBg: "#050816", headerBgSecondary: "#151030", bodyBg: "#050816", fontPrimary: "Inter", cardStyle: "glass", icon: "💻", textPrimary: "#ffffff", textSecondary: "#aaa6c3", accentColor: "#915eff" },
     { name: "CYBER NEON", headerBg: "#080808", headerBgSecondary: "#000000", bodyBg: "#0a0a0a", fontPrimary: "Orbitron", cardStyle: "glass", icon: "🟢", textPrimary: "#ffffff", textSecondary: "#a1a1aa", accentColor: "#00ffcc" },
     { name: "MONOGRAPH", headerBg: "#000000", headerBgSecondary: "#1C1917", bodyBg: "#FAFAF9", fontPrimary: "IBM Plex Sans", cardStyle: "minimal", icon: "🖋️", textPrimary: "#292524", textSecondary: "#78716C", accentColor: "#000000" },
+    { name: "NOIR", headerBg: "#060606", headerBgSecondary: "#000000", bodyBg: "#000000", fontPrimary: "Satoshi", cardStyle: "minimal", icon: "🌑", textPrimary: "#F0F0F0", textSecondary: "rgba(240, 240, 240, 0.7)", accentColor: "#FF2E0C" },
   ];
 
   // ✅ OPT: useMemo — only recomputes when localTheme or DB theme actually changes,
@@ -343,6 +345,7 @@ const PublicProfile = () => {
   const isTerminalDarkTheme = theme.name === "TERMINAL DARK";
   const isCyberNeonTheme = theme.name === "CYBER NEON";
   const isMonographTheme = theme.name === "MONOGRAPH";
+  const isNoirTheme = theme.name === "NOIR";
 
   const themeStyles = useMemo(() => ({
     backgroundColor: theme.bodyBg,
@@ -389,8 +392,14 @@ const PublicProfile = () => {
       return id;
     }
     
+    if (isNoirTheme) {
+      if (id === 'journey') return 'experience';
+      if (id === 'showcase') return 'work';
+      return id;
+    }
+    
     return id;
-  }, [isOrientalLuxeTheme, isAuraDarkTheme, isTerminalDarkTheme, isCyberNeonTheme]);
+  }, [isOrientalLuxeTheme, isAuraDarkTheme, isTerminalDarkTheme, isCyberNeonTheme, isMonographTheme, isNoirTheme]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -798,6 +807,14 @@ const PublicProfile = () => {
             githubData={githubData}
             githubLoading={githubLoading}
           />
+        </Suspense>
+      ) : isNoirTheme ? (
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#060606] flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-[#FF2E0C] border-t-transparent rounded-full animate-spin" />
+          </div>
+        }>
+          <NoirTheme user={user} isOwner={isOwner} />
         </Suspense>
       ) : (
         <Suspense fallback={
