@@ -47,6 +47,16 @@ const NoirTheme = ({
         cursor: "none",
       }}
     >
+      {/* ── Font imports: Satoshi + GeistMono (matching reference site) ── */}
+      <link
+        rel="stylesheet"
+        href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800,900&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-mono/style.css"
+      />
+
       {/* Custom Pointer (Desktop only) */}
       <CursorFX />
 

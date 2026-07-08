@@ -212,14 +212,14 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             >
               <div
                 className="relative overflow-hidden w-full rounded"
-                style={{ backgroundColor: tokens.colors.cardBg, aspectRatio: "3/4", minHeight: "360px" }}
+                style={{ backgroundColor: tokens.colors.cardBg, height: "480px" }}
               >
                 {profileImage ? (
                   <motion.img
                     style={{ scale: imageScale }}
                     src={profileImage}
                     alt={fullName}
-                    className="absolute inset-0 h-full w-full object-cover grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0"
+                    className="w-full h-full object-cover object-top grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0"
                   />
                 ) : (
                   <div
