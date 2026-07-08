@@ -1,6 +1,7 @@
 import React from "react";
 import CursorFX from "./CursorFX";
 import Hero from "./Hero";
+import Brands from "./Brands";
 import About from "./About";
 import Experience from "./Experience";
 import Education from "./Education";
@@ -65,6 +66,9 @@ const NoirTheme = ({
           data={githubData}
           loading={githubLoading}
         />
+
+        {/* Verification Proof Brands Marquee */}
+        <Brands user={user} isOwner={isOwner} />
 
         <About
           user={user}
