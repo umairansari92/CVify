@@ -192,15 +192,17 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               className="relative w-full max-w-sm md:max-w-lg lg:max-w-xl flex flex-col items-center"
             >
               {/* Image container with mask to fade edges */}
-              <div className="relative w-full flex items-center justify-center">
+              <div className="relative w-full flex items-center justify-center scale-110 md:scale-125 origin-right">
                 {profileImage ? (
                   <img
                     src={profileImage}
                     alt={fullName || "Profile"}
-                    className="w-full h-auto max-h-[500px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
+                    className="w-full h-auto max-h-[700px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
                     style={{
-                      WebkitMaskImage: "radial-gradient(closest-side, black 45%, transparent 95%)",
-                      maskImage: "radial-gradient(closest-side, black 45%, transparent 95%)"
+                      WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+                      WebkitMaskComposite: "source-in",
+                      maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+                      maskComposite: "intersect"
                     }}
                     loading="eager"
                   />

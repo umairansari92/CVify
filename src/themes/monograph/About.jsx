@@ -63,15 +63,17 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             </h3>
 
             {/* Profile Image with Faded Edges */}
-            <div className="relative w-full max-w-md lg:max-w-xl flex items-center justify-center">
+            <div className="relative w-full max-w-md lg:max-w-xl flex items-center justify-center scale-110 md:scale-125 origin-left">
               {profileImage ? (
                 <img
                   src={profileImage}
                   alt={firstName || "Profile"}
-                  className="relative w-full h-auto max-h-[500px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
+                  className="relative w-full h-auto max-h-[700px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
                   style={{
-                    WebkitMaskImage: "radial-gradient(closest-side, black 45%, transparent 95%)",
-                    maskImage: "radial-gradient(closest-side, black 45%, transparent 95%)"
+                    WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+                    WebkitMaskComposite: "source-in",
+                    maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%), linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+                    maskComposite: "intersect"
                   }}
                   loading="lazy"
                 />
