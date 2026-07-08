@@ -1,74 +1,107 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
+import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { tokens } from "./tokens";
 
 /**
- * NOIR — Contact Section
+ * NOIR — Contact Section (Enhanced)
  *
- * Layout: 2-column split
- *   LEFT  — headline, email CTA, social links
- *   RIGHT — full contact form (name, email, subject, message, send)
+ * LEFT column:
+ *   • Big cinematic headline
+ *   • Description
+ *   • Contact info cards (email, phone, location) with icon badges
+ *   • Social icon row (circle bordered)
  *
- * Props used: user, contactForm, setContactForm, handleContactSubmit, isSending
+ * RIGHT column:
+ *   • Full form: Name, Email, Subject, Message, Send CTA
+ *   • Focus glow ring on every input
+ *   • Animated hover fill on submit button
  */
 
-const FormField = ({ id, label, value, onChange, type = "input", placeholder, disabled }) => (
-  <div className="group relative">
-    <label
-      htmlFor={id}
-      className="block text-[9px] font-black uppercase tracking-[0.2em] mb-2"
-      style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
+const InfoCard = ({ icon: Icon, label, value, href }) => (
+  <div className="flex items-start gap-4">
+    <div
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+      style={{ backgroundColor: `${tokens.colors.accent}14`, color: tokens.colors.accent }}
     >
-      {label}
-    </label>
-    {type === "textarea" ? (
-      <textarea
-        id={id}
-        rows={5}
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder || ""}
-        disabled={disabled}
-        className="w-full bg-transparent border rounded-xl px-5 py-4 text-sm outline-none resize-none transition-all duration-300 placeholder:opacity-30 disabled:opacity-50"
-        style={{
-          color: tokens.colors.primary,
-          borderColor: tokens.colors.border,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}
-        onFocus={(e) => {
-          e.target.style.borderColor = tokens.colors.primary;
-          e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}22`;
-        }}
-        onBlur={(e) => {
-          e.target.style.borderColor = tokens.colors.border;
-          e.target.style.boxShadow = "none";
-        }}
-      />
-    ) : (
-      <input
-        id={id}
-        type={type}
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder || ""}
-        disabled={disabled}
-        className="w-full bg-transparent border rounded-xl px-5 py-4 text-sm outline-none transition-all duration-300 placeholder:opacity-30 disabled:opacity-50"
-        style={{
-          color: tokens.colors.primary,
-          borderColor: tokens.colors.border,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}
-        onFocus={(e) => {
-          e.target.style.borderColor = tokens.colors.primary;
-          e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}22`;
-        }}
-        onBlur={(e) => {
-          e.target.style.borderColor = tokens.colors.border;
-          e.target.style.boxShadow = "none";
-        }}
-      />
-    )}
+      <Icon size={17} />
+    </div>
+    <div>
+      <p
+        className="text-[9px] font-black uppercase tracking-[0.2em]"
+        style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono, opacity: 0.6 }}
+      >
+        {label}
+      </p>
+      {href ? (
+        <a
+          href={href}
+          className="mt-0.5 text-sm font-medium transition-colors"
+          style={{ color: tokens.colors.primary, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          onMouseEnter={(e) => (e.target.style.color = tokens.colors.accent)}
+          onMouseLeave={(e) => (e.target.style.color = tokens.colors.primary)}
+          data-cursor="hover"
+        >
+          {value}
+        </a>
+      ) : (
+        <span
+          className="mt-0.5 block text-sm font-medium"
+          style={{ color: tokens.colors.primary, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          {value}
+        </span>
+      )}
+    </div>
   </div>
+);
+
+const SocialIcon = ({ href, icon: Icon, label }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={label}
+    className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300"
+    style={{ borderColor: tokens.colors.border, color: tokens.colors.secondary }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.borderColor = tokens.colors.accent;
+      e.currentTarget.style.color = tokens.colors.accent;
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.borderColor = tokens.colors.border;
+      e.currentTarget.style.color = tokens.colors.secondary;
+    }}
+    data-cursor="hover"
+  >
+    <Icon size={16} />
+  </a>
+);
+
+const FormInput = ({ id, type = "text", placeholder, value, onChange, disabled }) => (
+  <input
+    id={id}
+    type={type}
+    placeholder={placeholder}
+    value={value || ""}
+    onChange={(e) => onChange(e.target.value)}
+    disabled={disabled}
+    className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
+    style={{
+      color: tokens.colors.primary,
+      borderColor: tokens.colors.border,
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    }}
+    onFocus={(e) => {
+      e.target.style.borderColor = tokens.colors.primary;
+      e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}1a`;
+    }}
+    onBlur={(e) => {
+      e.target.style.borderColor = tokens.colors.border;
+      e.target.style.boxShadow = "none";
+    }}
+  />
 );
 
 const Contact = ({
@@ -83,17 +116,18 @@ const Contact = ({
   const safeSubmit = handleContactSubmit || ((e) => e.preventDefault());
 
   const email = user?.email || user?.contact?.email || "";
-  const socialLinks = user?.socialLinks || user?.contact?.socialLinks || {};
+  const phone = user?.phoneNumber || user?.phone || "";
+  const location = user?.location || "";
+  const socialLinks = user?.socialLinks || {};
 
-  const updateField = (field) => (val) =>
+  const update = (field) => (val) =>
     safeSet((prev) => ({ ...(prev || {}), [field]: val }));
 
-  const socials = [
-    { key: "github", label: "GitHub" },
-    { key: "linkedin", label: "LinkedIn" },
-    { key: "twitter", label: "Twitter / X" },
-    { key: "instagram", label: "Instagram" },
-    { key: "website", label: "Website" },
+  const socialItems = [
+    { key: "github", icon: FaGithub },
+    { key: "linkedin", icon: FaLinkedin },
+    { key: "twitter", icon: FaTwitter },
+    { key: "instagram", icon: FaInstagram },
   ].filter((s) => !!socialLinks[s.key]);
 
   return (
@@ -103,8 +137,9 @@ const Contact = ({
       style={{ backgroundColor: tokens.colors.bg, borderColor: tokens.colors.border }}
     >
       <div className="mx-auto max-w-[1400px]">
+
         {/* Section label */}
-        <div className="mb-16 flex items-center gap-4">
+        <div className="mb-14 flex items-center gap-4">
           <span
             className="text-[10px] uppercase font-bold tracking-widest"
             style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
@@ -119,151 +154,190 @@ const Contact = ({
           </span>
         </div>
 
-        {/* 2-column split */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-          {/* LEFT — headline + email + socials */}
-          <div className="space-y-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
-              className="text-4xl md:text-6xl font-medium leading-[1.05]"
-              style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.heading }}
-            >
-              Let's build
-              <br />
-              something{" "}
-              <span
-                className="italic"
-                style={{ color: tokens.colors.accent, fontFamily: "'Instrument Serif', serif" }}
+          {/* ── LEFT — info + socials ── */}
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
+            className="space-y-12"
+          >
+            {/* Headline */}
+            <div className="space-y-2">
+              <p
+                className="text-[10px] font-black uppercase tracking-[0.25em]"
+                style={{ color: tokens.colors.accent, fontFamily: tokens.fonts.mono }}
               >
-                together.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.15, duration: tokens.motion.duration.normal }}
-              className="text-sm leading-relaxed max-w-sm"
-              style={{ color: tokens.colors.secondary, fontFamily: "'Plus Jakarta Sans', sans-serif", opacity: 0.7 }}
-            >
-              Have a project in mind or want to explore collaboration? Drop a message
-              and I'll get back within 24 hours.
-            </motion.p>
-
-            {/* Email */}
-            {email && (
-              <motion.a
-                href={`mailto:${email}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: tokens.motion.duration.normal }}
-                className="group relative inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest transition-colors"
-                style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.mono }}
-                data-cursor="hover"
+                GET IN TOUCH
+              </p>
+              <h2
+                className="text-4xl md:text-5xl font-medium leading-[1.1]"
+                style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.heading }}
               >
+                Let's build{" "}
                 <span
-                  className="w-8 h-px transition-all duration-300 group-hover:w-14"
-                  style={{ backgroundColor: tokens.colors.accent }}
-                />
-                <span className="group-hover:text-[var(--accent)] transition-colors duration-300"
-                  style={{ "--accent": tokens.colors.accent }}>
-                  {email}
+                  className="italic"
+                  style={{ fontFamily: "'Instrument Serif', serif", color: tokens.colors.accent }}
+                >
+                  something
                 </span>
-              </motion.a>
-            )}
+                <br />
+                together.
+              </h2>
+            </div>
 
-            {/* Social links */}
-            {socials.length > 0 && (
+            <p
+              className="text-sm leading-relaxed max-w-sm"
+              style={{ color: tokens.colors.secondary, fontFamily: "'Plus Jakarta Sans', sans-serif", opacity: 0.65 }}
+            >
+              Whether you have a project in mind, a question, or simply want to connect — 
+              feel free to reach out. I'm always open to discussing new opportunities.
+            </p>
+
+            {/* Contact Info Cards */}
+            <div className="space-y-6">
+              {email && (
+                <InfoCard icon={Mail} label="Email" value={email} href={`mailto:${email}`} />
+              )}
+              {phone && (
+                <InfoCard icon={Phone} label="Phone" value={phone} href={`tel:${phone}`} />
+              )}
+              {location && (
+                <InfoCard icon={MapPin} label="Location" value={location} />
+              )}
+            </div>
+
+            {/* Social icons */}
+            {socialItems.length > 0 && (
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: tokens.motion.duration.slow }}
-                className="flex flex-wrap gap-6 pt-2"
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-3 pt-2"
               >
-                {socials.map(({ key, label }) => (
-                  <a
+                {socialItems.map(({ key, icon }) => (
+                  <SocialIcon
                     key={key}
                     href={socialLinks[key]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] font-black uppercase tracking-widest transition-colors"
-                    style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
-                    onMouseEnter={(e) => (e.target.style.color = tokens.colors.primary)}
-                    onMouseLeave={(e) => (e.target.style.color = tokens.colors.secondary)}
-                    data-cursor="hover"
-                  >
-                    {label}
-                  </a>
+                    icon={icon}
+                    label={key}
+                  />
                 ))}
               </motion.div>
             )}
-          </div>
+          </motion.div>
 
-          {/* RIGHT — Contact Form */}
+          {/* ── RIGHT — contact form ── */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
             transition={{ delay: 0.1, duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
           >
             <form
               onSubmit={safeSubmit}
-              className="space-y-6 p-8 md:p-10 rounded-3xl border"
+              className="space-y-5 p-8 md:p-10 rounded-3xl border"
               style={{
                 backgroundColor: tokens.colors.cardBg,
                 borderColor: tokens.colors.border,
               }}
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FormField
-                  id="noir-contact-name"
-                  label="Full Name *"
-                  value={safeForm.name}
-                  onChange={updateField("name")}
-                  placeholder="John Doe"
-                  disabled={isSending}
-                />
-                <FormField
-                  id="noir-contact-email"
-                  label="Email Address *"
-                  type="email"
-                  value={safeForm.email}
-                  onChange={updateField("email")}
-                  placeholder="john@company.com"
+              {/* Name + Email row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label
+                    htmlFor="noir-c-name"
+                    className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
+                    style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
+                  >
+                    Full Name *
+                  </label>
+                  <FormInput
+                    id="noir-c-name"
+                    placeholder="John Doe"
+                    value={safeForm.name}
+                    onChange={update("name")}
+                    disabled={isSending}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="noir-c-email"
+                    className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
+                    style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
+                  >
+                    Email Address *
+                  </label>
+                  <FormInput
+                    id="noir-c-email"
+                    type="email"
+                    placeholder="john@company.com"
+                    value={safeForm.email}
+                    onChange={update("email")}
+                    disabled={isSending}
+                  />
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div>
+                <label
+                  htmlFor="noir-c-subject"
+                  className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
+                  style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
+                >
+                  Subject
+                </label>
+                <FormInput
+                  id="noir-c-subject"
+                  placeholder="Project Inquiry / Collaboration / ..."
+                  value={safeForm.subject}
+                  onChange={update("subject")}
                   disabled={isSending}
                 />
               </div>
 
-              <FormField
-                id="noir-contact-subject"
-                label="Subject"
-                value={safeForm.subject}
-                onChange={updateField("subject")}
-                placeholder="Project Inquiry / Collaboration / ..."
-                disabled={isSending}
-              />
+              {/* Message */}
+              <div>
+                <label
+                  htmlFor="noir-c-message"
+                  className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
+                  style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
+                >
+                  Message *
+                </label>
+                <textarea
+                  id="noir-c-message"
+                  rows={5}
+                  placeholder="Tell me about your project, timeline, and budget..."
+                  value={safeForm.message || ""}
+                  onChange={(e) => update("message")(e.target.value)}
+                  disabled={isSending}
+                  className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none resize-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
+                  style={{
+                    color: tokens.colors.primary,
+                    borderColor: tokens.colors.border,
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = tokens.colors.primary;
+                    e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}1a`;
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = tokens.colors.border;
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
 
-              <FormField
-                id="noir-contact-message"
-                label="Message *"
-                type="textarea"
-                value={safeForm.message}
-                onChange={updateField("message")}
-                placeholder="Tell me about your project, timeline, and budget..."
-                disabled={isSending}
-              />
-
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSending}
-                className="group relative w-full flex items-center justify-center gap-3 px-8 py-5 rounded-xl font-bold text-sm uppercase tracking-widest overflow-hidden transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-widest overflow-hidden transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: tokens.colors.primary,
                   color: tokens.colors.bg,
@@ -271,12 +345,11 @@ const Contact = ({
                 }}
                 data-cursor="hover"
               >
-                {/* Hover fill effect */}
                 <span
                   className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500"
                   style={{ backgroundColor: tokens.colors.accent }}
                 />
-                <span className="relative z-10 flex items-center gap-3">
+                <span className="relative z-10 flex items-center gap-2.5">
                   {isSending ? (
                     <>
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -284,26 +357,22 @@ const Contact = ({
                     </>
                   ) : (
                     <>
+                      <Send size={15} />
                       Send Message
-                      <span
-                        className="text-base transition-transform duration-300 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      >
-                        →
-                      </span>
                     </>
                   )}
                 </span>
               </button>
 
               <p
-                className="text-center text-[9px] uppercase tracking-widest opacity-30"
+                className="text-center text-[9px] uppercase tracking-widest opacity-25"
                 style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
               >
-                No spam. Encrypted in transit. Replies within 24h.
+                No spam. Replies within 24h.
               </p>
             </form>
           </motion.div>
+
         </div>
       </div>
     </section>
