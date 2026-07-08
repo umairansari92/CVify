@@ -7,14 +7,11 @@ import { tokens } from "./tokens";
 /**
  * NOIR — Hero Section
  *
- * FIXES applied:
- * 1. Removed internal <header> navbar (AGENTS.md Part 11 — universal navbar handles this)
- * 2. Added pt-24 to sticky container so content clears the universal navbar
- * 3. Reduced scroll canvas: 340vh → 200vh (less perceived blank space)
- * 4. Added TypeAnimation from user.headline
- * 5. Large name h1 always visible — scroll opacity starts at 1
- * 6. Photos use profileImage with reliable fallback
- * 7. Layout: hero fills viewport properly with flex distribution
+ * LAYOUT BUG FIXES:
+ * 1. Absolutely positions the name container in the center (z-20) to prevent overflow/clipping.
+ * 2. Inlines the motion.div photo containers directly to fix Framer Motion bindings.
+ * 3. Restores a high-quality portrait fallback image so that background photos always render.
+ * 4. Places the Recruiter HUD dock absolutely at the bottom to prevent layout pushing.
  */
 
 const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }) => {
@@ -99,28 +96,12 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
     typeSequence.push("Full Stack Developer", 2000);
   }
 
-  // Profile image — never show broken img
-  const imgSrc = profileImage || null;
+  // Profile image — high-quality portrait fallback to ensure photos always render
+  const fallbackImg = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80";
+  const imgSrc = profileImage || fallbackImg;
 
   const scrollTo = (id) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-
-  // Photo container helper
-  const PhotoFrame = ({ style, children }) => (
-    <motion.div
-      style={{
-        position: "absolute",
-        borderRadius: "4px",
-        overflow: "hidden",
-        backgroundColor: tokens.colors.cardBg,
-        border: `1px solid ${tokens.colors.border}`,
-        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
-        ...style,
-      }}
-    >
-      {children}
-    </motion.div>
-  );
 
   return (
     <section
@@ -159,63 +140,122 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
           aria-hidden="true"
         />
 
-        {/* ── Floating converging photos (background layer) ── */}
+        {/* ── Background Converging Photos (z-10) ── */}
         {imgSrc && (
           <div className="absolute inset-0 z-10 pointer-events-none select-none">
-            {/* Top-left */}
-            <PhotoFrame
+            {/* Photo 1 — Top Left */}
+            <motion.div
               style={{
-                left: "5%", top: "8%",
-                width: "clamp(110px, 12vw, 190px)",
-                aspectRatio: "4/5",
                 x: img1X, y: img1Y, rotate: img1Rotate, scale: img1Scale, opacity: img1Opacity,
-              }}
-            >
-              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
-            </PhotoFrame>
-
-            {/* Top-right */}
-            <PhotoFrame
-              style={{
-                right: "6%", top: "6%",
-                width: "clamp(130px, 14vw, 220px)",
-                aspectRatio: "4/3",
-                x: img2X, y: img2Y, rotate: img2Rotate, scale: img2Scale, opacity: img2Opacity,
-              }}
-            >
-              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
-            </PhotoFrame>
-
-            {/* Bottom-left */}
-            <PhotoFrame
-              style={{
-                left: "7%", bottom: "14%",
-                width: "clamp(100px, 11vw, 170px)",
-                aspectRatio: "1/1",
-                x: img3X, y: img3Y, rotate: img3Rotate, scale: img3Scale, opacity: img3Opacity,
-              }}
-            >
-              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
-            </PhotoFrame>
-
-            {/* Bottom-right */}
-            <PhotoFrame
-              style={{
-                right: "10%", bottom: "14%",
-                width: "clamp(110px, 12vw, 190px)",
+                position: "absolute", left: "6%", top: "12%",
+                width: "clamp(120px, 13vw, 200px)",
                 aspectRatio: "4/5",
-                x: img4X, y: img4Y, rotate: img4Rotate, scale: img4Scale, opacity: img4Opacity,
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: tokens.colors.cardBg,
+                border: `1px solid ${tokens.colors.border}`,
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
               }}
             >
               <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
-            </PhotoFrame>
+            </motion.div>
+
+            {/* Photo 2 — Top Right */}
+            <motion.div
+              style={{
+                x: img2X, y: img2Y, rotate: img2Rotate, scale: img2Scale, opacity: img2Opacity,
+                position: "absolute", right: "8%", top: "8%",
+                width: "clamp(140px, 15vw, 230px)",
+                aspectRatio: "4/3",
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: tokens.colors.cardBg,
+                border: `1px solid ${tokens.colors.border}`,
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
+              }}
+            >
+              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
+            </motion.div>
+
+            {/* Photo 3 — Bottom Left */}
+            <motion.div
+              style={{
+                x: img3X, y: img3Y, rotate: img3Rotate, scale: img3Scale, opacity: img3Opacity,
+                position: "absolute", left: "8%", bottom: "16%",
+                width: "clamp(110px, 11vw, 175px)",
+                aspectRatio: "1/1",
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: tokens.colors.cardBg,
+                border: `1px solid ${tokens.colors.border}`,
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
+              }}
+            >
+              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
+            </motion.div>
+
+            {/* Photo 4 — Bottom Right */}
+            <motion.div
+              style={{
+                x: img4X, y: img4Y, rotate: img4Rotate, scale: img4Scale, opacity: img4Opacity,
+                position: "absolute", right: "12%", bottom: "18%",
+                width: "clamp(120px, 12vw, 190px)",
+                aspectRatio: "4/5",
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: tokens.colors.cardBg,
+                border: `1px solid ${tokens.colors.border}`,
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)",
+              }}
+            >
+              <img src={imgSrc} alt="" className="w-full h-full object-cover grayscale" />
+            </motion.div>
           </div>
         )}
 
-        {/* ── Main content ── */}
-        <div className="relative z-20 flex-1 flex flex-col px-6 md:px-12 max-w-[1400px] w-full mx-auto">
+        {/* ── Large Typographic Name (z-20) ── */}
+        {/* Absolutely centered in viewport so it never overflows or collides with left panel */}
+        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+          <motion.h1
+            className="select-none text-center leading-none pointer-events-auto"
+            style={{
+              scale: nameScale,
+              opacity: nameOpacity,
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: "clamp(2.8rem, 8.5vw, 9rem)",
+              letterSpacing: "-0.04em",
+              color: tokens.colors.primary,
+            }}
+          >
+            <InlineEdit
+              isOwner={isOwner}
+              id="noir-first-name"
+              value={firstName}
+              onSave={(v) => handleLiveUpdate?.({ firstName: v })}
+            >
+              <span className="font-extrabold">{firstName || "Umair"}</span>
+            </InlineEdit>
+            {firstName && lastName ? " " : ""}
+            <InlineEdit
+              isOwner={isOwner}
+              id="noir-last-name"
+              value={lastName}
+              onSave={(v) => handleLiveUpdate?.({ lastName: v })}
+            >
+              <span
+                className="font-light italic"
+                style={{ fontFamily: "'Instrument Serif', serif" }}
+              >
+                {lastName || "Ahmed"}
+                <span style={{ color: tokens.colors.accent }}>.</span>
+              </span>
+            </InlineEdit>
+          </motion.h1>
+        </div>
 
-          {/* Top meta row: city + time */}
+        {/* ── Left Content Panel (z-30) ── */}
+        <div className="relative z-30 flex-1 flex flex-col justify-center px-6 md:px-12 max-w-[1400px] w-full mx-auto pb-16">
+          {/* Top meta info row */}
           {(cityName || time) && (
             <div className="flex items-center gap-2 mb-6 pt-1">
               <span
@@ -231,12 +271,11 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
             </div>
           )}
 
-          {/* Left panel: headline / TypeAnimation / bio / CTAs */}
           <motion.div
             style={{ opacity: panelOpacity, y: panelY }}
-            className="flex flex-col gap-7 max-w-lg"
+            className="flex flex-col gap-6 max-w-lg mt-6"
           >
-            {/* // SYSTEM PROFILE label */}
+            {/* Label */}
             <span
               className="text-[9px] font-black uppercase tracking-[0.3em]"
               style={{ color: tokens.colors.accent, fontFamily: tokens.fonts.mono }}
@@ -244,7 +283,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               // SYSTEM PROFILE
             </span>
 
-            {/* Value proposition */}
+            {/* Value prop */}
             <div>
               <InlineEdit
                 isOwner={isOwner}
@@ -345,108 +384,66 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
               </button>
             </div>
           </motion.div>
+        </div>
 
-          {/* Large typographic name — centered at the bottom */}
-          <div className="relative z-20 flex-1 flex items-end justify-center pb-6 md:pb-10">
-            <motion.h1
-              className="select-none text-center leading-none"
-              style={{
-                scale: nameScale,
-                opacity: nameOpacity,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: "clamp(2.8rem, 8.5vw, 9rem)",
-                letterSpacing: "-0.04em",
-                color: tokens.colors.primary,
-              }}
-            >
-              <InlineEdit
-                isOwner={isOwner}
-                id="noir-first-name"
-                value={firstName}
-                onSave={(v) => handleLiveUpdate?.({ firstName: v })}
-              >
-                <span className="font-extrabold">{firstName}</span>
-              </InlineEdit>
-              {firstName && lastName ? " " : ""}
-              <InlineEdit
-                isOwner={isOwner}
-                id="noir-last-name"
-                value={lastName}
-                onSave={(v) => handleLiveUpdate?.({ lastName: v })}
-              >
-                <span
-                  className="font-light italic"
-                  style={{ fontFamily: "'Instrument Serif', serif" }}
-                >
-                  {lastName}
-                  <span style={{ color: tokens.colors.accent }}>.</span>
-                </span>
-              </InlineEdit>
-              {!firstName && !lastName && (
-                <span className="font-extrabold opacity-20">Your Name</span>
-              )}
-            </motion.h1>
-          </div>
-
-          {/* Recruiter HUD dock */}
-          <motion.div
-            style={{ opacity: hudOpacity }}
-            className="hidden sm:block w-full max-w-2xl mx-auto z-30 pb-4"
+        {/* ── Recruiter HUD Dock (z-40) ── */}
+        {/* Absolutely positioned at the bottom so it never overflows */}
+        <motion.div
+          style={{ opacity: hudOpacity }}
+          className="absolute bottom-16 left-6 right-6 md:left-12 md:right-12 z-40 hidden sm:block"
+        >
+          <div
+            className="backdrop-blur-md border rounded-[2rem] px-6 py-3.5 flex items-center justify-between gap-6 max-w-2xl mx-auto"
+            style={{ backgroundColor: tokens.colors.cardBg, borderColor: tokens.colors.border }}
           >
-            <div
-              className="backdrop-blur-md border rounded-[2rem] px-6 py-3.5 flex items-center justify-between gap-6"
-              style={{ backgroundColor: tokens.colors.cardBg, borderColor: tokens.colors.border }}
-            >
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span
-                  className="text-[7px] font-black uppercase tracking-widest opacity-50"
-                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
-                >
-                  Recruiter HUD
-                </span>
-              </div>
-              <div className="flex gap-8 flex-1 justify-around">
-                {[
-                  { label: "Profile Views", val: viewsCount },
-                  { label: "Outreach Signals", val: signalsCount },
-                ].map(({ label, val }) => (
-                  <div key={label} className="text-center">
-                    <p className="text-sm font-bold" style={{ color: tokens.colors.primary }}>{val}</p>
-                    <p
-                      className="text-[7px] font-bold uppercase tracking-widest opacity-40 mt-0.5"
-                      style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
-                    >
-                      {label}
-                    </p>
-                  </div>
-                ))}
-                <div className="text-center">
-                  <InlineEdit
-                    isOwner={isOwner}
-                    id="noir-availability"
-                    value={availability}
-                    onSave={(v) => handleLiveUpdate?.({ availability: v })}
-                  >
-                    <p className="text-xs font-bold" style={{ color: tokens.colors.primary }}>{availability}</p>
-                  </InlineEdit>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span
+                className="text-[7px] font-black uppercase tracking-widest opacity-50"
+                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              >
+                Recruiter HUD
+              </span>
+            </div>
+            <div className="flex gap-8 flex-1 justify-around">
+              {[
+                { label: "Profile Views", val: viewsCount },
+                { label: "Outreach Signals", val: signalsCount },
+              ].map(({ label, val }) => (
+                <div key={label} className="text-center">
+                  <p className="text-sm font-bold" style={{ color: tokens.colors.primary }}>{val}</p>
                   <p
                     className="text-[7px] font-bold uppercase tracking-widest opacity-40 mt-0.5"
                     style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
                   >
-                    Status
+                    {label}
                   </p>
                 </div>
+              ))}
+              <div className="text-center">
+                <InlineEdit
+                  isOwner={isOwner}
+                  id="noir-availability"
+                  value={availability}
+                  onSave={(v) => handleLiveUpdate?.({ availability: v })}
+                >
+                  <p className="text-xs font-bold" style={{ color: tokens.colors.primary }}>{availability}</p>
+                </InlineEdit>
+                <p
+                  className="text-[7px] font-bold uppercase tracking-widest opacity-40 mt-0.5"
+                  style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
+                >
+                  Status
+                </p>
               </div>
             </div>
-          </motion.div>
-
-        </div>
+          </div>
+        </motion.div>
 
         {/* Scroll indicator */}
         <motion.div
           style={{ opacity: indicatorOpacity }}
-          className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-20 pointer-events-none"
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-40 pointer-events-none"
         >
           <span
             className="text-[7px] uppercase tracking-[0.25em] font-bold opacity-40"
