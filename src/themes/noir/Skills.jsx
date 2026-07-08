@@ -5,10 +5,10 @@ import { tokens } from "./tokens";
 /**
  * NOIR — Skills & Professional Services Section
  *
- * Changes (per design review):
- * - Skills: small tag cards (no progress fill bars)
- * - Services: single horizontal row (md:grid-cols-4 or scroll)
- * - Satoshi + GeistMono typography from tokens
+ * Changes applied:
+ * 1. Toolkit: increased text size from text-[10px] to text-xs, increased padding, and made borders more visible (rgba(255,255,255,0.15)).
+ * 2. Services: increased card height (min-h-[300px]) and increased text sizes (title: text-lg/text-xl, description: text-xs/text-sm).
+ * 3. Services Hover: Added a smooth red fill background slide-up effect, with text colors transitioning to black for premium high contrast.
  */
 
 /* ── Skill chip/tag card ── */
@@ -18,17 +18,17 @@ const SkillChip = ({ name, delay }) => (
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.25, delay }}
-    className="inline-flex items-center px-3 py-1.5 border rounded-lg text-[10px] font-semibold uppercase tracking-widest cursor-default transition-all duration-300"
+    className="inline-flex items-center px-4.5 py-2.5 border rounded-xl text-xs font-bold uppercase tracking-wider cursor-default transition-all duration-300"
     style={{
       color: tokens.colors.primary,
-      borderColor: tokens.colors.border,
+      borderColor: "rgba(255, 255, 255, 0.15)", // More visible default border
       backgroundColor: "transparent",
       fontFamily: tokens.fonts.mono,
     }}
     whileHover={{
-      borderColor: tokens.colors.primary,
+      borderColor: tokens.colors.accent,
       color: tokens.colors.accent,
-      backgroundColor: "transparent",
+      scale: 1.05,
     }}
   >
     {name}
@@ -42,67 +42,77 @@ const ServiceCard = ({ service, index }) => (
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: index * 0.07, duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
-    className="group relative flex flex-col gap-3 p-6 rounded-2xl border transition-all duration-400 overflow-hidden"
+    className="group relative flex flex-col p-8 md:p-10 rounded-3xl border transition-all duration-500 overflow-hidden min-h-[320px] justify-between cursor-default"
     style={{
       backgroundColor: tokens.colors.cardBg,
       borderColor: tokens.colors.border,
     }}
-    whileHover={{ borderColor: `${tokens.colors.accent}44` }}
   >
-    {/* Corner glow */}
+    {/* Dynamic Red Fill slide-up on hover */}
     <div
-      className="absolute top-0 right-0 w-24 h-24 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-600"
-      style={{ background: `radial-gradient(circle, ${tokens.colors.accent}20, transparent)` }}
+      className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+      style={{ backgroundColor: tokens.colors.accent }}
       aria-hidden="true"
     />
 
-    <div className="relative z-10 flex flex-col gap-3">
-      {/* Header row: icon + badge */}
+    {/* Glow spotlight behind fill */}
+    <div
+      className="absolute top-0 right-0 w-24 h-24 blur-[50px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-600 z-[1]"
+      style={{ background: `radial-gradient(circle, rgba(255,255,255,0.2) 20%, transparent)` }}
+      aria-hidden="true"
+    />
+
+    {/* Card Content Layout */}
+    <div className="relative z-10 flex flex-col justify-between h-full w-full flex-1 gap-6">
+      
+      {/* Top row: icon + badge */}
       <div className="flex items-start justify-between gap-2">
         <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black"
-          style={{ backgroundColor: `${tokens.colors.accent}15`, color: tokens.colors.accent, fontFamily: tokens.fonts.mono }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black bg-[#FF2E0C]/10 text-[#FF2E0C] group-hover:bg-black group-hover:text-white transition-all duration-500"
+          style={{ fontFamily: tokens.fonts.mono }}
         >
           {(service.title || "S").charAt(0).toUpperCase()}
         </div>
         <span
-          className="text-[7px] font-black uppercase tracking-[0.18em] px-2 py-1 rounded-full border shrink-0"
-          style={{ color: "#10b981", borderColor: "#10b98133", backgroundColor: "#10b9810a", fontFamily: tokens.fonts.mono }}
+          className="text-[8px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-full border shrink-0 text-emerald-400 border-emerald-500/20 bg-emerald-500/5 group-hover:text-black group-hover:border-black/20 group-hover:bg-transparent transition-all duration-500"
+          style={{ fontFamily: tokens.fonts.mono }}
         >
           Available
         </span>
       </div>
 
-      {/* Title */}
-      <h3
-        className="text-sm font-semibold leading-tight"
-        style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.body }}
-      >
-        {service.title || "Service"}
-      </h3>
+      {/* Title & Description Container */}
+      <div className="space-y-3">
+        <h3
+          className="text-lg md:text-xl font-bold leading-snug text-white group-hover:text-black transition-colors duration-500"
+          style={{ fontFamily: tokens.fonts.body }}
+        >
+          {service.title || "Service"}
+        </h3>
 
-      {/* Description */}
-      <p
-        className="text-[11px] leading-relaxed italic line-clamp-3 opacity-60"
-        style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.body }}
-      >
-        "{service.description || "Professional service offering."}"
-      </p>
+        <p
+          className="text-xs md:text-sm leading-relaxed opacity-70 group-hover:opacity-90 text-[#F0F0F0] group-hover:text-black transition-all duration-500 font-medium"
+          style={{ fontFamily: tokens.fonts.body }}
+        >
+          "{service.description || "Professional service offering."}"
+        </p>
+      </div>
 
-      {/* Deliverables */}
+      {/* Bottom Deliverables row */}
       {Array.isArray(service.deliverables) && service.deliverables.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1">
           {service.deliverables.slice(0, 2).map((d, di) => (
             <span
               key={di}
-              className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border"
-              style={{ color: tokens.colors.secondary, borderColor: tokens.colors.border, fontFamily: tokens.fonts.mono }}
+              className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border text-[#F0F0F0]/50 border-white/10 group-hover:text-black group-hover:border-black/20 transition-all duration-500"
+              style={{ fontFamily: tokens.fonts.mono }}
             >
               {d}
             </span>
           ))}
         </div>
       )}
+
     </div>
   </motion.div>
 );
@@ -110,7 +120,7 @@ const ServiceCard = ({ service, index }) => (
 /* ── Main component ── */
 const Skills = ({ user, isOwner }) => {
 
-  // ── Normalize skills (both schemas) ──
+  // Normalize skills (both schemas)
   let techSkills = [];
   let softSkills = [];
   let allFlat = [];
@@ -138,7 +148,7 @@ const Skills = ({ user, isOwner }) => {
   const getName = (skill) => (typeof skill === "string" ? skill : skill?.name || skill?.skill || "");
   const hasSkills = allFlat.length > 0 || techSkills.length > 0 || softSkills.length > 0;
 
-  // ── Services ──
+  // Services
   const services = user?.services || [];
   const hasServices = services.length > 0;
 
@@ -176,7 +186,7 @@ const Skills = ({ user, isOwner }) => {
                 <div className="flex flex-wrap gap-3">
                   {allFlat.map((skill, idx) => {
                     const name = getName(skill);
-                    return name ? <SkillChip key={idx} name={name} delay={idx * 0.025} /> : null;
+                    return name ? <SkillChip key={idx} name={name} delay={idx * 0.02} /> : null;
                   })}
                 </div>
               </div>
@@ -196,7 +206,7 @@ const Skills = ({ user, isOwner }) => {
                     <div className="flex flex-wrap gap-2.5">
                       {techSkills.map((skill, idx) => {
                         const name = getName(skill);
-                        return name ? <SkillChip key={idx} name={name} delay={idx * 0.025} /> : null;
+                        return name ? <SkillChip key={idx} name={name} delay={idx * 0.02} /> : null;
                       })}
                     </div>
                   </div>
@@ -212,7 +222,7 @@ const Skills = ({ user, isOwner }) => {
                     <div className="flex flex-wrap gap-2.5">
                       {softSkills.map((skill, idx) => {
                         const name = getName(skill);
-                        return name ? <SkillChip key={idx} name={name} delay={idx * 0.025} /> : null;
+                        return name ? <SkillChip key={idx} name={name} delay={idx * 0.02} /> : null;
                       })}
                     </div>
                   </div>
