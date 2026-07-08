@@ -442,9 +442,9 @@ const Documentation = () => {
 
     themes: (
       <>
-        <DocHeader title="All 10 Portfolio Themes" badge="Visual Design" />
+        <DocHeader title="All 11 Portfolio Themes" badge="Visual Design" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">10 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">11 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
         </p>
 
         <div className="space-y-4 mb-8">
@@ -459,6 +459,7 @@ const Documentation = () => {
             { icon: "✨", name: "AURA DARK", accent: "text-purple-400", border: "border-purple-500/20", bg: "bg-purple-500/5", desc: "Pure darkness meets cosmic elegance. Absolute black background (#000000) with deep purple accents (#B677EF). Uses the modern Syne font for a cutting-edge aesthetic. Perfect for tech innovators, startup founders, and creators pushing boundaries.", tags: ["Dark Mode", "Purple Accent", "Minimal"] },
             { icon: "💻", name: "TERMINAL DARK", accent: "text-violet-400", border: "border-violet-500/20", bg: "bg-violet-500/5", desc: "The 3D Developer Portfolio aesthetic reborn inside CVify Pro. Deep midnight blue background (#050816), sleek neon purple (#915eff) accents, a glowing profile avatar in the hero, timeline experience cards, and project cards with hashtag tech stacks. Perfect for developers who want a serious, high-impact first impression.", tags: ["Dark Mode", "Purple Neon", "Developer"] },
             { icon: "🟢", name: "CYBER NEON", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Cutting-edge hacker aesthetic inspired by the Catppuccin design language. Near-black background (#080808) with electric neon green (#00ffcc) accents. Uses the Orbitron monospace font with glow effects on all interactive elements. Full GitHub stats integration and a sleek scrolling experience.", tags: ["Dark Mode", "Neon Green", "Hacker", "NEW!"] },
+            { icon: "🖋️", name: "MONOGRAPH", accent: "text-slate-300", border: "border-white/20", bg: "bg-white/5", desc: "CVify Pro's premier editorial theme. Stark black headers against an off-white reading canvas with brutalist borders and IBM Plex Sans typography. Designed for authors, journalists, researchers, and professionals who demand a high-contrast, typographic-first presentation that reads like a premium magazine.", tags: ["Light Mode", "High Contrast", "Editorial", "NEW!"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
