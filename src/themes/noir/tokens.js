@@ -1,6 +1,6 @@
 export const tokens = {
   colors: {
-    bg: "#060606", // Deep black background
+    bg: "#000000", // Pure black background matching reference
     cardBg: "rgba(255,255,255,0.02)",
     border: "rgba(255, 255, 255, 0.05)",
     borderHover: "rgba(255, 255, 255, 0.15)",

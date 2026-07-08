@@ -18,17 +18,17 @@ const SkillChip = ({ name, delay }) => (
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.25, delay }}
-    className="inline-flex items-center px-4 py-2 border rounded-lg text-[11px] font-semibold uppercase tracking-widest cursor-default transition-all duration-300"
+    className="inline-flex items-center px-3 py-1.5 border rounded-lg text-[10px] font-semibold uppercase tracking-widest cursor-default transition-all duration-300"
     style={{
       color: tokens.colors.primary,
       borderColor: tokens.colors.border,
-      backgroundColor: "rgba(255,255,255,0.02)",
+      backgroundColor: "transparent",
       fontFamily: tokens.fonts.mono,
     }}
     whileHover={{
-      borderColor: `${tokens.colors.accent}55`,
+      borderColor: tokens.colors.primary,
       color: tokens.colors.accent,
-      backgroundColor: `${tokens.colors.accent}08`,
+      backgroundColor: "transparent",
     }}
   >
     {name}
@@ -254,13 +254,10 @@ const Skills = ({ user, isOwner }) => {
               </motion.h2>
             </div>
 
-            {/* Services — single horizontal row (up to 4 cols) */}
+            {/* Services — single horizontal row on desktop, wrapping on smaller screens */}
             {hasServices ? (
               <div
-                className="grid gap-5"
-                style={{
-                  gridTemplateColumns: `repeat(${Math.min(services.length, 4)}, minmax(0, 1fr))`,
-                }}
+                className={`grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-${Math.min(services.length, 4)}`}
               >
                 {services.map((service, idx) => (
                   <ServiceCard key={idx} service={service} index={idx} />
