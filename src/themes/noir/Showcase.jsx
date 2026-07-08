@@ -72,7 +72,7 @@ const Showcase = ({ user, isOwner }) => {
                   {project.description}
                 </p>
 
-                {project.techStack && (
+                {Array.isArray(project.techStack) && project.techStack.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {project.techStack.slice(0, 4).map((tech, idx) => (
                       <span key={idx} className="text-[10px] uppercase font-bold tracking-widest" style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}>

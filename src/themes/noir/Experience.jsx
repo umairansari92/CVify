@@ -55,12 +55,14 @@ const Experience = ({ user, isOwner }) => {
                 </h3>
                 
                 <div className="flex flex-col gap-3">
-                  {exp.description.map((desc, idx) => (
+                  {Array.isArray(exp.description) ? exp.description.map((desc, idx) => (
                     <div key={idx} className="flex items-start gap-4">
                       <span className="mt-2 w-1.5 h-1.5 shrink-0 rounded-full" style={{ backgroundColor: tokens.colors.borderHover }}></span>
-                      <p className="text-sm leading-relaxed" style={{ color: tokens.colors.secondary }}>{desc}</p>
+                      <p className="text-sm leading-relaxed flex-1" style={{ color: tokens.colors.secondary }}>{desc}</p>
                     </div>
-                  ))}
+                  )) : exp.description && (
+                    <p className="text-sm leading-relaxed" style={{ color: tokens.colors.secondary }}>{exp.description}</p>
+                  )}
                 </div>
                 
                 {/* AI Recruiter Insight - if available */}
