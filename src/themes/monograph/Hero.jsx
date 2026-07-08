@@ -60,7 +60,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 lg:gap-24 items-center">
 
           {/* Left — Name, bio, CTA */}
-          <div className="md:col-span-7 flex flex-col space-y-8">
+          <div className="md:col-span-12 lg:col-span-5 flex flex-col space-y-8">
             {/* Name */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -184,15 +184,15 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
           </div>
 
           {/* Right — Profile Image (like Bilal's hero) */}
-          <div className="md:col-span-5 flex flex-col items-center md:items-end gap-6">
+          <div className="md:col-span-12 lg:col-start-7 lg:col-span-6 flex flex-col items-center lg:items-end gap-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-              className="relative w-full max-w-sm md:max-w-lg lg:max-w-xl flex flex-col items-center"
+              className="relative w-full flex flex-col items-center lg:items-end"
             >
               {/* Image container with mask to fade edges */}
-              <div className="relative w-full flex items-center justify-center scale-125 md:scale-[1.35] lg:scale-[1.4] origin-right">
+              <div className="relative w-full max-w-lg lg:max-w-2xl flex items-center justify-center lg:justify-end scale-110">
                 {profileImage ? (
                   <img
                     src={profileImage}
