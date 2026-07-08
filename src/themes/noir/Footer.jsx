@@ -7,7 +7,7 @@ const Footer = ({ user }) => {
       <div className="mx-auto max-w-[1400px] flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-baseline gap-3">
           <span className="text-xl font-medium tracking-tight" style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.heading }}>
-            {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+            {user?.firstName?.charAt?.(0) || ""}{user?.lastName?.charAt?.(0) || ""}
           </span>
           <span className="text-[10px] uppercase font-bold tracking-widest" style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}>
             ©{new Date().getFullYear()}
