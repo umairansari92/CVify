@@ -148,9 +148,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           {/* Scattered Image 1 (Top Left) */}
           <motion.div
-            style={{ y: img1Y, rotate: img1Rotate, scale: img1Scale }}
+            style={{ y: img1Y, rotate: img1Rotate, scale: img1Scale, borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
             className="absolute left-[8%] top-[10%] w-[160px] md:w-[240px] aspect-[4/5] rounded overflow-hidden shadow-2xl border"
-            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
           >
             <img
               src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
@@ -161,9 +160,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
 
           {/* Scattered Image 2 (Top Right) */}
           <motion.div
-            style={{ y: img2Y, rotate: img2Rotate, scale: img2Scale }}
+            style={{ y: img2Y, rotate: img2Rotate, scale: img2Scale, borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
             className="absolute right-[15%] top-[5%] w-[180px] md:w-[260px] aspect-[4/3] rounded overflow-hidden shadow-2xl border"
-            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
           >
             <img
               src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
@@ -174,9 +172,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
 
           {/* Scattered Image 3 (Bottom Left) */}
           <motion.div
-            style={{ y: img3Y, rotate: img3Rotate }}
+            style={{ y: img3Y, rotate: img3Rotate, borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
             className="absolute left-[12%] bottom-[12%] w-[140px] md:w-[200px] aspect-square rounded overflow-hidden shadow-2xl border"
-            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
           >
             <img
               src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
@@ -187,9 +184,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
 
           {/* Scattered Image 4 (Bottom Right / Under Title) */}
           <motion.div
-            style={{ y: img4Y, rotate: img4Rotate, scale: img4Scale }}
+            style={{ y: img4Y, rotate: img4Rotate, scale: img4Scale, borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
             className="absolute right-[22%] bottom-[8%] w-[160px] md:w-[240px] aspect-[4/5] rounded overflow-hidden shadow-2xl border"
-            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
           >
             <img
               src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
