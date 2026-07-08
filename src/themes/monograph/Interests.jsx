@@ -2,11 +2,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
+import { toast } from "react-hot-toast";
 
 const Interests = ({ user, isOwner, handleArrayUpdate }) => {
   const interests = user?.interests || [];
 
-  if (interests.length === 0) return null;
+  if (!isOwner && interests.length === 0) return null;
 
   return (
     <section
@@ -39,33 +40,46 @@ const Interests = ({ user, isOwner, handleArrayUpdate }) => {
           </h3>
         </motion.div>
 
-        <div className="flex flex-wrap gap-4 md:gap-6">
-          {interests.map((interest, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="px-6 py-3 border rounded-full text-sm uppercase tracking-widest transition-colors hover:bg-white hover:text-black cursor-default"
-              style={{
-                fontFamily: tokens.fonts.mono,
-                borderColor: '#333',
-              }}
+        {interests.length === 0 && isOwner ? (
+          <div className="text-center py-12 border border-dashed" style={{ borderColor: tokens.colors.borders }}>
+            <p className="text-sm uppercase tracking-widest mb-6 opacity-60" style={{ fontFamily: tokens.fonts.mono }}>No Interests Found</p>
+            <button 
+              onClick={() => toast.success("Add interests in Dashboard > Dossier.")}
+              className="px-8 py-4 border text-xs font-bold uppercase tracking-widest transition-colors hover:bg-white hover:text-black"
+              style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.paper }}
             >
-              <InlineEdit 
-                isOwner={isOwner} 
-                value={interest.name || interest} 
-                onSave={(v) => {
-                  const updated = typeof interest === 'string' ? v : { ...interest, name: v };
-                  handleArrayUpdate("interests", index, updated);
+              + Add Passion
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-4 md:gap-6">
+            {interests.map((interest, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="px-6 py-3 border rounded-full text-sm uppercase tracking-widest transition-colors hover:bg-white hover:text-black cursor-default"
+                style={{
+                  fontFamily: tokens.fonts.mono,
+                  borderColor: '#333',
                 }}
               >
-                {interest.name || interest}
-              </InlineEdit>
-            </motion.div>
-          ))}
-        </div>
+                <InlineEdit 
+                  isOwner={isOwner} 
+                  value={interest.name || interest} 
+                  onSave={(v) => {
+                    const updated = typeof interest === 'string' ? v : { ...interest, name: v };
+                    handleArrayUpdate("interests", index, updated);
+                  }}
+                >
+                  {interest.name || interest}
+                </InlineEdit>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

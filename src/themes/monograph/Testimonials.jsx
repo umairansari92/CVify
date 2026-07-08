@@ -2,11 +2,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { tokens } from "./tokens";
 import InlineEdit from "../../components/profile/InlineEdit";
+import { toast } from "react-hot-toast";
 
 const Testimonials = ({ user, isOwner, handleArrayUpdate }) => {
   const testimonials = user?.testimonials || [];
 
-  if (testimonials.length === 0) return null;
+  if (!isOwner && testimonials.length === 0) return null;
 
   return (
     <section
@@ -39,69 +40,82 @@ const Testimonials = ({ user, isOwner, handleArrayUpdate }) => {
           </h3>
         </motion.div>
 
-        <div className="space-y-24">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col items-center"
+        {testimonials.length === 0 && isOwner ? (
+          <div className="text-center py-12 border border-dashed border-[#E5E5E4]">
+            <p className="text-sm uppercase tracking-widest mb-6 opacity-60" style={{ fontFamily: tokens.fonts.mono }}>No Testimonials Found</p>
+            <button 
+              onClick={() => toast.success("Add testimonials in Dashboard > Verification.")}
+              className="px-8 py-4 border text-xs font-bold uppercase tracking-widest transition-colors hover:bg-black hover:text-white"
+              style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.primaryText }}
             >
-              <div 
-                className="text-6xl leading-none opacity-20 mb-4" 
-                style={{ fontFamily: tokens.fonts.heading }}
+              + Add Testimonial
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-24">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="flex flex-col items-center"
               >
-                "
-              </div>
-              <blockquote 
-                className="text-xl md:text-2xl italic leading-relaxed mb-8"
-                style={{ fontFamily: tokens.fonts.body, color: tokens.colors.primaryText }}
-              >
-                <InlineEdit 
-                  isOwner={isOwner} 
-                  value={testimonial.text || testimonial.quote} 
-                  onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, text: v })}
+                <div 
+                  className="text-6xl leading-none opacity-20 mb-4" 
+                  style={{ fontFamily: tokens.fonts.heading }}
                 >
-                  {testimonial.text || testimonial.quote}
-                </InlineEdit>
-              </blockquote>
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-bold uppercase tracking-wider text-sm" style={{ fontFamily: tokens.fonts.heading }}>
+                  "
+                </div>
+                <blockquote 
+                  className="text-xl md:text-2xl italic leading-relaxed mb-8"
+                  style={{ fontFamily: tokens.fonts.body, color: tokens.colors.primaryText }}
+                >
                   <InlineEdit 
                     isOwner={isOwner} 
-                    value={testimonial.author || testimonial.name} 
-                    onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, author: v })}
+                    value={testimonial.text || testimonial.quote} 
+                    onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, text: v })}
                   >
-                    {testimonial.author || testimonial.name}
+                    {testimonial.text || testimonial.quote}
                   </InlineEdit>
-                </span>
-                <span className="text-[10px] uppercase tracking-[0.2em]" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}>
-                  <InlineEdit 
-                    isOwner={isOwner} 
-                    value={testimonial.position || testimonial.title} 
-                    onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, position: v })}
-                  >
-                    {testimonial.position || testimonial.title}
-                  </InlineEdit>
-                  {(testimonial.company) && (
-                    <>
-                      <span className="mx-2">—</span>
-                      <InlineEdit 
-                        isOwner={isOwner} 
-                        value={testimonial.company} 
-                        onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, company: v })}
-                      >
-                        {testimonial.company}
-                      </InlineEdit>
-                    </>
-                  )}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                </blockquote>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="font-bold uppercase tracking-wider text-sm" style={{ fontFamily: tokens.fonts.heading }}>
+                    <InlineEdit 
+                      isOwner={isOwner} 
+                      value={testimonial.author || testimonial.name} 
+                      onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, author: v })}
+                    >
+                      {testimonial.author || testimonial.name}
+                    </InlineEdit>
+                  </span>
+                  <span className="text-[10px] uppercase tracking-[0.2em]" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.muted }}>
+                    <InlineEdit 
+                      isOwner={isOwner} 
+                      value={testimonial.position || testimonial.title} 
+                      onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, position: v })}
+                    >
+                      {testimonial.position || testimonial.title}
+                    </InlineEdit>
+                    {(testimonial.company) && (
+                      <>
+                        <span className="mx-2">—</span>
+                        <InlineEdit 
+                          isOwner={isOwner} 
+                          value={testimonial.company} 
+                          onSave={(v) => handleArrayUpdate("testimonials", index, { ...testimonial, company: v })}
+                        >
+                          {testimonial.company}
+                        </InlineEdit>
+                      </>
+                    )}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

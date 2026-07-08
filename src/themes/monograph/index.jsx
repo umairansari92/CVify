@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import About from "./About";
 import Resume from "./Resume";
 import Showcase from "./Showcase";
+import Skills from "./Skills";
 import Certifications from "./Certifications";
 import Dossier from "./Dossier";
 import Testimonials from "./Testimonials";
@@ -64,6 +65,8 @@ const MonographTheme = ({
           handleArrayUpdate={handleArrayUpdate}
         />
       )}
+
+      <Skills user={user} />
 
       <Certifications user={user} isOwner={isOwner} handleArrayUpdate={handleArrayUpdate} />
       
