@@ -211,8 +211,8 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
               className="group relative"
             >
               <div
-                className="relative overflow-hidden aspect-[3/4] w-full rounded"
-                style={{ backgroundColor: tokens.colors.cardBg }}
+                className="relative overflow-hidden w-full rounded"
+                style={{ backgroundColor: tokens.colors.cardBg, aspectRatio: "3/4", minHeight: "360px" }}
               >
                 {profileImage ? (
                   <motion.img
