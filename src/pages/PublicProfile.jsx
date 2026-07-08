@@ -827,6 +827,7 @@ const PublicProfile = () => {
             isSending={isSending}
             githubData={githubData}
             githubLoading={githubLoading}
+            analytics={analytics}
           />
         </Suspense>
       ) : (

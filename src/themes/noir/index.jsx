@@ -32,6 +32,7 @@ const NoirTheme = ({
   isSending,
   githubData,
   githubLoading,
+  analytics,
 }) => {
   if (!user) return null;
 
@@ -54,6 +55,7 @@ const NoirTheme = ({
           isOwner={isOwner}
           handleLiveUpdate={handleLiveUpdate}
           setShowResumeModal={setShowResumeModal}
+          analytics={analytics}
         />
 
         {/* GitHub Stats */}
