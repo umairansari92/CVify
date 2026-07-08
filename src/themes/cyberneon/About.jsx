@@ -80,7 +80,61 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
             </div>
           </div>
         </motion.div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* ── Verification Proof ── */}
+      {(user?.branding?.verificationStats?.atsScore || user?.branding?.verificationStats?.dataPoints) && (
+        <div className="max-w-[1200px] mx-auto mt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 p-8 rounded border"
+            style={{ backgroundColor: tokens.colors.cardBg, borderColor: tokens.colors.cardBorder }}
+          >
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] uppercase tracking-[0.3em]" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}>
+                &gt; VERIFICATION_PROOF
+              </p>
+              <p className="text-xl font-bold uppercase tracking-widest text-white" style={{ fontFamily: tokens.fonts.heading }}>
+                Verified by CVify
+              </p>
+            </div>
+
+            <div className="flex items-center gap-12 md:gap-20">
+              {user?.branding?.verificationStats?.atsScore && (
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-white" style={{ fontFamily: tokens.fonts.mono }}>
+                    {user.branding.verificationStats.atsScore}%
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.3em] mt-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textMuted }}>AVG_ATS_SCORE</p>
+                </div>
+              )}
+              {user?.branding?.verificationStats?.dataPoints && (
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-white" style={{ fontFamily: tokens.fonts.mono }}>
+                    {user.branding.verificationStats.dataPoints}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.3em] mt-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textMuted }}>DATA_POINTS</p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => {}}
+              className="px-8 py-4 rounded text-xs font-bold uppercase tracking-widest transition-all border"
+              style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.primary, color: tokens.colors.primary, backgroundColor: 'transparent' }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = tokens.colors.primary; e.currentTarget.style.color = '#000'; e.currentTarget.style.boxShadow = `0 0 20px ${tokens.colors.primary}66`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = tokens.colors.primary; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              ACCESS_DOSSIER
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };

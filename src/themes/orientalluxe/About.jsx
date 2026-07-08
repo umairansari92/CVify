@@ -178,6 +178,58 @@ const About = ({ user, isOwner, handleLiveUpdate }) => {
           ))}
         </motion.div>
       </div>
+
+      {/* ── Verification Proof ── */}
+      {(user?.branding?.verificationStats?.atsScore || user?.branding?.verificationStats?.dataPoints) && (
+        <div className="mx-auto max-w-7xl px-6 mt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 p-8 md:p-12 rounded-2xl border"
+            style={{ backgroundColor: `${tokens.colors.bgSoft}66`, borderColor: tokens.colors.border }}
+          >
+            <div className="flex flex-col gap-2">
+              <p className="text-[10px] uppercase tracking-[0.4em]" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.accent }}>
+                — Verification Proof
+              </p>
+              <p className="text-2xl font-bold uppercase tracking-widest" style={{ color: tokens.colors.textPrimary, fontFamily: tokens.fonts.primary }}>
+                Verified by CVify
+              </p>
+            </div>
+
+            <div className="flex items-center gap-12 md:gap-20">
+              {user?.branding?.verificationStats?.atsScore && (
+                <div className="text-center">
+                  <p className="text-4xl font-bold" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textPrimary }}>
+                    {user.branding.verificationStats.atsScore}%
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.3em] mt-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textMuted }}>Avg. ATS Score</p>
+                </div>
+              )}
+              {user?.branding?.verificationStats?.dataPoints && (
+                <div className="text-center">
+                  <p className="text-4xl font-bold" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textPrimary }}>
+                    {user.branding.verificationStats.dataPoints}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.3em] mt-2" style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.textMuted }}>Data Points</p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => setShowResumeModal && setShowResumeModal(true)}
+              className="px-8 py-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all border"
+              style={{ fontFamily: tokens.fonts.mono, borderColor: tokens.colors.accent, color: tokens.colors.accent, backgroundColor: 'transparent' }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = tokens.colors.accent; e.currentTarget.style.color = '#000'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = tokens.colors.accent; }}
+            >
+              Access Full Professional Dossier
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };
