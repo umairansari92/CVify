@@ -814,7 +814,20 @@ const PublicProfile = () => {
             <div className="w-12 h-12 border-4 border-[#FF2E0C] border-t-transparent rounded-full animate-spin" />
           </div>
         }>
-          <NoirTheme user={user} isOwner={isOwner} />
+          <NoirTheme
+            user={user}
+            projects={projects}
+            isOwner={isOwner}
+            handleLiveUpdate={handleLiveUpdate}
+            handleArrayUpdate={handleArrayUpdate}
+            setShowResumeModal={setShowResumeModal}
+            contactForm={contactForm}
+            setContactForm={setContactForm}
+            handleContactSubmit={handleContactSubmit}
+            isSending={isSending}
+            githubData={githubData}
+            githubLoading={githubLoading}
+          />
         </Suspense>
       ) : (
         <Suspense fallback={

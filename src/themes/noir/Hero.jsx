@@ -282,7 +282,6 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         {/* ── Central Name (scales up on scroll as images converge) ── */}
         <div className="relative z-20 flex flex-1 items-center justify-center">
           <motion.h1
-            style={{ scale: nameScale, opacity: nameOpacity }}
             className="select-none flex flex-wrap items-baseline justify-center gap-[0.2em] whitespace-nowrap"
             style={{
               scale: nameScale,
