@@ -268,32 +268,25 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
                 value={lastName}
                 onSave={(v) => handleLiveUpdate?.({ lastName: v })}
               >
-                {/* Boxed lastName with slow red fill on hover */}
+                {/* Character-level color fill via background-clip:text */}
                 <span
-                  className="group relative inline-flex items-center justify-center overflow-hidden"
+                  className="font-light italic select-none"
                   style={{
-                    border: `2px solid ${tokens.colors.primary}`,
-                    borderRadius: "2px",
-                    padding: "0 0.25em",
+                    fontFamily: "'Instrument Serif', serif",
+                    background: `linear-gradient(to right, ${tokens.colors.accent} 50%, ${tokens.colors.primary} 50%)`,
+                    backgroundSize: "200% 100%",
+                    backgroundPosition: "100% 0",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                    transition: "background-position 900ms cubic-bezier(0.16, 1, 0.3, 1)",
                     cursor: "default",
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundPosition = "0 0"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundPosition = "100% 0"; }}
                 >
-                  {/* Red fill slide-up — 900ms slow */}
-                  <span
-                    className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none"
-                    style={{ backgroundColor: tokens.colors.accent }}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className="relative font-light italic transition-colors duration-[900ms] group-hover:text-black"
-                    style={{ fontFamily: "'Instrument Serif', serif", color: tokens.colors.primary }}
-                  >
-                    {lastName}
-                    <span
-                      className="transition-colors duration-[900ms] group-hover:text-black"
-                      style={{ color: tokens.colors.accent }}
-                    >.</span>
-                  </span>
+                  {lastName}<span style={{ WebkitTextFillColor: tokens.colors.accent, color: tokens.colors.accent }}>.</span>
                 </span>
               </InlineEdit>
             </h1>
