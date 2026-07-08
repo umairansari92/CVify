@@ -1,346 +1,332 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
-import { ArrowDown } from "lucide-react";
+import React, { useRef, useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import InlineEdit from "../../components/profile/InlineEdit";
 import { tokens } from "./tokens";
 
-/**
- * NOIR — Hero Section
- * Full-viewport hero with letter-by-letter name reveal,
- * TypeAnimation headline, availability badge, and social links.
- */
 const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "";
-  const headline = user?.headline || "";
-  const bio = user?.bio || "";
-  const location = user?.location || "";
-  const isOpenToWork = user?.openToWork ?? true;
+  const containerRef = useRef(null);
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    // Dynamic city time based on user location (defaulting to user location or Karachi/Tangier style)
+    const updateTime = () => {
+      const options = {
+        timeZone: "Asia/Karachi", // Fallback or detect
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      };
+      try {
+        const formatter = new Intl.DateTimeFormat("en-US", options);
+        setTime(formatter.format(new Date()));
+      } catch (e) {
+        const now = new Date();
+        setTime(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`);
+      }
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Parallax / Scroll to focus values for the scattered images
+  const img1Y = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const img1Rotate = useTransform(scrollYProgress, [0, 1], [-8, 2]);
+  const img1Scale = useTransform(scrollYProgress, [0, 1], [0.95, 1.05]);
+
+  const img2Y = useTransform(scrollYProgress, [0, 1], [0, -220]);
+  const img2Rotate = useTransform(scrollYProgress, [0, 1], [10, -5]);
+  const img2Scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
+  const img3Y = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const img3Rotate = useTransform(scrollYProgress, [0, 1], [-15, -25]);
+
+  const img4Y = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  const img4Rotate = useTransform(scrollYProgress, [0, 1], [6, 15]);
+  const img4Scale = useTransform(scrollYProgress, [0, 1], [0.9, 1.1]);
+
+  const nameScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const nameY = useTransform(scrollYProgress, [0, 1], [0, 50]);
+
   const profileImage = user?.profileImage;
+  const locationName = user?.location || "Karachi, Pakistan";
+  const firstName = user?.firstName || "Mostafa";
+  const lastName = user?.lastName || "Oulahyan";
+  const bio = user?.bio || "Full stack developer, turning ideas into fast, considered products.";
 
-  // Build type sequence from headline (comma-separated roles)
-  const typeSequence = [];
-  if (headline) {
-    headline.split(",").forEach((s) => {
-      const trimmed = s.trim();
-      if (trimmed) typeSequence.push(trimmed, 2000);
-    });
-  }
-  if (typeSequence.length === 0) typeSequence.push("Professional Portfolio", 3000);
-
-  // Letter reveal animation
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.04 } },
+  // Navigation handlers
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
-  const letterVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { ease: tokens.motion.easing.base, duration: tokens.motion.duration.fast },
-    },
-  };
-
-  const AnimatedText = ({ text }) => (
-    <motion.span
-      className="inline-block"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          variants={letterVariants}
-          className="inline-block"
-          style={{ whiteSpace: char === " " ? "pre" : "normal" }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.span>
-  );
 
   return (
     <section
+      ref={containerRef}
       id="hero"
-      className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden"
+      className="relative min-h-screen w-full overflow-hidden flex flex-col justify-between"
       style={{ backgroundColor: tokens.colors.bg }}
     >
-      {/* 10% Aurora Effect */}
+      {/* Google Font link injected directly */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+
+      {/* Vibrant Red/Orange Aura (Glow from right-top corner) */}
       <div
-        className="absolute inset-0 z-0 pointer-events-none opacity-10"
+        className="absolute right-0 top-0 w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] rounded-full pointer-events-none filter blur-[120px] opacity-45"
         style={{
-          background: `radial-gradient(circle at 80% 20%, ${tokens.colors.aiGlow}, transparent 50%),
-                       radial-gradient(circle at 20% 80%, rgba(255,255,255,0.02), transparent 50%)`,
+          background: `radial-gradient(circle, ${tokens.colors.accent} 0%, rgba(255, 46, 12, 0.2) 50%, transparent 100%)`,
+          transform: "translate(20%, -20%)",
         }}
       />
-      {/* Film Grain */}
+      {/* Film Grain Texture */}
       <div
-        className="absolute inset-0 z-10 pointer-events-none opacity-[0.025]"
+        className="absolute inset-0 z-[1] pointer-events-none opacity-[0.035]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           mixBlendMode: "overlay",
         }}
       />
 
-      <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-36 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
-        {/* LEFT — Text Content */}
-        <div className="flex flex-col items-start">
-          {/* Availability Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
-            className="flex items-center gap-3 mb-10 px-4 py-2 rounded-full border"
-            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
+      {/* Minimal Top Header */}
+      <header className="relative z-50 w-full px-6 md:px-12 py-8 flex items-center justify-between">
+        <div className="flex items-center gap-3" data-cursor="hover">
+          <span
+            className="text-lg font-bold tracking-tighter"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: tokens.colors.primary }}
           >
-            <div className="relative flex h-2 w-2">
-              <span
-                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ backgroundColor: isOpenToWork ? tokens.colors.accent : tokens.colors.secondary }}
-              />
-              <span
-                className="relative inline-flex rounded-full h-2 w-2"
-                style={{ backgroundColor: isOpenToWork ? tokens.colors.accent : tokens.colors.secondary }}
-              />
-            </div>
-            <span
-              className="uppercase text-[10px] font-bold tracking-widest"
-              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
-            >
-              {isOpenToWork ? "Available for opportunities" : "Not available"}
-              {location && ` — ${location}`}
-            </span>
-          </motion.div>
-
-          {/* Hero Name */}
-          <h1
-            className="text-6xl md:text-8xl lg:text-[9rem] font-medium leading-[0.9] tracking-tighter mb-8 cursor-default group"
-            style={{ color: tokens.colors.primary, fontFamily: tokens.fonts.heading }}
+            {firstName.charAt(0)}{lastName.charAt(0)}
+          </span>
+          <span
+            className="text-[10px] tracking-widest opacity-60 uppercase font-medium hidden sm:inline"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
           >
-            <InlineEdit
-              isOwner={isOwner}
-              id="noir-hero-name"
-              value={fullName}
-              onSave={(v) => {
-                const parts = v.trim().split(" ");
-                handleLiveUpdate?.({ firstName: parts[0] || "", lastName: parts.slice(1).join(" ") || "" });
-              }}
-            >
-              <AnimatedText text={user?.firstName || "Your"} />
-              <br />
-              <span className="transition-all duration-700 group-hover:italic" style={{ color: tokens.colors.primary }}>
-                <AnimatedText text={user?.lastName || "Name"} />
-              </span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="ml-2 inline-block"
-                style={{ color: tokens.colors.accent }}
-              >
-                .
-              </motion.span>
-            </InlineEdit>
-          </h1>
+            {firstName} {lastName}
+          </span>
+        </div>
 
-          {/* TypeAnimation Headline */}
-          {typeSequence.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: tokens.motion.duration.normal }}
-              className="mb-6 flex items-center gap-2"
-              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
-            >
-              <span className="text-[10px] uppercase tracking-widest opacity-50">→</span>
-              <InlineEdit
-                isOwner={isOwner}
-                id="noir-hero-headline"
-                value={headline}
-                onSave={(v) => handleLiveUpdate?.({ headline: v })}
-              >
-                <span className="text-sm md:text-base font-medium" style={{ color: tokens.colors.primary }}>
-                  <TypeAnimation
-                    sequence={typeSequence}
-                    wrapper="span"
-                    speed={50}
-                    repeat={Infinity}
-                    cursor={false}
-                  />
-                  <span
-                    className="ml-0.5 inline-block h-4 w-px animate-pulse align-middle"
-                    style={{ backgroundColor: tokens.colors.accent }}
-                  />
-                </span>
-              </InlineEdit>
-            </motion.div>
-          )}
-
-          {/* Bio */}
-          {(bio || isOwner) && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: tokens.motion.duration.normal }}
-              className="max-w-md mb-10"
-            >
-              <InlineEdit
-                isOwner={isOwner}
-                id="noir-hero-bio"
-                value={bio}
-                type="textarea"
-                onSave={(v) => handleLiveUpdate?.({ bio: v })}
-              >
-                <p className="text-sm md:text-base leading-relaxed" style={{ color: tokens.colors.secondary }}>
-                  {bio || <span className="opacity-40 italic">Add your bio…</span>}
-                </p>
-              </InlineEdit>
-            </motion.div>
-          )}
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: tokens.motion.duration.normal }}
-            className="flex flex-wrap gap-4"
-          >
-            {setShowResumeModal && (
-              <button
-                onClick={() => setShowResumeModal(true)}
-                className="px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:opacity-80"
-                style={{
-                  backgroundColor: tokens.colors.primary,
-                  color: tokens.colors.bg,
-                  fontFamily: tokens.fonts.mono,
-                }}
-                data-cursor="hover"
-              >
-                View Resume
-              </button>
-            )}
+        {/* Center Nav Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          {["about", "skills", "work", "contact"].map((sec) => (
             <button
-              onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-              className="px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest border transition-all duration-300 hover:border-[var(--primary)] hover:text-[var(--primary)]"
-              style={{
-                borderColor: tokens.colors.border,
-                color: tokens.colors.secondary,
-                fontFamily: tokens.fonts.mono,
-                "--primary": tokens.colors.primary,
-              }}
+              key={sec}
+              onClick={() => scrollToSection(sec)}
+              className="text-[10px] tracking-[0.2em] uppercase font-bold hover:opacity-100 opacity-60 transition-opacity"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
               data-cursor="hover"
             >
-              View Work
+              {sec}
             </button>
+          ))}
+        </nav>
+
+        {/* Top Right Live Time */}
+        <div className="flex items-center gap-2">
+          <span
+            className="w-1.5 h-1.5 rounded-full animate-ping"
+            style={{ backgroundColor: tokens.colors.accent }}
+          />
+          <span
+            className="text-[10px] tracking-widest uppercase font-bold"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary }}
+          >
+            {locationName.split(",")[0]} {time}
+          </span>
+        </div>
+      </header>
+
+      {/* Hero Visuals and Title */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center py-20">
+        
+        {/* Scattered Photo Canvas */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          {/* Scattered Image 1 (Top Left) */}
+          <motion.div
+            style={{ y: img1Y, rotate: img1Rotate, scale: img1Scale }}
+            className="absolute left-[8%] top-[10%] w-[160px] md:w-[240px] aspect-[4/5] rounded overflow-hidden shadow-2xl border"
+            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
+          >
+            <img
+              src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
+              alt=""
+              className="w-full h-full object-cover grayscale"
+            />
           </motion.div>
 
-          {/* Social Links */}
+          {/* Scattered Image 2 (Top Right) */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: tokens.motion.duration.slow }}
-            className="mt-16 flex items-center gap-6 pt-8 border-t w-full"
-            style={{ borderColor: tokens.colors.border }}
+            style={{ y: img2Y, rotate: img2Rotate, scale: img2Scale }}
+            className="absolute right-[15%] top-[5%] w-[180px] md:w-[260px] aspect-[4/3] rounded overflow-hidden shadow-2xl border"
+            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
           >
-            {user?.socialLinks?.github && (
-              <a
-                href={user.socialLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="uppercase text-[10px] font-bold tracking-widest transition-colors hover:text-[var(--primary)]"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary, "--primary": tokens.colors.primary }}
-                data-cursor="hover"
-              >
-                GitHub
-              </a>
-            )}
-            {user?.socialLinks?.linkedin && (
-              <a
-                href={user.socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="uppercase text-[10px] font-bold tracking-widest transition-colors hover:text-[var(--primary)]"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary, "--primary": tokens.colors.primary }}
-                data-cursor="hover"
-              >
-                LinkedIn
-              </a>
-            )}
-            {user?.socialLinks?.twitter && (
-              <a
-                href={user.socialLinks.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="uppercase text-[10px] font-bold tracking-widest transition-colors hover:text-[var(--primary)]"
-                style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.secondary, "--primary": tokens.colors.primary }}
-                data-cursor="hover"
-              >
-                Twitter
-              </a>
-            )}
+            <img
+              src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
+              alt=""
+              className="w-full h-full object-cover grayscale"
+            />
+          </motion.div>
+
+          {/* Scattered Image 3 (Bottom Left) */}
+          <motion.div
+            style={{ y: img3Y, rotate: img3Rotate }}
+            className="absolute left-[12%] bottom-[12%] w-[140px] md:w-[200px] aspect-square rounded overflow-hidden shadow-2xl border"
+            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
+          >
+            <img
+              src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
+              alt=""
+              className="w-full h-full object-cover grayscale"
+            />
+          </motion.div>
+
+          {/* Scattered Image 4 (Bottom Right / Under Title) */}
+          <motion.div
+            style={{ y: img4Y, rotate: img4Rotate, scale: img4Scale }}
+            className="absolute right-[22%] bottom-[8%] w-[160px] md:w-[240px] aspect-[4/5] rounded overflow-hidden shadow-2xl border"
+            style={{ borderColor: tokens.colors.border, backgroundColor: tokens.colors.cardBg }}
+          >
+            <img
+              src={profileImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"}
+              alt=""
+              className="w-full h-full object-cover grayscale"
+            />
           </motion.div>
         </div>
 
-        {/* RIGHT — Profile Image */}
-        <div className="hidden lg:flex items-center justify-end">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: tokens.motion.duration.slow, delay: 0.2, ease: tokens.motion.easing.base }}
-            className="relative w-full max-w-md"
+        {/* Content Box (Tilted description card at top left) */}
+        <div className="relative z-20 w-full max-w-sm mb-12 self-start md:ml-[15%]">
+          <InlineEdit
+            isOwner={isOwner}
+            id="noir-hero-bio"
+            value={bio}
+            type="textarea"
+            onSave={(v) => handleLiveUpdate?.({ bio: v })}
           >
-            <div
-              className="overflow-hidden rounded aspect-[3/4] w-full"
-              style={{ backgroundColor: tokens.colors.cardBg }}
+            <p
+              className="text-sm md:text-base leading-relaxed tracking-wide opacity-80"
+              style={{ color: tokens.colors.primary, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt={fullName}
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  style={{
-                    WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)",
-                    maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)",
-                  }}
-                  loading="eager"
-                />
-              ) : (
-                <div
-                  className="flex h-full w-full items-center justify-center text-7xl font-medium"
-                  style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.heading }}
-                >
-                  {(fullName?.[0] || "?").toUpperCase()}
-                </div>
-              )}
-            </div>
+              {bio}
+            </p>
+          </InlineEdit>
+        </div>
 
-            {/* Corner accents */}
-            <span className="pointer-events-none absolute -left-3 -top-3 h-5 w-5 border-l border-t" style={{ borderColor: tokens.colors.borderHover }} />
-            <span className="pointer-events-none absolute -right-3 -top-3 h-5 w-5 border-r border-t" style={{ borderColor: tokens.colors.borderHover }} />
-            <span className="pointer-events-none absolute -bottom-3 -left-3 h-5 w-5 border-b border-l" style={{ borderColor: tokens.colors.borderHover }} />
-            <span className="pointer-events-none absolute -bottom-3 -right-3 h-5 w-5 border-b border-r" style={{ borderColor: tokens.colors.borderHover }} />
-          </motion.div>
+        {/* Main Central Typography Name */}
+        <motion.div
+          style={{ scale: nameScale, y: nameY }}
+          className="relative z-30 flex flex-col items-center justify-center text-center select-none"
+        >
+          <h1
+            className="text-[12vw] sm:text-[10vw] md:text-[8vw] font-bold leading-none tracking-tighter"
+            style={{ color: tokens.colors.primary, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            <span className="inline-block mr-4 font-extrabold">
+              <InlineEdit
+                isOwner={isOwner}
+                id="noir-first-name"
+                value={firstName}
+                onSave={(v) => handleLiveUpdate?.({ firstName: v })}
+              >
+                {firstName}
+              </InlineEdit>
+            </span>
+            <span
+              className="italic font-light transition-all duration-700 hover:tracking-wide"
+              style={{ fontFamily: "'Instrument Serif', serif", color: tokens.colors.primary }}
+            >
+              <InlineEdit
+                isOwner={isOwner}
+                id="noir-last-name"
+                value={lastName}
+                onSave={(v) => handleLiveUpdate?.({ lastName: v })}
+              >
+                {lastName}
+              </InlineEdit>
+              <span style={{ color: tokens.colors.accent }}>.</span>
+            </span>
+          </h1>
+        </motion.div>
+
+        {/* Scroll To Focus Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+          <span
+            className="text-[9px] tracking-[0.25em] uppercase font-bold opacity-60"
+            style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+          >
+            Scroll to focus
+          </span>
+          <div className="w-px h-12 bg-white/20 relative overflow-hidden">
+            <motion.div
+              animate={{ y: ["-100%", "100%"] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              className="absolute top-0 left-0 w-full h-1/2"
+              style={{ backgroundColor: tokens.colors.accent }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.a
-        href="#about"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        onClick={(e) => { e.preventDefault(); document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }); }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce"
-        style={{ color: tokens.colors.secondary }}
-        aria-label="Scroll down"
-        data-cursor="hover"
-      >
-        <ArrowDown size={20} />
-      </motion.a>
+      {/* Minimal Footer Info */}
+      <footer className="relative z-20 w-full px-6 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t" style={{ borderColor: tokens.colors.border }}>
+        <div className="flex items-center gap-6">
+          {user?.socialLinks?.github && (
+            <a
+              href={user.socialLinks.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] tracking-widest uppercase font-bold opacity-60 hover:opacity-100 transition-opacity"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              data-cursor="hover"
+            >
+              GitHub
+            </a>
+          )}
+          {user?.socialLinks?.linkedin && (
+            <a
+              href={user.socialLinks.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] tracking-widest uppercase font-bold opacity-60 hover:opacity-100 transition-opacity"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              data-cursor="hover"
+            >
+              LinkedIn
+            </a>
+          )}
+          {user?.socialLinks?.twitter && (
+            <a
+              href={user.socialLinks.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] tracking-widest uppercase font-bold opacity-60 hover:opacity-100 transition-opacity"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              data-cursor="hover"
+            >
+              Twitter
+            </a>
+          )}
+        </div>
+
+        <div className="hidden sm:flex items-center gap-8">
+          {["work", "about", "contact"].map((sec) => (
+            <button
+              key={sec}
+              onClick={() => scrollToSection(sec)}
+              className="text-[9px] tracking-widest uppercase font-bold opacity-60 hover:opacity-100 transition-opacity"
+              style={{ fontFamily: tokens.fonts.mono, color: tokens.colors.primary }}
+              data-cursor="hover"
+            >
+              {sec}
+            </button>
+          ))}
+        </div>
+      </footer>
     </section>
   );
 };
