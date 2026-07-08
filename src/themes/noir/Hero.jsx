@@ -355,7 +355,6 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal, analytics }
           {/* Central Large Typographic Name */}
           <div className="relative z-20 flex flex-1 items-end justify-center pb-8">
             <motion.h1
-              style={{ scale: nameScale, opacity: nameOpacity }}
               className="select-none flex flex-wrap items-baseline justify-center gap-[0.2em] whitespace-nowrap"
               style={{
                 scale: nameScale,
