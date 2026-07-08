@@ -189,7 +189,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-              className="relative w-full max-w-sm md:max-w-md lg:max-w-lg flex flex-col items-center"
+              className="relative w-full max-w-sm md:max-w-lg lg:max-w-xl flex flex-col items-center"
             >
               {/* Image container with mask to fade edges */}
               <div className="relative w-full flex items-center justify-center">
@@ -199,8 +199,8 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
                     alt={fullName || "Profile"}
                     className="w-full h-auto max-h-[500px] object-contain grayscale hover:grayscale-0 transition-all duration-700"
                     style={{
-                      WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)",
-                      maskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)"
+                      WebkitMaskImage: "radial-gradient(closest-side, black 45%, transparent 95%)",
+                      maskImage: "radial-gradient(closest-side, black 45%, transparent 95%)"
                     }}
                     loading="eager"
                   />
