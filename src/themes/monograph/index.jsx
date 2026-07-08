@@ -38,6 +38,14 @@ const MonographTheme = ({
         setShowResumeModal={setShowResumeModal}
       />
 
+      {/* GitHub Insights */}
+      <GithubStats 
+        githubUrl={user?.socialLinks?.github} 
+        userSkills={user?.skills?.technical || user?.skills || []} 
+        data={githubData}
+        loading={githubLoading}
+      />
+
       <About user={user} isOwner={isOwner} handleLiveUpdate={handleLiveUpdate} />
 
       {(isOwner || user?.experience?.length > 0 || user?.education?.length > 0) && (

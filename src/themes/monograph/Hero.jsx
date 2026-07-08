@@ -57,7 +57,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
         </motion.div>
 
         {/* Main hero grid: Left content + Right image */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 lg:gap-24 items-center">
 
           {/* Left — Name, bio, CTA */}
           <div className="md:col-span-7 flex flex-col space-y-8">
@@ -192,7 +192,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
               className="relative w-full max-w-sm md:max-w-lg lg:max-w-xl flex flex-col items-center"
             >
               {/* Image container with mask to fade edges */}
-              <div className="relative w-full flex items-center justify-center scale-110 md:scale-125 origin-right">
+              <div className="relative w-full flex items-center justify-center scale-125 md:scale-[1.35] lg:scale-[1.4] origin-right">
                 {profileImage ? (
                   <img
                     src={profileImage}
