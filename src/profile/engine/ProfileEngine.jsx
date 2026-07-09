@@ -43,13 +43,15 @@ const themePresets = [
   { name: "TERMINAL DARK",   headerBg: "#050816", headerBgSecondary: "#151030", bodyBg: "#050816",  fontPrimary: "Inter",           cardStyle: "glass",   icon: "💻", textPrimary: "#ffffff",  textSecondary: "#aaa6c3",              accentColor: "#915eff" },
   { name: "CYBER NEON",      headerBg: "#080808", headerBgSecondary: "#000000", bodyBg: "#0a0a0a",  fontPrimary: "Orbitron",        cardStyle: "glass",   icon: "🟢", textPrimary: "#ffffff",  textSecondary: "#a1a1aa",              accentColor: "#00ffcc" },
   { name: "MONOGRAPH",       headerBg: "#000000", headerBgSecondary: "#1C1917", bodyBg: "#FAFAF9",  fontPrimary: "IBM Plex Sans",   cardStyle: "minimal", icon: "🖋️", textPrimary: "#292524", textSecondary: "#78716C",              accentColor: "#000000" },
-  { name: "NOIR",            headerBg: "#060606", headerBgSecondary: "#000000", bodyBg: "#000000",  fontPrimary: "Satoshi",         cardStyle: "minimal", icon: "🌑", textPrimary: "#F0F0F0",  textSecondary: "rgba(240,240,240,0.7)", accentColor: "#FF2E0C" },
+  { name: "NOIR",            headerBg: "#060606", headerBgSecondary: "#000000", bodyBg: "#000000",  fontPrimary: "Satoshi",         cardStyle: "minimal", icon: "🌑", textPrimary: "#F0F0F0",  textSecondary: "#b0b0b0",               accentColor: "#FF2E0C" },
 ];
 
 const ProfileEngine = ({
   user, model, loading, profileError,
   localTheme, setLocalTheme, analytics, isUpdating,
   handleLiveUpdate, username,
+  displayValue, ensureAbsoluteUrl, personalInfo,
+  deleteProjectThunk, openProjectModalThunk,
 }) => {
   const dispatch = useDispatch();
   const [showThemePanel,  setShowThemePanel]  = useState(false);
@@ -158,6 +160,13 @@ const ProfileEngine = ({
     user,
     projects:             model?.projects || [],
     isOwner:              isOwner,
+    theme,
+    displayValue,
+    ensureAbsoluteUrl,
+    personalInfo,
+    deleteProjectThunk,
+    openProjectModalThunk,
+    dispatch,
     handleLiveUpdate:     model?.actions?.handleLiveUpdate,
     handleArrayUpdate:    model?.actions?.handleArrayUpdate,
     setShowResumeModal,
@@ -168,7 +177,8 @@ const ProfileEngine = ({
     githubData:           model?.github?.data,
     githubLoading:        model?.github?.loading,
     analytics,
-  }), [model, user, isOwner, isLight, analytics, setShowResumeModal, themeContextValue.tokens]);
+  }), [model, user, isOwner, isLight, analytics, setShowResumeModal, themeContextValue.tokens,
+       theme, displayValue, ensureAbsoluteUrl, personalInfo, deleteProjectThunk, openProjectModalThunk, dispatch]);
 
   // ── Guards ──
   if (loading) return (

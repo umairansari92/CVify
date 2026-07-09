@@ -156,6 +156,31 @@ const ProfileLoader = () => {
   }, [user, projects, contactForm, analytics, githubData, githubLoading,
       handleLiveUpdate, handleArrayUpdate, handleContactSubmit, isSending]);
 
+  const displayValue = useCallback((value, placeholder) => {
+    if (value && typeof value === 'string' && value.trim() !== "") return value;
+    if (value && typeof value !== 'string') return value;
+    return null;
+  }, []);
+
+  const ensureAbsoluteUrl = useCallback((url) => {
+    if (!url || typeof url !== "string") return "";
+    const trimmed = url.trim();
+    if (!trimmed) return "";
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("mailto:") || trimmed.startsWith("tel:")) return trimmed;
+    return `https://${trimmed}`;
+  }, []);
+
+  const personalInfo = useMemo(() => ({
+    fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+    image: user?.profileImage,
+    jobTitle: user?.headline,
+    objective: user?.bio,
+    summary: user?.bio,
+    location: user?.location,
+    email: user?.email,
+    phone: user?.phoneNumber
+  }), [user?.firstName, user?.lastName, user?.profileImage, user?.headline, user?.bio, user?.location, user?.email, user?.phoneNumber]);
+
   return (
     <ProfileEngine
       user={user}
@@ -168,6 +193,11 @@ const ProfileLoader = () => {
       isUpdating={isUpdating}
       handleLiveUpdate={handleLiveUpdate}
       username={username}
+      displayValue={displayValue}
+      ensureAbsoluteUrl={ensureAbsoluteUrl}
+      personalInfo={personalInfo}
+      deleteProjectThunk={deleteProjectThunk}
+      openProjectModalThunk={openProjectModalThunk}
     />
   );
 };
