@@ -8,15 +8,25 @@
 const fs   = require("fs");
 const path = require("path");
 
-// Parse --name argument
+// Parse name argument
 const args  = process.argv.slice(2);
+let rawName = "";
+
 const nameArg = args.find(a => a.startsWith("--name="));
-if (!nameArg) {
-  console.error("\n\x1b[31mError: provide a theme name. Example: npm run create-theme -- --name=aurora\x1b[0m\n");
-  process.exit(1);
+if (nameArg) {
+  rawName = nameArg.split("=")[1].trim();
+} else {
+  // Fall back to first positional argument that doesn't start with a dash
+  const positionalArg = args.find(a => !a.startsWith("-"));
+  if (positionalArg) {
+    rawName = positionalArg.trim();
+  }
 }
 
-const rawName   = nameArg.split("=")[1].trim();
+if (!rawName) {
+  console.error("\n\x1b[31mError: provide a theme name. Example: npm run create-theme -- --name=aurora or npm run create-theme aurora\x1b[0m\n");
+  process.exit(1);
+}
 const dirName   = rawName.toLowerCase().replace(/\s+/g, "");
 const themeId   = rawName.toUpperCase().replace(/\s+/g, "_");
 const themeName = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
