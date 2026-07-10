@@ -14,6 +14,18 @@ const ENGINE_VERSION = "4.0";
  * memo() prevents re-renders from sibling/parent state changes (e.g., showThemePanel,
  * showResumeModal) that don't affect themeId or themeProps.
  */
+// Cache to store lazy-loaded theme components so they are only defined once.
+// Defining React.lazy() inside the render function causes React to treat it as a new
+// component type on every render, destroying the DOM state and forcing a complete remount.
+const lazyThemeCache = {};
+
+const getLazyTheme = (themeId, loadFn) => {
+  if (!lazyThemeCache[themeId]) {
+    lazyThemeCache[themeId] = React.lazy(loadFn);
+  }
+  return lazyThemeCache[themeId];
+};
+
 const ThemeResolverInner = ({ themeId, themeProps }) => {
   const entry = registry[themeId] || registry["STANDARD"];
 
@@ -34,7 +46,7 @@ const ThemeResolverInner = ({ themeId, themeProps }) => {
     );
   }
 
-  const ThemeComponent = React.lazy(lazyLoad);
+  const ThemeComponent = getLazyTheme(themeId, lazyLoad);
 
   const fallbackBg = manifest.defaultPreset === "NOIR" ? "#000" :
                      manifest.defaultPreset === "AURA DARK" ? "#000" : "#0f172a";

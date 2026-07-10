@@ -104,24 +104,36 @@ const FormInput = ({ id, type = "text", placeholder, value, onChange, disabled }
   />
 );
 
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const contactSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  subject: yup.string().required("Subject is required"),
+  message: yup.string().required("Message is required"),
+});
+
 const Contact = ({
   user,
-  contactForm,
-  setContactForm,
   handleContactSubmit,
   isSending,
 }) => {
-  const safeForm = contactForm || { name: "", email: "", subject: "", message: "" };
-  const safeSet = setContactForm || (() => {});
-  const safeSubmit = handleContactSubmit || ((e) => e.preventDefault());
-
   const email = user?.email || user?.contact?.email || "";
   const phone = user?.phoneNumber || user?.phone || "";
   const location = user?.location || "";
   const socialLinks = user?.socialLinks || {};
 
-  const update = (field) => (val) =>
-    safeSet((prev) => ({ ...(prev || {}), [field]: val }));
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: yupResolver(contactSchema),
+    defaultValues: { name: "", email: "", subject: "", message: "" }
+  });
+
+  const onSubmit = async (data) => {
+    await handleContactSubmit(data);
+    reset();
+  };
 
   const socialItems = [
     { key: "github", icon: FaGithub },
@@ -238,7 +250,7 @@ const Contact = ({
             transition={{ delay: 0.1, duration: tokens.motion.duration.normal, ease: tokens.motion.easing.base }}
           >
             <form
-              onSubmit={safeSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               className="space-y-5 p-8 md:p-10 rounded-3xl border"
               style={{
                 backgroundColor: tokens.colors.cardBg,
@@ -247,7 +259,7 @@ const Contact = ({
             >
               {/* Name + Email row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
+                <div className="flex flex-col gap-1">
                   <label
                     htmlFor="noir-c-name"
                     className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
@@ -255,15 +267,29 @@ const Contact = ({
                   >
                     Full Name *
                   </label>
-                  <FormInput
+                  <input
+                    {...register("name")}
                     id="noir-c-name"
                     placeholder="John Doe"
-                    value={safeForm.name}
-                    onChange={update("name")}
                     disabled={isSending}
+                    className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
+                    style={{
+                      color: tokens.colors.primary,
+                      borderColor: tokens.colors.border,
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = tokens.colors.primary;
+                      e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}1a`;
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = tokens.colors.border;
+                      e.target.style.boxShadow = "none";
+                    }}
                   />
+                  {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1" style={{ fontFamily: tokens.fonts.mono }}>{errors.name.message}</p>}
                 </div>
-                <div>
+                <div className="flex flex-col gap-1">
                   <label
                     htmlFor="noir-c-email"
                     className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
@@ -271,37 +297,65 @@ const Contact = ({
                   >
                     Email Address *
                   </label>
-                  <FormInput
+                  <input
+                    {...register("email")}
                     id="noir-c-email"
                     type="email"
                     placeholder="john@company.com"
-                    value={safeForm.email}
-                    onChange={update("email")}
                     disabled={isSending}
+                    className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
+                    style={{
+                      color: tokens.colors.primary,
+                      borderColor: tokens.colors.border,
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = tokens.colors.primary;
+                      e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}1a`;
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = tokens.colors.border;
+                      e.target.style.boxShadow = "none";
+                    }}
                   />
+                  {errors.email && <p className="text-red-500 text-[10px] font-bold mt-1" style={{ fontFamily: tokens.fonts.mono }}>{errors.email.message}</p>}
                 </div>
               </div>
 
               {/* Subject */}
-              <div>
+              <div className="flex flex-col gap-1">
                 <label
                   htmlFor="noir-c-subject"
                   className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
                   style={{ color: tokens.colors.secondary, fontFamily: tokens.fonts.mono }}
                 >
-                  Subject
+                  Subject *
                 </label>
-                <FormInput
+                <input
+                  {...register("subject")}
                   id="noir-c-subject"
                   placeholder="Project Inquiry / Collaboration / ..."
-                  value={safeForm.subject}
-                  onChange={update("subject")}
                   disabled={isSending}
+                  className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
+                  style={{
+                    color: tokens.colors.primary,
+                    borderColor: tokens.colors.border,
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = tokens.colors.primary;
+                    e.target.style.boxShadow = `0 0 0 1px ${tokens.colors.primary}1a`;
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = tokens.colors.border;
+                    e.target.style.boxShadow = "none";
+                  }}
                 />
+                {errors.subject && <p className="text-red-500 text-[10px] font-bold mt-1" style={{ fontFamily: tokens.fonts.mono }}>{errors.subject.message}</p>}
               </div>
 
               {/* Message */}
-              <div>
+              <div className="flex flex-col gap-1">
                 <label
                   htmlFor="noir-c-message"
                   className="block mb-2 text-[9px] font-black uppercase tracking-[0.2em]"
@@ -313,9 +367,8 @@ const Contact = ({
                   id="noir-c-message"
                   rows={5}
                   placeholder="Tell me about your project, timeline, and budget..."
-                  value={safeForm.message || ""}
-                  onChange={(e) => update("message")(e.target.value)}
                   disabled={isSending}
+                  {...register("message")}
                   className="w-full bg-transparent border rounded-xl px-5 py-3.5 text-sm outline-none resize-none transition-all duration-300 placeholder:opacity-25 disabled:opacity-40"
                   style={{
                     color: tokens.colors.primary,
@@ -331,6 +384,7 @@ const Contact = ({
                     e.target.style.boxShadow = "none";
                   }}
                 />
+                {errors.message && <p className="text-red-500 text-[10px] font-bold mt-1" style={{ fontFamily: tokens.fonts.mono }}>{errors.message.message}</p>}
               </div>
 
               {/* Submit */}

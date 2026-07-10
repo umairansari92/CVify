@@ -2,9 +2,19 @@ import React from "react";
 import { getDynamicWhatsAppLink } from "../../../utils/whatsappUtils";
 import { MapPin, Mail, Phone, Send } from "lucide-react";
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaFacebook, FaGlobe, FaWhatsapp } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import InlineEdit from "../InlineEdit";
 
-const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handleContactSubmit, isSending, handleLiveUpdate, ensureAbsoluteUrl }) => {
+const contactSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  subject: yup.string().required("Subject is required"),
+  message: yup.string().required("Message is required"),
+});
+
+const Contact = React.memo(({ user, isOwner, handleContactSubmit, isSending, handleLiveUpdate, ensureAbsoluteUrl }) => {
   const personalInfo = user?.personalInfo || {
     fullName: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
     image: user?.profileImage,
@@ -13,6 +23,16 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
     location: user?.location,
     email: user?.email,
     phone: user?.phoneNumber
+  };
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: yupResolver(contactSchema),
+    defaultValues: { name: "", email: "", subject: "", message: "" }
+  });
+
+  const onSubmit = async (data) => {
+    await handleContactSubmit(data);
+    reset();
   };
 
   const getIcon = (platform) => {
@@ -24,7 +44,7 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
       case 'facebook': return <FaFacebook size={20} />;
       case 'portfolio': return <FaGlobe size={20} />;
       case 'whatsapp': return <FaWhatsapp size={20} />;
-      default: return <FaGlobb size={20} />;
+      default: return <FaGlobe size={20} />;
     }
   };
 
@@ -134,45 +154,49 @@ const Contact = React.memo(({ user, isOwner, contactForm, setContactForm, handle
           </div>
 
           <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-sm">
-            <form className="space-y-6" onSubmit={handleContactSubmit}>
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-1">
+                  <input 
+                    type="text" 
+                    placeholder="YOUR NAME" 
+                    className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
+                    {...register("name")}
+                    disabled={isSending}
+                  />
+                  {errors.name && <p className="text-red-500 text-[10px] font-bold ml-2">{errors.name.message}</p>}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <input 
+                    type="email" 
+                    placeholder="YOUR EMAIL" 
+                    className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
+                    {...register("email")}
+                    disabled={isSending}
+                  />
+                  {errors.email && <p className="text-red-500 text-[10px] font-bold ml-2">{errors.email.message}</p>}
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
                 <input 
                   type="text" 
-                  placeholder="YOUR NAME" 
+                  placeholder="ENTER SUBJECT" 
                   className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-                  required
-                  value={contactForm.name}
-                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  {...register("subject")}
                   disabled={isSending}
                 />
-                <input 
-                  type="email" 
-                  placeholder="YOUR EMAIL" 
-                  className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-                  required
-                  value={contactForm.email}
-                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                  disabled={isSending}
-                />
+                {errors.subject && <p className="text-red-500 text-[10px] font-bold ml-2">{errors.subject.message}</p>}
               </div>
-              <input 
-                type="text" 
-                placeholder="ENTER SUBJECT" 
-                className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all"
-                required
-                value={contactForm.subject}
-                onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                disabled={isSending}
-              />
-              <textarea 
-                placeholder="Message Here..." 
-                rows="6"
-                className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all resize-none"
-                required
-                value={contactForm.message}
-                onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                disabled={isSending}
-              ></textarea>
+              <div className="flex flex-col gap-1">
+                <textarea 
+                  placeholder="Message Here..." 
+                  rows="6"
+                  className="w-full bg-[var(--bg-primary)]/50 border border-[var(--card-border)] rounded-xl px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-secondary)] opacity-30 focus:opacity-100 focus:outline-none focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] transition-all resize-none"
+                  {...register("message")}
+                  disabled={isSending}
+                ></textarea>
+                {errors.message && <p className="text-red-500 text-[10px] font-bold ml-2">{errors.message.message}</p>}
+              </div>
               
               <div className="text-right pt-4">
                 <button 

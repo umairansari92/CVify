@@ -116,15 +116,20 @@ const ProfileLoader = () => {
     handleLiveUpdate({ [field]: arr });
   }, [user, handleLiveUpdate]);
 
-  const handleContactSubmit = useCallback(async (e) => {
-    e?.preventDefault();
+  const handleContactSubmit = useCallback(async (dataOrEvent) => {
+    if (dataOrEvent && typeof dataOrEvent.preventDefault === "function") {
+      dataOrEvent.preventDefault();
+    }
+    
+    const submitData = (dataOrEvent && typeof dataOrEvent.preventDefault !== "function")
+      ? dataOrEvent
+      : contactFormRef.current;
+
     if (isSending) return;
     setIsSending(true);
     const tid = toast.loading("Sending your message...");
-    // Read from ref — avoids stale closure WITHOUT adding contactForm to deps
-    const formSnapshot = contactFormRef.current;
     try {
-      await api.post(`/portfolio/contact/${username}`, formSnapshot);
+      await api.post(`/portfolio/contact/${username}`, submitData);
       toast.success("Message sent!", { id: tid });
       setContactForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
