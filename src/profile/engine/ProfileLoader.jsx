@@ -6,7 +6,6 @@ import {
   fetchPublicProfile,
   fetchProfileAnalytics,
   updateActiveProfileLocally,
-  clearActiveProfile,
   deleteProjectThunk,
   openProjectModalThunk,
 } from "../../features/profile/profileSlice";
@@ -47,9 +46,11 @@ const ProfileLoader = () => {
   const [githubLoading,setGithubLoading] = useState(false);
 
   // ── Data fetches ──
+  // NOTE: We do NOT clear the active profile on unmount to prevent the
+  // hero flash/disappear on re-renders (React StrictMode double-invocation).
+  // The profile is replaced atomically when fetchPublicProfile resolves.
   useEffect(() => {
     dispatch(fetchPublicProfile(username));
-    return () => dispatch(clearActiveProfile());
   }, [dispatch, username]);
 
   useEffect(() => {

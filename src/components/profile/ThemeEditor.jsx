@@ -203,7 +203,7 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         bodyBg: "#000000",
         accentColor: "#FF2E0C",
         textPrimary: "#F0F0F0",
-        textSecondary: "rgba(240, 240, 240, 0.7)",
+        textSecondary: "#b0b0b0",
         cardStyle: "minimal",
         fontPrimary: "Satoshi",
       },
