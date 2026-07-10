@@ -32,6 +32,7 @@ const Documentation = () => {
         { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
         { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
         { id: "ai-gateway", icon: <ShieldCheck size={16} />, label: "Enterprise AI Gateway (New!)" },
+        { id: "theme-engine", icon: <Palette size={16} />, label: "🎨 Theme Engine v4.0 (New!)" },
       ]
     },
     {
@@ -444,9 +445,13 @@ const Documentation = () => {
     themes: (
       <>
         <DocHeader title="All 12 Portfolio Themes" badge="Visual Design" />
-        <p className="text-text-secondary text-[15px] leading-relaxed mb-8">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">12 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for a consistent, premium navigation experience.
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">12 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes are powered by the new <strong className="text-primary">Theme Engine v4.0</strong> — a pluggable, 5-layer architecture that auto-discovers themes at build time. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for consistent navigation.
         </p>
+        <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl mb-8 flex items-start gap-3">
+          <Palette size={16} className="text-primary mt-0.5 flex-shrink-0" />
+          <p className="text-[13px] text-text-secondary leading-relaxed"><strong className="text-primary">Theme Engine v4.0:</strong> Themes are lazy-loaded chunks, auto-registered via <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">import.meta.glob</code>, and sandbox-validated at build time. To add a new theme, run <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">npm run create-theme &lt;name&gt;</code>. No manual imports or PublicProfile.jsx edits needed. See the <button onClick={() => setActiveSection("theme-engine")} className="text-primary underline font-bold">Theme Engine v4.0</button> section for full architecture details.</p>
+        </div>
 
         <div className="space-y-4 mb-8">
           {[
@@ -801,6 +806,115 @@ const Documentation = () => {
       </>
     ),
 
+    "theme-engine": (
+      <>
+        <DocHeader title="🎨 Theme Engine v4.0" badge="Architecture" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro's portfolio rendering system has been completely re-engineered from a monolithic <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">PublicProfile.jsx</code> into a <strong className="text-primary">pluggable, 5-layer Theme Engine</strong> — designed to scale to 1000+ themes with zero changes to core engine files. Inspired by enterprise SaaS plugin architectures.
+        </p>
+
+        <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl mb-8">
+          <p className="text-[13px] text-amber-400 font-black uppercase tracking-widest mb-1">Architecture Freeze v1.0</p>
+          <p className="text-[13px] text-text-secondary leading-relaxed">The 5-layer pipeline is frozen. New capabilities are added through plugins, manifests, configuration, or additive APIs — never by modifying the engine core.</p>
+        </div>
+
+        <SectionTitle>The 5-Layer Pipeline</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { layer: "1", name: "PublicProfile.jsx", color: "blue", role: "Entry Point", desc: "A 12-line thin shell. Only mounts ProfileLoader. Never contains theme logic, Redux selectors, or UI." },
+            { layer: "2", name: "ProfileLoader.jsx", color: "emerald", role: "Data Layer", desc: "Handles all Redux dispatches, API calls (profile, analytics, GitHub), stable action callbacks, and ViewModel construction. Zero JSX beyond delegating to ProfileEngine." },
+            { layer: "3", name: "ProfileEngine.jsx", color: "purple", role: "UI Shell & Overlays", desc: "Applies CSS variables to the DOM, renders universal overlays (Navbar, Resume Modal, HUD Dock, ThemePanel, AI Widget), and provides ThemeContext. Delegates theme rendering to ThemeResolver." },
+            { layer: "4", name: "ThemeResolver.jsx", color: "amber", role: "Lazy Loader & Sandbox", desc: "Looks up the theme ID in the registry, verifies engine API compatibility, lazy-loads the theme chunk, and wraps it in an ErrorBoundary to prevent crashes from taking down the engine." },
+            { layer: "5", name: "Theme Plugin", color: "red", role: "Visual Layer", desc: "A self-contained JSX component. Receives a standardized ThemeProps contract. FORBIDDEN from importing Redux, making API calls, or accessing browser storage." },
+          ].map((item, i) => {
+            const colors = { blue: "border-blue-500/20 bg-blue-500/5 text-blue-400", emerald: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400", purple: "border-purple-500/20 bg-purple-500/5 text-purple-400", amber: "border-amber-500/20 bg-amber-500/5 text-amber-400", red: "border-red-500/20 bg-red-500/5 text-red-400" };
+            return (
+              <div key={i} className={`p-4 rounded-2xl border ${colors[item.color]}`}>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border ${colors[item.color]}`}>{item.layer}</span>
+                  <span className={`font-black text-sm ${colors[item.color].split(' ')[2]}`}>{item.name}</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-text-muted border border-white/10 px-2 py-0.5 rounded-full">{item.role}</span>
+                </div>
+                <p className="text-text-secondary text-[13px] leading-relaxed">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <SectionTitle>ViewModel Layer</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          All raw DB data is normalized by <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">profile/viewmodel/index.js</code> before reaching any theme. This means themes are completely decoupled from the database schema — a DB field rename never breaks a theme.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Database size={16} />} color="blue" title="12 Sub-Modules" desc="hero.js, about.js, experience.js, education.js, skills.js, projects.js, certifications.js, testimonials.js, interests.js, contact.js, github.js, analytics.js — each independently testable." />
+          <InfoCard icon={<Shield size={16} />} color="purple" title="Zero Schema Leakage" desc="Themes receive a typed model prop instead of raw user object. DB field renames, schema changes, or data migrations never require touching theme code." />
+        </div>
+
+        <SectionTitle>Auto-Discovery Registry</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          The registry uses Vite's <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">import.meta.glob</code> to automatically discover all theme manifests at build time. <strong className="text-text-primary">No manual imports needed.</strong>
+        </p>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8">
+          <pre className="text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre">{`// profile/themes/registry.js
+const manifests = import.meta.glob('./*/manifest.js', { eager: true });
+// ThemeResolver creates a lazy() loader for each discovered manifest
+// → Adding a new theme only requires placing a folder here`}</pre>
+        </div>
+
+        <SectionTitle>Shared Component Library</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Layers size={16} />} color="emerald" title="Primitives" desc="Button (accent-aware), Card (glass/minimal auto-detect), Badge (accent/muted/outline), Section (semantic wrapper), Image (lazy + fallback). All read tokens from ThemeContext." />
+          <InfoCard icon={<Layout size={16} />} color="blue" title="Composites" desc="Timeline (experience/education), SkillGrid (handles both skill schemas), StatGrid (analytics), ProjectGallery (responsive grid with tech badges). Drop-in for any theme." />
+        </div>
+
+        <SectionTitle>Theme SDK & Validation CLI</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <InfoCard icon={<Zap size={16} />} color="amber" title="npm run create-theme &lt;name&gt;" desc="Scaffolds a complete new theme folder with manifest.js, theme.config.js, tokens.js, sections.js, index.jsx, and README.md in one command." />
+          <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="npm run validate-themes" desc="Runs structural checks (required files), manifest schema validation (id, engine, features, navigation), and forbidden API scans (no Redux, no fetch, no localStorage) across all themes." />
+        </div>
+
+        <SectionTitle>Theme Sandbox Rules (Enforced)</SectionTitle>
+        <div className="p-5 bg-red-500/5 border border-red-500/20 rounded-2xl mb-6">
+          <p className="text-[11px] font-black uppercase tracking-widest text-red-400 mb-3">Forbidden APIs — Violating These Crashes the Engine</p>
+          <div className="space-y-2">
+            {[
+              ["useSelector / useDispatch / useStore", "Themes must never access Redux directly"],
+              ["fetch() / axios", "Themes must never make network requests"],
+              ["localStorage / sessionStorage", "Themes must never read or write browser storage"],
+              ["WebSocket / XMLHttpRequest", "No real-time connections from theme layer"],
+              ["import.meta.env", "Themes must never read environment variables"],
+            ].map(([api, reason], i) => (
+              <div key={i} className="flex items-start gap-3 text-[12px]">
+                <code className="text-red-400 bg-red-500/10 px-2 py-0.5 rounded font-mono flex-shrink-0">{api}</code>
+                <span className="text-text-secondary">{reason}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-text-muted mt-3 italic">✅ Allowed: setTimeout, setInterval, requestAnimationFrame (for animations, typewriter effects, debouncing)</p>
+        </div>
+
+        <SectionTitle>Bug Fixes (v4.0 Launch)</SectionTitle>
+        <div className="space-y-3">
+          {[
+            { tag: "FIX", color: "emerald", title: "Hero Flash / Disappear Bug", desc: "clearActiveProfile() was called on every unmount in ProfileLoader, causing user → null → loading → re-render cycles. Fixed by removing cleanup — profile is replaced atomically on re-fetch." },
+            { tag: "FIX", color: "blue", title: "rgba Color Warning Eliminated", desc: "NOIR preset textSecondary was stored as rgba(240,240,240,0.7). Browser's <input type=color> only accepts #rrggbb format. Fixed in both ProfileEngine.jsx and ThemeEditor.jsx presets." },
+            { tag: "FIX", color: "purple", title: "TypeError: Cannot read .name", desc: "Standard and CyberNeon themes expected legacy props (theme, dispatch, deleteProjectThunk) that weren't being passed through the new engine. Fixed by injecting all backward-compat props into themeProps." },
+          ].map((item, i) => {
+            const colors = { emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400", blue: "bg-blue-500/10 border-blue-500/20 text-blue-400", purple: "bg-purple-500/10 border-purple-500/20 text-purple-400" };
+            return (
+              <div key={i} className={`p-4 rounded-2xl border ${colors[item.color]}`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${colors[item.color]}`}>{item.tag}</span>
+                  <p className="font-black text-sm text-text-primary">{item.title}</p>
+                </div>
+                <p className="text-text-secondary text-[13px] leading-relaxed">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    ),
+
     particles: (
       <>
         <DocHeader title="Interactive Particles FX" badge="Visual Enhancement" />
@@ -923,35 +1037,63 @@ const Documentation = () => {
         {/* Folder Tree */}
         <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8 overflow-x-auto">
           <pre className="text-[12px] text-text-secondary font-mono leading-relaxed whitespace-pre">{`CVify/
-├─ Client/                     # React SPA (Vite)
+├─ Client/                       # React SPA (Vite)
+│   ├─ scripts/                  # CLI tools
+│   │   ├─ createTheme.cjs       # Theme SDK scaffolder (npm run create-theme)
+│   │   └─ validateThemes.cjs    # Structural validator (npm run validate-themes)
 │   ├─ src/
-│   │   ├─ pages/            # SPA routes (Documentation, PublicProfile, …)
-│   │   ├─ components/       # Reusable UI (ThemeBackgroundFX, InfoCard, …)
-│   │   ├─ themes/           # 7 premium themes + ORIENTAL LUXE
-│   │   ├─ utils/            # API wrapper, formatters
-│   │   └─ three/            # Three.js visualisations
-│   ├─ public/                # Static assets
+│   │   ├─ pages/                # SPA routes (Documentation, PublicProfile, …)
+│   │   ├─ components/           # Reusable UI (InlineEdit, ThemeEditor, …)
+│   │   ├─ themes/               # 8 premium theme folders (JSX components)
+│   │   ├─ profile/              # ✨ Theme Engine v4.0 (pluggable architecture)
+│   │   │   ├─ engine/           # 5-layer pipeline: Loader → Engine → Resolver
+│   │   │   │   ├─ ProfileLoader.jsx    # Layer 2: Data, Redux, GitHub
+│   │   │   │   ├─ ProfileEngine.jsx    # Layer 3: Overlays, ThemeContext
+│   │   │   │   ├─ ThemeResolver.jsx    # Layer 4: Lazy-load, Error boundary
+│   │   │   │   ├─ ThemeContext.jsx     # Design tokens shared context
+│   │   │   │   └─ ErrorBoundary.jsx    # Theme crash isolation
+│   │   │   ├─ themes/           # Registry + manifest per theme
+│   │   │   │   ├─ registry.js         # Auto-discovery (import.meta.glob)
+│   │   │   │   ├─ noir/               # manifest.js + theme.config.js + index.jsx
+│   │   │   │   ├─ auradark/
+│   │   │   │   ├─ cyberneon/
+│   │   │   │   ├─ monograph/
+│   │   │   │   ├─ orientalluxe/
+│   │   │   │   ├─ terminaldark/
+│   │   │   │   ├─ standard/
+│   │   │   │   └─ aurora/             # Scaffolded via create-theme SDK
+│   │   │   ├─ viewmodel/        # Data normalization (ViewModel layer)
+│   │   │   │   ├─ index.js            # Root aggregator
+│   │   │   │   ├─ hero.js / about.js / experience.js …
+│   │   │   └─ shared/           # Primitives & Composites
+│   │   │       ├─ primitives/         # Button, Card, Badge, Section, Image
+│   │   │       └─ composites/         # Timeline, SkillGrid, ProjectGallery…
+│   │   ├─ utils/                # API wrapper, formatters
+│   │   └─ three/                # Three.js visualisations
+│   ├─ public/                   # Static assets
 │   └─ vite.config.ts
-├─ Server/                     # Express API
-│   ├─ controllers/          # Business logic (auth, resume, ATS, …)
-│   ├─ models/               # Mongoose schemas
-│   ├─ routes/               # Express routers
-│   ├─ middlewares/          # Helmet, rate‑limit, error handling
-│   ├─ services/              # Email, PDF, background jobs
-│   ├─ utils/                # blockedDomains.js (disposable email blocking)
-│   └─ server.js              # Entry point, BFF integration
-├─ .env                       # Environment variables
-├─ package.json               # Monorepo dependencies
-└─ vercel.json                # Vercel deployment config`}</pre>
+├─ Server/                       # Express API
+│   ├─ controllers/              # Business logic (auth, resume, ATS, …)
+│   ├─ models/                   # Mongoose schemas
+│   ├─ routes/                   # Express routers
+│   ├─ middlewares/              # Helmet, rate-limit, error handling
+│   ├─ services/                 # Email, PDF, background jobs
+│   ├─ utils/                    # blockedDomains.js (disposable email blocking)
+│   └─ server.js                 # Entry point, BFF integration
+├─ .env                          # Environment variables
+├─ package.json                  # Monorepo dependencies
+└─ vercel.json                   # Vercel deployment config`}</pre>
         </div>
 
         <SectionTitle>Key Directories Explained</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <InfoCard icon={<Layout size={16} />} color="blue" title="Client/src/pages/" desc="Every SPA route lives here — Dashboard, Builder, PublicProfile, Documentation. Each page owns its own layout and data fetching." />
-          <InfoCard icon={<Cpu size={16} />} color="purple" title="Client/src/themes/" desc="7 modular theme folders, each with its own BackgroundFX.jsx particle/SVG config. Adding a new theme = adding one folder." />
+          <InfoCard icon={<Cpu size={16} />} color="purple" title="Client/src/themes/" desc="8 modular theme folders (JSX components). Each is lazy-loaded by ThemeResolver via import.meta.glob auto-discovery. Adding a theme = one folder." />
+          <InfoCard icon={<Palette size={16} />} color="blue" title="Client/src/profile/engine/" desc="The 5-layer Theme Engine pipeline: ProfileLoader (data) → ProfileEngine (overlays) → ThemeResolver (lazy-load) → Theme Plugin. Engine never imports themes directly." />
+          <InfoCard icon={<Layers size={16} />} color="emerald" title="Client/src/profile/themes/" desc="Registry & per-theme manifests. registry.js uses import.meta.glob to auto-discover all manifests. Each theme has manifest.js, theme.config.js, and index.jsx (re-export adapter)." />
+          <InfoCard icon={<Database size={16} />} color="purple" title="Client/src/profile/viewmodel/" desc="Normalizes raw DB data into a safe, typed ViewModel. Themes access data via model prop instead of raw user object — zero DB schema leakage into themes." />
+          <InfoCard icon={<Zap size={16} />} color="amber" title="Client/scripts/" desc="Two CLI tools: createTheme.cjs scaffolds a new theme boilerplate (npm run create-theme aurora), and validateThemes.cjs checks structure & blocks forbidden APIs." />
           <InfoCard icon={<Shield size={16} />} color="emerald" title="Server/middlewares/" desc="Helmet (security headers), express-rate-limit (abuse prevention), auth guard (JWT verification), and centralised errorHandler.js." />
-          <InfoCard icon={<Database size={16} />} color="amber" title="Server/utils/blockedDomains.js" desc="A curated Set of 200+ disposable/temporary email domains. Exported isDisposableEmail() is called on signup and referral to block abuse." />
-          <InfoCard icon={<Layers size={16} />} color="red" title="Server/server.js" desc="Express app entry point. Mounts Helmet globally, registers the BFF router (/api/v1/bff/dashboard), and bootstraps MongoDB Atlas connection." />
           <InfoCard icon={<Globe size={16} />} color="blue" title="vercel.json" desc="Rewrites rule: all /* routes map to the Vite build output so React Router handles client-side navigation without 404s on refresh." />
         </div>
       </>
