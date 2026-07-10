@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, startTransition } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef, startTransition } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../api/axios";
@@ -40,7 +40,18 @@ const ProfileLoader = () => {
   // ── Local state (loader-owned) ──
   const [localTheme,   setLocalTheme]   = useState(null);
   const [isUpdating,   setIsUpdating]   = useState(false);
-  const [contactForm,  setContactForm]  = useState({ name: "", email: "", subject: "", message: "" });
+  // contactForm uses BOTH state (for controlled inputs) AND a ref (stable snapshot for callbacks).
+  // The ref prevents contactForm from entering the model useMemo dep array —
+  // which was causing every keystroke to rebuild the ViewModel and flash the Hero.
+  const [contactForm,  setContactFormState]  = useState({ name: "", email: "", subject: "", message: "" });
+  const contactFormRef = useRef(contactForm);
+  const setContactForm = useCallback((valOrFn) => {
+    setContactFormState((prev) => {
+      const next = typeof valOrFn === "function" ? valOrFn(prev) : valOrFn;
+      contactFormRef.current = next;
+      return next;
+    });
+  }, []);
   const [isSending,    setIsSending]    = useState(false);
   const [githubData,   setGithubData]   = useState(null);
   const [githubLoading,setGithubLoading] = useState(false);
@@ -110,14 +121,16 @@ const ProfileLoader = () => {
     if (isSending) return;
     setIsSending(true);
     const tid = toast.loading("Sending your message...");
+    // Read from ref — avoids stale closure WITHOUT adding contactForm to deps
+    const formSnapshot = contactFormRef.current;
     try {
-      await api.post(`/portfolio/contact/${username}`, contactForm);
+      await api.post(`/portfolio/contact/${username}`, formSnapshot);
       toast.success("Message sent!", { id: tid });
       setContactForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to send.", { id: tid });
     } finally { setIsSending(false); }
-  }, [username, contactForm, isSending]);
+  }, [username, isSending, setContactForm]);
 
   // ── Projects (stable memo) ──
   const projects = useMemo(() => {
@@ -137,12 +150,16 @@ const ProfileLoader = () => {
   }, [user?.projects, user?.portfolio, user?.username]);
 
   // ── Build ViewModel ──
+  // IMPORTANT: contactForm is intentionally NOT in this useMemo dep array.
+  // Contact form values are passed via the stable setContactForm callback and read
+  // via contactFormRef in handleContactSubmit. This prevents every keystroke from
+  // rebuilding the ViewModel → re-rendering ThemeResolver → flashing the Hero.
   const model = useMemo(() => {
     if (!user) return null;
     return createViewModel({
       user,
       projects,
-      contactForm,
+      contactForm: contactFormRef.current,
       analytics,
       githubData,
       githubLoading,
@@ -154,8 +171,8 @@ const ProfileLoader = () => {
         isSending,
       },
     });
-  }, [user, projects, contactForm, analytics, githubData, githubLoading,
-      handleLiveUpdate, handleArrayUpdate, handleContactSubmit, isSending]);
+  }, [user, projects, analytics, githubData, githubLoading,
+      handleLiveUpdate, handleArrayUpdate, handleContactSubmit, isSending, setContactForm]);
 
   const displayValue = useCallback((value, placeholder) => {
     if (value && typeof value === 'string' && value.trim() !== "") return value;

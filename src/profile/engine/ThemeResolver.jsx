@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, memo } from "react";
 import registry from "../themes/registry.js";
 import ErrorBoundary from "./ErrorBoundary.jsx";
 
@@ -10,8 +10,11 @@ const ENGINE_VERSION = "4.0";
  *
  * This is the ONLY file that interacts with the registry.
  * The engine never imports theme code directly.
+ *
+ * memo() prevents re-renders from sibling/parent state changes (e.g., showThemePanel,
+ * showResumeModal) that don't affect themeId or themeProps.
  */
-const ThemeResolver = ({ themeId, themeProps }) => {
+const ThemeResolverInner = ({ themeId, themeProps }) => {
   const entry = registry[themeId] || registry["STANDARD"];
 
   if (!entry) {
@@ -49,5 +52,7 @@ const ThemeResolver = ({ themeId, themeProps }) => {
     </ErrorBoundary>
   );
 };
+
+const ThemeResolver = memo(ThemeResolverInner);
 
 export default ThemeResolver;

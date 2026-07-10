@@ -55,8 +55,12 @@ const ProfileEngine = ({
 }) => {
   const dispatch = useDispatch();
   const [showThemePanel,  setShowThemePanel]  = useState(false);
-  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [showResumeModal, setShowResumeModalState] = useState(false);
   const [isMenuOpen,      setIsMenuOpen]      = useState(false);
+  // Stable callback — does NOT change reference when showResumeModal state changes.
+  // This prevents setShowResumeModal from being a useMemo dep, which would cause
+  // themeProps to be recreated on every modal open/close.
+  const setShowResumeModal = useCallback((val) => setShowResumeModalState(val), []);
 
   // ── Resolve theme object from presets ──
   const savedTheme = user?.themeSettings;
