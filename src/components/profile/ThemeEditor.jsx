@@ -208,6 +208,21 @@ const ThemeEditor = ({ settings, onUpdate, saving }) => {
         fontPrimary: "Satoshi",
       },
     },
+    {
+      id: "apex",
+      name: "APEX",
+      icon: <span className="text-2xl">🏆</span>,
+      settings: {
+        headerBg: "#0D0F12",
+        headerBgSecondary: "#161920",
+        bodyBg: "#0D0F12",
+        accentColor: "#2D9881",
+        textPrimary: "#ffffff",
+        textSecondary: "#94A3B8",
+        cardStyle: "minimal",
+        fontPrimary: "Outfit",
+      },
+    },
   ];
 
   const paletteItems = [

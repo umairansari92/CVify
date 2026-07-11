@@ -1,0 +1,26 @@
+export default {
+  id: "APEX",
+  name: "Apex",
+  version: "1.0.0",
+  engine: "4.0",
+  author: "CVify",
+  description: "Add a description for your theme here.",
+  thumbnail: "./preview.webp",
+  supportedModes: ["dark"],
+  defaultPreset: "APEX",
+  features: {
+    github: true,
+    analytics: true,
+    resume: true,
+    contact: true,
+    particles: false,
+    glass: false,
+  },
+  navigation: {
+    home: "hero",
+    about: "about",
+    journey: "experience",
+    showcase: "showcase",
+    contact: "contact",
+  },
+};

@@ -44,6 +44,7 @@ const themePresets = [
   { name: "CYBER NEON",      headerBg: "#080808", headerBgSecondary: "#000000", bodyBg: "#0a0a0a",  fontPrimary: "Orbitron",        cardStyle: "glass",   icon: "🟢", textPrimary: "#ffffff",  textSecondary: "#a1a1aa",              accentColor: "#00ffcc" },
   { name: "MONOGRAPH",       headerBg: "#000000", headerBgSecondary: "#1C1917", bodyBg: "#FAFAF9",  fontPrimary: "IBM Plex Sans",   cardStyle: "minimal", icon: "🖋️", textPrimary: "#292524", textSecondary: "#78716C",              accentColor: "#000000" },
   { name: "NOIR",            headerBg: "#060606", headerBgSecondary: "#000000", bodyBg: "#000000",  fontPrimary: "Satoshi",         cardStyle: "minimal", icon: "🌑", textPrimary: "#F0F0F0",  textSecondary: "#b0b0b0",               accentColor: "#FF2E0C" },
+  { name: "APEX",            headerBg: "#0D0F12", headerBgSecondary: "#161920", bodyBg: "#0D0F12",  fontPrimary: "Outfit",          cardStyle: "minimal", icon: "🏆", textPrimary: "#ffffff",  textSecondary: "#94A3B8",               accentColor: "#2D9881" },
 ];
 
 const ProfileEngine = ({
