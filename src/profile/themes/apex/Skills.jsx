@@ -7,76 +7,132 @@ import SkillNode from "./galaxy/SkillNode";
 import DetailPanel from "./galaxy/DetailPanel";
 import ParticleBackground from "./galaxy/ParticleBackground";
 
-// Category config for styling
+// Color mapping for all user professions
 const CATEGORY_MAP = {
-  Technical: { label: "Technical / Dev", color: "#2D9881" },
-  Strategic: { label: "Strategic Focus", color: "#7C3AED" },
-  "Soft Skills": { label: "Soft / Leadership", color: "#EA580C" },
+  Technical: { label: "Technical / Core Skills", color: "#2D9881" },
+  Strategic: { label: "Strategic / Management", color: "#7C3AED" },
+  "Soft Skills": { label: "Support / Soft Skills", color: "#EA580C" },
 };
 
 const Skills = ({ user, isOwner }) => {
-  // Normalize skills database model
-  const skillList = useMemo(() => {
-    const list = [];
+  // 1. Group & parse skills safely supporting multiple formats (Object or Array)
+  const groupedSkills = useMemo(() => {
+    const categories = {
+      Technical: [],
+      Strategic: [],
+      "Soft Skills": [],
+    };
+
     if (user?.skills && !Array.isArray(user.skills)) {
-      // Object format
-      const technical = user.skills.technical || [];
+      // Object format: { technical: [...], strategic: [...], soft: [...] }
+      const tech = user.skills.technical || [];
+      const strat = user.skills.strategic || [];
       const soft = user.skills.soft || [];
-      const strategic = user.skills.strategic || [];
-      technical.forEach((s) => list.push({ name: s, category: "Technical" }));
-      strategic.forEach((s) => list.push({ name: s, category: "Strategic" }));
-      soft.forEach((s) => list.push({ name: s, category: "Soft Skills" }));
+      tech.forEach((s) => categories.Technical.push({ name: s, category: "Technical" }));
+      strat.forEach((s) => categories.Strategic.push({ name: s, category: "Strategic" }));
+      soft.forEach((s) => categories["Soft Skills"].push({ name: s, category: "Soft Skills" }));
     } else if (Array.isArray(user?.skills)) {
-      // Array format
+      // Array format: [{ name: "...", category: "..." }]
       user.skills.forEach((s) => {
         const name = typeof s === "string" ? s : s?.name || "";
         const cat = (typeof s === "object" && s?.category) || "Technical";
+        const normalizedCat =
+          cat.toLowerCase() === "strategic"
+            ? "Strategic"
+            : cat.toLowerCase() === "soft" || cat.toLowerCase() === "soft skills"
+            ? "Soft Skills"
+            : "Technical";
+
         if (name) {
-          list.push({
-            name,
-            category: cat === "strategic" ? "Strategic" : cat === "soft" ? "Soft Skills" : "Technical",
-          });
+          categories[normalizedCat].push({ name, category: normalizedCat });
         }
       });
     }
-    return list;
+
+    return categories;
   }, [user?.skills]);
 
-  // Orbit assignment setup
-  const rings = useMemo(() => {
-    const r1 = [];
-    const r2 = [];
-    const r3 = [];
-    skillList.forEach((skill, index) => {
-      const targetRing = index % 3;
-      if (targetRing === 0) r1.push(skill);
-      else if (targetRing === 1) r2.push(skill);
-      else r3.push(skill);
-    });
-    return [r1, r2, r3];
-  }, [skillList]);
+  // 2. Dynamic Ring Allocation System (Auto-scales up to 50+ skills dynamically without overlaps)
+  // Max 6 nodes per orbit for clean professional layout spacing
+  const MAX_NODES_PER_RING = 6;
 
-  // Selected skill for the detail panel
+  const dynamicGalaxyConfig = useMemo(() => {
+    const orbitTracks = []; // Array of { radiusX, radiusY, direction, speed, nodes }
+    let ringCount = 0;
+
+    // Distribute Technical (Inner Orbits)
+    const techSkills = groupedSkills.Technical;
+    if (techSkills.length > 0) {
+      for (let i = 0; i < techSkills.length; i += MAX_NODES_PER_RING) {
+        const slice = techSkills.slice(i, i + MAX_NODES_PER_RING);
+        ringCount++;
+        orbitTracks.push({
+          ringIndex: ringCount,
+          category: "Technical",
+          nodes: slice,
+          // Kepler's Law: Inner planets orbit faster, outer planets orbit slower
+          speed: 0.16 / Math.sqrt(ringCount),
+          direction: ringCount % 2 === 0 ? -1 : 1,
+        });
+      }
+    }
+
+    // Distribute Strategic (Middle Orbits)
+    const stratSkills = groupedSkills.Strategic;
+    if (stratSkills.length > 0) {
+      for (let i = 0; i < stratSkills.length; i += MAX_NODES_PER_RING) {
+        const slice = stratSkills.slice(i, i + MAX_NODES_PER_RING);
+        ringCount++;
+        orbitTracks.push({
+          ringIndex: ringCount,
+          category: "Strategic",
+          nodes: slice,
+          speed: 0.16 / Math.sqrt(ringCount),
+          direction: ringCount % 2 === 0 ? -1 : 1,
+        });
+      }
+    }
+
+    // Distribute Soft Skills (Outer Orbits)
+    const softSkills = groupedSkills["Soft Skills"];
+    if (softSkills.length > 0) {
+      for (let i = 0; i < softSkills.length; i += MAX_NODES_PER_RING) {
+        const slice = softSkills.slice(i, i + MAX_NODES_PER_RING);
+        ringCount++;
+        orbitTracks.push({
+          ringIndex: ringCount,
+          category: "Soft Skills",
+          nodes: slice,
+          speed: 0.16 / Math.sqrt(ringCount),
+          direction: ringCount % 2 === 0 ? -1 : 1,
+        });
+      }
+    }
+
+    return orbitTracks;
+  }, [groupedSkills]);
+
+  // Selected node for detailed slide-in panel
   const [selectedSkill, setSelectedSkill] = useState(null);
 
-  // Parallax mouse positioning state
+  // Mouse Parallax position state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // 60FPS animation frames state
   const [time, setTime] = useState(0);
-  const hoveredNodeRef = useRef(null); // stores { ringIndex, nodeIndex } of hovered element to pause it
+  const hoveredNodeRef = useRef(null); // stores { ringIdx, nodeIdx } to pause hover item
 
   useEffect(() => {
     let animFrame;
     const tick = () => {
-      setTime((prev) => prev + 0.002);
+      setTime((prev) => prev + 0.04); // Elegant, very smooth delta
       animFrame = requestAnimationFrame(tick);
     };
     animFrame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animFrame);
   }, []);
 
-  // Parallax handler
+  // Parallax Event listener
   useEffect(() => {
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth) - 0.5;
@@ -87,7 +143,7 @@ const Skills = ({ user, isOwner }) => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Orbit sizing config based on screen sizes
+  // Responsive dimensions configuration
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
 
   useEffect(() => {
@@ -97,39 +153,47 @@ const Skills = ({ user, isOwner }) => {
   }, []);
 
   const isMobile = windowWidth < 768;
-  const sizeMultiplier = isMobile ? 0.65 : 1;
+  const sizeMultiplier = isMobile ? 0.6 : 1;
 
-  const orbitRadii = [
-    { rx: 140 * sizeMultiplier, ry: 90 * sizeMultiplier },
-    { rx: 240 * sizeMultiplier, ry: 150 * sizeMultiplier },
-    { rx: 340 * sizeMultiplier, ry: 210 * sizeMultiplier },
-  ];
+  // Dynamically compute radiusX and radiusY for each track so they scale nicely based on total tracks
+  const tracksWithRadii = useMemo(() => {
+    return dynamicGalaxyConfig.map((track, idx) => {
+      // Dynamic spacing: inner rings start at 120px, increasing by 75px per ring
+      const baseRx = 125 + idx * 72;
+      const baseRy = 85 + idx * 46;
+      return {
+        ...track,
+        rx: baseRx * sizeMultiplier,
+        ry: baseRy * sizeMultiplier,
+      };
+    });
+  }, [dynamicGalaxyConfig, sizeMultiplier]);
 
-  const hasSkills = skillList.length > 0;
+  const hasSkills = dynamicGalaxyConfig.length > 0;
   if (!hasSkills && !isOwner) return null;
 
   return (
     <section
       id="skills"
-      className="py-24 relative overflow-hidden border-t min-h-[680px] md:min-h-[850px] flex items-center justify-center select-none"
+      className="py-24 relative overflow-hidden border-t min-h-[720px] md:min-h-[920px] flex items-center justify-center select-none"
       style={{
         backgroundColor: tokens.colors.bg,
         borderColor: tokens.colors.border,
       }}
     >
-      {/* ── Nebula background glow ── */}
+      {/* Soft background glow */}
       <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(circle 500px at 50% 50%, ${tokens.colors.accent}12, transparent 80%)`,
+          background: `radial-gradient(circle 600px at 50% 50%, ${tokens.colors.accent}12, transparent 80%)`,
         }}
       />
 
-      <ParticleBackground count={isMobile ? 20 : 45} />
+      <ParticleBackground count={isMobile ? 25 : 50} />
 
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col items-center justify-center">
-        
-        {/* Title / Info Header */}
+
+        {/* Header */}
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-16 text-left">
           <div className="space-y-2">
             <span
@@ -145,11 +209,11 @@ const Skills = ({ user, isOwner }) => {
               Orbiting My Expertise
             </h2>
             <p className="text-sm max-w-md" style={{ color: tokens.colors.secondary }}>
-              Explore the interactive universe of my tools and capabilities. Move mouse to tilt the orbits, hover a planet to zoom, or click for breakdown detail panel.
+              Technical and Strategic skills are grouped into separate orbits. Hover a skill to pause and highlight, or click to explore focus engagements.
             </p>
           </div>
 
-          {/* Interactive Guide Widget (Inspired by reference image) */}
+          {/* Interactive Guide Legend */}
           <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl border" style={{ borderColor: tokens.colors.border, backgroundColor: "rgba(25, 29, 36, 0.4)" }}>
             {Object.entries(CATEGORY_MAP).map(([key, item]) => (
               <div key={key} className="flex items-center gap-2 text-xs font-bold">
@@ -162,65 +226,61 @@ const Skills = ({ user, isOwner }) => {
 
         {/* ── Interactive Galaxy Container ── */}
         <div
-          className="relative w-full max-w-[900px] aspect-[4/3] md:aspect-[16/9] flex items-center justify-center border rounded-3xl overflow-hidden shadow-2xl transition-all duration-300"
+          className="relative w-full max-w-[950px] aspect-[4/3] md:aspect-[16/10] flex items-center justify-center border rounded-3xl overflow-hidden shadow-2xl transition-all duration-300"
           style={{
             borderColor: tokens.colors.border,
-            backgroundColor: "rgba(10, 12, 16, 0.6)",
-            backdropFilter: "blur(8px)",
+            backgroundColor: "rgba(10, 12, 16, 0.65)",
+            backdropFilter: "blur(12px)",
           }}
         >
-          {/* Instructions helper overlay inside the screen */}
+          {/* Mouse movement guide widget */}
           <div
             className="absolute bottom-6 left-6 z-30 flex items-center gap-3 px-4 py-2.5 rounded-xl border pointer-events-none"
             style={{ borderColor: tokens.colors.border, backgroundColor: `${tokens.colors.bg}ee` }}
           >
             <span className="text-lg">🖱️</span>
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-              Hover stars to slow rotation
+              Interactive Tilt View Active
             </span>
           </div>
 
-          {/* 1. Orbit Tracks */}
-          {orbitRadii.map((radius, rIdx) => (
+          {/* Render All Orbit Tracks */}
+          {tracksWithRadii.map((track, idx) => (
             <OrbitRing
-              key={rIdx}
-              radiusX={radius.rx}
-              radiusY={radius.ry}
+              key={idx}
+              radiusX={track.rx}
+              radiusY={track.ry}
               mousePos={mousePos}
             />
           ))}
 
-          {/* 2. Central Core */}
+          {/* Center Skills Core */}
           <CenterCore mousePos={mousePos} scale={sizeMultiplier} />
 
-          {/* 3. Orbiting Planet Nodes */}
-          {rings.map((ringNodes, rIdx) => {
-            const radius = orbitRadii[rIdx];
-            const direction = rIdx === 1 ? -1 : 1; // Counter-clockwise for middle ring
-            const baseSpeed = (0.35 / (rIdx + 1.2)) * direction;
-
-            return ringNodes.map((node, nIdx) => {
-              const spacing = (Math.PI * 2) / ringNodes.length;
+          {/* Orbiting Planet Nodes */}
+          {tracksWithRadii.map((track, trackIdx) => {
+            return track.nodes.map((node, nodeIdx) => {
+              const spacing = (Math.PI * 2) / track.nodes.length;
               const isHovered =
-                hoveredNodeRef.current?.ringIndex === rIdx &&
-                hoveredNodeRef.current?.nodeIndex === nIdx;
+                hoveredNodeRef.current?.trackIndex === trackIdx &&
+                hoveredNodeRef.current?.nodeIndex === nodeIdx;
 
-              // Compute dynamic angle offsets
-              const nodeAngle = nIdx * spacing + time * baseSpeed * (isHovered ? 0.05 : 1);
+              // Kepler's speed coefficient adjustment: Orbit speed is scaled elegantly based on time
+              const baseAngle = nodeIdx * spacing + time * track.speed * track.direction * (isHovered ? 0.05 : 1);
 
               return (
                 <SkillNode
-                  key={`${rIdx}-${nIdx}`}
+                  key={`${trackIdx}-${nodeIdx}`}
                   name={node.name}
                   category={node.category}
-                  angle={nodeAngle}
-                  radiusX={radius.rx}
-                  radiusY={radius.ry}
+                  angle={baseAngle}
+                  radiusX={track.rx}
+                  radiusY={track.ry}
                   mousePos={mousePos}
                   active={selectedSkill?.name === node.name}
                   onHoverChange={(hovering) => {
                     if (hovering) {
-                      hoveredNodeRef.current = { ringIndex: rIdx, nodeIndex: nIdx };
+                      hoveredNodeRef.current = { trackIndex: trackIdx, nodeIndex: nodeIdx };
                     } else {
                       hoveredNodeRef.current = null;
                     }
@@ -231,7 +291,7 @@ const Skills = ({ user, isOwner }) => {
             });
           })}
 
-          {/* 4. Sliding Details Panel */}
+          {/* Detail Side Panel Overlay */}
           <AnimatePresence>
             {selectedSkill && (
               <DetailPanel
