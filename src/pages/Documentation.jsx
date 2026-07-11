@@ -68,7 +68,7 @@ const Documentation = () => {
     {
       label: "Themes & Visual FX",
       items: [
-        { id: "themes", icon: <Palette size={16} />, label: "All 12 Portfolio Themes" },
+        { id: "themes", icon: <Palette size={16} />, label: "All 13 Portfolio Themes" },
         { id: "resume-templates", icon: <Layout size={16} />, label: "12 Resume PDF Templates (New!)" },
         { id: "noir", icon: <Moon size={16} />, label: "🌑 NOIR (Flagship)" },
         { id: "monograph", icon: <FileText size={16} />, label: "🖋️ MONOGRAPH (Premium)" },
@@ -76,6 +76,7 @@ const Documentation = () => {
         { id: "aura-dark", icon: <Sparkles size={16} />, label: "✨ AURA DARK" },
         { id: "terminal-dark", icon: <Cpu size={16} />, label: "💻 TERMINAL DARK" },
         { id: "cyber-neon", icon: <Zap size={16} />, label: "🟢 CYBER NEON" },
+        { id: "apex", icon: <Award size={16} />, label: "🏆 APEX (Minimalist)" },
         { id: "particles", icon: <MousePointer size={16} />, label: "Interactive Particles FX" },
       ]
     },
@@ -444,9 +445,9 @@ const Documentation = () => {
 
     themes: (
       <>
-        <DocHeader title="All 12 Portfolio Themes" badge="Visual Design" />
+        <DocHeader title="All 13 Portfolio Themes" badge="Visual Design" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          Every CVify Pro portfolio comes with <strong className="text-text-primary">12 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes are powered by the new <strong className="text-primary">Theme Engine v4.0</strong> — a pluggable, 5-layer architecture that auto-discovers themes at build time. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for consistent navigation.
+          Every CVify Pro portfolio comes with <strong className="text-text-primary">13 handcrafted, premium themes</strong> — each a complete visual identity with its own typography, color palette, card style, background animation, and interactive particle effects. All themes are powered by the new <strong className="text-primary">Theme Engine v4.0</strong> — a pluggable, 5-layer architecture that auto-discovers themes at build time. All themes share the same <strong className="text-text-primary">Universal Floating Navbar</strong> for consistent navigation.
         </p>
         <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl mb-8 flex items-start gap-3">
           <Palette size={16} className="text-primary mt-0.5 flex-shrink-0" />
@@ -467,6 +468,7 @@ const Documentation = () => {
             { icon: "🟢", name: "CYBER NEON", accent: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5", desc: "Cutting-edge hacker aesthetic inspired by the Catppuccin design language. Near-black background (#080808) with electric neon green (#00ffcc) accents. Uses the Orbitron monospace font with glow effects on all interactive elements. Full GitHub stats integration and a sleek scrolling experience.", tags: ["Dark Mode", "Neon Green", "Hacker", "NEW!"] },
             { icon: "🖋️", name: "MONOGRAPH", accent: "text-slate-300", border: "border-white/20", bg: "bg-white/5", desc: "CVify Pro's premier editorial theme. Stark black headers against an off-white reading canvas with brutalist borders and IBM Plex Sans typography. Designed for authors, journalists, researchers, and professionals who demand a high-contrast, typographic-first presentation that reads like a premium magazine.", tags: ["Light Mode", "High Contrast", "Editorial", "NEW!"] },
             { icon: "🌑", name: "NOIR", accent: "text-orange-500", border: "border-orange-500/20", bg: "bg-orange-500/5", desc: "Flagship premium minimalist dark theme. Absolute black background, Satoshi typography, custom motion system, and subtle orange accents.", tags: ["Dark Mode", "Minimal", "Premium", "Flagship"] },
+            { icon: "🏆", name: "APEX", accent: "text-teal-400", border: "border-teal-500/20", bg: "bg-teal-500/5", desc: "Clean, modern, minimal, and recruiter-focused dark aesthetic. Uses Outfit typography, electric teal highlights, and a structured, low-friction professional layout optimized for enterprise recruiters.", tags: ["Dark Mode", "Teal Accent", "Recruiter", "NEW!"] },
           ].map((theme, i) => (
             <div key={i} className={`p-5 rounded-2xl border ${theme.border} ${theme.bg}`}>
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -798,6 +800,55 @@ const Documentation = () => {
         <SectionTitle>Best For</SectionTitle>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {["Cybersecurity Experts", "Blockchain Developers", "Ethical Hackers", "Game Developers", "DevOps Engineers", "Tech Creatives"].map((role, i) => (
+            <div key={i} className="p-3 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-center">
+              <p className="text-emerald-400 font-black text-xs">{role}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    apex: (
+      <>
+        <DocHeader title="🏆 APEX Theme" badge="Premium Theme" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          <strong className="text-white">APEX</strong> is CVify Pro's premier recruiter-focused minimal theme. Designed to capture a hiring manager's attention in under 6 seconds, it combines a sleek dark slate canvas, Outfit/Inter typography, and structured layouts with glowing interactive elements.
+        </p>
+
+        <SectionTitle>Visual Identity & Design Tokens</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Palette size={18} />} color="emerald" title="Clean Minimal Canvas"
+            desc="Deep slate background (#0D0F12) and dark card surfaces (#161920) keep visual noise to an absolute minimum." />
+          <InfoCard icon={<Target size={18} />} color="emerald" title="Recruiter-Focused Hierarchy"
+            desc="Highlights essential data like professional summary, skills progress bars, and work timelines first." />
+          <InfoCard icon={<Sparkles size={18} />} color="emerald" title="Teal Accent Highlights"
+            desc="Vivid teal (#2D9881) accents are used on CTA buttons, project tags, progress bars, and hover transitions." />
+          <InfoCard icon={<FileText size={18} />} color="emerald" title="Outfit Typography"
+            desc="Modern Outfit heading font paired with Inter body font provides clean, highly-readable text presentation." />
+        </div>
+
+        <SectionTitle>Theme Properties Contract</SectionTitle>
+        <div className="p-5 bg-white/5 border border-white/20 rounded-2xl mb-6">
+          <div className="space-y-3">
+            {[
+              { label: "Background", val: "Deep Dark Slate (#0D0F12)" },
+              { label: "Surface", val: "Dark Gray Card Surface (#161920)" },
+              { label: "Accent Color", val: "Teal / Emerald (#2D9881)" },
+              { label: "Borders", val: "Subtle Gray Slate (#1E293B)" },
+              { label: "Typings", val: "Outfit (Heading) + Inter (Body)" },
+              { label: "Card Aesthetics", val: "Minimal / Clean Flat Cards with soft hover lifts" }
+            ].map((row, i) => (
+              <div key={i} className="flex items-start gap-3 text-[13px]">
+                <span className="font-black text-white w-28 flex-shrink-0">{row.label}</span>
+                <span className="text-text-secondary">{row.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTitle>Best For</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {["Senior Developers", "Project Managers", "Technical Leads", "UI/UX Designers", "System Architects"].map((role, i) => (
             <div key={i} className="p-3 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-center">
               <p className="text-emerald-400 font-black text-xs">{role}</p>
             </div>
@@ -1674,8 +1725,8 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
-            { title: "Universal Floating Navbar — All Themes", desc: "The premium pill-shaped floating navbar (previously only on Standard themes) is now the single universal navbar across ALL 10 themes. AuraDark and CyberNeon's old theme-specific navbars were removed and replaced. Navbar links dynamically map to the correct section IDs per theme.", status: "NEW" },
-            { title: "DataVerse Technologies Footer Branding", desc: "A consistent branded footer has been added across all 10 portfolio themes: 'Powered by DataVerse Technologies | Designed & Developed by Umair Ahmed | © 2026'. Both DataVerse and Umair Ahmed link to their respective public profiles.", status: "NEW" },
+            { title: "Universal Floating Navbar — All Themes", desc: "The premium pill-shaped floating navbar (previously only on Standard themes) is now the single universal navbar across ALL 13 themes. AuraDark and CyberNeon's old theme-specific navbars were removed and replaced. Navbar links dynamically map to the correct section IDs per theme.", status: "NEW" },
+            { title: "DataVerse Technologies Footer Branding", desc: "A consistent branded footer has been added across all 13 portfolio themes: 'Powered by DataVerse Technologies | Designed & Developed by Umair Ahmed | © 2026'. Both DataVerse and Umair Ahmed link to their respective public profiles.", status: "NEW" },
             { title: "CYBER NEON Theme", desc: "10th premium portfolio theme — near-black (#080808) background with electric neon green (#00ffcc) accents, Orbitron monospace font, floating dev characters FX, and full GitHub stats integration. Hacker aesthetic for cybersecurity and blockchain professionals.", status: "NEW" },
             { title: "Frontend Performance Optimizations", desc: "content-visibility:auto on all major profile sections, useCallback on all PublicProfile handlers, useMemo on personalInfo/publicResumes to prevent React.memo bypass, fetchpriority='high' on hero LCP image, font-display:swap + DNS prefetch for CDNs.", status: "NEW" },
             { title: "AI Representative (Portfolio AI Guide)", desc: "Floating AI-powered chat widget on every public portfolio. Represents the candidate to recruiters with dynamic profile search, quick action buttons, and anti-hallucination guardrails. Powered by Groq SSE streaming.", status: "ACTIVE" },
@@ -1841,7 +1892,7 @@ export const isDisposableEmail = (email) => {
       <>
         <DocHeader title="Universal Floating Navbar" badge="UI Update" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          In June 2026, CVify Pro made the <strong className="text-text-primary">premium pill-shaped floating navbar universal</strong> — it now renders identically across all 10 portfolio themes. Previously, AuraDark had a hamburger overlay menu and CyberNeon had its own top bar; both were removed in favour of the single shared navbar.
+          In June 2026, CVify Pro made the <strong className="text-text-primary">premium pill-shaped floating navbar universal</strong> — it now renders identically across all 13 portfolio themes. Previously, AuraDark had a hamburger overlay menu and CyberNeon had its own top bar; both were removed in favour of the single shared navbar.
         </p>
 
         <SectionTitle>What Changed</SectionTitle>
@@ -1858,7 +1909,7 @@ export const isDisposableEmail = (email) => {
 
         <SectionTitle>Section ID Map by Theme</SectionTitle>
         <ComparisonTable items={[
-          { left: "Standard / TerminalDark", right: "#home · #about · #journey · #showcase · #contact" },
+          { left: "Standard / TerminalDark / APEX", right: "#hero · #about · #experience · #showcase · #contact" },
           { left: "AuraDark", right: "#ad-hero-name · #about-ad · #experience-ad · #showcase-ad · #contact-ad" },
           { left: "CyberNeon", right: "#home · #about · #resume (Journey) · #projects (Showcase) · #contact" },
           { left: "OrientalLuxe", right: "#hero-ol · #about-ol · #experience-ol · #showcase-ol · #contact-ol" },
@@ -1898,6 +1949,7 @@ export const isDisposableEmail = (email) => {
           { left: "TERMINAL DARK", right: "✅ Footer added" },
           { left: "CYBER NEON", right: "✅ Footer added" },
           { left: "ORIENTAL LUXE", right: "✅ Footer added (gold accent on links)" },
+          { left: "APEX", right: "✅ Footer added (teal accent on links)" },
           { left: "Midnight Dev / Corporate Gold / Creative Sunset / Slate / Emerald", right: "✅ Footer added" },
         ]} />
       </>
