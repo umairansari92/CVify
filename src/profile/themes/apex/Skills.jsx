@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { tokens } from "./tokens";
 import CenterCore from "./galaxy/CenterCore";
@@ -7,40 +7,28 @@ import SkillNode from "./galaxy/SkillNode";
 import DetailPanel from "./galaxy/DetailPanel";
 import ParticleBackground from "./galaxy/ParticleBackground";
 
-// Color mapping for all user professions
-const CATEGORY_MAP = {
-  Technical: { label: "Technical / Core Skills", color: "#2D9881" },
-  Strategic: { label: "Strategic / Management", color: "#7C3AED" },
-  "Soft Skills": { label: "Support / Soft Skills", color: "#EA580C" },
-};
-
 const Skills = ({ user, isOwner }) => {
-  // 1. Group & parse skills safely supporting multiple formats (Object or Array)
+  // 1. Group skills into Technical and Strategic (and other categories)
   const groupedSkills = useMemo(() => {
     const categories = {
       Technical: [],
       Strategic: [],
-      "Soft Skills": [],
     };
 
     if (user?.skills && !Array.isArray(user.skills)) {
-      // Object format: { technical: [...], strategic: [...], soft: [...] }
       const tech = user.skills.technical || [];
       const strat = user.skills.strategic || [];
       const soft = user.skills.soft || [];
       tech.forEach((s) => categories.Technical.push({ name: s, category: "Technical" }));
       strat.forEach((s) => categories.Strategic.push({ name: s, category: "Strategic" }));
-      soft.forEach((s) => categories["Soft Skills"].push({ name: s, category: "Soft Skills" }));
+      soft.forEach((s) => categories.Strategic.push({ name: s, category: "Strategic" })); // group soft/support under strategic/leadership
     } else if (Array.isArray(user?.skills)) {
-      // Array format: [{ name: "...", category: "..." }]
       user.skills.forEach((s) => {
         const name = typeof s === "string" ? s : s?.name || "";
         const cat = (typeof s === "object" && s?.category) || "Technical";
         const normalizedCat =
-          cat.toLowerCase() === "strategic"
+          cat.toLowerCase() === "strategic" || cat.toLowerCase() === "soft" || cat.toLowerCase() === "soft skills"
             ? "Strategic"
-            : cat.toLowerCase() === "soft" || cat.toLowerCase() === "soft skills"
-            ? "Soft Skills"
             : "Technical";
 
         if (name) {
@@ -52,67 +40,27 @@ const Skills = ({ user, isOwner }) => {
     return categories;
   }, [user?.skills]);
 
-  // 2. Dynamic Ring Allocation System (Auto-scales up to 50+ skills dynamically without overlaps)
-  // Max 6 nodes per orbit for clean professional layout spacing
-  const MAX_NODES_PER_RING = 6;
-
-  const dynamicGalaxyConfig = useMemo(() => {
-    const orbitTracks = []; // Array of { radiusX, radiusY, direction, speed, nodes }
-    let ringCount = 0;
-
-    // Distribute Technical (Inner Orbits)
-    const techSkills = groupedSkills.Technical;
-    if (techSkills.length > 0) {
-      for (let i = 0; i < techSkills.length; i += MAX_NODES_PER_RING) {
-        const slice = techSkills.slice(i, i + MAX_NODES_PER_RING);
-        ringCount++;
-        orbitTracks.push({
-          ringIndex: ringCount,
-          category: "Technical",
-          nodes: slice,
-          // Kepler's Law: Inner planets orbit faster, outer planets orbit slower
-          speed: 0.16 / Math.sqrt(ringCount),
-          direction: ringCount % 2 === 0 ? -1 : 1,
-        });
-      }
+  // Orbit assignment helper: assigns nodes to tracks (max 6 per track)
+  const getTracks = (skills, baseSpeed) => {
+    const tracks = [];
+    const maxPerRing = 6;
+    for (let i = 0; i < skills.length; i += maxPerRing) {
+      const slice = skills.slice(i, i + maxPerRing);
+      const ringIdx = tracks.length + 1;
+      tracks.push({
+        ringIndex: ringIdx,
+        nodes: slice,
+        speed: baseSpeed / Math.sqrt(ringIdx),
+        direction: ringIdx % 2 === 0 ? -1 : 1,
+      });
     }
+    return tracks;
+  };
 
-    // Distribute Strategic (Middle Orbits)
-    const stratSkills = groupedSkills.Strategic;
-    if (stratSkills.length > 0) {
-      for (let i = 0; i < stratSkills.length; i += MAX_NODES_PER_RING) {
-        const slice = stratSkills.slice(i, i + MAX_NODES_PER_RING);
-        ringCount++;
-        orbitTracks.push({
-          ringIndex: ringCount,
-          category: "Strategic",
-          nodes: slice,
-          speed: 0.16 / Math.sqrt(ringCount),
-          direction: ringCount % 2 === 0 ? -1 : 1,
-        });
-      }
-    }
+  const techTracks = useMemo(() => getTracks(groupedSkills.Technical, 0.08), [groupedSkills.Technical]);
+  const stratTracks = useMemo(() => getTracks(groupedSkills.Strategic, 0.06), [groupedSkills.Strategic]);
 
-    // Distribute Soft Skills (Outer Orbits)
-    const softSkills = groupedSkills["Soft Skills"];
-    if (softSkills.length > 0) {
-      for (let i = 0; i < softSkills.length; i += MAX_NODES_PER_RING) {
-        const slice = softSkills.slice(i, i + MAX_NODES_PER_RING);
-        ringCount++;
-        orbitTracks.push({
-          ringIndex: ringCount,
-          category: "Soft Skills",
-          nodes: slice,
-          speed: 0.16 / Math.sqrt(ringCount),
-          direction: ringCount % 2 === 0 ? -1 : 1,
-        });
-      }
-    }
-
-    return orbitTracks;
-  }, [groupedSkills]);
-
-  // Selected node for detailed slide-in panel
+  // Selected skill state
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   // Mouse Parallax position state
@@ -120,12 +68,11 @@ const Skills = ({ user, isOwner }) => {
 
   // 60FPS animation frames state
   const [time, setTime] = useState(0);
-  const hoveredNodeRef = useRef(null); // stores { ringIdx, nodeIdx } to pause hover item
 
   useEffect(() => {
     let animFrame;
     const tick = () => {
-      setTime((prev) => prev + 0.04); // Elegant, very smooth delta
+      setTime((prev) => prev + 0.05); // elegant, steady motion speed multiplier
       animFrame = requestAnimationFrame(tick);
     };
     animFrame = requestAnimationFrame(tick);
@@ -155,27 +102,111 @@ const Skills = ({ user, isOwner }) => {
   const isMobile = windowWidth < 768;
   const sizeMultiplier = isMobile ? 0.6 : 1;
 
-  // Dynamically compute radiusX and radiusY for each track so they scale nicely based on total tracks
-  const tracksWithRadii = useMemo(() => {
-    return dynamicGalaxyConfig.map((track, idx) => {
-      // Dynamic spacing: inner rings start at 120px, increasing by 75px per ring
-      const baseRx = 125 + idx * 72;
-      const baseRy = 85 + idx * 46;
+  // Track renderer helper to draw orbits and nodes cleanly
+  const renderGalaxy = (tracks, categoryLabel, coreLabel, accentColor) => {
+    // Generate radii dynamically per track (inner starting at 120px)
+    const tracksWithRadii = tracks.map((track, idx) => {
+      const baseRx = 120 + idx * 70;
+      const baseRy = 80 + idx * 45;
       return {
         ...track,
         rx: baseRx * sizeMultiplier,
         ry: baseRy * sizeMultiplier,
       };
     });
-  }, [dynamicGalaxyConfig, sizeMultiplier]);
 
-  const hasSkills = dynamicGalaxyConfig.length > 0;
-  if (!hasSkills && !isOwner) return null;
+    const hasTracks = tracks.length > 0;
+
+    return (
+      <div className="flex flex-col items-center w-full max-w-[950px]">
+        {/* Galaxy Title */}
+        <div className="mb-4 text-center">
+          <h3
+            className="text-lg font-black uppercase tracking-widest border-b pb-2 mb-2"
+            style={{ color: accentColor, borderColor: "rgba(255,255,255,0.05)" }}
+          >
+            {categoryLabel}
+          </h3>
+          <span className="text-xs text-slate-400">
+            {tracks.reduce((acc, t) => acc + t.nodes.length, 0)} Active Nodes
+          </span>
+        </div>
+
+        {/* Orbit screen container */}
+        <div
+          className="relative w-full aspect-[4/3] md:aspect-[16/10] flex items-center justify-center border rounded-3xl overflow-hidden shadow-2xl transition-all duration-300"
+          style={{
+            borderColor: tokens.colors.border,
+            backgroundColor: "rgba(10, 12, 16, 0.65)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          {/* Instructions helper overlay inside the screen */}
+          <div
+            className="absolute bottom-6 left-6 z-30 flex items-center gap-3 px-4 py-2.5 rounded-xl border pointer-events-none"
+            style={{ borderColor: tokens.colors.border, backgroundColor: `${tokens.colors.bg}ee` }}
+          >
+            <span className="text-lg">🖱️</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+              Interactive Space View
+            </span>
+          </div>
+
+          {/* Render All Orbit Tracks */}
+          {hasTracks ? (
+            tracksWithRadii.map((track, idx) => (
+              <OrbitRing
+                key={idx}
+                radiusX={track.rx}
+                radiusY={track.ry}
+                mousePos={mousePos}
+              />
+            ))
+          ) : (
+            <div className="text-slate-500 text-xs">No entries assigned</div>
+          )}
+
+          {/* Center Skills Core */}
+          <CenterCore mousePos={mousePos} scale={sizeMultiplier} label={coreLabel} />
+
+          {/* Orbiting Planet Nodes */}
+          {hasTracks &&
+            tracksWithRadii.map((track, trackIdx) => {
+              return track.nodes.map((node, nodeIdx) => {
+                const spacing = (Math.PI * 2) / track.nodes.length;
+                // Kepler's planetary motion speed: steady base rotation angle calculated cleanly
+                const baseAngle = nodeIdx * spacing + time * track.speed * track.direction;
+
+                return (
+                  <SkillNode
+                    key={`${trackIdx}-${nodeIdx}`}
+                    name={node.name}
+                    category={node.category}
+                    angle={baseAngle}
+                    radiusX={track.rx}
+                    radiusY={track.ry}
+                    mousePos={mousePos}
+                    active={selectedSkill?.name === node.name}
+                    onHoverChange={() => {}}
+                    onClick={() => setSelectedSkill(node)}
+                  />
+                );
+              });
+            })}
+        </div>
+      </div>
+    );
+  };
+
+  const hasTech = groupedSkills.Technical.length > 0;
+  const hasStrat = groupedSkills.Strategic.length > 0;
+
+  if (!hasTech && !hasStrat && !isOwner) return null;
 
   return (
     <section
       id="skills"
-      className="py-24 relative overflow-hidden border-t min-h-[720px] md:min-h-[920px] flex items-center justify-center select-none"
+      className="py-24 relative overflow-hidden border-t min-h-[900px] flex items-center justify-center select-none"
       style={{
         backgroundColor: tokens.colors.bg,
         borderColor: tokens.colors.border,
@@ -185,122 +216,61 @@ const Skills = ({ user, isOwner }) => {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(circle 600px at 50% 50%, ${tokens.colors.accent}12, transparent 80%)`,
+          background: `radial-gradient(circle 800px at 50% 50%, ${tokens.colors.accent}12, transparent 80%)`,
         }}
       />
 
-      <ParticleBackground count={isMobile ? 25 : 50} />
+      <ParticleBackground count={isMobile ? 30 : 60} />
 
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col items-center justify-center">
 
-        {/* Header */}
-        <div className="w-full flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-16 text-left">
-          <div className="space-y-2">
-            <span
-              className="text-xs font-black uppercase tracking-[0.25em]"
-              style={{ color: tokens.colors.accent }}
-            >
-              Skills Galaxy
-            </span>
-            <h2
-              className="text-3xl sm:text-4xl font-extrabold tracking-tight"
-              style={{ fontFamily: tokens.fonts.heading, color: tokens.colors.primary }}
-            >
-              Orbiting My Expertise
-            </h2>
-            <p className="text-sm max-w-md" style={{ color: tokens.colors.secondary }}>
-              Technical and Strategic skills are grouped into separate orbits. Hover a skill to pause and highlight, or click to explore focus engagements.
-            </p>
-          </div>
-
-          {/* Interactive Guide Legend */}
-          <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl border" style={{ borderColor: tokens.colors.border, backgroundColor: "rgba(25, 29, 36, 0.4)" }}>
-            {Object.entries(CATEGORY_MAP).map(([key, item]) => (
-              <div key={key} className="flex items-center gap-2 text-xs font-bold">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                <span style={{ color: tokens.colors.primary }}>{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Interactive Galaxy Container ── */}
-        <div
-          className="relative w-full max-w-[950px] aspect-[4/3] md:aspect-[16/10] flex items-center justify-center border rounded-3xl overflow-hidden shadow-2xl transition-all duration-300"
-          style={{
-            borderColor: tokens.colors.border,
-            backgroundColor: "rgba(10, 12, 16, 0.65)",
-            backdropFilter: "blur(12px)",
-          }}
-        >
-          {/* Mouse movement guide widget */}
-          <div
-            className="absolute bottom-6 left-6 z-30 flex items-center gap-3 px-4 py-2.5 rounded-xl border pointer-events-none"
-            style={{ borderColor: tokens.colors.border, backgroundColor: `${tokens.colors.bg}ee` }}
+        {/* Title Header */}
+        <div className="w-full flex flex-col items-center text-center gap-2 mb-16">
+          <span
+            className="text-xs font-black uppercase tracking-[0.25em]"
+            style={{ color: tokens.colors.accent }}
           >
-            <span className="text-lg">🖱️</span>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-              Interactive Tilt View Active
-            </span>
-          </div>
-
-          {/* Render All Orbit Tracks */}
-          {tracksWithRadii.map((track, idx) => (
-            <OrbitRing
-              key={idx}
-              radiusX={track.rx}
-              radiusY={track.ry}
-              mousePos={mousePos}
-            />
-          ))}
-
-          {/* Center Skills Core */}
-          <CenterCore mousePos={mousePos} scale={sizeMultiplier} />
-
-          {/* Orbiting Planet Nodes */}
-          {tracksWithRadii.map((track, trackIdx) => {
-            return track.nodes.map((node, nodeIdx) => {
-              const spacing = (Math.PI * 2) / track.nodes.length;
-              const isHovered =
-                hoveredNodeRef.current?.trackIndex === trackIdx &&
-                hoveredNodeRef.current?.nodeIndex === nodeIdx;
-
-              // Kepler's speed coefficient adjustment: Orbit speed is scaled elegantly based on time
-              const baseAngle = nodeIdx * spacing + time * track.speed * track.direction * (isHovered ? 0.05 : 1);
-
-              return (
-                <SkillNode
-                  key={`${trackIdx}-${nodeIdx}`}
-                  name={node.name}
-                  category={node.category}
-                  angle={baseAngle}
-                  radiusX={track.rx}
-                  radiusY={track.ry}
-                  mousePos={mousePos}
-                  active={selectedSkill?.name === node.name}
-                  onHoverChange={(hovering) => {
-                    if (hovering) {
-                      hoveredNodeRef.current = { trackIndex: trackIdx, nodeIndex: nodeIdx };
-                    } else {
-                      hoveredNodeRef.current = null;
-                    }
-                  }}
-                  onClick={() => setSelectedSkill(node)}
-                />
-              );
-            });
-          })}
-
-          {/* Detail Side Panel Overlay */}
-          <AnimatePresence>
-            {selectedSkill && (
-              <DetailPanel
-                skill={selectedSkill}
-                onClose={() => setSelectedSkill(null)}
-              />
-            )}
-          </AnimatePresence>
+            Capabilities Universe
+          </span>
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+            style={{ fontFamily: tokens.fonts.heading, color: tokens.colors.primary }}
+          >
+            Capabilities &amp; Experience Orbits
+          </h2>
+          <div className="h-1 w-20 rounded-full mt-2" style={{ backgroundColor: tokens.colors.accent }} />
         </div>
+
+        {/* Dual Stacked Galaxies (Technical and Strategic divided completely) */}
+        <div className="w-full space-y-24 flex flex-col items-center">
+          {/* Galaxy 1: Technical Capabilities */}
+          {(hasTech || isOwner) &&
+            renderGalaxy(
+              techTracks,
+              "Core Capabilities / Toolkit",
+              "Core",
+              tokens.colors.accent
+            )}
+
+          {/* Galaxy 2: Strategic Focus & Leadership */}
+          {(hasStrat || isOwner) &&
+            renderGalaxy(
+              stratTracks,
+              "Strategy / Leadership / Support",
+              "Strategy",
+              "#7C3AED"
+            )}
+        </div>
+
+        {/* Slide-in Drawer Detail Panel */}
+        <AnimatePresence>
+          {selectedSkill && (
+            <DetailPanel
+              skill={selectedSkill}
+              onClose={() => setSelectedSkill(null)}
+            />
+          )}
+        </AnimatePresence>
 
       </div>
     </section>
