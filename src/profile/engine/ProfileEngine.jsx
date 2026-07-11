@@ -104,6 +104,7 @@ const ProfileEngine = ({
       "CYBER_NEON":     { journey: "resume",    showcase: "projects" },
       "MONOGRAPH":      { journey: "resume",    showcase: "projects" },
       "NOIR":           { journey: "experience",showcase: "work" },
+      "APEX":           { home: "hero",         journey: "experience",   about: "about",    showcase: "showcase",    contact: "contact" },
     };
     return navMaps[themeId]?.[id] || id;
   }, [theme.name]);
