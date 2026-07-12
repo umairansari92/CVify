@@ -812,31 +812,32 @@ const Documentation = () => {
       <>
         <DocHeader title="🏆 APEX Theme" badge="Premium Theme" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          <strong className="text-white">APEX</strong> is CVify Pro's premier recruiter-focused minimal theme. Designed to capture a hiring manager's attention in under 6 seconds, it combines a sleek dark slate canvas, Outfit/Inter typography, and structured layouts with glowing interactive elements.
+          <strong className="text-white">APEX</strong> is CVify Pro's premier recruiter-focused minimal theme. Built to capture hiring interest instantly, it incorporates a deep dark slate canvas, Outfit/Inter typography, and a signature <strong className="text-primary">Interactive Skills Galaxy</strong> with dual planetary orbits.
         </p>
 
         <SectionTitle>Visual Identity & Design Tokens</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <InfoCard icon={<Palette size={18} />} color="emerald" title="Clean Minimal Canvas"
             desc="Deep slate background (#0D0F12) and dark card surfaces (#161920) keep visual noise to an absolute minimum." />
-          <InfoCard icon={<Target size={18} />} color="emerald" title="Recruiter-Focused Hierarchy"
-            desc="Highlights essential data like professional summary, skills progress bars, and work timelines first." />
-          <InfoCard icon={<Sparkles size={18} />} color="emerald" title="Teal Accent Highlights"
-            desc="Vivid teal (#2D9881) accents are used on CTA buttons, project tags, progress bars, and hover transitions." />
-          <InfoCard icon={<FileText size={18} />} color="emerald" title="Outfit Typography"
-            desc="Modern Outfit heading font paired with Inter body font provides clean, highly-readable text presentation." />
+          <InfoCard icon={<Target size={18} />} color="emerald" title="Skills Galaxy Engine"
+            desc="Visualizes capabilities as orbiting spheres revolving around dynamic glowing central cores with customizable labels." />
+          <InfoCard icon={<Sparkles size={18} />} color="emerald" title="Keplerian Motion & Speeds"
+            desc="Planets orbit at dynamic speeds decaying with distance. Alternating directions prevent visual fatigue." />
+          <InfoCard icon={<FileText size={18} />} color="emerald" title="Dual Orbits Categories"
+            desc="Separates Technical Capabilities (Core Toolkit) and Strategic Leadership Focus areas into two stacked galaxy systems." />
         </div>
 
-        <SectionTitle>Theme Properties Contract</SectionTitle>
+        <SectionTitle>Key Features & Tech Specs</SectionTitle>
         <div className="p-5 bg-white/5 border border-white/20 rounded-2xl mb-6">
           <div className="space-y-3">
             {[
-              { label: "Background", val: "Deep Dark Slate (#0D0F12)" },
-              { label: "Surface", val: "Dark Gray Card Surface (#161920)" },
-              { label: "Accent Color", val: "Teal / Emerald (#2D9881)" },
-              { label: "Borders", val: "Subtle Gray Slate (#1E293B)" },
-              { label: "Typings", val: "Outfit (Heading) + Inter (Body)" },
-              { label: "Card Aesthetics", val: "Minimal / Clean Flat Cards with soft hover lifts" }
+              { label: "Background", val: "Deep Dark Slate (#0D0F12) with starry ambient parallax particles" },
+              { label: "Dual Galaxies", val: "Core Capabilities (Teal Accent Core) & Strategic Focus (Violet/Orange Accent Core)" },
+              { label: "Interactive Tilt", val: "Orbit paths and nodes shift subtly with mouse coordinates parallax (8px max)" },
+              { label: "Auto-Scaling", val: "Limits rings to 6 nodes. Spawns extra orbit tracks automatically to hold 50+ skills without clutter" },
+              { label: "Kepler's speed", val: "Outer orbits rotate slower, inner orbits rotate faster for natural cosmic physics" },
+              { label: "Universality", val: "Generic nomenclature (e.g. engagements/context/competency) optimized for any job tier" },
+              { label: "Detail Panel", val: "Slide-in right drawer showing competency ratings, stats cards, and focus scopes" }
             ].map((row, i) => (
               <div key={i} className="flex items-start gap-3 text-[13px]">
                 <span className="font-black text-white w-28 flex-shrink-0">{row.label}</span>
@@ -848,7 +849,7 @@ const Documentation = () => {
 
         <SectionTitle>Best For</SectionTitle>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {["Senior Developers", "Project Managers", "Technical Leads", "UI/UX Designers", "System Architects"].map((role, i) => (
+          {["Senior Executives", "Medical & Legal Staff", "Product Managers", "Software Engineers", "Consultants & Directors"].map((role, i) => (
             <div key={i} className="p-3 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-center">
               <p className="text-emerald-400 font-black text-xs">{role}</p>
             </div>
