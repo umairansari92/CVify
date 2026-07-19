@@ -400,6 +400,23 @@ const SkillsForm = () => {
   const themeColor = currentResume?.themeColor || "#3b82f6";
   const suggestions = getSuggestions(jobTitle);
 
+  // ── Developer / Non-Developer Mode (persisted) ──
+  const [professionMode, setProfessionMode] = useState(() => {
+    try { return localStorage.getItem("cvify_profession_mode") || "non-dev"; }
+    catch { return "non-dev"; }
+  });
+  const toggleMode = (mode) => {
+    setProfessionMode(mode);
+    try { localStorage.setItem("cvify_profession_mode", mode); } catch {}
+  };
+
+  // ── Categorized technicalSkills selectors ──
+  const techFrontend  = currentResume?.technicalSkills?.frontend  || [];
+  const techBackend   = currentResume?.technicalSkills?.backend   || [];
+  const techDatabase  = currentResume?.technicalSkills?.database  || [];
+  const techAiDevOps  = currentResume?.technicalSkills?.aiDevOps  || [];
+  const techTools     = currentResume?.technicalSkills?.tools     || [];
+
   const { loaded } = useSelector((state) => state.globalSkills);
 
   // Load Global Skills Cache once on mount
@@ -408,6 +425,38 @@ const SkillsForm = () => {
       dispatch(fetchAllGlobalSkills());
     }
   }, [dispatch, loaded]);
+
+  // ── Generic categorized skill handlers (Developer mode) ──
+  // All categories share the same add/remove pattern — field is the dot-notation path
+  const addCategorySkill = useCallback(
+    (field, currentList, allListsFlat) => (skill) => {
+      let formatted = skill.trim();
+      if (!formatted) return;
+      formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+      const lower = formatted.toLowerCase();
+      if (allListsFlat.some(s => s.toLowerCase() === lower)) {
+        toast.error("Skill already exists in another category!");
+        return;
+      }
+      const updated = Array.from(new Set([...currentList, formatted]));
+      dispatch(setResumeField({ field, value: updated }));
+      dispatch(addSkillToCache(formatted));
+      api.post("/skills/track", { skills: [formatted] }).catch(() => {});
+    },
+    [dispatch],
+  );
+
+  const removeCategorySkill = useCallback(
+    (field, currentList) => (skill) => {
+      dispatch(setResumeField({ field, value: currentList.filter(s => s !== skill) }));
+    },
+    [dispatch],
+  );
+
+  // Flatten all categorized skills for duplicate detection
+  const allCategorySkillsFlat = [
+    ...techFrontend, ...techBackend, ...techDatabase, ...techAiDevOps, ...techTools,
+  ];
 
   // ── Handlers for "skills" field ──
   const addSkill = useCallback(
@@ -571,43 +620,90 @@ const SkillsForm = () => {
             Technical &amp; Professional Skills
           </h3>
           <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-          {skills.length > 0 && (
-            <span className="text-[10px] font-black text-text-muted bg-foreground/10 px-2 py-0.5 rounded-full">
-              {skills.length} skills
-            </span>
-          )}
         </div>
 
-        <TagInput
-          label="Your Skills"
-          placeholder={`Type any skill and press Enter (e.g. ${jobTitle ? getSuggestions(jobTitle)[0] || "MS Excel" : "MS Excel, Leadership"})`}
-          skills={skills}
-          onAdd={addSkill}
-          onRemove={removeSkill}
-          color={themeColor}
-          hint="Press Enter or comma (,) after each skill. Press Backspace to remove last skill."
-        />
+        {/* ── Developer / Non-Developer Toggle ── */}
+        <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-border-subtle w-fit">
+          <button
+            type="button"
+            onClick={() => toggleMode("non-dev")}
+            className={`px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 ${
+              professionMode === "non-dev"
+                ? "bg-white dark:bg-slate-800 text-primary shadow-sm border border-primary/20"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            🏢 General / Non-Tech
+          </button>
+          <button
+            type="button"
+            onClick={() => toggleMode("dev")}
+            className={`px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 ${
+              professionMode === "dev"
+                ? "bg-white dark:bg-slate-800 text-primary shadow-sm border border-primary/20"
+                : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            💻 Developer / Tech
+          </button>
+        </div>
 
-        {/* Smart Suggestions */}
-        {notInList.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-[10px] font-black text-text-muted/70 uppercase tracking-widest ml-1">
-              💡 Suggested for{" "}
-              <span className="text-action">{jobTitle || "your role"}</span> —
-              click to add
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {notInList.slice(0, 10).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => addSkill(s)}
-                  className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200"
-                >
-                  + {s}
-                </button>
-              ))}
-            </div>
+        {/* ── NON-DEV MODE: Single flat skills box ── */}
+        {professionMode === "non-dev" && (
+          <div className="space-y-4">
+            <TagInput
+              label="Your Skills"
+              placeholder={`Type any skill and press Enter (e.g. ${jobTitle ? getSuggestions(jobTitle)[0] || "MS Excel" : "MS Excel, Leadership"})`}
+              skills={skills}
+              onAdd={addSkill}
+              onRemove={removeSkill}
+              color={themeColor}
+              hint="Press Enter or comma (,) after each skill. Press Backspace to remove last skill."
+            />
+            {/* Smart Suggestions */}
+            {suggestions.filter(s => !skills.includes(s)).length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[10px] font-black text-text-muted/70 uppercase tracking-widest ml-1">
+                  💡 Suggested for <span className="text-action">{jobTitle || "your role"}</span> — click to add
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.filter(s => !skills.includes(s)).slice(0, 10).map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => addSkill(s)}
+                      className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200"
+                    >
+                      + {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── DEVELOPER MODE: 5 categorized inputs ── */}
+        {professionMode === "dev" && (
+          <div className="space-y-5">
+            {[
+              { label: "Frontend",   field: "technicalSkills.frontend",  list: techFrontend,  color: "#3b82f6", placeholder: "React, Next.js, TypeScript, Tailwind, HTML, CSS, Redux..." },
+              { label: "Backend",    field: "technicalSkills.backend",   list: techBackend,   color: "#8b5cf6", placeholder: "Node.js, Express, Python, FastAPI, Django, REST APIs..." },
+              { label: "Database",   field: "technicalSkills.database",  list: techDatabase,  color: "#10b981", placeholder: "MongoDB, PostgreSQL, MySQL, Redis, Firebase..." },
+              { label: "AI / DevOps",field: "technicalSkills.aiDevOps",  list: techAiDevOps,  color: "#f59e0b", placeholder: "Docker, AWS, CI/CD, Kubernetes, Claude, OpenAI, Gemini..." },
+              { label: "Tools",      field: "technicalSkills.tools",     list: techTools,     color: "#64748b", placeholder: "GitHub, Postman, Figma, VS Code, Jira, MS Excel..." },
+            ].map(({ label, field, list, color, placeholder }) => (
+              <TagInput
+                key={field}
+                label={label}
+                placeholder={placeholder}
+                skills={list}
+                onAdd={addCategorySkill(field, list, allCategorySkillsFlat)}
+                onRemove={removeCategorySkill(field, list)}
+                color={color}
+                hint={`Press Enter or comma (,) to add. Press Backspace to remove last.`}
+              />
+            ))}
           </div>
         )}
 
