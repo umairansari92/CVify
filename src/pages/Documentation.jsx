@@ -44,7 +44,7 @@ const Documentation = () => {
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
         { id: "shareable-links", icon: <Globe size={16} />, label: "Public Shareable Links (New!)" },
         { id: "document-identity", icon: <FileText size={16} />, label: "Document Identity (New!)" },
-        { id: "currently-learning", icon: <TrendingUp size={16} />, label: "🧠 Currently Learning Skills (New!)" },
+        { id: "currently-learning", icon: <TrendingUp size={16} />, label: "🧠 Skills Engine & Learning (New!)" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
         { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative" },
         { id: "ai-representative-v2", icon: <Bot size={16} />, label: "🤖 AI Rep — Deep Dive (New!)" },
@@ -2043,54 +2043,70 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
     ),
     "currently-learning": (
       <>
-        <DocHeader title="🧠 Currently Learning Skills" badge="New Feature" />
+        <DocHeader title="🧠 Skills Engine &amp; Currently Learning" badge="New Feature" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          The <strong className="text-text-primary">Currently Learning</strong> feature lets candidates transparently surface skills they are actively studying — separate from their proven professional toolkit. This honest signal helps recruiters identify high-growth candidates while maintaining ATS scorecard integrity.
+          The <strong className="text-text-primary">Skills Engine</strong> provides a dual-mode entry system (General vs. Developer) that categorizes candidate capabilities for recruiters while maintaining complete ATS scoring integrity. It works hand-in-hand with the <strong className="text-text-primary">Currently Learning</strong> roadmap to transparently separate proven skills from active studies.
         </p>
 
-        <SectionTitle>Why This Feature Exists</SectionTitle>
+        <SectionTitle>Key Features</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Honest Career Signaling"
-            desc="Candidates can show Docker or AWS without falsely claiming 'Expert' status. Recruiters see genuine learning intent, not inflated skill tags." />
+            desc="Candidates can show Docker or AWS under 'Currently Learning' without falsely claiming 'Expert' status. Recruiters see genuine learning intent." />
           <InfoCard icon={<Target size={18} />} color="blue" title="ATS Gap Bridging"
-            desc="ATS Scanner includes learningRoadmap keywords at 50% weight. Candidates with matching gaps-in-progress score higher than those with cold missing skills." />
+            desc="ATS Scanner matches learningRoadmap keywords at 50% weight. Candidates with matching gaps-in-progress score higher than those with cold missing skills." />
           <InfoCard icon={<ShieldCheck size={18} />} color="purple" title="Mutual Exclusion Guardrail"
             desc="A skill cannot exist in both professional and learning lists simultaneously. Enforced at both the React UI level and the API (BFF) level." />
           <InfoCard icon={<Zap size={18} />} color="amber" title="Unlimited Skill Tags"
-            desc="No artificial cap on skill count. Frontend alone can have 20+ real skills (React, Redux, TypeScript, Tailwind, Figma...). Users add whatever the job post demands for maximum ATS coverage." />
+            desc="No artificial cap on skill counts. Users add whatever the job post demands for maximum ATS matching coverage without scoring penalties." />
         </div>
 
-        <SectionTitle>Technical Architecture</SectionTitle>
+        <SectionTitle>Profession Modes</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl">
+            <h4 className="font-black text-primary text-sm mb-2">🏢 General / Non-Tech Mode</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">
+              Provides a single, flat list of professional skills. Ideal for business, sales, admin, operations, and management roles where highly nested categorization is not required.
+            </p>
+          </div>
+          <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl">
+            <h4 className="font-black text-primary text-sm mb-2">💻 Developer / Tech Mode</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">
+              Splits skills into 6 structured inputs: <strong className="text-text-primary">Frontend, Backend, Database, AI/DevOps, Security, and Tools</strong>. Great for software engineers, designers, and tech professionals.
+            </p>
+          </div>
+        </div>
+
+        <SectionTitle>Technical Architecture &amp; Sync Logic</SectionTitle>
         <div className="space-y-4 mb-8">
           <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
             <h4 className="font-black text-blue-400 text-sm mb-2">Layer 1: Redux Schema — resumeSlice.js</h4>
-            <p className="text-text-secondary text-[13px] leading-relaxed mb-3">The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">initialState.currentResume.technicalSkills</code> object includes a new <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">learningRoadmap: []</code> field. The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">setResumeField</code> reducer uses a generic nested-path resolver — dispatching <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">{`{ field: "technicalSkills.learningRoadmap", value: ["Docker", "AWS"] }`}</code> directly writes into the nested object without any hardcoded constants.</p>
+            <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+              The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">initialState.currentResume.technicalSkills</code> object includes nested arrays for all developer categories (<code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">frontend</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">backend</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">database</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">aiDevOps</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">security</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">tools</code>, <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">learningRoadmap</code>).
+            </p>
           </div>
           <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
-            <h4 className="font-black text-purple-400 text-sm mb-2">Layer 2: UI Hook — useResumeSkills()</h4>
-            <p className="text-text-secondary text-[13px] leading-relaxed">A dedicated custom hook abstracts all skill path strings away from UI components. <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">SkillsForm.jsx</code> calls <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">addLearningSkill("Docker")</code> — it never knows about <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">technicalSkills.learningRoadmap</code>. If the path ever changes, only the hook file needs updating.</p>
+            <h4 className="font-black text-purple-400 text-sm mb-2">Layer 2: Theme Sync Logic — SkillsForm.jsx</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">
+              Whenever a developer adds or removes a skill in a category, the system automatically merges and dispatches the union list to the flat <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">skills</code> field. This ensures all 13 interactive portfolio themes remain 100% compatible out-of-the-box.
+            </p>
           </div>
           <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
             <h4 className="font-black text-emerald-400 text-sm mb-2">Layer 3: BFF Controller — validateTechnicalSkillsBFF()</h4>
-            <p className="text-text-secondary text-[13px] leading-relaxed">Even if a user bypasses the React UI and sends a raw HTTP PATCH request to the API, the server enforces all constraints. <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">resume.controller.js</code> runs the validator before any database write — returning <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">HTTP 400</code> with a precise error message for any violation.</p>
+            <p className="text-text-secondary text-[13px] leading-relaxed">
+              Enforces cross-category duplicate checks and mutual exclusion checks at the backend level. Direct PATCH requests violating validation rules (e.g., adding a skill to both learningRoadmap and frontend) return <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">HTTP 400 Bad Request</code>.
+            </p>
           </div>
         </div>
 
-        <SectionTitle>ATS Scoring Impact</SectionTitle>
+        <SectionTitle>ATS &amp; PDF Rendering Engine</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          All 12 ATS-friendly PDF templates are fully integrated. In Developer mode, templates print dedicated headers (Frontend, Backend, Database, AI/DevOps, Security, Tools) to present a clean technical expertise section to recruiters.
+        </p>
         <ComparisonTable items={[
-          { left: "Professional Skills", right: "100% weight in ATS keyword matching" },
-          { left: "learningRoadmap Skills", right: "50% weight — honest partial credit" },
-          { left: "Job Match Tag", right: "'Gap Bridged' — shown on recruiter scorecard when learning skill matches JD" },
-          { left: "AI Career Coach", right: "Auto-suggests resources for skills in learningRoadmap" },
+          { left: "Flat Skills Mode", right: "Renders as comma-separated professional skills" },
+          { left: "Developer Categories", right: "Renders as separate structured categories (Frontend, Backend, Security, etc.)" },
+          { left: "Currently Learning Roadmap", right: "Renders separately with dashed/italic learning badge" },
         ]} />
-
-        <SectionTitle>Future Roadmap</SectionTitle>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <InfoCard icon={<Layout size={16} />} color="amber" title="PDF Templates (Upcoming)"
-            desc="All 12 resume PDF templates will conditionally render a 'Currently Learning' section with amber distinction badges when learningRoadmap is non-empty." />
-          <InfoCard icon={<Brain size={16} />} color="purple" title="@cvify/schema (Strategic)"
-            desc="Long-term: learningRoadmap will be part of a Zod-validated shared schema package (@cvify/schema) used by Client, Server, and AI services — single source of truth." />
-        </div>
       </>
     ),
   };
