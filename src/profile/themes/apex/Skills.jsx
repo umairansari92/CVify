@@ -91,6 +91,7 @@ const Skills = ({ user, isOwner }) => {
 
   // Responsive dimensions configuration
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  const isMobile = windowWidth < 768;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
