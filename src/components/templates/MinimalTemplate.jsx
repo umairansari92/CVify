@@ -287,6 +287,12 @@ const MinimalTemplate = ({ data }) => {
                       {technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
+                  {technicalSkills?.security?.length > 0 && (
+                    <div className="mb-1">
+                      <span className="font-semibold">Security:</span>{" "}
+                      {technicalSkills.security.join(", ")}
+                    </div>
+                  )}
                   {technicalSkills?.tools?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Tools:</span>{" "}

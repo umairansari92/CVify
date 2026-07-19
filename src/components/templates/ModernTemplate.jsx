@@ -192,6 +192,30 @@ const ModernTemplate = ({ data }) => {
                   </span>
                 </div>
               )}
+              {technicalSkills?.security?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Security:</span>{" "}
+                  <span className="text-gray-600">
+                    {technicalSkills.security.join(", ")}
+                  </span>
+                </div>
+              )}
+              {technicalSkills?.database?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Database:</span>{" "}
+                  <span className="text-gray-600">
+                    {technicalSkills.database.join(", ")}
+                  </span>
+                </div>
+              )}
+              {technicalSkills?.tools?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Tools:</span>{" "}
+                  <span className="text-gray-600">
+                    {technicalSkills.tools.join(", ")}
+                  </span>
+                </div>
+              )}
               {competencies?.length > 0 && (
                 <div className="mt-3">
                   <h4 className="text-xs font-bold uppercase text-gray-500 mb-1">

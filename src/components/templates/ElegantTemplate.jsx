@@ -327,6 +327,12 @@ const ElegantTemplate = ({ data }) => {
                       {data.technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
+                  {data.technicalSkills?.security?.length > 0 && (
+                    <div className="text-center">
+                      <span className="font-bold block mb-1">Security</span>
+                      {data.technicalSkills.security.join(", ")}
+                    </div>
+                  )}
                   {data.technicalSkills?.tools?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Tools</span>

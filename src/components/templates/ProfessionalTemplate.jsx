@@ -290,6 +290,36 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
+                {technicalSkills?.aiDevOps?.length > 0 && (
+                   <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">AI / DevOps</div>
+                    <div className="flex flex-wrap">
+                      {technicalSkills.aiDevOps.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {technicalSkills?.security?.length > 0 && (
+                   <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">Security</div>
+                    <div className="flex flex-wrap">
+                      {technicalSkills.security.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {technicalSkills?.tools?.length > 0 && (
+                   <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">Tools</div>
+                    <div className="flex flex-wrap">
+                      {technicalSkills.tools.map((s, i) => (
+                        <span key={i} className="bg-slate-700 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

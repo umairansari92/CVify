@@ -372,6 +372,23 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
+                    {technicalSkills?.security?.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-bold text-gray-500 uppercase">
+                          Security
+                        </div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {technicalSkills.security.map((s, i) => (
+                            <span
+                              key={i}
+                              className="bg-gray-200 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                            >
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {technicalSkills?.tools?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">

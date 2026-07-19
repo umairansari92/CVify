@@ -291,6 +291,18 @@ const ExecutiveTemplate = ({ data }) => {
                       {technicalSkills.aiDevOps.join(", ")}
                     </div>
                   )}
+                  {technicalSkills?.security?.length > 0 && (
+                    <div className="mb-3">
+                      <span className="font-bold underline">Security:</span>{" "}
+                      {technicalSkills.security.join(", ")}
+                    </div>
+                  )}
+                  {technicalSkills?.tools?.length > 0 && (
+                    <div className="mb-3">
+                      <span className="font-bold underline">Tools:</span>{" "}
+                      {technicalSkills.tools.join(", ")}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

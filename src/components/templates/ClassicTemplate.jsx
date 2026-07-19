@@ -312,6 +312,12 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
                 {technicalSkills.aiDevOps.join(", ")}
               </div>
             )}
+            {technicalSkills?.security?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Security:</span>{" "}
+                {technicalSkills.security.join(", ")}
+              </div>
+            )}
             {technicalSkills?.tools?.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Tools:</span>{" "}

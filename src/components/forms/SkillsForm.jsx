@@ -415,6 +415,7 @@ const SkillsForm = () => {
   const techBackend   = currentResume?.technicalSkills?.backend   || [];
   const techDatabase  = currentResume?.technicalSkills?.database  || [];
   const techAiDevOps  = currentResume?.technicalSkills?.aiDevOps  || [];
+  const techSecurity  = currentResume?.technicalSkills?.security  || [];
   const techTools     = currentResume?.technicalSkills?.tools     || [];
 
   const { loaded } = useSelector((state) => state.globalSkills);
@@ -428,18 +429,24 @@ const SkillsForm = () => {
 
   // ── Generic categorized skill handlers (Developer mode) ──
   // All categories share the same add/remove pattern — field is the dot-notation path
+  // Categorized skills are automatically synced back to the flat skills array for theme compatibility.
   const addCategorySkill = useCallback(
-    (field, currentList, allListsFlat) => (skill) => {
+    (field, currentList, allOtherListsFlat) => (skill) => {
       let formatted = skill.trim();
       if (!formatted) return;
       formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
       const lower = formatted.toLowerCase();
-      if (allListsFlat.some(s => s.toLowerCase() === lower)) {
+      if (allOtherListsFlat.some(s => s.toLowerCase() === lower)) {
         toast.error("Skill already exists in another category!");
         return;
       }
       const updated = Array.from(new Set([...currentList, formatted]));
       dispatch(setResumeField({ field, value: updated }));
+
+      // Sync to flat skills array for portfolio theme compatibility
+      const flatSkills = Array.from(new Set([...allOtherListsFlat, ...updated]));
+      dispatch(setResumeField({ field: "skills", value: flatSkills }));
+
       dispatch(addSkillToCache(formatted));
       api.post("/skills/track", { skills: [formatted] }).catch(() => {});
     },
@@ -447,15 +454,20 @@ const SkillsForm = () => {
   );
 
   const removeCategorySkill = useCallback(
-    (field, currentList) => (skill) => {
-      dispatch(setResumeField({ field, value: currentList.filter(s => s !== skill) }));
+    (field, currentList, allOtherListsFlat) => (skill) => {
+      const updated = currentList.filter(s => s !== skill);
+      dispatch(setResumeField({ field, value: updated }));
+
+      // Sync to flat skills array for portfolio theme compatibility
+      const flatSkills = Array.from(new Set([...allOtherListsFlat, ...updated]));
+      dispatch(setResumeField({ field: "skills", value: flatSkills }));
     },
     [dispatch],
   );
 
   // Flatten all categorized skills for duplicate detection
   const allCategorySkillsFlat = [
-    ...techFrontend, ...techBackend, ...techDatabase, ...techAiDevOps, ...techTools,
+    ...techFrontend, ...techBackend, ...techDatabase, ...techAiDevOps, ...techSecurity, ...techTools,
   ];
 
   // ── Handlers for "skills" field ──
@@ -691,6 +703,7 @@ const SkillsForm = () => {
               { label: "Backend",    field: "technicalSkills.backend",   list: techBackend,   color: "#8b5cf6", placeholder: "Node.js, Express, Python, FastAPI, Django, REST APIs..." },
               { label: "Database",   field: "technicalSkills.database",  list: techDatabase,  color: "#10b981", placeholder: "MongoDB, PostgreSQL, MySQL, Redis, Firebase..." },
               { label: "AI / DevOps",field: "technicalSkills.aiDevOps",  list: techAiDevOps,  color: "#f59e0b", placeholder: "Docker, AWS, CI/CD, Kubernetes, Claude, OpenAI, Gemini..." },
+              { label: "Security",   field: "technicalSkills.security",  list: techSecurity,  color: "#ef4444", placeholder: "Helmet.js, JWT Authentication, CORS Configuration, Rate Limiting..." },
               { label: "Tools",      field: "technicalSkills.tools",     list: techTools,     color: "#64748b", placeholder: "GitHub, Postman, Figma, VS Code, Jira, MS Excel..." },
             ].map(({ label, field, list, color, placeholder }) => (
               <TagInput
@@ -698,8 +711,8 @@ const SkillsForm = () => {
                 label={label}
                 placeholder={placeholder}
                 skills={list}
-                onAdd={addCategorySkill(field, list, allCategorySkillsFlat)}
-                onRemove={removeCategorySkill(field, list)}
+                onAdd={addCategorySkill(field, list, allCategorySkillsFlat.filter(s => !list.includes(s)))}
+                onRemove={removeCategorySkill(field, list, allCategorySkillsFlat.filter(s => !list.includes(s)))}
                 color={color}
                 hint={`Press Enter or comma (,) to add. Press Backspace to remove last.`}
               />

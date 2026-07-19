@@ -233,6 +233,23 @@ const ClearTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
+                {technicalSkills?.security?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs uppercase text-slate-400 mb-1">
+                      Security
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {technicalSkills.security.map((s, i) => (
+                        <span
+                          key={i}
+                          className="bg-slate-700 px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {(technicalSkills?.database?.length > 0 ||
                   technicalSkills?.tools?.length > 0) && (
                   <div>

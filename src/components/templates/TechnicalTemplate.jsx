@@ -230,6 +230,16 @@ const TechnicalTemplate = ({ data }) => {
                       </div>
                     </div>
                   )}
+                  {technicalSkills?.security?.length > 0 && (
+                    <div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Security</div>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {technicalSkills.security.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {technicalSkills?.tools?.length > 0 && (
                     <div>
                       <div className="text-[10px] uppercase text-slate-400 font-bold">Tools</div>
