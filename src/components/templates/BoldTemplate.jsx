@@ -304,6 +304,23 @@ const BoldTemplate = ({ data }) => {
                         </div>
                       </div>
                     )}
+                    {technicalSkills?.learningRoadmap?.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-bold text-gray-500 uppercase">
+                          Currently Learning
+                        </div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {technicalSkills.learningRoadmap.map((s, i) => (
+                            <span
+                              key={i}
+                              className="bg-gray-100 border border-gray-300 border-dashed px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                            >
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {technicalSkills?.backend?.length > 0 && (
                       <div className="mb-3">
                         <div className="text-xs font-bold text-gray-500 uppercase">

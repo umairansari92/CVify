@@ -267,6 +267,12 @@ const ExecutiveTemplate = ({ data }) => {
                       {technicalSkills.frontend.join(", ")}
                     </div>
                   )}
+                  {technicalSkills?.learningRoadmap?.length > 0 && (
+                    <div className="mb-3">
+                      <span className="font-bold underline">Currently Learning:</span>{" "}
+                      {technicalSkills.learningRoadmap.join(", ")}
+                    </div>
+                  )}
                   {technicalSkills?.backend?.length > 0 && (
                     <div className="mb-3">
                       <span className="font-bold underline">Backend:</span>{" "}

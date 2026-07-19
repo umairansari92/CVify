@@ -376,7 +376,7 @@ const ClearPDF = ({ data }) => {
                     ([cat, list], i) =>
                       list?.length > 0 && (
                         <View key={i} style={styles.skillGroup} wrap={false}>
-                          <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}</Text>
+                          <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}</Text>
                           <View
                             style={{ flexDirection: "row", flexWrap: "wrap" }}
                           >

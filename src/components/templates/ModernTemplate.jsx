@@ -168,6 +168,14 @@ const ModernTemplate = ({ data }) => {
                   </span>
                 </div>
               )}
+              {technicalSkills?.learningRoadmap?.length > 0 && (
+                <div className="text-sm mb-2">
+                  <span className="font-bold text-gray-700">Currently Learning:</span>{" "}
+                  <span className="text-gray-600">
+                    {technicalSkills.learningRoadmap.join(", ")}
+                  </span>
+                </div>
+              )}
               {technicalSkills?.backend?.length > 0 && (
                 <div className="text-sm mb-2">
                   <span className="font-bold text-gray-700">Backend:</span>{" "}

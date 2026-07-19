@@ -303,6 +303,12 @@ const ElegantTemplate = ({ data }) => {
                       {data.technicalSkills.frontend.join(", ")}
                     </div>
                   )}
+                  {data.technicalSkills?.learningRoadmap?.length > 0 && (
+                    <div className="text-center">
+                      <span className="font-bold block mb-1">Currently Learning</span>
+                      {data.technicalSkills.learningRoadmap.join(", ")}
+                    </div>
+                  )}
                   {data.technicalSkills?.backend?.length > 0 && (
                     <div className="text-center">
                       <span className="font-bold block mb-1">Backend</span>

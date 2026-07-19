@@ -190,6 +190,16 @@ const TechnicalTemplate = ({ data }) => {
                       </div>
                     </div>
                   )}
+                  {technicalSkills?.learningRoadmap?.length > 0 && (
+                    <div>
+                      <div className="text-[10px] uppercase text-slate-400 font-bold">Currently Learning</div>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {technicalSkills.learningRoadmap.map((s, i) => (
+                          <span key={i} className="text-[11px] bg-slate-50 text-slate-600 px-2 py-0.5 rounded border border-slate-300 border-dashed">{s}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {technicalSkills?.backend?.length > 0 && (
                     <div>
                       <div className="text-[10px] uppercase text-slate-400 font-bold">Backend</div>

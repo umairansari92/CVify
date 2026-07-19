@@ -311,7 +311,7 @@ const EliteTemplate = ({ data }) => {
                       list?.length > 0 && (
                         <div key={i}>
                           <p className="text-[9px] font-black text-slate-400 uppercase mb-1">
-                            Skills
+                            {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}
                           </p>
                           <ul className="text-[10px] text-slate-700 font-bold space-y-1">
                             {list.map((s, idx) => (

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setResumeField } from "../../features/resume/resumeSlice";
 import { fetchAllGlobalSkills, addSkillToCache } from "../../features/skills/globalSkillsSlice";
 import api from "../../api/axios";
+import { toast } from "react-hot-toast";
 
 // ─── Smart Skill Suggestions by Job Title ───────────────────────────────────
 const SKILL_SUGGESTIONS = {
@@ -388,6 +389,8 @@ const SkillsForm = () => {
 
   // Get flat skills array (new universal field)
   const skills = currentResume?.skills || [];
+  // Get currently learning roadmap skills
+  const learningRoadmap = currentResume?.technicalSkills?.learningRoadmap || [];
   // Competencies (strengths)
   const competencies = currentResume?.competencies || [];
   // Interests
@@ -415,6 +418,20 @@ const SkillsForm = () => {
       // Normalization: First letter uppercase as requested
       formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
 
+      // Case-insensitive duplicate check
+      const lowerSkill = formatted.toLowerCase();
+      if (skills.some(s => s.toLowerCase() === lowerSkill) || 
+          learningRoadmap.some(s => s.toLowerCase() === lowerSkill)) {
+        toast.error("Skill already exists in Professional Skills or Currently Learning!");
+        return;
+      }
+
+      // Max 20 skills limit check
+      if (skills.length >= 20) {
+        toast.error("You can add a maximum of 20 skills to Professional Skills!");
+        return;
+      }
+
       // Use Set to strictly enforce uniqueness during addition
       const updated = Array.from(new Set([...skills, formatted]));
       
@@ -430,18 +447,12 @@ const SkillsForm = () => {
       // Sync back to technicalSkills for PDF / Legacy Template compatibility
       dispatch(
         setResumeField({
-          field: "technicalSkills",
-          value: {
-            frontend: updated, // We put everything in 'frontend' for flat structure
-            backend: [],
-            database: [],
-            aiDevOps: [],
-            tools: [],
-          },
+          field: "technicalSkills.frontend",
+          value: updated,
         }),
       );
     },
-    [skills, dispatch],
+    [skills, learningRoadmap, dispatch],
   );
 
   const removeSkill = useCallback(
@@ -451,18 +462,62 @@ const SkillsForm = () => {
       // Sync back to technicalSkills to ensure PDF/Legacy parity
       dispatch(
         setResumeField({
-          field: "technicalSkills",
-          value: {
-            frontend: updated,
-            backend: [],
-            database: [],
-            aiDevOps: [],
-            tools: [],
-          },
+          field: "technicalSkills.frontend",
+          value: updated,
         }),
       );
     },
     [skills, dispatch],
+  );
+
+  // ── Handlers for "learningRoadmap" field ──
+  const addLearningSkill = useCallback(
+    (skill) => {
+      let formatted = skill.trim();
+      if (!formatted) return;
+
+      // Normalization: First letter uppercase
+      formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+
+      // Case-insensitive duplicate check
+      const lowerSkill = formatted.toLowerCase();
+      if (skills.some(s => s.toLowerCase() === lowerSkill) || 
+          learningRoadmap.some(s => s.toLowerCase() === lowerSkill)) {
+        toast.error("Skill already exists in Professional Skills or Currently Learning!");
+        return;
+      }
+
+      // Max 20 skills limit check
+      if (learningRoadmap.length >= 20) {
+        toast.error("You can add a maximum of 20 skills to Currently Learning!");
+        return;
+      }
+
+      const updated = Array.from(new Set([...learningRoadmap, formatted]));
+      
+      dispatch(
+        setResumeField({
+          field: "technicalSkills.learningRoadmap",
+          value: updated,
+        }),
+      );
+      // Optimistically update global cache too
+      dispatch(addSkillToCache(formatted));
+    },
+    [skills, learningRoadmap, dispatch],
+  );
+
+  const removeLearningSkill = useCallback(
+    (skill) => {
+      const updated = learningRoadmap.filter((s) => s !== skill);
+      dispatch(
+        setResumeField({
+          field: "technicalSkills.learningRoadmap",
+          value: updated,
+        }),
+      );
+    },
+    [learningRoadmap, dispatch],
   );
 
   // ── Handlers for "competencies" field ──
@@ -575,6 +630,88 @@ const SkillsForm = () => {
             100% ATS readability.
           </p>
         </div>
+      </section>
+
+      {/* ── Section 1.5: Currently Learning ── */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] whitespace-nowrap">
+            Currently Learning
+          </h3>
+          <span className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+          {learningRoadmap.length > 0 && (
+            <span className="text-[10px] font-black text-text-muted bg-foreground/10 px-2 py-0.5 rounded-full">
+              {learningRoadmap.length} skills
+            </span>
+          )}
+        </div>
+
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl relative overflow-hidden flex flex-col md:flex-row md:items-start gap-4">
+          <div className="flex gap-2">
+            <span className="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+              ⓘ
+            </span>
+            <div className="space-y-1">
+              <h4 className="text-xs font-bold text-text-primary">Skills listed under Currently Learning:</h4>
+              <p className="text-[10px] text-text-muted leading-relaxed">
+                These are skills you are actively learning. They improve ATS keyword matching but clearly indicate that you are still developing proficiency.
+              </p>
+            </div>
+          </div>
+          <div className="md:ml-auto shrink-0 space-y-1 bg-white dark:bg-slate-950/40 p-3 rounded-xl border border-border-subtle grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-1.5">
+            <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs">✔</span> Included in ATS scan
+            </div>
+            <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs">✔</span> Included in Job Match
+            </div>
+            <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs">✔</span> Displayed separately
+            </div>
+            <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs">✔</span> AI-honesty protection
+            </div>
+          </div>
+        </div>
+
+        <TagInput
+          label="Skills in Training"
+          placeholder="e.g. Docker, AWS, Linux, Payment Gateway Integration, Courier API Integration..."
+          skills={learningRoadmap}
+          onAdd={addLearningSkill}
+          onRemove={removeLearningSkill}
+          color={themeColor}
+          hint="Press Enter or comma (,) after each skill. Press Backspace to remove last skill."
+        />
+
+        {/* Smart Suggestions for Currently Learning */}
+        {["Docker", "AWS", "Linux", "Payment Gateway Integration", "Courier API Integration"].filter(
+          (s) => !skills.some(x => x.toLowerCase() === s.toLowerCase()) && 
+                 !learningRoadmap.some(x => x.toLowerCase() === s.toLowerCase())
+        ).length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-text-muted/70 uppercase tracking-widest ml-1">
+              💡 Suggested Target Technologies — click to add to roadmap
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {["Docker", "AWS", "Linux", "Payment Gateway Integration", "Courier API Integration"]
+                .filter(
+                  (s) => !skills.some(x => x.toLowerCase() === s.toLowerCase()) && 
+                         !learningRoadmap.some(x => x.toLowerCase() === s.toLowerCase())
+                )
+                .map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => addLearningSkill(s)}
+                    className="px-3 py-1.5 text-xs font-bold rounded-xl border-2 border-dashed border-border-subtle text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200"
+                  >
+                    + {s}
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── Section 2: Core Strengths ── */}

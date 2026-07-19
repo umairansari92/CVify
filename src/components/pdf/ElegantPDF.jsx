@@ -415,7 +415,7 @@ const ElegantPDF = ({ data }) => {
                               marginBottom: 3,
                             }}
                           >
-                            {cat === "frontend" ? "Skills" : cat}
+                            {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}
                           </Text>
                           <Text style={{ fontSize: 8.5, color: "#6b7280" }}>
                             {list.join(", ")}

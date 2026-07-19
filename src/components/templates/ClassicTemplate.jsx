@@ -288,6 +288,12 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
                 {technicalSkills.frontend.join(", ")}
               </div>
             )}
+            {technicalSkills?.learningRoadmap?.length > 0 && (
+              <div className="mb-2 mr-8">
+                <span className="font-bold">Currently Learning:</span>{" "}
+                {technicalSkills.learningRoadmap.join(", ")}
+              </div>
+            )}
             {technicalSkills?.backend?.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Backend:</span>{" "}

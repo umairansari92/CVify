@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -348,12 +348,12 @@ const BoldPDF = ({ data }) => {
                       <View style={styles.entryHeader}>
                         <Text style={styles.title}>{exp.position}</Text>
                         <Text style={styles.subtitle}>
-                          {exp.company} | {exp.startDate} — {exp.endDate}
+                          {exp.company} | {exp.startDate} â€” {exp.endDate}
                         </Text>
                       </View>
                       {exp.responsibilities?.map((res, j) => (
                         <View key={j} style={styles.bullet} wrap={false}>
-                          <Text style={styles.bulletIcon}>•</Text>
+                          <Text style={styles.bulletIcon}>â€¢</Text>
                           <Text style={styles.bulletText}>{res}</Text>
                         </View>
                       ))}
@@ -389,7 +389,7 @@ const BoldPDF = ({ data }) => {
                       </View>
                       {proj.description?.map((desc, j) => (
                         <View key={j} style={styles.bullet} wrap={false}>
-                          <Text style={[styles.bulletIcon, { color: "#6b7280" }]}>»</Text>
+                          <Text style={[styles.bulletIcon, { color: "#6b7280" }]}>Â»</Text>
                           <Text style={styles.bulletText}>{desc}</Text>
                         </View>
                       ))}
@@ -406,7 +406,7 @@ const BoldPDF = ({ data }) => {
                   </Text>
                   {section.items?.map((item, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={[styles.bulletIcon, { color: themeColor }]}>•</Text>
+                      <Text style={[styles.bulletIcon, { color: themeColor }]}>â€¢</Text>
                       <Text style={styles.bulletText}>{item}</Text>
                     </View>
                   ))}
@@ -456,6 +456,7 @@ const BoldPDF = ({ data }) => {
                                 database: "Systems",
                                 aiDevOps: "Tools & Platforms",
                                 tools: "Other Tools",
+                                learningRoadmap: "Currently Learning",
                               }[cat] ||
                                 cat
                                   .replace(/([A-Z])/g, " $1")
@@ -505,7 +506,7 @@ const BoldPDF = ({ data }) => {
                   <Text style={styles.sectionTitle}>Core Skills</Text>
                   {competencies?.map((c, i) => (
                     <View key={i} style={styles.bullet}>
-                      <Text>•</Text>
+                      <Text>â€¢</Text>
                       <Text style={styles.skillText}>{c}</Text>
                     </View>
                   ))}

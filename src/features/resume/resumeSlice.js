@@ -9,6 +9,36 @@ import {
   parseResume
 } from "./resumeThunk";
 
+export const ResumeFields = {
+  // Personal Info
+  FULL_NAME: "personalInfo.fullName",
+  EMAIL: "personalInfo.email",
+  PHONE: "personalInfo.phone",
+  LOCATION: "personalInfo.location",
+  JOB_TITLE: "personalInfo.jobTitle",
+  LINKEDIN: "personalInfo.linkedin",
+  GITHUB: "personalInfo.github",
+  PORTFOLIO: "personalInfo.portfolio",
+  SUMMARY: "personalInfo.profileSummary",
+
+  // Skills
+  FRONTEND_SKILLS: "technicalSkills.frontend",
+  BACKEND_SKILLS: "technicalSkills.backend",
+  DATABASE_SKILLS: "technicalSkills.database",
+  AI_DEVOPS_SKILLS: "technicalSkills.aiDevOps",
+  TOOLS_SKILLS: "technicalSkills.tools",
+  LEARNING_ROADMAP: "technicalSkills.learningRoadmap",
+
+  // Layout Configuration
+  THEME_COLOR: "themeColor",
+  FONT_FAMILY: "fontFamily",
+  NAME_SIZE: "nameSize",
+  HEADING_SIZE: "headingSize",
+  BODY_SIZE: "bodySize",
+  MARGIN: "margin",
+  TEMPLATE_ID: "templateId",
+};
+
 const resumeSlice = createSlice({
   name: "resume",
   initialState: {
@@ -45,6 +75,7 @@ const resumeSlice = createSlice({
           database: [],
           aiDevOps: [],
           tools: [],
+          learningRoadmap: [],
         },
         projects: [],
         competencies: [],
@@ -61,6 +92,32 @@ const resumeSlice = createSlice({
     },
     initResumeWithData(state, action) {
       state.currentResume = {
+        title: action.payload.title || "Untitled Resume",
+        personalInfo: {
+          fullName: "",
+          email: "",
+          phone: "",
+          location: "",
+          jobTitle: "",
+          linkedin: "",
+          github: "",
+          portfolio: "",
+          profileSummary: "",
+        },
+        education: [],
+        experience: [],
+        skills: [], // Universal flat skills array (any profession)
+        technicalSkills: {
+          frontend: [],
+          backend: [],
+          database: [],
+          aiDevOps: [],
+          tools: [],
+          learningRoadmap: [],
+        },
+        projects: [],
+        competencies: [],
+        softwareProficiency: [],
         themeColor: "#0f172a",
         fontFamily: "Inter",
         nameSize: 24,
@@ -74,16 +131,32 @@ const resumeSlice = createSlice({
     },
     setResumeField(state, action) {
       if (state.currentResume) {
-        const { field, value } = action.payload;
+        const { field, value, operation } = action.payload;
         const keys = field.split(".");
         let current = state.currentResume;
         
         for (let i = 0; i < keys.length - 1; i++) {
-          if (!current[keys[i]]) current[keys[i]] = {};
+          if (!(keys[i] in current)) {
+            console.warn(`[resumeSlice] Invalid path: "${keys[i]}" does not exist in state. Cannot set "${field}".`);
+            return;
+          }
           current = current[keys[i]];
         }
         
-        current[keys[keys.length - 1]] = value;
+        const lastKey = keys[keys.length - 1];
+        
+        if (operation === "append") {
+          if (!Array.isArray(current[lastKey])) {
+            current[lastKey] = [];
+          }
+          current[lastKey].push(value);
+        } else if (operation === "remove") {
+          if (Array.isArray(current[lastKey])) {
+            current[lastKey] = current[lastKey].filter(item => item !== value);
+          }
+        } else {
+          current[lastKey] = value;
+        }
       }
     },
     setResumeData(state, action) {

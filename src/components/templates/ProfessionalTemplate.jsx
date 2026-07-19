@@ -246,6 +246,23 @@ const ProfessionalTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
+                {technicalSkills?.learningRoadmap?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-xs uppercase text-slate-500 mb-1">
+                      Currently Learning
+                    </div>
+                    <div className="flex flex-wrap">
+                      {technicalSkills.learningRoadmap.map((s, i) => (
+                        <span
+                          key={i}
+                          className="bg-slate-600 px-2 py-0.5 rounded text-[10px] text-slate-300 mr-2 mb-2 font-bold tracking-tight border border-slate-500/50"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {technicalSkills?.backend?.length > 0 && (
                   <div className="mb-4">
                     <div className="text-xs uppercase text-slate-500 mb-1">

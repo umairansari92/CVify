@@ -272,6 +272,13 @@ const TraditionalTemplate = ({ data }) => {
                 </div>
               )}
 
+              {technicalSkills?.learningRoadmap?.length > 0 && (
+                <div>
+                  <span className="font-bold">Currently Learning:</span>{" "}
+                  {technicalSkills.learningRoadmap.join(", ")}
+                </div>
+              )}
+
               {technicalSkills?.backend?.length > 0 && (
                 <div>
                   <span className="font-bold">Backend:</span>{" "}

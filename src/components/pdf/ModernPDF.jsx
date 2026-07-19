@@ -368,7 +368,7 @@ const ModernPDF = ({ data }) => {
                   ([cat, list], i) =>
                     list?.length > 0 && (
                       <View key={i} style={styles.skillGroup}>
-                        <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat}</Text>
+                        <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}</Text>
                         <Text style={styles.skillText}>{list.join(", ")}</Text>
                       </View>
                     ),

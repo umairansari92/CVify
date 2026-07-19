@@ -311,14 +311,14 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} — {exp.endDate}
+                    {exp.startDate} â€” {exp.endDate}
                   </Text>
                 </View>
                 <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletDot}>â€¢</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
                   ))}
@@ -345,7 +345,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.bulletList}>
                   {proj.description?.map((desc, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletDot}>â€¢</Text>
                       <Text style={styles.bulletText}>{desc}</Text>
                     </View>
                   ))}
@@ -364,7 +364,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.degree}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} — {edu.endDate}
+                    {edu.startDate} â€” {edu.endDate}
                   </Text>
                 </View>
                 <Text style={dynamicStyles.subtitle}>{edu.institution}</Text>
@@ -384,7 +384,7 @@ const ElitePDF = ({ data }) => {
                     list?.length > 0 && (
                       <View key={i} style={styles.skillRow} wrap={false}>
                         <Text style={styles.skillLabel}>
-                          {cat === "frontend" ? "Skills" : cat}:
+                          {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}:
                         </Text>
                         <Text style={styles.skillValue}>{list.join(", ")}</Text>
                       </View>
@@ -407,7 +407,7 @@ const ElitePDF = ({ data }) => {
             <View style={styles.bulletList}>
               {section.items?.map((item, j) => (
                 <View key={j} style={styles.bullet} wrap={false}>
-                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.bulletDot}>â€¢</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}
@@ -423,3 +423,4 @@ const ElitePDF = ({ data }) => {
 };
 
 export default ElitePDF;
+

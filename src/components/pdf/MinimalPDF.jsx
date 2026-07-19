@@ -334,14 +334,14 @@ const MinimalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} — {exp.endDate}
+                    {exp.startDate} â€” {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>•</Text>
+                      <Text style={styles.bulletDot}>â€¢</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
                   ))}
@@ -411,7 +411,7 @@ const MinimalPDF = ({ data }) => {
                       {edu.institution}
                     </Text>
                     <Text style={{ fontSize: 8.5, color: "#94a3b8" }}>
-                      {edu.startDate} — {edu.endDate}
+                      {edu.startDate} â€” {edu.endDate}
                     </Text>
                   </View>
                 ))}
@@ -434,17 +434,20 @@ const MinimalPDF = ({ data }) => {
                       list.length > 0 && (
                         <View key={i} style={styles.skillCategory} wrap={false}>
                           <Text style={styles.skillCategoryTitle}>
-                            {{
-                              frontend: "Skills",
-                              backend: "Additional Skills",
-                              database: "Systems",
-                              aiDevOps: "Tools & Platforms",
-                              tools: "Other Tools",
-                            }[cat] ||
+                            {
+                              {
+                                frontend: "Skills",
+                                backend: "Additional Skills",
+                                database: "Systems",
+                                aiDevOps: "Tools & Platforms",
+                                tools: "Other Tools",
+                                learningRoadmap: "Currently Learning",
+                              }[cat] ||
                               cat
                                 .replace(/([A-Z])/g, " $1")
                                 .trim()
-                                .replace(/^\w/, (c) => c.toUpperCase())}
+                                .replace(/^\w/, (c) => c.toUpperCase())
+                            }
                           </Text>
                           <Text style={styles.skillText}>
                             {list.join(", ")}
@@ -461,7 +464,7 @@ const MinimalPDF = ({ data }) => {
                     <View style={styles.bulletList}>
                       {competencies.map((c, i) => (
                         <View key={i} style={styles.bullet}>
-                          <Text style={styles.bulletDot}>•</Text>
+                          <Text style={styles.bulletDot}>â€¢</Text>
                           <Text style={styles.bulletText}>{c}</Text>
                         </View>
                       ))}
@@ -497,7 +500,7 @@ const MinimalPDF = ({ data }) => {
             <View style={styles.bulletList}>
               {section.items?.map((item, q) => (
                 <View key={q} style={styles.bullet}>
-                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.bulletDot}>â€¢</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}

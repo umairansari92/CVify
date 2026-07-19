@@ -286,13 +286,13 @@ const TraditionalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.company}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} — {exp.endDate}
+                    {exp.startDate} Ã¢â‚¬â€ {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.position}</Text>
                 {exp.responsibilities?.map((res, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text>•</Text>
+                    <Text>Ã¢â‚¬Â¢</Text>
                     <Text style={styles.bulletText}>{res}</Text>
                   </View>
                 ))}
@@ -309,7 +309,7 @@ const TraditionalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} — {edu.endDate}
+                    {edu.startDate} Ã¢â‚¬â€ {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{edu.degree}</Text>
@@ -327,17 +327,20 @@ const TraditionalPDF = ({ data }) => {
                   list?.length > 0 && (
                     <View key={i} style={styles.skillRow}>
                       <Text style={styles.skillLabel}>
-                        {{
-                          frontend: "Skills",
-                          backend: "Additional Skills",
-                          database: "Systems",
-                          aiDevOps: "Tools & Platforms",
-                          tools: "Other Tools",
-                        }[cat] ||
+                        {
+                          {
+                            frontend: "Skills",
+                            backend: "Additional Skills",
+                            database: "Systems",
+                            aiDevOps: "Tools & Platforms",
+                            tools: "Other Tools",
+                            learningRoadmap: "Currently Learning",
+                          }[cat] ||
                           cat
                             .replace(/([A-Z])/g, " $1")
                             .trim()
-                            .replace(/^\w/, (c) => c.toUpperCase())}
+                            .replace(/^\w/, (c) => c.toUpperCase())
+                        }
                         :
                       </Text>
                       <Text style={styles.skillList}>{list.join(", ")}</Text>
@@ -359,7 +362,7 @@ const TraditionalPDF = ({ data }) => {
                 </Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet} wrap={false}>
-                    <Text>•</Text>
+                    <Text>Ã¢â‚¬Â¢</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -388,7 +391,7 @@ const TraditionalPDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.items?.map((item, j) => (
               <View key={j} style={styles.bullet} wrap={false}>
-                <Text style={dynamicStyles.accentText}>•</Text>
+                <Text style={dynamicStyles.accentText}>Ã¢â‚¬Â¢</Text>
                 <Text style={styles.bulletText}>{item}</Text>
               </View>
             ))}

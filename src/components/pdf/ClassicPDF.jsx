@@ -294,13 +294,13 @@ const ClassicPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} — {exp.endDate}
+                    {exp.startDate} â€” {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
                 {exp.responsibilities?.map((res, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text>•</Text>
+                    <Text>â€¢</Text>
                     <Text style={styles.bulletText}>{res}</Text>
                   </View>
                 ))}
@@ -327,7 +327,7 @@ const ClassicPDF = ({ data }) => {
                 </View>
                 {proj.description?.map((desc, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text>•</Text>
+                    <Text>â€¢</Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
                 ))}
@@ -347,17 +347,20 @@ const ClassicPDF = ({ data }) => {
                       <View key={i} style={styles.gridItem}>
                         <Text style={[styles.skillText, { fontSize: 9 }]}>
                           <Text style={styles.skillLabel}>
-                            {{
-                              frontend: "Skills",
-                              backend: "Additional Skills",
-                              database: "Systems",
-                              aiDevOps: "Tools & Platforms",
-                              tools: "Other Tools",
-                            }[cat] ||
+                            {
+                              {
+                                frontend: "Skills",
+                                backend: "Additional Skills",
+                                database: "Systems",
+                                aiDevOps: "Tools & Platforms",
+                                tools: "Other Tools",
+                                learningRoadmap: "Currently Learning",
+                              }[cat] ||
                               cat
                                 .replace(/([A-Z])/g, " $1")
                                 .trim()
-                                .replace(/^\w/, (c) => c.toUpperCase())}
+                                .replace(/^\w/, (c) => c.toUpperCase())
+                            }
                             :{" "}
                           </Text>
                           {list.join(", ")}
@@ -392,7 +395,7 @@ const ClassicPDF = ({ data }) => {
                 </Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet} wrap={false}>
-                    <Text style={dynamicStyles.accentText}>•</Text>
+                    <Text style={dynamicStyles.accentText}>â€¢</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -415,7 +418,7 @@ const ClassicPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} — {edu.endDate}
+                    {edu.startDate} â€” {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.skillText}>{edu.degree}</Text>
@@ -430,7 +433,7 @@ const ClassicPDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.items?.map((item, m) => (
               <View key={m} style={styles.bullet} wrap={false}>
-                <Text style={dynamicStyles.accentText}>•</Text>
+                <Text style={dynamicStyles.accentText}>â€¢</Text>
                 <Text style={styles.bulletText}>{item}</Text>
               </View>
             ))}

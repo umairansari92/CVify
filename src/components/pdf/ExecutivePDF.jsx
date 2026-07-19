@@ -327,7 +327,7 @@ const ExecutivePDF = ({ data }) => {
                 <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
                 {section.items?.map((item, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text style={[styles.bulletIcon, { color: themeColor }]}>•</Text>
+                    <Text style={[styles.bulletIcon, { color: themeColor }]}>â€¢</Text>
                     <Text style={styles.bulletText}>{item}</Text>
                   </View>
                 ))}
@@ -342,7 +342,7 @@ const ExecutivePDF = ({ data }) => {
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>
-                        {exp.startDate} — {exp.endDate}
+                        {exp.startDate} â€” {exp.endDate}
                       </Text>
                     </View>
                     <Text style={styles.subtitle}>{exp.company}</Text>
@@ -374,7 +374,7 @@ const ExecutivePDF = ({ data }) => {
                     </View>
                     {proj.description?.map((desc, j) => (
                       <View key={j} style={styles.bullet} wrap={false}>
-                        <Text style={styles.bulletIcon}>•</Text>
+                        <Text style={styles.bulletIcon}>â€¢</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
                     ))}
@@ -389,7 +389,7 @@ const ExecutivePDF = ({ data }) => {
                 <Text style={dynamicStyles.sectionTitle}>Core Strengths</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet} wrap={false}>
-                    <Text style={styles.bulletIcon}>•</Text>
+                    <Text style={styles.bulletIcon}>â€¢</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -415,7 +415,7 @@ const ExecutivePDF = ({ data }) => {
                     </Text>
                     <Text style={{ fontSize: 9 }}>{edu.degree}</Text>
                     <Text style={{ fontSize: 8, color: "#64748b" }}>
-                      {edu.startDate} — {edu.endDate}
+                      {edu.startDate} â€” {edu.endDate}
                     </Text>
                   </View>
                 ))}
@@ -444,6 +444,7 @@ const ExecutivePDF = ({ data }) => {
                               database: "Systems",
                               aiDevOps: "Tools & Platforms",
                               tools: "Other Tools",
+                              learningRoadmap: "Currently Learning",
                             }[cat] ||
                               cat
                                 .replace(/([A-Z])/g, " $1")
@@ -478,7 +479,7 @@ const ExecutivePDF = ({ data }) => {
                   Interests
                 </Text>
                 <Text style={{ fontSize: 9, marginTop: 6 }}>
-                  {interests.join(" • ")}
+                  {interests.join(" â€¢ ")}
                 </Text>
               </View>
             )}

@@ -264,7 +264,7 @@ const GlobalTemplate = ({ data }) => {
                     list?.length > 0 && (
                       <div key={i}>
                         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">
-                          {cat === "frontend" ? "Skills" : cat}
+                          {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}
                         </p>
                         <p className="text-xs text-slate-700 leading-relaxed italic">
                           {list.join(", ")}

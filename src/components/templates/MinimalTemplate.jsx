@@ -263,6 +263,12 @@ const MinimalTemplate = ({ data }) => {
                       {technicalSkills.frontend.join(", ")}
                     </div>
                   )}
+                  {technicalSkills?.learningRoadmap?.length > 0 && (
+                    <div className="mb-1">
+                      <span className="font-semibold">Currently Learning:</span>{" "}
+                      {technicalSkills.learningRoadmap.join(", ")}
+                    </div>
+                  )}
                   {technicalSkills?.backend?.length > 0 && (
                     <div className="mb-1">
                       <span className="font-semibold">Backend:</span>{" "}

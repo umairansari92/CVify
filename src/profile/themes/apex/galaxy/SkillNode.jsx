@@ -1,36 +1,37 @@
 import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaTimes, FaStar } from "react-icons/fa";
 import { tokens } from "../tokens";
 
-// Color mapping for skill categories to neon nodes
+// Color mapping for skill categories
 const CATEGORY_COLORS = {
   Technical: {
     color: "#2D9881", // teal
     glow: "rgba(45, 152, 129, 0.4)",
     bg: "rgba(45, 152, 129, 0.08)",
     border: "rgba(45, 152, 129, 0.2)",
-    label: "Development",
+    label: "Core Skill",
   },
   Strategic: {
     color: "#7C3AED", // violet
     glow: "rgba(124, 58, 237, 0.4)",
     bg: "rgba(124, 58, 237, 0.08)",
     border: "rgba(124, 58, 237, 0.2)",
-    label: "Strategic",
+    label: "Strategic Focus",
   },
   "Soft Skills": {
     color: "#EA580C", // orange
     glow: "rgba(234, 88, 12, 0.4)",
     bg: "rgba(234, 88, 12, 0.08)",
     border: "rgba(234, 88, 12, 0.2)",
-    label: "Leadership",
+    label: "Support Focus",
   },
   Default: {
     color: "#2D9881",
     glow: "rgba(45, 152, 129, 0.4)",
     bg: "rgba(45, 152, 129, 0.08)",
     border: "rgba(45, 152, 129, 0.2)",
-    label: "Skills",
+    label: "Skill Focus",
   },
 };
 
@@ -43,6 +44,7 @@ const SkillNode = ({
   mousePos = { x: 0, y: 0 },
   onHoverChange,
   onClick,
+  onClose,
   active,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -59,6 +61,11 @@ const SkillNode = ({
   // Add mouse parallax shifts
   const px = (mousePos.x || 0) * 8;
   const py = (mousePos.y || 0) * 8;
+
+  // Mockup popover values based on length of name
+  const yearsExp = 2 + (name.length % 5);
+  const rating = 4.2 + (Math.round((name.length % 9) * 0.1 * 10) / 10);
+  const fullStars = Math.floor(rating);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -81,6 +88,81 @@ const SkillNode = ({
         zIndex: isHovered || active ? 50 : 20,
       }}
     >
+      {/* ── Dynamic Floating Detail Popover Card ── */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 15 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onClick={(e) => e.stopPropagation()} // Prevent closing popover when clicking inside it
+            className="absolute bottom-[76px] left-1/2 -translate-x-1/2 w-60 rounded-2xl border text-left p-4 space-y-3 z-50 shadow-2xl"
+            style={{
+              backgroundColor: "rgba(22, 25, 32, 0.95)",
+              borderColor: cfg.color,
+              backdropFilter: "blur(16px)",
+              boxShadow: `0 8px 32px rgba(0, 0, 0, 0.6), 0 0 15px ${cfg.glow}`,
+            }}
+          >
+            {/* Popover Header */}
+            <div className="flex items-center justify-between border-b pb-2" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+              <div className="flex items-center gap-2">
+                <span className="text-sm">
+                  {category === "Technical" ? "⚡" : category === "Strategic" ? "🧠" : "🤝"}
+                </span>
+                <div>
+                  <h4 className="text-xs font-black text-white leading-tight">
+                    {name}
+                  </h4>
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">
+                    {cfg.label}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
+                className="p-1 rounded-md border border-slate-700/40 text-slate-400 hover:text-white transition-colors"
+              >
+                <FaTimes size={8} />
+              </button>
+            </div>
+
+            {/* Content Stats */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-[10px] font-bold text-slate-400">
+                <span>Rating</span>
+                <span style={{ color: cfg.color }}>{rating.toFixed(1)} / 5.0</span>
+              </div>
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    size={10}
+                    color={i < fullStars ? cfg.color : "rgba(255,255,255,0.08)"}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Experience / Status */}
+            <div className="flex justify-between items-center bg-slate-900/40 border border-slate-800/40 rounded-xl p-2 text-[10px]">
+              <div>
+                <span className="block font-black text-white">{yearsExp}+ Years</span>
+                <span className="text-[8px] text-slate-500 uppercase font-bold">Experience</span>
+              </div>
+              <div className="text-right">
+                <span className="block font-black text-emerald-400">Active</span>
+                <span className="text-[8px] text-slate-500 uppercase font-bold">Status</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.button
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

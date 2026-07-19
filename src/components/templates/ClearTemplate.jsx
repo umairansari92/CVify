@@ -178,6 +178,27 @@ const ClearTemplate = ({ data }) => {
                     </div>
                   </div>
                 )}
+                {technicalSkills?.learningRoadmap?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs uppercase text-slate-400 mb-1">
+                      Currently Learning
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {technicalSkills.learningRoadmap.map((s, i) => (
+                        <span
+                          key={i}
+                          className="px-1.5 py-0.5 rounded text-xs mr-1 mb-1"
+                          style={{
+                            backgroundColor: `${themeColor}10`,
+                            border: `1px dashed ${themeColor}50`,
+                          }}
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {technicalSkills?.backend?.length > 0 && (
                   <div className="mb-3">
                     <div className="text-xs uppercase text-slate-400 mb-1">

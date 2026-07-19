@@ -188,7 +188,8 @@ const Skills = ({ user, isOwner }) => {
                     mousePos={mousePos}
                     active={selectedSkill?.name === node.name}
                     onHoverChange={() => {}}
-                    onClick={() => setSelectedSkill(node)}
+                    onClick={() => setSelectedSkill(selectedSkill?.name === node.name ? null : node)}
+                    onClose={() => setSelectedSkill(null)}
                   />
                 );
               });
@@ -261,16 +262,6 @@ const Skills = ({ user, isOwner }) => {
               "#7C3AED"
             )}
         </div>
-
-        {/* Slide-in Drawer Detail Panel */}
-        <AnimatePresence>
-          {selectedSkill && (
-            <DetailPanel
-              skill={selectedSkill}
-              onClose={() => setSelectedSkill(null)}
-            />
-          )}
-        </AnimatePresence>
 
       </div>
     </section>
