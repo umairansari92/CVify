@@ -99,15 +99,19 @@ const Skills = ({ user, isOwner }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isMobile = windowWidth < 768;
-  const sizeMultiplier = isMobile ? 0.6 : 1;
+  const sizeMultiplier = useMemo(() => {
+    if (windowWidth >= 1024) return 1.0;
+    if (windowWidth >= 768) return 0.78;
+    // Scale proportionally on mobile viewports to prevent overflow
+    return Math.max(0.42, (windowWidth - 48) / 850);
+  }, [windowWidth]);
 
   // Track renderer helper to draw orbits and nodes cleanly
   const renderGalaxy = (tracks, categoryLabel, coreLabel, accentColor) => {
-    // Generate radii dynamically per track (inner starting at 120px)
+    // Generate radii dynamically per track (larger base and spacing increments for more spread)
     const tracksWithRadii = tracks.map((track, idx) => {
-      const baseRx = 120 + idx * 70;
-      const baseRy = 80 + idx * 45;
+      const baseRx = 175 + idx * 85;
+      const baseRy = 110 + idx * 52;
       return {
         ...track,
         rx: baseRx * sizeMultiplier,
