@@ -44,6 +44,7 @@ const Documentation = () => {
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
         { id: "shareable-links", icon: <Globe size={16} />, label: "Public Shareable Links (New!)" },
         { id: "document-identity", icon: <FileText size={16} />, label: "Document Identity (New!)" },
+        { id: "currently-learning", icon: <TrendingUp size={16} />, label: "🧠 Currently Learning Skills (New!)" },
         { id: "profile", icon: <Layout size={16} />, label: "User Profile & Dashboard" },
         { id: "ai-representative", icon: <Bot size={16} />, label: "🤖 AI Representative" },
         { id: "ai-representative-v2", icon: <Bot size={16} />, label: "🤖 AI Rep — Deep Dive (New!)" },
@@ -1054,6 +1055,22 @@ const manifests = import.meta.glob('./*/manifest.js', { eager: true });
           { left: "Loading State", right: "Shifted from 'Multiple Spinners' to 'Instant-Render'" },
           { left: "Reliability", right: "Service-level isolation prevents platform-wide crashes" },
         ]} />
+
+        <SectionTitle>BFF v2 — Validation Gatekeeper (July 2026)</SectionTitle>
+        <div className="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl mb-6">
+          <p className="text-[11px] font-black uppercase tracking-widest text-emerald-400 mb-2">New: Server-Side Skill Integrity Guards</p>
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+            The BFF now acts as a strict <strong className="text-text-primary">validation gatekeeper</strong> for technicalSkills data. A new <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">validateTechnicalSkillsBFF()</code> function runs inside both <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">createResume</code> and <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">updateResume</code> controllers — ensuring any raw HTTP PATCH that bypasses the React frontend is still rejected by the API.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="Mutual Exclusion"
+              desc="A skill cannot exist in both professional lists (frontend, backend, database, aiDevOps, tools) and learningRoadmap simultaneously. Returns HTTP 400 Conflict." />
+            <InfoCard icon={<AlertCircle size={16} />} color="amber" title="Size Limits"
+              desc="Each skill category is capped at 20 tags. Exceeding this limit returns HTTP 400 — even from raw API clients bypassing the React UI." />
+            <InfoCard icon={<Database size={16} />} color="blue" title="Dual Format Support"
+              desc="Validates both nested object format { technicalSkills: { frontend: [] } } and Mongoose dot-notation { 'technicalSkills.frontend': [] } — no edge case escapes." />
+          </div>
+        </div>
       </>
     ),
 
@@ -1726,6 +1743,9 @@ export const isDisposableEmail = (email) => {
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
+            { title: "🧠 Currently Learning Skills (learningRoadmap)", desc: "New technicalSkills.learningRoadmap field added to the Resume schema. Users can tag skills they are actively studying — displayed with distinct amber 'Learning' styling in the Skills section. Full architecture: useResumeSkills() hook decouples UI from Redux paths, BFF validateTechnicalSkillsBFF() enforces mutual exclusion at API level, and ATS scoring applies a 50% weight to learning skills to prevent dishonest scorecards.", status: "NEW" },
+            { title: "BFF Validation Gatekeeper v2 — technicalSkills Integrity", desc: "A production-grade validateTechnicalSkillsBFF() function now runs inside both createResume and updateResume server controllers. Enforces: (1) Max 20 tags per category, (2) Mutual exclusion — same skill cannot be in professional lists AND learningRoadmap simultaneously, (3) Dual-format support for both nested object and Mongoose dot-notation PATCH bodies. Returns HTTP 400 with a precise conflict message.", status: "NEW" },
+            { title: "Redux resumeSlice Architecture Refactor", desc: "Removed the ResumeFields constants dictionary (Single Responsibility principle — Redux slice should not own domain schema). The setResumeField reducer now uses a generic nested-path resolver supporting dot-notation like 'technicalSkills.learningRoadmap' — eliminating 29 hardcoded constants while maintaining full backward compatibility.", status: "NEW" },
             { title: "Universal Floating Navbar — All Themes", desc: "The premium pill-shaped floating navbar (previously only on Standard themes) is now the single universal navbar across ALL 13 themes. AuraDark and CyberNeon's old theme-specific navbars were removed and replaced. Navbar links dynamically map to the correct section IDs per theme.", status: "NEW" },
             { title: "DataVerse Technologies Footer Branding", desc: "A consistent branded footer has been added across all 13 portfolio themes: 'Powered by DataVerse Technologies | Designed & Developed by Umair Ahmed | © 2026'. Both DataVerse and Umair Ahmed link to their respective public profiles.", status: "NEW" },
             { title: "CYBER NEON Theme", desc: "10th premium portfolio theme — near-black (#080808) background with electric neon green (#00ffcc) accents, Orbitron monospace font, floating dev characters FX, and full GitHub stats integration. Hacker aesthetic for cybersecurity and blockchain professionals.", status: "NEW" },
@@ -2017,6 +2037,58 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
           { left: "Core Vision", right: "Democratize elite career branding globally — no talent lost in the ATS void." },
           { left: "Contact", right: "Integrated HUD on platform or official LinkedIn for enterprise inquiries." },
         ]} />
+      </>
+    ),
+    "currently-learning": (
+      <>
+        <DocHeader title="🧠 Currently Learning Skills" badge="New Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          The <strong className="text-text-primary">Currently Learning</strong> feature lets candidates transparently surface skills they are actively studying — separate from their proven professional toolkit. This honest signal helps recruiters identify high-growth candidates while maintaining ATS scorecard integrity.
+        </p>
+
+        <SectionTitle>Why This Feature Exists</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Honest Career Signaling"
+            desc="Candidates can show Docker or AWS without falsely claiming 'Expert' status. Recruiters see genuine learning intent, not inflated skill tags." />
+          <InfoCard icon={<Target size={18} />} color="blue" title="ATS Gap Bridging"
+            desc="ATS Scanner includes learningRoadmap keywords at 50% weight. Candidates with matching gaps-in-progress score higher than those with cold missing skills." />
+          <InfoCard icon={<ShieldCheck size={18} />} color="purple" title="Mutual Exclusion Guardrail"
+            desc="A skill cannot exist in both professional and learning lists simultaneously. Enforced at both the React UI level and the API (BFF) level." />
+          <InfoCard icon={<Zap size={18} />} color="amber" title="Max 20 Tag Limit"
+            desc="Each skill category, including learningRoadmap, is capped at 20 tags. Prevents noise and keeps recruiter-facing skill blocks readable." />
+        </div>
+
+        <SectionTitle>Technical Architecture</SectionTitle>
+        <div className="space-y-4 mb-8">
+          <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+            <h4 className="font-black text-blue-400 text-sm mb-2">Layer 1: Redux Schema — resumeSlice.js</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed mb-3">The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">initialState.currentResume.technicalSkills</code> object includes a new <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">learningRoadmap: []</code> field. The <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">setResumeField</code> reducer uses a generic nested-path resolver — dispatching <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">{`{ field: "technicalSkills.learningRoadmap", value: ["Docker", "AWS"] }`}</code> directly writes into the nested object without any hardcoded constants.</p>
+          </div>
+          <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
+            <h4 className="font-black text-purple-400 text-sm mb-2">Layer 2: UI Hook — useResumeSkills()</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">A dedicated custom hook abstracts all skill path strings away from UI components. <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">SkillsForm.jsx</code> calls <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">addLearningSkill("Docker")</code> — it never knows about <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">technicalSkills.learningRoadmap</code>. If the path ever changes, only the hook file needs updating.</p>
+          </div>
+          <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+            <h4 className="font-black text-emerald-400 text-sm mb-2">Layer 3: BFF Controller — validateTechnicalSkillsBFF()</h4>
+            <p className="text-text-secondary text-[13px] leading-relaxed">Even if a user bypasses the React UI and sends a raw HTTP PATCH request to the API, the server enforces all constraints. <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">resume.controller.js</code> runs the validator before any database write — returning <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">HTTP 400</code> with a precise error message for any violation.</p>
+          </div>
+        </div>
+
+        <SectionTitle>ATS Scoring Impact</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Professional Skills", right: "100% weight in ATS keyword matching" },
+          { left: "learningRoadmap Skills", right: "50% weight — honest partial credit" },
+          { left: "Job Match Tag", right: "'Gap Bridged' — shown on recruiter scorecard when learning skill matches JD" },
+          { left: "AI Career Coach", right: "Auto-suggests resources for skills in learningRoadmap" },
+        ]} />
+
+        <SectionTitle>Future Roadmap</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <InfoCard icon={<Layout size={16} />} color="amber" title="PDF Templates (Upcoming)"
+            desc="All 12 resume PDF templates will conditionally render a 'Currently Learning' section with amber distinction badges when learningRoadmap is non-empty." />
+          <InfoCard icon={<Brain size={16} />} color="purple" title="@cvify/schema (Strategic)"
+            desc="Long-term: learningRoadmap will be part of a Zod-validated shared schema package (@cvify/schema) used by Client, Server, and AI services — single source of truth." />
+        </div>
       </>
     ),
   };

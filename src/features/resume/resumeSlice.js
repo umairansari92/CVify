@@ -9,35 +9,7 @@ import {
   parseResume
 } from "./resumeThunk";
 
-export const ResumeFields = {
-  // Personal Info
-  FULL_NAME: "personalInfo.fullName",
-  EMAIL: "personalInfo.email",
-  PHONE: "personalInfo.phone",
-  LOCATION: "personalInfo.location",
-  JOB_TITLE: "personalInfo.jobTitle",
-  LINKEDIN: "personalInfo.linkedin",
-  GITHUB: "personalInfo.github",
-  PORTFOLIO: "personalInfo.portfolio",
-  SUMMARY: "personalInfo.profileSummary",
 
-  // Skills
-  FRONTEND_SKILLS: "technicalSkills.frontend",
-  BACKEND_SKILLS: "technicalSkills.backend",
-  DATABASE_SKILLS: "technicalSkills.database",
-  AI_DEVOPS_SKILLS: "technicalSkills.aiDevOps",
-  TOOLS_SKILLS: "technicalSkills.tools",
-  LEARNING_ROADMAP: "technicalSkills.learningRoadmap",
-
-  // Layout Configuration
-  THEME_COLOR: "themeColor",
-  FONT_FAMILY: "fontFamily",
-  NAME_SIZE: "nameSize",
-  HEADING_SIZE: "headingSize",
-  BODY_SIZE: "bodySize",
-  MARGIN: "margin",
-  TEMPLATE_ID: "templateId",
-};
 
 const resumeSlice = createSlice({
   name: "resume",
@@ -131,7 +103,7 @@ const resumeSlice = createSlice({
     },
     setResumeField(state, action) {
       if (state.currentResume) {
-        const { field, value, operation } = action.payload;
+        const { field, value } = action.payload;
         const keys = field.split(".");
         let current = state.currentResume;
         
@@ -143,20 +115,7 @@ const resumeSlice = createSlice({
           current = current[keys[i]];
         }
         
-        const lastKey = keys[keys.length - 1];
-        
-        if (operation === "append") {
-          if (!Array.isArray(current[lastKey])) {
-            current[lastKey] = [];
-          }
-          current[lastKey].push(value);
-        } else if (operation === "remove") {
-          if (Array.isArray(current[lastKey])) {
-            current[lastKey] = current[lastKey].filter(item => item !== value);
-          }
-        } else {
-          current[lastKey] = value;
-        }
+        current[keys[keys.length - 1]] = value;
       }
     },
     setResumeData(state, action) {
