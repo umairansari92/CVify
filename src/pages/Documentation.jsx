@@ -1062,14 +1062,13 @@ const manifests = import.meta.glob('./*/manifest.js', { eager: true });
           <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
             The BFF now acts as a strict <strong className="text-text-primary">validation gatekeeper</strong> for technicalSkills data. A new <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">validateTechnicalSkillsBFF()</code> function runs inside both <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">createResume</code> and <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">updateResume</code> controllers — ensuring any raw HTTP PATCH that bypasses the React frontend is still rejected by the API.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <InfoCard icon={<ShieldCheck size={16} />} color="emerald" title="Mutual Exclusion"
               desc="A skill cannot exist in both professional lists (frontend, backend, database, aiDevOps, tools) and learningRoadmap simultaneously. Returns HTTP 400 Conflict." />
-            <InfoCard icon={<AlertCircle size={16} />} color="amber" title="Size Limits"
-              desc="Each skill category is capped at 20 tags. Exceeding this limit returns HTTP 400 — even from raw API clients bypassing the React UI." />
             <InfoCard icon={<Database size={16} />} color="blue" title="Dual Format Support"
               desc="Validates both nested object format { technicalSkills: { frontend: [] } } and Mongoose dot-notation { 'technicalSkills.frontend': [] } — no edge case escapes." />
           </div>
+          <p className="text-[11px] text-text-muted mt-3 italic">✅ No per-category size limit is enforced — skill lists are intentionally unlimited so users can add every keyword from a job post for maximum ATS coverage.</p>
         </div>
       </>
     ),
@@ -1747,7 +1746,7 @@ export const isDisposableEmail = (email) => {
         <div className="space-y-3 mb-8">
           {[
             { title: "🧠 Currently Learning Skills (learningRoadmap)", desc: "New technicalSkills.learningRoadmap field added to the Resume schema. Users can tag skills they are actively studying — displayed with distinct amber 'Learning' styling in the Skills section. Full architecture: useResumeSkills() hook decouples UI from Redux paths, BFF validateTechnicalSkillsBFF() enforces mutual exclusion at API level, and ATS scoring applies a 50% weight to learning skills to prevent dishonest scorecards.", status: "NEW" },
-            { title: "BFF Validation Gatekeeper v2 — technicalSkills Integrity", desc: "A production-grade validateTechnicalSkillsBFF() function now runs inside both createResume and updateResume server controllers. Enforces: (1) Max 20 tags per category, (2) Mutual exclusion — same skill cannot be in professional lists AND learningRoadmap simultaneously, (3) Dual-format support for both nested object and Mongoose dot-notation PATCH bodies. Returns HTTP 400 with a precise conflict message.", status: "NEW" },
+            { title: "BFF Validation Gatekeeper v2 — technicalSkills Integrity", desc: "A production-grade validateTechnicalSkillsBFF() function now runs inside both createResume and updateResume server controllers. Enforces: (1) Mutual exclusion — same skill cannot be in professional lists AND learningRoadmap simultaneously, (2) Dual-format support for both nested object and Mongoose dot-notation PATCH bodies. Skill lists are intentionally unlimited — no size cap. Returns HTTP 400 with a precise conflict message.", status: "NEW" },
             { title: "Redux resumeSlice Architecture Refactor", desc: "Removed the ResumeFields constants dictionary (Single Responsibility principle — Redux slice should not own domain schema). The setResumeField reducer now uses a generic nested-path resolver supporting dot-notation like 'technicalSkills.learningRoadmap' — eliminating 29 hardcoded constants while maintaining full backward compatibility.", status: "NEW" },
             { title: "Universal Floating Navbar — All Themes", desc: "The premium pill-shaped floating navbar (previously only on Standard themes) is now the single universal navbar across ALL 13 themes. AuraDark and CyberNeon's old theme-specific navbars were removed and replaced. Navbar links dynamically map to the correct section IDs per theme.", status: "NEW" },
             { title: "DataVerse Technologies Footer Branding", desc: "A consistent branded footer has been added across all 13 portfolio themes: 'Powered by DataVerse Technologies | Designed & Developed by Umair Ahmed | © 2026'. Both DataVerse and Umair Ahmed link to their respective public profiles.", status: "NEW" },
@@ -2057,8 +2056,8 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
             desc="ATS Scanner includes learningRoadmap keywords at 50% weight. Candidates with matching gaps-in-progress score higher than those with cold missing skills." />
           <InfoCard icon={<ShieldCheck size={18} />} color="purple" title="Mutual Exclusion Guardrail"
             desc="A skill cannot exist in both professional and learning lists simultaneously. Enforced at both the React UI level and the API (BFF) level." />
-          <InfoCard icon={<Zap size={18} />} color="amber" title="Max 20 Tag Limit"
-            desc="Each skill category, including learningRoadmap, is capped at 20 tags. Prevents noise and keeps recruiter-facing skill blocks readable." />
+          <InfoCard icon={<Zap size={18} />} color="amber" title="Unlimited Skill Tags"
+            desc="No artificial cap on skill count. Frontend alone can have 20+ real skills (React, Redux, TypeScript, Tailwind, Figma...). Users add whatever the job post demands for maximum ATS coverage." />
         </div>
 
         <SectionTitle>Technical Architecture</SectionTitle>
