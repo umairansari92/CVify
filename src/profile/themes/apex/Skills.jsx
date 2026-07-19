@@ -4,7 +4,6 @@ import { tokens } from "./tokens";
 import CenterCore from "./galaxy/CenterCore";
 import OrbitRing from "./galaxy/OrbitRing";
 import SkillNode from "./galaxy/SkillNode";
-import DetailPanel from "./galaxy/DetailPanel";
 import ParticleBackground from "./galaxy/ParticleBackground";
 
 const Skills = ({ user, isOwner }) => {
