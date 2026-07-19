@@ -426,11 +426,6 @@ const SkillsForm = () => {
         return;
       }
 
-      // Max 20 skills limit check
-      if (skills.length >= 20) {
-        toast.error("You can add a maximum of 20 skills to Professional Skills!");
-        return;
-      }
 
       // Use Set to strictly enforce uniqueness during addition
       const updated = Array.from(new Set([...skills, formatted]));
@@ -487,11 +482,6 @@ const SkillsForm = () => {
         return;
       }
 
-      // Max 20 skills limit check
-      if (learningRoadmap.length >= 20) {
-        toast.error("You can add a maximum of 20 skills to Currently Learning!");
-        return;
-      }
 
       const updated = Array.from(new Set([...learningRoadmap, formatted]));
       
