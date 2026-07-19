@@ -1726,6 +1726,9 @@ export const isDisposableEmail = (email) => {
             { q: "How is this different from Canva/Zety/Rezi?", a: "Only platform combining AI ATS Auditor + Context-Aware Scoring + Live Portfolio + Cover Letter AI + Recruiter HUD — all in one ecosystem." },
             { q: "What file formats are supported?", a: "PDF or DOCX (max 5MB). PDF recommended for layout consistency." },
             { q: "Do I need technical knowledge?", a: "Zero. Step-by-step career coach. Portfolio auto-generated from profile data." },
+            { q: "Can I add skills I'm still learning but not yet expert in?", a: "Yes — that's exactly what the 'Currently Learning' section is for. Add skills like Docker or AWS to your Learning Roadmap. They appear with a distinct amber badge so recruiters understand your honest growth trajectory, not inflated claims." },
+            { q: "Will 'Currently Learning' skills hurt my ATS score?", a: "No — they help at a discounted weight. ATS Scanner matches learningRoadmap keywords at 50% weight (vs 100% for professional skills). You get partial credit for gaps-in-progress, never a penalty. A matched learning skill also earns a 'Gap Bridged' tag on recruiter scorecards." },
+            { q: "Can I add the same skill to both professional skills and Currently Learning?", a: "No — and the system enforces this strictly. If a skill exists in your professional lists (Frontend, Backend, etc.), it cannot also appear in Currently Learning. This rule is enforced in the React UI and also at the API (server) level, so it cannot be bypassed." },
           ].map((f, i) => (
             <div key={i} className="p-5 glass rounded-2xl border border-white/5 hover:border-primary/10 transition-all">
               <p className="font-black text-primary text-sm mb-1.5">Q: {f.q}</p>
