@@ -311,7 +311,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} â€” {exp.endDate}
+                    {exp.startDate} - {exp.endDate}
                   </Text>
                 </View>
                 <Text style={dynamicStyles.subtitle}>{exp.company}</Text>
@@ -364,7 +364,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.degree}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} â€” {edu.endDate}
+                    {edu.startDate} - {edu.endDate}
                   </Text>
                 </View>
                 <Text style={dynamicStyles.subtitle}>{edu.institution}</Text>

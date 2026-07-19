@@ -348,7 +348,7 @@ const BoldPDF = ({ data }) => {
                       <View style={styles.entryHeader}>
                         <Text style={styles.title}>{exp.position}</Text>
                         <Text style={styles.subtitle}>
-                          {exp.company} | {exp.startDate} â€” {exp.endDate}
+                          {exp.company} | {exp.startDate} - {exp.endDate}
                         </Text>
                       </View>
                       {exp.responsibilities?.map((res, j) => (

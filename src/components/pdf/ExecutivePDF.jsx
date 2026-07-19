@@ -342,7 +342,7 @@ const ExecutivePDF = ({ data }) => {
                     <View style={styles.entryHeader}>
                       <Text style={styles.title}>{exp.position}</Text>
                       <Text style={styles.date}>
-                        {exp.startDate} â€” {exp.endDate}
+                        {exp.startDate} - {exp.endDate}
                       </Text>
                     </View>
                     <Text style={styles.subtitle}>{exp.company}</Text>
@@ -415,7 +415,7 @@ const ExecutivePDF = ({ data }) => {
                     </Text>
                     <Text style={{ fontSize: 9 }}>{edu.degree}</Text>
                     <Text style={{ fontSize: 8, color: "#64748b" }}>
-                      {edu.startDate} â€” {edu.endDate}
+                      {edu.startDate} - {edu.endDate}
                     </Text>
                   </View>
                 ))}

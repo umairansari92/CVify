@@ -286,7 +286,7 @@ const TraditionalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.company}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} Ã¢â‚¬â€ {exp.endDate}
+                    {exp.startDate} - {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.position}</Text>
@@ -309,7 +309,7 @@ const TraditionalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{edu.institution}</Text>
                   <Text style={styles.date}>
-                    {edu.startDate} Ã¢â‚¬â€ {edu.endDate}
+                    {edu.startDate} - {edu.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{edu.degree}</Text>

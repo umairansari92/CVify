@@ -334,7 +334,7 @@ const MinimalPDF = ({ data }) => {
                 <View style={styles.entryHeader}>
                   <Text style={styles.title}>{exp.position}</Text>
                   <Text style={styles.date}>
-                    {exp.startDate} â€” {exp.endDate}
+                    {exp.startDate} - {exp.endDate}
                   </Text>
                 </View>
                 <Text style={styles.subtitle}>{exp.company}</Text>
@@ -411,7 +411,7 @@ const MinimalPDF = ({ data }) => {
                       {edu.institution}
                     </Text>
                     <Text style={{ fontSize: 8.5, color: "#94a3b8" }}>
-                      {edu.startDate} â€” {edu.endDate}
+                      {edu.startDate} - {edu.endDate}
                     </Text>
                   </View>
                 ))}
