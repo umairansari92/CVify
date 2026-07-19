@@ -1,4 +1,4 @@
-﻿import React from "react";
+﻿﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -353,7 +353,7 @@ const BoldPDF = ({ data }) => {
                       </View>
                       {exp.responsibilities?.map((res, j) => (
                         <View key={j} style={styles.bullet} wrap={false}>
-                          <Text style={styles.bulletIcon}>â€¢</Text>
+                          <Text style={styles.bulletIcon}>-</Text>
                           <Text style={styles.bulletText}>{res}</Text>
                         </View>
                       ))}
@@ -406,7 +406,7 @@ const BoldPDF = ({ data }) => {
                   </Text>
                   {section.items?.map((item, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={[styles.bulletIcon, { color: themeColor }]}>â€¢</Text>
+                      <Text style={[styles.bulletIcon, { color: themeColor }]}>-</Text>
                       <Text style={styles.bulletText}>{item}</Text>
                     </View>
                   ))}
@@ -451,11 +451,12 @@ const BoldPDF = ({ data }) => {
                               }}
                             >
                               {{
-                                frontend: "Skills",
-                                backend: "Additional Skills",
-                                database: "Systems",
-                                aiDevOps: "Tools & Platforms",
-                                tools: "Other Tools",
+                                frontend: "Frontend",
+                                backend: "Backend",
+                                database: "Database",
+                                aiDevOps: "AI & DevOps",
+                                tools: "Tools",
+                                security: "Security",
                                 learningRoadmap: "Currently Learning",
                               }[cat] ||
                                 cat
@@ -506,7 +507,7 @@ const BoldPDF = ({ data }) => {
                   <Text style={styles.sectionTitle}>Core Skills</Text>
                   {competencies?.map((c, i) => (
                     <View key={i} style={styles.bullet}>
-                      <Text>â€¢</Text>
+                      <Text>-</Text>
                       <Text style={styles.skillText}>{c}</Text>
                     </View>
                   ))}

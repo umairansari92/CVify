@@ -1,4 +1,4 @@
-import React from "react";
+﻿﻿import React from "react";
 import {
   Document,
   Page,
@@ -318,7 +318,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>â€¢</Text>
+                      <Text style={styles.bulletDot}>-</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
                   ))}
@@ -345,7 +345,7 @@ const ElitePDF = ({ data }) => {
                 <View style={styles.bulletList}>
                   {proj.description?.map((desc, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>â€¢</Text>
+                      <Text style={styles.bulletDot}>-</Text>
                       <Text style={styles.bulletText}>{desc}</Text>
                     </View>
                   ))}
@@ -384,7 +384,7 @@ const ElitePDF = ({ data }) => {
                     list?.length > 0 && (
                       <View key={i} style={styles.skillRow} wrap={false}>
                         <Text style={styles.skillLabel}>
-                          {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}:
+                          {{ frontend: "Frontend", backend: "Backend", database: "Database", aiDevOps: "AI & DevOps", security: "Security", tools: "Tools", learningRoadmap: "Currently Learning" }[cat] || cat.replace(/([A-Z])/g, " $1").trim().replace(/^\w/, c => c.toUpperCase())}:
                         </Text>
                         <Text style={styles.skillValue}>{list.join(", ")}</Text>
                       </View>
@@ -407,7 +407,7 @@ const ElitePDF = ({ data }) => {
             <View style={styles.bulletList}>
               {section.items?.map((item, j) => (
                 <View key={j} style={styles.bullet} wrap={false}>
-                  <Text style={styles.bulletDot}>â€¢</Text>
+                  <Text style={styles.bulletDot}>-</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}

@@ -1,4 +1,4 @@
-import React from "react";
+﻿﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -327,7 +327,7 @@ const ExecutivePDF = ({ data }) => {
                 <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
                 {section.items?.map((item, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text style={[styles.bulletIcon, { color: themeColor }]}>â€¢</Text>
+                    <Text style={[styles.bulletIcon, { color: themeColor }]}>-</Text>
                     <Text style={styles.bulletText}>{item}</Text>
                   </View>
                 ))}
@@ -374,7 +374,7 @@ const ExecutivePDF = ({ data }) => {
                     </View>
                     {proj.description?.map((desc, j) => (
                       <View key={j} style={styles.bullet} wrap={false}>
-                        <Text style={styles.bulletIcon}>â€¢</Text>
+                        <Text style={styles.bulletIcon}>-</Text>
                         <Text style={styles.bulletText}>{desc}</Text>
                       </View>
                     ))}
@@ -389,7 +389,7 @@ const ExecutivePDF = ({ data }) => {
                 <Text style={dynamicStyles.sectionTitle}>Core Strengths</Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet} wrap={false}>
-                    <Text style={styles.bulletIcon}>â€¢</Text>
+                    <Text style={styles.bulletIcon}>-</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -439,12 +439,13 @@ const ExecutivePDF = ({ data }) => {
                         <View key={i} style={{ marginBottom: 5 }} wrap={false}>
                           <Text style={styles.skillLabel}>
                             {{
-                              frontend: "Skills",
-                              backend: "Additional Skills",
-                              database: "Systems",
-                              aiDevOps: "Tools & Platforms",
-                              tools: "Other Tools",
-                              learningRoadmap: "Currently Learning",
+                              frontend: "Frontend",
+                              backend: "Backend",
+                              database: "Database",
+                              aiDevOps: "AI & DevOps",
+                              tools: "Tools",
+                              security: "Security",
+                                learningRoadmap: "Currently Learning",
                             }[cat] ||
                               cat
                                 .replace(/([A-Z])/g, " $1")
@@ -479,7 +480,7 @@ const ExecutivePDF = ({ data }) => {
                   Interests
                 </Text>
                 <Text style={{ fontSize: 9, marginTop: 6 }}>
-                  {interests.join(" â€¢ ")}
+                  {interests.join(" - ")}
                 </Text>
               </View>
             )}

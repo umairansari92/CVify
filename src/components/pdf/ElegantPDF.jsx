@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -415,7 +415,7 @@ const ElegantPDF = ({ data }) => {
                               marginBottom: 3,
                             }}
                           >
-                            {cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}
+                            {{ frontend: "Frontend", backend: "Backend", database: "Database", aiDevOps: "AI & DevOps", security: "Security", tools: "Tools", learningRoadmap: "Currently Learning" }[cat] || cat.replace(/([A-Z])/g, " $1").trim().replace(/^\w/, c => c.toUpperCase())}
                           </Text>
                           <Text style={{ fontSize: 8.5, color: "#6b7280" }}>
                             {list.join(", ")}

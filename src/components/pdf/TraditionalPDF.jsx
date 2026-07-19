@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -329,12 +329,13 @@ const TraditionalPDF = ({ data }) => {
                       <Text style={styles.skillLabel}>
                         {
                           {
-                            frontend: "Skills",
-                            backend: "Additional Skills",
-                            database: "Systems",
-                            aiDevOps: "Tools & Platforms",
-                            tools: "Other Tools",
-                            learningRoadmap: "Currently Learning",
+                            frontend: "Frontend",
+                            backend: "Backend",
+                            database: "Database",
+                            aiDevOps: "AI & DevOps",
+                            tools: "Tools",
+                            security: "Security",
+                                learningRoadmap: "Currently Learning",
                           }[cat] ||
                           cat
                             .replace(/([A-Z])/g, " $1")

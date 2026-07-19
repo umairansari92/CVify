@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -395,7 +395,7 @@ const GlobalPDF = ({ data }) => {
                 ([cat, list], i) =>
                   list?.length > 0 && (
                     <View key={i} style={styles.skillCategory}>
-                      <Text style={styles.skillLabel}>{cat === "frontend" ? "Skills" : cat === "learningRoadmap" ? "Currently Learning" : cat}</Text>
+                      <Text style={styles.skillLabel}>{{ frontend: "Frontend", backend: "Backend", database: "Database", aiDevOps: "AI & DevOps", security: "Security", tools: "Tools", learningRoadmap: "Currently Learning" }[cat] || cat.replace(/([A-Z])/g, " $1").trim().replace(/^\w/, c => c.toUpperCase())}</Text>
                       <Text style={styles.skillValue}>{list.join(", ")}</Text>
                     </View>
                   ),

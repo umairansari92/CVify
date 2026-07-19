@@ -1,4 +1,4 @@
-import React from "react";
+﻿﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -341,7 +341,7 @@ const MinimalPDF = ({ data }) => {
                 <View style={styles.bulletList}>
                   {exp.responsibilities?.map((res, j) => (
                     <View key={j} style={styles.bullet} wrap={false}>
-                      <Text style={styles.bulletDot}>â€¢</Text>
+                      <Text style={styles.bulletDot}>-</Text>
                       <Text style={styles.bulletText}>{res}</Text>
                     </View>
                   ))}
@@ -436,11 +436,12 @@ const MinimalPDF = ({ data }) => {
                           <Text style={styles.skillCategoryTitle}>
                             {
                               {
-                                frontend: "Skills",
-                                backend: "Additional Skills",
-                                database: "Systems",
-                                aiDevOps: "Tools & Platforms",
-                                tools: "Other Tools",
+                                frontend: "Frontend",
+                                backend: "Backend",
+                                database: "Database",
+                                aiDevOps: "AI & DevOps",
+                                tools: "Tools",
+                                security: "Security",
                                 learningRoadmap: "Currently Learning",
                               }[cat] ||
                               cat
@@ -464,7 +465,7 @@ const MinimalPDF = ({ data }) => {
                     <View style={styles.bulletList}>
                       {competencies.map((c, i) => (
                         <View key={i} style={styles.bullet}>
-                          <Text style={styles.bulletDot}>â€¢</Text>
+                          <Text style={styles.bulletDot}>-</Text>
                           <Text style={styles.bulletText}>{c}</Text>
                         </View>
                       ))}
@@ -500,7 +501,7 @@ const MinimalPDF = ({ data }) => {
             <View style={styles.bulletList}>
               {section.items?.map((item, q) => (
                 <View key={q} style={styles.bullet}>
-                  <Text style={styles.bulletDot}>â€¢</Text>
+                  <Text style={styles.bulletDot}>-</Text>
                   <Text style={styles.bulletText}>{item}</Text>
                 </View>
               ))}

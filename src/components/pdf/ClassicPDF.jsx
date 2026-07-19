@@ -1,4 +1,4 @@
-import React from "react";
+﻿﻿import React from "react";
 import BrandingFooter from "./BrandingFooter";
 import BrandingWatermark from "./BrandingWatermark";
 import {
@@ -300,7 +300,7 @@ const ClassicPDF = ({ data }) => {
                 <Text style={styles.subtitle}>{exp.company}</Text>
                 {exp.responsibilities?.map((res, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text>â€¢</Text>
+                    <Text>-</Text>
                     <Text style={styles.bulletText}>{res}</Text>
                   </View>
                 ))}
@@ -327,7 +327,7 @@ const ClassicPDF = ({ data }) => {
                 </View>
                 {proj.description?.map((desc, j) => (
                   <View key={j} style={styles.bullet} wrap={false}>
-                    <Text>â€¢</Text>
+                    <Text>-</Text>
                     <Text style={styles.bulletText}>{desc}</Text>
                   </View>
                 ))}
@@ -349,11 +349,12 @@ const ClassicPDF = ({ data }) => {
                           <Text style={styles.skillLabel}>
                             {
                               {
-                                frontend: "Skills",
-                                backend: "Additional Skills",
-                                database: "Systems",
-                                aiDevOps: "Tools & Platforms",
-                                tools: "Other Tools",
+                                frontend: "Frontend",
+                                backend: "Backend",
+                                database: "Database",
+                                aiDevOps: "AI & DevOps",
+                                tools: "Tools",
+                                security: "Security",
                                 learningRoadmap: "Currently Learning",
                               }[cat] ||
                               cat
@@ -395,7 +396,7 @@ const ClassicPDF = ({ data }) => {
                 </Text>
                 {competencies.map((c, i) => (
                   <View key={i} style={styles.bullet} wrap={false}>
-                    <Text style={dynamicStyles.accentText}>â€¢</Text>
+                    <Text style={dynamicStyles.accentText}>-</Text>
                     <Text style={styles.bulletText}>{c}</Text>
                   </View>
                 ))}
@@ -433,7 +434,7 @@ const ClassicPDF = ({ data }) => {
             <Text style={dynamicStyles.sectionTitle}>{section.title}</Text>
             {section.items?.map((item, m) => (
               <View key={m} style={styles.bullet} wrap={false}>
-                <Text style={dynamicStyles.accentText}>â€¢</Text>
+                <Text style={dynamicStyles.accentText}>-</Text>
                 <Text style={styles.bulletText}>{item}</Text>
               </View>
             ))}
