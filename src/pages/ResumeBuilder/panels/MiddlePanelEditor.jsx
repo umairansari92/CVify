@@ -10,7 +10,7 @@ import CustomSectionsForm from "../../../components/forms/CustomSectionsForm";
 import ResumeMatcherView from "../components/ResumeMatcherView";
 import ResumeDesignerView from "../components/ResumeDesignerView";
 import { useDispatch, useSelector } from "react-redux";
-import { setResumeData } from "../../../features/resume/resumeSlice";
+import { setResumeData, setParsingAnalysis } from "../../../features/resume/resumeSlice";
 import { updateDiamonds } from "../../../features/auth/authSlice";
 import api from "../../../api/axios";
 import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
@@ -19,6 +19,7 @@ import ResumeAnalyzerView from "../components/ResumeAnalyzerView";
 const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   const dispatch = useDispatch();
   const { currentResume } = useSelector((state) => state.resume);
+  const { user } = useSelector((state) => state.auth);
   
   const isAnalyzer = activeTab === "Analyzer";
   const isContent = activeTab === "Content";
@@ -63,6 +64,12 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
       toast.error("Save your resume first to run a deep AI scan.");
       return;
     }
+    // Client-side cost protection check
+    const COST = 30;
+    if ((user?.diamonds || 0) < COST) {
+      toast.error(`Insufficient Diamonds! You need ${COST} 💎 for a Full AI Scan. Current balance: ${user?.diamonds || 0}`);
+      return;
+    }
     setIsScanning(true);
     const toastId = toast.loading("Running deep AI analysis...");
     try {
@@ -70,6 +77,18 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
         resumeId: currentResume._id,
       });
       if (response.data.success) {
+        // Sync diamonds in HUD
+        if (response.data.newDiamondBalance !== undefined) {
+          dispatch(updateDiamonds(response.data.newDiamondBalance));
+        }
+        // Sync parsingAnalysis in Redux store
+        dispatch(setParsingAnalysis({
+          scores: {
+            completeness: 90, // reasonable placeholder for parsing completion
+            quantification: response.data.impactScore,
+            impact: response.data.impactScore,
+          }
+        }));
         toast.success(`AI Scan complete! Impact Score: ${response.data.impactScore}%`, { id: toastId });
       } else {
         toast.error(response.data.message || "Scan failed", { id: toastId });
@@ -199,7 +218,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
               {isScanning ? (
                 <><div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /> Scanning...</>
               ) : (
-                <><Sparkles size={14} /> Full AI Scan</>
+                <><Sparkles size={14} /> Full AI Scan (30 💎)</>
               )}
             </button>
          </div>
