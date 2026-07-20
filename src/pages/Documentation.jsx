@@ -56,6 +56,7 @@ const Documentation = () => {
         { id: "magic-import", icon: <Sparkles size={16} />, label: "Magic AI Import" },
         { id: "intent-mode", icon: <Zap size={16} />, label: "AI Intent Mode" },
         { id: "job-matcher", icon: <Target size={16} />, label: "Job Matcher (JD Analysis)" },
+        { id: "resume-audit", icon: <ShieldCheck size={16} />, label: "Resume Intelligence Audit" },
       ]
     },
     {
@@ -206,6 +207,110 @@ const Documentation = () => {
           { step: "2", title: "Paste JD", desc: "Paste the job requirements from LinkedIn or any job board." },
           { step: "3", title: "Analyze", desc: "Click 'Analyze Job Match' (50 💎). You'll get a detailed strategy report." },
         ]} />
+      </>
+    ),
+
+    "resume-audit": (
+      <>
+        <DocHeader title="Resume Intelligence Audit" badge="Intelligence Hub" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
+          The <strong className="text-primary">Resume Intelligence Audit</strong> is a dual-mode validation engine designed to evaluate resumes dynamically. It bridges the gap between static content writing and modern ATS criteria, ensuring your resume meets recruiter expectations instantly.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Zero-Latency Live Scoring" 
+            desc="Heuristic client-side algorithms recalculate metrics in real-time as you type, giving instant visual feedback without API cost or delay." />
+          <InfoCard icon={<Brain size={18} />} color="blue" title="Magic Import Synchronicity" 
+            desc="Leverages structure models generated during AI imports to prioritize deep extraction analyses and structural evaluations." />
+        </div>
+
+        <SectionTitle>How the Audit Engine Works</SectionTitle>
+        <p className="text-slate-300 text-[14px] leading-relaxed mb-6">
+          The engine operates using a fallback architecture. When you upload a resume via <strong>Magic Import</strong>, it receives structural scores directly from the server. As you manually edit or create a resume from scratch, the client-side engine executes local validation functions in real-time to compute scores on-the-fly.
+        </p>
+
+        {/* --- Visual Diagrams Showcase --- */}
+        <SectionTitle>Technical Diagrams & Data Workflows</SectionTitle>
+        <div className="space-y-12 my-8">
+          {/* Architecture */}
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6">
+            <h4 className="font-black text-sm text-white mb-2">1. Technical System Architecture</h4>
+            <p className="text-xs text-slate-400 mb-4">
+              Demonstrates the flow from inputs (Magic Import or Manual Editor) through the Redux store, and shows how the merge selector chooses between parsingAnalysis and live computed scores.
+            </p>
+            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
+              <img 
+                src="/docs/analyzer-architecture.png" 
+                alt="Resume Audit System Architecture" 
+                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
+              />
+            </div>
+          </div>
+
+          {/* DFD */}
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6">
+            <h4 className="font-black text-sm text-white mb-2">2. Data Flow Diagram (DFD Level 1)</h4>
+            <p className="text-xs text-slate-400 mb-4">
+              Traces how data moves from user inputs, through the parser service, to databases/Redux stores, and how final scoring metrics are assembled for UI rendering.
+            </p>
+            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
+              <img 
+                src="/docs/analyzer-dfd.png" 
+                alt="Resume Audit Data Flow Diagram" 
+                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
+              />
+            </div>
+          </div>
+
+          {/* Decision Tree */}
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6">
+            <h4 className="font-black text-sm text-white mb-2">3. Decision Tree & Scoring Logic Flow</h4>
+            <p className="text-xs text-slate-400 mb-4">
+              A logical map showcasing how completeness, quantification, and impact are calculated mathematically, leading to overall category verdicts.
+            </p>
+            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
+              <img 
+                src="/docs/analyzer-decision-tree.png" 
+                alt="Resume Audit Logic Flow" 
+                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
+              />
+            </div>
+          </div>
+        </div>
+
+        <SectionTitle>Scoring Methodology</SectionTitle>
+        <p className="text-slate-300 text-[14px] leading-relaxed mb-6">
+          The audit engine splits evaluations into three metrics:
+        </p>
+
+        <div className="space-y-4 mb-8">
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <h5 className="font-black text-sm text-white mb-2 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Completeness Score (40% Weight)
+            </h5>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Checks for the presence of 8 crucial resume modules: Full Name, Email, Profile Summary, Phone Number, Work Experience, Education, Skills, and Projects. Lacking any of these triggers warning flags as they are ATS compliance requirements.
+            </p>
+          </div>
+
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <h5 className="font-black text-sm text-white mb-2 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" /> Measurable Results (35% Weight)
+            </h5>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Analyzes all bullet points in your work experience to count metrics, stats, percentages, and dollar amounts. Resumes with quantifiable impact (e.g. "Optimized DB speed by 40%") receive significantly higher scores.
+            </p>
+          </div>
+
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <h5 className="font-black text-sm text-white mb-2 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Impact Language (25% Weight)
+            </h5>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Cross-references the first word of every bullet point against a library of 26 active action verbs (e.g. "Architected", "Spearheaded", "Refactored"). Replaces weak filler phrases ("Responsible for") with strong, direct verbs.
+            </p>
+          </div>
+        </div>
       </>
     ),
 
