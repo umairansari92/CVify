@@ -238,13 +238,32 @@ const Documentation = () => {
             <p className="text-xs text-slate-400 mb-4">
               Demonstrates the flow from inputs (Magic Import or Manual Editor) through the Redux store, and shows how the merge selector chooses between parsingAnalysis and live computed scores.
             </p>
-            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
-              <img 
-                src="/docs/analyzer-architecture.png" 
-                alt="Resume Audit System Architecture" 
-                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
-              />
-            </div>
+            <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400">
+{`  ┌──────────────────────────────────────────────────────────┐
+  │                        INPUTS                            │
+  │  ┌──────────────────────────┐  ┌──────────────────────┐  │
+  │  │ Magic Import (File Upload)│  │ Manual Editor Build  │  │
+  │  └─────────────┬────────────┘  └──────────┬───────────┘  │
+  └────────────────┼──────────────────────────┼──────────────┘
+                   ▼                          ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                      REDUX STORE                         │
+  │       [ parsingAnalysis ]         [ currentResume ]      │
+  └────────────────┬──────────────────────────┬──────────────┘
+                   │                          │
+                   ▼                          ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                      FALLBACK MERGER                     │
+  │  Is parsingAnalysis present?                             │
+  │  ├─▶ YES: Use parsed server scores                      │
+  │  └─▶ NO:  Run live client Heuristic Engine               │
+  └────────────────────────────┬─────────────────────────────┘
+                               ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                   RESUME ANALYZER VIEW                   │
+  │ [ Completeness: 40% ] [ Quantification: 35% ] [ Impact: 25% ] │
+  └──────────────────────────────────────────────────────────┘`}
+            </pre>
           </div>
 
           {/* DFD */}
@@ -253,13 +272,23 @@ const Documentation = () => {
             <p className="text-xs text-slate-400 mb-4">
               Traces how data moves from user inputs, through the parser service, to databases/Redux stores, and how final scoring metrics are assembled for UI rendering.
             </p>
-            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
-              <img 
-                src="/docs/analyzer-dfd.png" 
-                alt="Resume Audit Data Flow Diagram" 
-                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
-              />
-            </div>
+            <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-blue-400">
+{`     ┌────────┐             PDF / DOCX File             ┌─────────────┐
+     │  User  │────────────────────────────────────────▶│ P1: Upload  │
+     └────▲───┘                                         └──────┬──────┘
+          │                                                    │ Raw Text
+          │ Visual Dashboard                                   ▼
+     ┌────┴──────┐      parsingAnalysis         ┌─────────────────────────────┐
+     │ Render UI │◀─────────────────────────────│ P2: Parse & Extract (Gemini)│
+     └────▲──────┘                              └──────────────┬──────────────┘
+          │                                                    │ Save Resume
+          │ finalScores                                        ▼
+     ┌────┴────────┐   liveScores    ┌─────────────────┐  Save  ┌──────────────┐
+     │ P5: Merger  │◀────────────────│ P4: Live Engine │◀──────▶│ D2: Database │
+     └────▲────────┘                 └────────▲────────┘        └──────────────┘
+          │                                   │
+          └─────────── currentResume ─────────┘`}
+            </pre>
           </div>
 
           {/* Decision Tree */}
@@ -268,13 +297,29 @@ const Documentation = () => {
             <p className="text-xs text-slate-400 mb-4">
               A logical map showcasing how completeness, quantification, and impact are calculated mathematically, leading to overall category verdicts.
             </p>
-            <div className="border border-white/10 rounded-2xl overflow-hidden bg-slate-950/80 p-2 shadow-2xl">
-              <img 
-                src="/docs/analyzer-decision-tree.png" 
-                alt="Resume Audit Logic Flow" 
-                className="w-full h-auto max-h-[500px] object-contain rounded-xl hover:scale-[1.01] transition-transform duration-300"
-              />
-            </div>
+            <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-amber-400">
+{`  User opens Analyzer View
+             │
+             ▼
+   Is parsingAnalysis in Redux?
+   ├── YES ──▶ Use AI parser scores (Magic Import)
+   └── NO  ──▶ Run live computeScores(currentResume)
+                     │
+                     ▼
+         ┌───────────┴───────────┐
+         │ Live Score Algorithms │
+         └───────────┬───────────┘
+                     ├─▶ Completeness (Weight: 40%) ──▶ Checks 8 structural fields
+                     ├─▶ Quantification (Weight: 35%) ─▶ Checks metrics & stats count
+                     └─▶ Impact Language (Weight: 25%) ─▶ Matches 26 action verbs
+                     │
+                     ▼
+       Overall Weighted Percentage calculated
+                     │
+                     ├─▶ Overall >= 70% ──▶ "Good" (Green UI status)
+                     ├─├─▶ Overall >= 40% ──▶ "Fair" (Amber UI status)
+                     └──▶ Overall < 40% ───▶ "Needs Work" (Red UI status)`}
+            </pre>
           </div>
         </div>
 
