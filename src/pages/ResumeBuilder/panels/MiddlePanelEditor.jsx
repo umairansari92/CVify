@@ -26,6 +26,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   const isDesigner = activeTab === "Designer";
   const [intent, setIntent] = React.useState("");
   const [isExecuting, setIsExecuting] = React.useState(false);
+  const [isScanning, setIsScanning] = React.useState(false);
 
   const handleExecuteAI = async () => {
     if (!intent.trim()) return;
@@ -54,6 +55,29 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
       toast.error(error.response?.data?.message || "AI failed to process intent", { id: toastId });
     } finally {
       setIsExecuting(false);
+    }
+  };
+
+  const handleFullAIScan = async () => {
+    if (!currentResume?._id) {
+      toast.error("Save your resume first to run a deep AI scan.");
+      return;
+    }
+    setIsScanning(true);
+    const toastId = toast.loading("Running deep AI analysis...");
+    try {
+      const response = await api.post("/resume-intelligence/analyze-impact", {
+        resumeId: currentResume._id,
+      });
+      if (response.data.success) {
+        toast.success(`AI Scan complete! Impact Score: ${response.data.impactScore}%`, { id: toastId });
+      } else {
+        toast.error(response.data.message || "Scan failed", { id: toastId });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "AI scan failed", { id: toastId });
+    } finally {
+      setIsScanning(false);
     }
   };
 
@@ -167,8 +191,16 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
             
             <div className="h-8 w-[1px] border-r border-white/5" />
             
-            <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80 transition-opacity">
-              <Sparkles size={14} /> Full AI Scan
+            <button
+              onClick={handleFullAIScan}
+              disabled={isScanning}
+              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80 transition-opacity disabled:opacity-40"
+            >
+              {isScanning ? (
+                <><div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /> Scanning...</>
+              ) : (
+                <><Sparkles size={14} /> Full AI Scan</>
+              )}
             </button>
          </div>
       </div>
