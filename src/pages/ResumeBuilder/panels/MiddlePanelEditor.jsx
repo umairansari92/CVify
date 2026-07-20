@@ -31,8 +31,15 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
 
   const handleExecuteAI = async () => {
     if (!intent.trim()) return;
-    setIsExecuting(true);
     
+    // Client-side cost protection check (30 diamonds fee)
+    const COST = 30;
+    if ((user?.diamonds || 0) < COST) {
+      toast.error(`Insufficient Diamonds! You need ${COST} 💎 for AI optimization. Current balance: ${user?.diamonds || 0}`);
+      return;
+    }
+
+    setIsExecuting(true);
     const toastId = toast.loading(`AI is processing: "${intent}"...`);
     try {
       const response = await api.post("/resume-intelligence/optimize-intent", {
