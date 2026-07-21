@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import InlineEdit from "../../components/profile/InlineEdit";
+import { tokens } from "./tokens";
 
 const About = ({ user, isOwner, handleLiveUpdate }) => {
   const profileImage = user?.profileImage || user?.profilePicture || user?.avatar;
