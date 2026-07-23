@@ -23,16 +23,19 @@ export const loginUser = createAsyncThunk(
       return res.data;
     } catch (err) {
       const errorData = err.response?.data;
-      const message =
-        errorData?.message || "Login failed. Please check your credentials.";
-      if (errorData?.code === "EMAIL_NOT_VERIFIED" && errorData?.email) {
-        return rejectWithValue({
-          message,
-          email: errorData.email,
-          code: "EMAIL_NOT_VERIFIED",
-        });
+      if (typeof errorData === "object" && errorData !== null) {
+        if (errorData.code === "EMAIL_NOT_VERIFIED" && errorData.email) {
+          return rejectWithValue({
+            message: errorData.message,
+            email: errorData.email,
+            code: "EMAIL_NOT_VERIFIED",
+          });
+        }
+        return rejectWithValue(errorData);
       }
-      return rejectWithValue(message);
+      return rejectWithValue({
+        message: err.message || "Login failed. Please check your credentials.",
+      });
     }
   },
 );

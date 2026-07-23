@@ -63,6 +63,14 @@ api.interceptors.response.use(
     } else if (status === 403 && data?.code === "EMAIL_NOT_VERIFIED" && data?.email) {
       // Don't show generic toast - Login page will show verify prompt and redirect
       // Just reject so auth thunk can handle it
+    } else if (
+      status === 429 || 
+      data?.code === "CAPTCHA_REQUIRED" || 
+      data?.code === "BACKOFF_DELAY" || 
+      data?.code === "ACCOUNT_LOCKED"
+    ) {
+      // Silently pass backoff and captcha errors to the Login page UI
+      return Promise.reject(error);
     } else if (status === 503) {
       // Maintenance Mode Active
       window.location.href = "/maintenance";
