@@ -156,6 +156,7 @@ const Login = () => {
       const res = await api.post("/auth/captcha/verify", {
         token: captchaData.token,
         answer: captchaAnswer.trim(),
+        email: (emailValue || "").toLowerCase().trim(), // Required for correct Triple-Lock DB key derivation
       });
       if (res.data?.success) {
         setCaptchaSolved(true);
