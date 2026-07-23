@@ -22,6 +22,7 @@ const Login = () => {
   // ── Wave 4.1 Security UI States ───────────────────────────────────────────
   const [isCheckingSecurity, setIsCheckingSecurity] = useState(true);
   const [countdown, setCountdown] = useState(0);
+  const [initialCountdown, setInitialCountdown] = useState(0); // Tracks starting value for progress bar
   const [captchaData, setCaptchaData] = useState(null); // { challenge, token, expiresIn }
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [captchaLoading, setCaptchaLoading] = useState(false);
@@ -45,6 +46,7 @@ const Login = () => {
       const { locked, retryAfter, captchaRequired } = res.data;
 
       if (retryAfter > 0) {
+        setInitialCountdown(retryAfter);
         setCountdown(retryAfter);
       } else {
         setCountdown(0);
@@ -99,6 +101,7 @@ const Login = () => {
   // ── Handle Progressive Backoff Countdown Loop ─────────────────────────────
   useEffect(() => {
     if (error && typeof error === "object" && error.retryAfter > 0) {
+      setInitialCountdown(error.retryAfter);
       setCountdown(error.retryAfter);
       notifyOtherTabs();
     }
@@ -230,27 +233,14 @@ const Login = () => {
             Welcome Back
           </h2>
 
-          {/* ── ERROR & THROTTLE BANNER ────────────────────────────────────────── */}
-          {error && (
+          {/* ── ERROR MESSAGE BANNER (credentials/general errors only) ─────────── */}
+          {error && countdown <= 0 && (
             <div className="bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 p-4 rounded-2xl text-xs font-bold mb-6 border border-red-100 dark:border-red-900/50 animate-shake">
               <p className="mb-2">
                 {typeof error === "object" && error?.message
                   ? error.message
                   : String(error)}
               </p>
-
-              {/* Live Progressive Backoff Countdown Indicator */}
-              {countdown > 0 && (
-                <div className="mt-3 pt-3 border-t border-red-200 dark:border-red-900/50 flex items-center justify-between">
-                  <span className="font-extrabold text-[11px] uppercase tracking-wider text-red-600 dark:text-red-300 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                    Security Delay Active
-                  </span>
-                  <span className="font-black text-sm bg-red-100 dark:bg-red-900/60 px-3 py-1 rounded-xl text-red-700 dark:text-red-200">
-                    {countdown}s remaining
-                  </span>
-                </div>
-              )}
 
               {typeof error === "object" && error?.email && (
                 <Link
@@ -263,6 +253,47 @@ const Login = () => {
               )}
             </div>
           )}
+
+          {/* ── SECURITY DELAY TIMER (visible whenever countdown > 0, error-independent) ── */}
+          {countdown > 0 && (
+            <div className="mb-6 rounded-2xl overflow-hidden border border-red-200 dark:border-red-900/60 bg-red-50 dark:bg-red-950/30">
+              {/* Header */}
+              <div className="flex items-center gap-3 px-5 pt-4 pb-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <p className="text-[11px] font-black uppercase tracking-widest text-red-600 dark:text-red-300">
+                  Security Delay Active
+                </p>
+              </div>
+
+              {/* Timer Display */}
+              <div className="flex items-center justify-between px-5 pb-4">
+                <p className="text-[11px] text-red-500 dark:text-red-400 font-semibold">
+                  {error && typeof error === "object" && error?.message
+                    ? error.message
+                    : "Too many failed attempts. Please wait before retrying."}
+                </p>
+                <div className="flex-shrink-0 ml-4 bg-red-100 dark:bg-red-900/60 rounded-xl px-4 py-2 text-center min-w-[72px]">
+                  <span className="font-black text-lg text-red-700 dark:text-red-200 tabular-nums">
+                    {countdown >= 60
+                      ? `${Math.floor(countdown / 60)}m ${countdown % 60 < 10 ? "0" : ""}${countdown % 60}s`
+                      : `${countdown}s`}
+                  </span>
+                </div>
+              </div>
+
+              {/* Animated progress bar draining from full to empty */}
+              <div className="h-1 w-full bg-red-100 dark:bg-red-900/40">
+                <div
+                  className="h-1 bg-gradient-to-r from-red-500 to-orange-400 transition-all duration-1000 ease-linear"
+                  style={{ width: `${Math.min(100, (countdown / (initialCountdown || countdown)) * 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
+
 
           {/* ── CAPTCHA SOLVED BADGE ───────────────────────────────────────────── */}
           {captchaSolved && (
