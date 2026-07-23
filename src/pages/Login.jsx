@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunk";
@@ -8,13 +8,19 @@ import Logo from "../components/common/Logo";
 import ThemeToggle from "../components/common/ThemeToggle";
 import api from "../api/axios";
 
+// Create a BroadcastChannel for cross-tab security synchronization
+const authChannel = typeof window !== "undefined" && "BroadcastChannel" in window
+  ? new BroadcastChannel("cvify_auth_channel")
+  : null;
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, token } = useSelector((state) => state.auth);
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm();
 
-  // ── Wave 2 Security UI States ──────────────────────────────────────────────
+  // ── Wave 4.1 Security UI States ───────────────────────────────────────────
+  const [isCheckingSecurity, setIsCheckingSecurity] = useState(true);
   const [countdown, setCountdown] = useState(0);
   const [captchaData, setCaptchaData] = useState(null); // { challenge, token, expiresIn }
   const [captchaAnswer, setCaptchaAnswer] = useState("");
@@ -22,54 +28,101 @@ const Login = () => {
   const [captchaSolved, setCaptchaSolved] = useState(false);
   const [captchaError, setCaptchaError] = useState("");
 
+  const emailValue = watch("email");
+  const lastCheckedEmail = useRef("");
+
   useEffect(() => {
     if (token) {
       navigate("/dashboard");
     }
   }, [token, navigate]);
 
-  // ── Restore Backoff State from localStorage on Mount / Refresh ─────────────
-  useEffect(() => {
-    const savedUntil = localStorage.getItem("cvify_backoff_until");
-    if (savedUntil) {
-      const remainingSec = Math.ceil((parseInt(savedUntil, 10) - Date.now()) / 1000);
-      if (remainingSec > 0) {
-        setCountdown(remainingSec);
+  // ── Authoritative Mount-Time Security Check (POST /api/auth/security-state) ──
+  const fetchSecurityState = async (identifier = "") => {
+    try {
+      setIsCheckingSecurity(true);
+      const res = await api.post("/auth/security-state", { identifier });
+      const { locked, retryAfter, captchaRequired } = res.data;
+
+      if (retryAfter > 0) {
+        setCountdown(retryAfter);
       } else {
-        localStorage.removeItem("cvify_backoff_until");
+        setCountdown(0);
       }
+
+      if (captchaRequired) {
+        // If CAPTCHA is required by server state, trigger captcha generator
+        fetchCaptcha();
+      }
+    } catch (err) {
+      console.error("[SECURITY_STATE_FETCH] Failed:", err.message);
+    } finally {
+      setIsCheckingSecurity(false);
     }
+  };
+
+  // Check IP-level security state on initial mount
+  useEffect(() => {
+    fetchSecurityState("");
   }, []);
 
-  // ── Handle Progressive Backoff Countdown & Persistence ──────────────────────
+  // Check email-specific security state when user finishes typing email (on blur or pause)
+  const handleEmailBlur = () => {
+    if (emailValue && emailValue !== lastCheckedEmail.current) {
+      lastCheckedEmail.current = emailValue;
+      fetchSecurityState(emailValue);
+    }
+  };
+
+  // ── Multi-Tab Synchronization via BroadcastChannel ────────────────────────
+  useEffect(() => {
+    if (!authChannel) return;
+
+    const handleChannelMessage = (event) => {
+      if (event.data?.type === "SECURITY_STATE_UPDATED") {
+        fetchSecurityState(emailValue || "");
+      }
+    };
+
+    authChannel.addEventListener("message", handleChannelMessage);
+    return () => {
+      authChannel.removeEventListener("message", handleChannelMessage);
+    };
+  }, [emailValue]);
+
+  const notifyOtherTabs = () => {
+    if (authChannel) {
+      authChannel.postMessage({ type: "SECURITY_STATE_UPDATED" });
+    }
+  };
+
+  // ── Handle Progressive Backoff Countdown Loop ─────────────────────────────
   useEffect(() => {
     if (error && typeof error === "object" && error.retryAfter > 0) {
-      const lockUntilMs = Date.now() + error.retryAfter * 1000;
-      localStorage.setItem("cvify_backoff_until", lockUntilMs.toString());
       setCountdown(error.retryAfter);
+      notifyOtherTabs();
     }
   }, [error]);
 
   useEffect(() => {
-    if (countdown <= 0) {
-      localStorage.removeItem("cvify_backoff_until");
-      return;
-    }
+    if (countdown <= 0) return;
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          localStorage.removeItem("cvify_backoff_until");
           dispatch(clearAuthError());
+          // Recovery Loop (TIMER_FINISHED -> SECURITY_CHECKING -> IDLE)
+          fetchSecurityState(emailValue || "");
+          notifyOtherTabs();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [countdown, dispatch]);
+  }, [countdown, dispatch, emailValue]);
 
-  // ── Handle CAPTCHA Auto-Fetch ──────────────────────────────────────────────
+  // ── Handle CAPTCHA Challenge Generator ─────────────────────────────────────
   const isCaptchaRequired =
     typeof error === "object" &&
     (error?.captchaRequired || error?.code === "CAPTCHA_REQUIRED");
@@ -109,12 +162,13 @@ const Login = () => {
         setCaptchaData(null);
         setCaptchaAnswer("");
         dispatch(clearAuthError());
+        notifyOtherTabs();
       }
     } catch (err) {
       setCaptchaError(
         err.response?.data?.message || "Incorrect answer. Try again."
       );
-      fetchCaptcha(); // Auto-regenerate fresh challenge on wrong answer
+      fetchCaptcha();
     } finally {
       setCaptchaLoading(false);
     }
@@ -130,11 +184,17 @@ const Login = () => {
           state: { email: payload.email },
           replace: true,
         });
+      } else {
+        notifyOtherTabs();
       }
     }
   };
 
-  const isFormDisabled = loading || countdown > 0 || (isCaptchaRequired && !captchaSolved);
+  const isFormDisabled =
+    isCheckingSecurity ||
+    loading ||
+    countdown > 0 ||
+    (isCaptchaRequired && !captchaSolved);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6 transition-colors duration-500 overflow-hidden relative">
@@ -288,6 +348,7 @@ const Login = () => {
               </label>
               <input
                 {...register("email", { required: true })}
+                onBlur={handleEmailBlur}
                 placeholder="e.g. name@company.com"
                 disabled={isFormDisabled}
                 className="w-full px-6 py-4 rounded-2xl border-2 border-border-subtle bg-foreground/5 text-text-main placeholder:text-text-muted/40 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-semibold disabled:opacity-50"
@@ -320,7 +381,9 @@ const Login = () => {
               className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 shadow-premium hover:shadow-primary/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4 grow-btn"
               disabled={isFormDisabled}
             >
-              {loading
+              {isCheckingSecurity
+                ? "Checking Security..."
+                : loading
                 ? "Authenticating..."
                 : countdown > 0
                 ? `Wait ${countdown}s to retry`

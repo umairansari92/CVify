@@ -42,15 +42,22 @@ api.interceptors.response.use(
       // Clear token
       localStorage.removeItem("token");
       
-      // Determine if we are on a public route or login/auth calls where 401 is NOT session expiration
+      // Determine if this is an unauthenticated auth operation or public route
       const isPublicRoute = 
         window.location.pathname.startsWith("/p/") ||
         window.location.pathname.startsWith("/share/");
+      const isAuthEndpoint = 
+        error.config?.url?.includes("/auth/login") ||
+        error.config?.url?.includes("/auth/signup") ||
+        error.config?.url?.includes("/auth/verify-otp") ||
+        error.config?.url?.includes("/auth/forgot-password") ||
+        error.config?.url?.includes("/auth/reset-password") ||
+        error.config?.url?.includes("/auth/security-state") ||
+        error.config?.url?.includes("/auth/captcha/");
       const isAuthMe = error.config?.url?.includes("/auth/me");
-      const isAuthLogin = error.config?.url?.includes("/auth/login");
       const isPublicApiCall = error.config?.url?.includes("/public/");
 
-      if (!isPublicRoute && !isAuthMe && !isAuthLogin && !isPublicApiCall) {
+      if (!isPublicRoute && !isAuthMe && !isAuthEndpoint && !isPublicApiCall) {
         // Force login with a modal confirmation ONLY for expired session on protected app routes
         Swal.fire({
           icon: "error",
