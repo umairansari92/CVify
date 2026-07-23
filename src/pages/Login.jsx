@@ -162,6 +162,7 @@ const Login = () => {
         setCaptchaData(null);
         setCaptchaAnswer("");
         dispatch(clearAuthError());
+        await fetchSecurityState(emailValue || "");
         notifyOtherTabs();
       }
     } catch (err) {
