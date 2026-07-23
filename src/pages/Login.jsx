@@ -334,14 +334,10 @@ const Login = () => {
 
           {/* ── LOGIN FORM ────────────────────────────────────────────────────── */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Honeypot field — hidden from real users, catches bots */}
+            {/* Honeypot field — type="hidden" prevents browser password managers from autofilling it */}
             <input
-              type="text"
+              type="hidden"
               {...register("_honey")}
-              tabIndex={-1}
-              autoComplete="off"
-              className="hidden pointer-events-none"
-              style={{ display: "none" }}
             />
 
             <div className="space-y-2">
