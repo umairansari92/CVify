@@ -28,19 +28,38 @@ const Login = () => {
     }
   }, [token, navigate]);
 
-  // ── Handle Progressive Backoff Countdown ───────────────────────────────────
+  // ── Restore Backoff State from localStorage on Mount / Refresh ─────────────
+  useEffect(() => {
+    const savedUntil = localStorage.getItem("cvify_backoff_until");
+    if (savedUntil) {
+      const remainingSec = Math.ceil((parseInt(savedUntil, 10) - Date.now()) / 1000);
+      if (remainingSec > 0) {
+        setCountdown(remainingSec);
+      } else {
+        localStorage.removeItem("cvify_backoff_until");
+      }
+    }
+  }, []);
+
+  // ── Handle Progressive Backoff Countdown & Persistence ──────────────────────
   useEffect(() => {
     if (error && typeof error === "object" && error.retryAfter > 0) {
+      const lockUntilMs = Date.now() + error.retryAfter * 1000;
+      localStorage.setItem("cvify_backoff_until", lockUntilMs.toString());
       setCountdown(error.retryAfter);
     }
   }, [error]);
 
   useEffect(() => {
-    if (countdown <= 0) return;
+    if (countdown <= 0) {
+      localStorage.removeItem("cvify_backoff_until");
+      return;
+    }
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
+          localStorage.removeItem("cvify_backoff_until");
           dispatch(clearAuthError());
           return 0;
         }

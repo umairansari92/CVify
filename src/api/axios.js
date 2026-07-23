@@ -42,15 +42,16 @@ api.interceptors.response.use(
       // Clear token
       localStorage.removeItem("token");
       
-      // Determine if we are on a public route where we shouldn't interrupt the user
+      // Determine if we are on a public route or login/auth calls where 401 is NOT session expiration
       const isPublicRoute = 
         window.location.pathname.startsWith("/p/") ||
         window.location.pathname.startsWith("/share/");
       const isAuthMe = error.config?.url?.includes("/auth/me");
+      const isAuthLogin = error.config?.url?.includes("/auth/login");
       const isPublicApiCall = error.config?.url?.includes("/public/");
 
-      if (!isPublicRoute && !isAuthMe && !isPublicApiCall) {
-        // Force login with a modal confirmation only on protected/app routes
+      if (!isPublicRoute && !isAuthMe && !isAuthLogin && !isPublicApiCall) {
+        // Force login with a modal confirmation ONLY for expired session on protected app routes
         Swal.fire({
           icon: "error",
           title: "Session Expired",
