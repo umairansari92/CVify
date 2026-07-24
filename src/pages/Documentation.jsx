@@ -6,7 +6,8 @@ import {
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
   BarChart3, GitBranch, TrendingUp, Heart,
-  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail, Bot, Moon
+  AlertCircle, Palette, Wand2, MousePointer, Settings2, Mail, Bot, Moon,
+  Wifi, WifiOff, SignalLow
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/common/Logo";
@@ -89,6 +90,7 @@ const Documentation = () => {
         { id: "universal-navbar", icon: <Layout size={16} />, label: "Universal Floating Navbar (New!)" },
         { id: "footer-branding", icon: <Globe size={16} />, label: "Footer Branding (New!)" },
         { id: "perf-optimizations", icon: <Zap size={16} />, label: "⚡ Frontend Performance (New!)" },
+        { id: "network-status", icon: <Wifi size={16} />, label: "🌐 Network Resiliency & Offline UI (New!)" },
       ]
     },
     {
@@ -1668,6 +1670,58 @@ export const isDisposableEmail = (email) => {
             </div>
           ))}
         </div>
+      </>
+    ),
+
+    "network-status": (
+      <>
+        <DocHeader title="🌐 Network Resiliency & Offline UI" badge="Reliability" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro includes a global, real-time <strong className="text-text-primary">Network Status Monitor</strong> (<code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">NetworkStatus.jsx</code>) mounted at the root level in <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">App.jsx</code>. It provides instant visual feedback when a candidate loses internet connectivity or experiences high latency.
+        </p>
+
+        <SectionTitle>1. No Internet (Offline) Overlay</SectionTitle>
+        <div className="p-5 bg-red-500/5 border border-red-500/10 rounded-2xl mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center text-red-400">
+              <WifiOff size={20} />
+            </div>
+            <div>
+              <h4 className="font-black text-sm text-red-400">Automatic Connection Interception</h4>
+              <p className="text-text-muted text-[12px]">Triggers on window "offline" event</p>
+            </div>
+          </div>
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            When internet connection drops, a glassmorphic top banner slides in with a pulsating alert: <strong className="text-text-primary font-bold">"You are currently offline. Changes will sync automatically once reconnected."</strong> Includes an instant manual retry button.
+          </p>
+          <div className="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+            <p className="text-emerald-400 font-bold text-xs">✅ Auto-Recovery Toast</p>
+            <p className="text-text-secondary text-[12px] mt-0.5">When connection restores, a green "Internet Restored!" confirmation appears for 4 seconds before auto-dismissing.</p>
+          </div>
+        </div>
+
+        <SectionTitle>2. Low / Slow Internet (2G & High Latency Alert)</SectionTitle>
+        <div className="p-5 bg-amber-500/5 border border-amber-500/10 rounded-2xl mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
+              <SignalLow size={20} />
+            </div>
+            <div>
+              <h4 className="font-black text-sm text-amber-400">Dual Detection Engine</h4>
+              <p className="text-text-muted text-[12px]">Network Information API + Lightweight Health Ping</p>
+            </div>
+          </div>
+          <p className="text-text-secondary text-[13px] leading-relaxed mb-3">
+            Monitors <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-lg text-xs">navigator.connection.effectiveType</code> ("2g", "slow-2g", RTT &gt; 1500ms) alongside background periodic HEAD latency checks. If network speed degrades, a bottom-right amber toast warns the user: <strong className="text-text-primary font-bold">"Slow Network Detected — AI operations &amp; imports may take longer."</strong>
+          </p>
+        </div>
+
+        <SectionTitle>Testing in Chrome DevTools</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Offline Test", right: "DevTools → Network tab → Select 'Offline'" },
+          { left: "Slow 3G Test", right: "DevTools → Network tab → Select 'Slow 3G' (triggers 2g effectiveType)" },
+          { left: "Latency Lag Test", right: "DevTools → Network tab → Add Custom Profile (2000ms latency)" },
+        ]} />
       </>
     ),
 
