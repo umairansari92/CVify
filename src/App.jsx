@@ -7,6 +7,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { getMe } from "./features/auth/authThunk";
 import PWAInstall from "./components/common/PWAInstall";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import NetworkStatus from "./components/common/NetworkStatus";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const App = () => {
       <Helmet>
         <link rel="canonical" href={currentUrl} />
       </Helmet>
+      <NetworkStatus />
       <PWAInstall />
       <ErrorBoundary>
         <AppRoutes />
