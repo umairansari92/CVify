@@ -3,25 +3,33 @@ import { Maximize2, ZoomIn, ZoomOut, Monitor, Tablet, Smartphone, FileEdit, Eye 
 import PDFPreviewPanel from "../../../components/PDFPreviewPanel";
 import { getDOMTemplate } from "../../../components/templates/TemplateRegistry";
 
-const RightPanelPreview = ({ resume }) => {
-  const [zoom, setZoom] = useState(0.85);
+const RightPanelPreview = ({ resume, isMobileModal = false, onCloseMobileModal }) => {
+  const [zoom, setZoom] = useState(isMobileModal ? 0.45 : 0.85);
   const [viewMode, setViewMode] = useState("editor"); // 'editor' or 'pdf'
 
   return (
-    <div className="hidden lg:flex w-[600px] xl:w-[750px] bg-slate-900 border-l border-white/5 flex-col shrink-0 relative overflow-hidden">
+    <div className={isMobileModal ? "w-full h-full bg-slate-900 flex flex-col relative overflow-hidden" : "hidden lg:flex w-[600px] xl:w-[750px] bg-slate-900 border-l border-white/5 flex-col shrink-0 relative overflow-hidden"}>
       {/* Control Bar */}
-      <div className="h-14 border-b border-white/5 bg-bg-secondary flex items-center justify-between px-6 shrink-0 z-10">
+      <div className="h-14 border-b border-white/5 bg-bg-secondary flex items-center justify-between px-4 sm:px-6 shrink-0 z-10">
         <div className="flex items-center gap-2">
+           {isMobileModal && (
+             <button 
+               onClick={onCloseMobileModal}
+               className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-[10px] font-black uppercase tracking-widest hover:text-white mr-2"
+             >
+               ✕ Close
+             </button>
+           )}
            <div className="flex items-center gap-1 p-1 bg-slate-950/60 rounded-lg border border-white/5">
               <button 
                 onClick={() => startTransition(() => setViewMode("editor"))}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "editor" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-md text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "editor" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
                 <FileEdit size={12} /> Editor
               </button>
               <button 
                 onClick={() => startTransition(() => setViewMode("pdf"))}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "pdf" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-md text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "pdf" ? "bg-slate-800 text-primary shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
                 <Eye size={12} /> PDF View
               </button>

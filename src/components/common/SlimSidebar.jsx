@@ -20,7 +20,7 @@ const SlimSidebar = () => {
   ];
 
   return (
-    <div className="w-[70px] glass-strong border-r border-card-border h-screen flex flex-col items-center py-8 z-[60] shrink-0">
+    <div className="hidden md:flex w-[70px] glass-strong border-r border-card-border h-screen flex-col items-center py-8 z-[60] shrink-0">
       <NavLink to="/" className="mb-12 group relative">
         <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-all border border-primary/20">
           <FaChevronLeft size={14} />

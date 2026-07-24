@@ -110,14 +110,14 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
   return (
     <div className="flex-1 flex flex-col bg-bg-primary relative overflow-hidden">
       {/* Intent Mode Bar (The AI Command Center) */}
-      <div className="px-8 pt-8 pb-2 shrink-0">
-        <div className="bg-bg-secondary border border-white/5 rounded-[1.25rem] p-1.5 flex items-center gap-3 shadow-sm group focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-500">
-          <div className="flex items-center gap-3 pl-4 flex-1">
+      <div className="px-3 sm:px-8 pt-3 sm:pt-8 pb-2 shrink-0">
+        <div className="bg-bg-secondary border border-white/5 rounded-[1.25rem] p-2 sm:p-1.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 shadow-sm group focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-500">
+          <div className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-4 flex-1">
             <Sparkles className="text-primary animate-pulse shrink-0" size={16} />
             <input 
               type="text" 
-              placeholder="What should the AI do? e.g. 'Rewrite my summary to sound more executive'"
-              className="w-full bg-transparent border-none outline-none text-sm font-semibold text-slate-300 placeholder:text-slate-500"
+              placeholder="What should AI do? e.g. 'Rewrite summary to sound executive'"
+              className="w-full bg-transparent border-none outline-none text-xs sm:text-sm font-semibold text-slate-300 placeholder:text-slate-500 py-1"
               value={intent}
               onChange={(e) => setIntent(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleExecuteAI()}
@@ -126,7 +126,7 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
           <button 
             onClick={handleExecuteAI}
             disabled={isExecuting || !intent}
-            className="px-6 py-2.5 bg-primary text-white rounded-[1rem] text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 flex items-center gap-2 shadow-lg shadow-primary/20"
+            className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-primary text-white rounded-[1rem] text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 shrink-0"
           >
             {isExecuting ? (
               <>
@@ -144,31 +144,31 @@ const MiddlePanelEditor = ({ activeSection, activeTab, onSave }) => {
       </div>
 
       {/* Editor Content Area */}
-      <div className="flex-1 overflow-y-auto p-6 no-scrollbar pb-24">
-        <div className="max-w-3xl mx-auto space-y-8">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-6 no-scrollbar pb-28 sm:pb-24">
+        <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
           
           {isContent && (
             <>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
                 <div>
-                  <h2 className="text-2xl font-black tracking-tighter capitalize text-white">{activeSection}</h2>
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage your professional {activeSection}</p>
+                  <h2 className="text-xl sm:text-2xl font-black tracking-tighter capitalize text-white">{activeSection}</h2>
+                  <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5 sm:mt-1">Manage your professional {activeSection}</p>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                   <button className="p-3 bg-bg-secondary border border-white/5 rounded-xl text-slate-400 hover:text-red-500 transition-all">
+                <div className="flex items-center gap-2 self-end sm:self-auto w-full sm:w-auto">
+                   <button className="p-2.5 sm:p-3 bg-bg-secondary border border-white/5 rounded-xl text-slate-400 hover:text-red-500 transition-all">
                      <Trash2 size={16} />
                    </button>
                     <button 
                       onClick={() => onSave()}
-                      className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-white rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                     >
                       <Save size={14} /> Save Section
                     </button>
                 </div>
               </div>
 
-              <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 shadow-sm">
+              <div className="bg-bg-secondary border border-white/5 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-sm">
                 {activeSection === "personal" && <PersonalInfoForm />}
                 {activeSection === "experience" && <ExperienceForm />}
                 {activeSection === "education" && <EducationForm />}
