@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { WifiOff, SignalLow, Wifi, AlertTriangle, CheckCircle2, RefreshCw } from "lucide-react";
+import { WifiOff, SignalLow, CheckCircle2, RefreshCw } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const NetworkStatus = () => {
@@ -33,12 +33,11 @@ const NetworkStatus = () => {
     };
   }, [wasOffline]);
 
-  // 2. Network Speed / Connection Quality Detector
+  // 2. Network Speed / Connection Quality Detector (Native Network API)
   useEffect(() => {
     if (isOffline) return;
 
     const checkNetworkQuality = () => {
-      // Method A: Network Information API (Chrome / Edge / Opera / Android)
       const connection =
         navigator.connection ||
         navigator.mozConnection ||
@@ -61,7 +60,6 @@ const NetworkStatus = () => {
 
     checkNetworkQuality();
 
-    // Listen for Network Information API change events
     const connection =
       navigator.connection ||
       navigator.mozConnection ||
@@ -73,36 +71,40 @@ const NetworkStatus = () => {
     }
   }, [isOffline]);
 
-  // Ping Check fallback to measure latency if connection API isn't present
+  // 3. Fallback Latency Monitor (for browsers without Network Info API or for latency spikes)
   useEffect(() => {
     if (isOffline) return;
 
     let isMounted = true;
     const interval = setInterval(async () => {
+      if (!isMounted || !navigator.onLine) return;
+
       const startTime = performance.now();
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
-        
-        await fetch("/api/health", { 
-          method: "HEAD", 
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const res = await fetch("/api/health", {
+          method: "GET",
           signal: controller.signal,
-          cache: "no-store" 
-        }).catch(() => {});
-        
+          cache: "no-store",
+        });
+
         clearTimeout(timeoutId);
         const latency = performance.now() - startTime;
 
-        if (isMounted) {
-          // If HEAD ping takes > 2500ms, flag as slow connection
-          if (latency > 2500 && !navigator.onLine) {
+        if (isMounted && res.ok) {
+          // If response latency > 3000ms, flag as slow connection
+          if (latency > 3000) {
             setIsSlow(true);
+          } else if (!navigator.connection) {
+            setIsSlow(false);
           }
         }
       } catch {
-        // Silent catch for HEAD fetch
+        // Suppress network errors silently during offline transitions
       }
-    }, 20000); // Check every 20s
+    }, 30000); // Check every 30 seconds
 
     return () => {
       isMounted = false;
@@ -188,7 +190,7 @@ const NetworkStatus = () => {
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">2G / Lag</span>
               </h5>
               <p className="text-[11px] text-amber-300/80 font-medium mt-0.5 leading-tight">
-                Your connection seems slow. AI operations & imports may take longer.
+                Your connection seems slow. AI operations &amp; imports may take longer.
               </p>
             </div>
 
