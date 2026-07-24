@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 // Lazy Loading Pages to shred the 5MB bundle
+const LandingPage = lazy(() => import("../pages/LandingPage"));
+const CreateResumeWizard = lazy(() => import("../pages/CreateResumeWizard"));
 const Login = lazy(() => import("../pages/Login"));
 const Signup = lazy(() => import("../pages/Signup"));
 const VerifyOtp = lazy(() => import("../pages/VerifyOtp"));
@@ -76,19 +78,28 @@ const AppRoutes = () => {
 
       <Route
         path="/"
-        element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
+        element={<Navigate to={token ? "/dashboard" : "/landing"} replace />}
       />
 
-      {/* Public auth routes */}
+      {/* Public Landing & Auth routes */}
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-      {/* Public resume share page — uses slug, never DB ID */}
       <Route path="/share/r/:slug" element={<PublicResumeViewer />} />
-      {/* Legacy redirect: old /share/resume/:id links go to home gracefully */}
       <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
+
+      {/* Multi-Step Create Resume Wizard */}
+      <Route
+        path="/create-resume"
+        element={
+          <ProtectedRoute>
+            <CreateResumeWizard />
+          </ProtectedRoute>
+        }
+      />
 
       {/* New Resume Builder (Full Screen) */}
       <Route
@@ -109,7 +120,7 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create" element={<ResumeRedirect />} />
+        <Route path="/create" element={<Navigate to="/create-resume" replace />} />
         <Route path="/edit/:id" element={<ResumeRedirect />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/cover-letter" element={<CoverLetterPage />} />
