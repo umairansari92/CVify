@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Book, Cpu, ShieldCheck, Zap, Target, Gem, ChevronRight, 
+import {
+  Book, Cpu, ShieldCheck, Zap, Target, Gem, ChevronRight,
   FileText, Globe, ArrowLeft, Users, Sparkles, Eye,
   Brain, Layers, Briefcase, Rocket, Layout,
   Database, Star, Award, MessageSquare, Shield, Menu, X,
@@ -117,18 +117,18 @@ const Documentation = () => {
       <>
         <DocHeader title="Platform Overview" badge="Introduction" />
         <p className="text-slate-300 text-[15px] leading-relaxed mb-8">
-          CVify Pro is not just a resume builder — it is a <strong className="text-text-primary">Career Intelligence Ecosystem</strong>. 
-          The platform solves the "Black Box" problem of Applicant Tracking Systems by giving users a real-time, AI-backed auditor 
+          CVify Pro is not just a resume builder — it is a <strong className="text-text-primary">Career Intelligence Ecosystem</strong>.
+          The platform solves the "Black Box" problem of Applicant Tracking Systems by giving users a real-time, AI-backed auditor
           that mimics Fortune 500 hiring pipelines. The architecture prioritizes <em>Aesthetics, Agency, and Authority</em>.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoCard icon={<Target size={18} />} color="emerald" title="For Job Seekers" 
+          <InfoCard icon={<Target size={18} />} color="emerald" title="For Job Seekers"
             desc="Build ATS-friendly resumes, generate targeted cover letters, and host a live, SEO-optimized digital portfolio with zero coding. Get honest, empathetic feedback that helps you grow." />
-          <InfoCard icon={<Briefcase size={18} />} color="blue" title="For Recruiters" 
+          <InfoCard icon={<Briefcase size={18} />} color="blue" title="For Recruiters"
             desc="View candidates with verified GitHub data, actual project proof, transparent AI-matched skill alignments, and a 6-second first impression verdict. No more guessing." />
-          <InfoCard icon={<Brain size={18} />} color="purple" title="Context-Aware Intelligence" 
+          <InfoCard icon={<Brain size={18} />} color="purple" title="Context-Aware Intelligence"
             desc="The AI adapts scoring, keywords, and coaching tone based on experience level (Fresher → Senior) and market mode (Standard, Pakistan HR, Freelance, Remote)." />
-          <InfoCard icon={<Shield size={18} />} color="amber" title="Anti-Hallucination Guarantee" 
+          <InfoCard icon={<Shield size={18} />} color="amber" title="Anti-Hallucination Guarantee"
             desc="6 strict rules ensure AI only references actual resume content. Hybrid scoring (AI × 0.6 + Server × 0.4) prevents random score inflation." />
         </div>
       </>
@@ -150,13 +150,13 @@ const Documentation = () => {
       <>
         <DocHeader title="Magic AI Import" badge="Intelligence Hub" />
         <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
-          Don't start from scratch. Our <strong className="text-primary">Magic AI Import</strong> parses your existing PDF or DOCX resume and instantly builds a professional CVify Pro profile. 
+          Don't start from scratch. Our <strong className="text-primary">Magic AI Import</strong> parses your existing PDF or DOCX resume and instantly builds a professional CVify Pro profile.
         </p>
         <SectionTitle>Key Features</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InfoCard icon={<Brain size={18} />} color="blue" title="Semantic Parsing" 
+          <InfoCard icon={<Brain size={18} />} color="blue" title="Semantic Parsing"
             desc="AI understands that 'Software Engineer' is a Role and 'Python' is a Skill, mapping them to the correct sections with 98% accuracy." />
-          <InfoCard icon={<Zap size={18} />} color="emerald" title="Instant Hydration" 
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Instant Hydration"
             desc="Your entire professional timeline (Experience, Education, Projects) is populated in under 20 seconds." />
         </div>
         <SectionTitle>How to Use</SectionTitle>
@@ -221,9 +221,9 @@ const Documentation = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InfoCard icon={<Zap size={18} />} color="emerald" title="Zero-Latency Live Scoring" 
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Zero-Latency Live Scoring"
             desc="Heuristic client-side algorithms recalculate metrics in real-time as you type, giving instant visual feedback without API cost or delay." />
-          <InfoCard icon={<Brain size={18} />} color="blue" title="Magic Import Synchronicity" 
+          <InfoCard icon={<Brain size={18} />} color="blue" title="Magic Import Synchronicity"
             desc="Leverages structure models generated during AI imports to prioritize deep extraction analyses and structural evaluations." />
         </div>
 
@@ -242,7 +242,7 @@ const Documentation = () => {
               Demonstrates the flow from inputs (Magic Import or Manual Editor) through the Redux store, and shows how the merge selector chooses between parsingAnalysis and live computed scores.
             </p>
             <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400">
-{`  ┌──────────────────────────────────────────────────────────┐
+              {`  ┌──────────────────────────────────────────────────────────┐
   │                        INPUTS                            │
   │  ┌──────────────────────────┐  ┌──────────────────────┐  │
   │  │ Magic Import (File Upload)│  │ Manual Editor Build  │  │
@@ -276,7 +276,7 @@ const Documentation = () => {
               Traces how data moves from user inputs, through the parser service, to databases/Redux stores, and how final scoring metrics are assembled for UI rendering.
             </p>
             <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-blue-400">
-{`     ┌────────┐             PDF / DOCX File             ┌─────────────┐
+              {`     ┌────────┐             PDF / DOCX File             ┌─────────────┐
      │  User  │────────────────────────────────────────▶│ P1: Upload  │
      └────▲───┘                                         └──────┬──────┘
           │                                                    │ Raw Text
@@ -301,7 +301,7 @@ const Documentation = () => {
               A logical map showcasing how completeness, quantification, and impact are calculated mathematically, leading to overall category verdicts.
             </p>
             <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-amber-400">
-{`  User opens Analyzer View
+              {`  User opens Analyzer View
              │
              ▼
    Is parsingAnalysis in Redux?
@@ -374,7 +374,7 @@ const Documentation = () => {
           <InfoCard icon={<BarChart3 size={16} />} color="purple" title="4-Dimension Score" desc="Formatting, Keywords, Quantification, Impact — each with WHY justification." />
           <InfoCard icon={<Eye size={16} />} color="amber" title="6-Second Verdict" desc="Psychological simulation of what a recruiter thinks at first glance." />
         </div>
-        
+
         <p className="text-slate-400 text-[13px] italic">
           Full AI ATS Scan costs <strong className="text-primary">50 💎</strong> per new version. Re-scans within 24h of the same content are discounted or FREE.
         </p>
@@ -390,13 +390,13 @@ const Documentation = () => {
 
         <SectionTitle>Key Optimization Metrics</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Potential Score Meter" 
+          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Potential Score Meter"
             desc="Gemini calculates your 'Actual' vs 'Potential' score. Implement all fixes to reach your scientific goal (e.g., 68% -> 92%)." />
-          <InfoCard icon={<ShieldCheck size={18} />} color="blue" title="Reality & Dealbreaker Check" 
+          <InfoCard icon={<ShieldCheck size={18} />} color="blue" title="Reality & Dealbreaker Check"
             desc="6 strict rules prevent lying. If a job has a hard requirement (Visa/Language/Exp) you lack, the AI flags it as a Dealbreaker." />
-          <InfoCard icon={<GitBranch size={18} />} color="purple" title="Interactive Checklist" 
+          <InfoCard icon={<GitBranch size={18} />} color="purple" title="Interactive Checklist"
             desc="Every loophole and win is a checkable task. Progress is saved in LocalStorage per scan so you never lose your flow." />
-          <InfoCard icon={<Eye size={18} />} color="amber" title="Recruiter First Impression" 
+          <InfoCard icon={<Eye size={18} />} color="amber" title="Recruiter First Impression"
             desc="A psychological simulation of what a hiring manager thinks after seeing the 'Fixed' version of your resume." />
         </div>
 
@@ -519,7 +519,7 @@ const Documentation = () => {
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
           Every CVify Pro portfolio features an elite <strong className="text-teal-400">Smart AI Representative</strong>. This is not a generic chatbot — it's a deeply integrated digital twin that holds your entire portfolio in memory, answering recruiter questions instantly with 0ms latency.
         </p>
-        
+
         <SectionTitle>Deep Client-Side NLP Engine</SectionTitle>
         <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
           The bot runs a powerful <strong>Zero-Latency NLP scanner</strong> directly in the browser. It tokenizes user input, ignores stop words, and actively scans your local data (Skills, Projects, Experience, Contact, Location) to return instant factual answers without making API calls.
@@ -1174,7 +1174,7 @@ const manifests = import.meta.glob('./*/manifest.js', { eager: true });
         ]} />
       </>
     ),
-    
+
     bff: (
       <>
         <DocHeader title="BFF v1: High-Performance Architecture" badge="Major Update" />
@@ -1191,13 +1191,13 @@ const manifests = import.meta.glob('./*/manifest.js', { eager: true });
 
         <SectionTitle>The Solution (BFF v1.0)</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InfoCard icon={<Zap size={18} />} color="emerald" title="Unified v1 Endpoint" 
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="Unified v1 Endpoint"
             desc="One single request (/api/v1/bff/dashboard) now returns a custom-pruned View Model containing everything your screen needs." />
-          <InfoCard icon={<Heart size={18} />} color="red" title="Heart vs Makeup Resilience" 
+          <InfoCard icon={<Heart size={18} />} color="red" title="Heart vs Makeup Resilience"
             desc="The system distinguishes between 'Heart' services (Resumes/Profile) and 'Makeup' services (Stats). If Stats fail, your dashboard still loads instantly." />
-          <InfoCard icon={<Cpu size={18} />} color="blue" title="SWR Strategy" 
+          <InfoCard icon={<Cpu size={18} />} color="blue" title="SWR Strategy"
             desc="Stale-While-Revalidate logic allows the UI to show cached data instantly while refreshing in the background — Zero waiting." />
-          <InfoCard icon={<Layers size={18} />} color="purple" title="Section-Aware Caching" 
+          <InfoCard icon={<Layers size={18} />} color="purple" title="Section-Aware Caching"
             desc="Advanced caching keys ensure that editing one resume doesn't wipe your entire dashboard cache. Only relevant segments refresh." />
         </div>
 
@@ -1766,7 +1766,7 @@ export const isDisposableEmail = (email) => {
                 <Layers size={16} /> Trust Boundaries
               </h4>
               <pre className="font-mono text-[10px] md:text-[11px] bg-slate-950 border border-white/5 p-4 rounded-xl leading-relaxed text-emerald-400 overflow-x-auto">
-{` Browser (Untrusted Client)
+                {` Browser (Untrusted Client)
     │
     ▼ [TLS 1.3 / Encrypted Transit]
  Cloudflare WAF (DDoS / Edge Filtering)
@@ -1794,7 +1794,7 @@ export const isDisposableEmail = (email) => {
         </p>
         <div className="bg-slate-950 border border-white/10 rounded-2xl p-5 mb-8 overflow-x-auto">
           <pre className="font-mono text-[10px] md:text-[11px] leading-relaxed text-emerald-400">
-{` [ Incoming HTTP Request ]
+            {` [ Incoming HTTP Request ]
            │
            ▼
  1. Cloudflare WAF ───────────► [ Drop Layer 7 DDoS & Malicious Scrapers ]
@@ -1861,7 +1861,7 @@ export const isDisposableEmail = (email) => {
 
         <SectionTitle>4. Triple-Lock Architecture & Per-Lock Thresholds</SectionTitle>
         <p className="text-text-secondary text-[13px] leading-relaxed mb-4">Three independent SHA-256 hashed identifiers are computed on every login attempt and evaluated with progressive thresholds.</p>
-        
+
         <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -1923,13 +1923,13 @@ export const isDisposableEmail = (email) => {
           </table>
         </div>
 
-        {/* ─── 4. CRYPTO INVENTORY & OWASP COMPLIANCE ─── */}
-        <SectionTitle>6. Cryptographic Primitive Inventory</SectionTitle>
-        <p className="text-text-secondary text-[13px] leading-relaxed mb-2">
-          Mapped against OWASP ASVS v4.0 (Section 6: Stored Cryptography) and NIST SP 800-63B. Living compliance artifact for SOC 2 / ISO 27001 readiness.
+        {/* ─── 4. FUTURE ROADMAP (v8.0) & CRYPTO INVENTORY ─── */}
+        <SectionTitle>6. OWASP Cryptographic Primitive Inventory</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Mapped against OWASP ASVS v4.0 (Section 6: Stored Cryptography) and NIST SP 800-63B standards.
         </p>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-6">
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-white/[0.03]">
@@ -1941,18 +1941,13 @@ export const isDisposableEmail = (email) => {
             </thead>
             <tbody className="text-[12px]">
               {[
-                ["Password Storage",        "bcrypt (Cost 10) + Pepper",  "PEPPER_KEY env var",        "Lazy migration"],
-                ["JWT Session Tokens",      "HMAC-SHA256 (HS256)",        "JWT_SECRET root key",       "90-day planned"],
-                ["Math CAPTCHA",            "HMAC-SHA256",                "Derived purpose key",       "60s per-challenge"],
-                ["Admin Audit Log",         "HMAC-SHA256 chain",          "Derived purpose key",       "Domain separated"],
-                ["OTP Generation",          "crypto.randomInt()",         "CSPRNG",                    "Single-use (10m)"],
-                ["UUID / Session IDs",      "crypto.randomUUID()",        "CSPRNG (v4)",               "Per-session"],
-                ["Random Tokens",           "crypto.randomBytes()",       "CSPRNG",                    "Per-issue"],
-                ["Password Reset",          "HMAC-SHA256",                "Derived purpose key",       "Single-use (15m)"],
-                ["Device Fingerprint",      "SHA-256",                    "UA + IP + Platform",        "Statistically static"],
-                ["Brute Force Keys",        "SHA-256 hashed identifiers", "Ephemeral MongoDB keys",    "24h TTL"],
-                ["Refresh Tokens (v8.0)",   "SHA-256(token) stored hash", "CSPRNG 256-bit token",      "On every issue"],
-                ["Data Encryption (future)","AES-256-GCM",               "Derived per-purpose key",   "Not currently required"],
+                ["Password Storage", "bcrypt (Cost 10) + Pepper", "PEPPER_KEY env var", "Lazy Migration"],
+                ["JWT Tokens", "HMAC-SHA256 (HS256)", "JWT_SECRET root", "90 Days (kid v1/v2)"],
+                ["Math CAPTCHA", "HMAC-SHA256", "Derived Purpose Key", "60s Per-Challenge"],
+                ["Admin Audit Log", "HMAC-SHA256 Chain", "Derived Purpose Key", "Domain Separated"],
+                ["Device Fingerprint", "SHA-256", "UA+IP+Platform Hash", "Statistically Static"],
+                ["Triple-Lock Brute Force", "SHA-256 Hashed Keys", "MongoDB Index Keys", "Ephemeral (24h TTL)"],
+                ["Refresh Tokens (v8.0)", "SHA-256(token) Hash", "CSPRNG 256-bit Token", "Rotated on Issue"],
               ].map(([purpose, algo, source, rot], i) => (
                 <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 px-4 text-text-primary font-bold">{purpose}</td>
@@ -1965,89 +1960,23 @@ export const isDisposableEmail = (email) => {
           </table>
         </div>
 
-        {/* ─── OWASP PRINCIPLES IN PRACTICE ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {/* Secret Storage */}
-          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
-            <p className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Secret Storage</p>
-            <p className="font-black text-sm text-text-primary mb-2">Vercel Encrypted Env Vars</p>
-            <p className="text-[12px] text-text-secondary leading-relaxed">
-              Vercel encrypted environment variables are an acceptable baseline for production SaaS. No hardcoded secrets. No secrets in git history.
-              Future enterprise deployments will use <span className="text-text-primary font-bold">AWS KMS</span> or <span className="text-text-primary font-bold">HashiCorp Vault</span>.
-            </p>
-          </div>
-
-          {/* Sensitive Data Minimisation */}
-          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
-            <p className="text-[10px] font-black uppercase tracking-widest text-purple-400 mb-2">OWASP Principle</p>
-            <p className="font-black text-sm text-text-primary mb-2">Minimise Sensitive Storage</p>
-            <p className="text-[12px] text-text-secondary leading-relaxed">
-              CVify never stores raw auth artifacts. OTPs, brute-force identifiers, and refresh tokens are stored only as <span className="font-mono text-primary">SHA-256(value)</span> hashes — same principle as password hashing.
-            </p>
-          </div>
-
-          {/* Encryption + Auth */}
-          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
-            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-2">OWASP Principle</p>
-            <p className="font-black text-sm text-text-primary mb-2">Encryption ≠ Access Control</p>
-            <p className="text-[12px] text-text-secondary leading-relaxed">
-              Cryptography does not replace authorization. All protected resources pass through JWT authentication <span className="text-text-primary font-bold">+</span> ownership verification before any data is returned or decrypted.
-            </p>
-          </div>
-        </div>
-
-        {/* ─── OWASP COMPLIANCE TABLE ─── */}
-        <SectionTitle>7. OWASP Compliance Assessment (v7.0)</SectionTitle>
-        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-white/[0.03]">
-                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Area</th>
-                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary text-center">Status</th>
-                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Notes</th>
-              </tr>
-            </thead>
-            <tbody className="text-[12px]">
-              {[
-                ["Password hashing",          "✅ Excellent",              "bcrypt + server pepper"],
-                ["Secure randomness",         "✅ Excellent",              "crypto.randomInt / randomBytes / randomUUID only"],
-                ["Domain separated keys",     "✅ Excellent",              "Per-purpose HMAC-derived keys"],
-                ["No hardcoded secrets",      "✅ Excellent",              "Loud fail on missing env vars"],
-                ["Timing-safe comparisons",   "✅ Excellent",              "crypto.timingSafeEqual() throughout"],
-                ["Sensitive data minimisation","✅ Excellent",             "All auth identifiers stored as hashes"],
-                ["Encryption + authorization","✅ Excellent",              "JWT middleware guards every protected route"],
-                ["Key lifecycle planning",    "🟡 Planned",               "kid versioning in v8.0"],
-                ["Key rotation",              "🟡 Planned",               "90-day automated policy in v8.0"],
-                ["Data-at-rest encryption",   "🟡 Not currently required", "AES-256-GCM planned when sensitive fields added"],
-                ["External KMS / HSM",        "🟡 Future enterprise",      "Vercel encrypted env vars acceptable at current scale"],
-              ].map(([area, status, note], i) => (
-                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
-                  <td className="py-3 px-4 text-text-primary font-bold">{area}</td>
-                  <td className="py-3 px-4 font-black text-center">{status}</td>
-                  <td className="py-3 px-4 text-text-secondary font-medium">{note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <SectionTitle>8. v8.0 10-Step Sequential Execution Roadmap</SectionTitle>
+        <SectionTitle>7. v8.0 10-Step Sequential Execution Roadmap</SectionTitle>
         <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
-          OWASP-aligned priority sequence — identity management first, then additional cryptographic controls:
+          Strict engineering sequence aligned with OWASP Cryptographic Storage Cheat Sheet and NIST recommendations:
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
           {[
-            { step: "1",  title: "Refresh Token Rotation (RTR)",    desc: "Token family revocation on reuse — theft mitigation." },
-            { step: "2",  title: "Refresh Token Hashing",           desc: "Store SHA256(token) in MongoDB instead of plain tokens." },
-            { step: "3",  title: "Active Session Dashboard",        desc: "View & terminate active device sessions remotely." },
-            { step: "4",  title: "Google OAuth 2.0 PKCE",           desc: "Enterprise social login with PKCE verification." },
-            { step: "5",  title: "WebAuthn / Passkeys",             desc: "FIDO2 biometric & hardware key support (Touch ID, YubiKey)." },
-            { step: "6",  title: "JWT Key Versioning (kid)",        desc: "kid: 'v1' / 'v2' header support for zero-downtime rotation." },
-            { step: "7",  title: "Automated Key Rotation",          desc: "90-day JWT secret rotation policy." },
-            { step: "8",  title: "SIEM Operations Dashboard",       desc: "Real-time SOC threat telemetry stream." },
-            { step: "9",  title: "Zero-Trust Continuous Auth",      desc: "Adaptive step-up authentication on sensitive actions." },
-            { step: "10", title: "Data-at-Rest Encryption",         desc: "AES-256-GCM for resume / portfolio fields (if required)." },
+            { step: "1", title: "Refresh Token Rotation (RTR)", desc: "Automatic token family revocation on reuse detection." },
+            { step: "2", title: "Refresh Token Hashing", desc: "Store SHA256(token) in MongoDB instead of plain tokens." },
+            { step: "3", title: "Active Session Dashboard", desc: "View & terminate active device sessions remotely." },
+            { step: "4", title: "Google OAuth 2.0 PKCE", desc: "Enterprise social login with PKCE verification." },
+            { step: "5", title: "WebAuthn / Passkeys", desc: "Biometric & hardware key support (Touch ID, YubiKey)." },
+            { step: "6", title: "Key Versioning (`kid`)", desc: "Header support for kid: 'v1' / 'v2' zero-downtime key rotation." },
+            { step: "7", title: "Automatic Key Rotation", desc: "Automated 90-day JWT secret rotation policy." },
+            { step: "8", title: "Crypto Inventory Living Artifact", desc: "crypto_inventory.md for SOC 2 / ISO 27001 readiness." },
+            { step: "9", title: "SIEM Operations Dashboard", desc: "Real-time threat telemetry stream for SOC teams." },
+            { step: "10", title: "Zero-Trust Continuous Auth", desc: "Adaptive step-up authentication on sensitive actions." },
           ].map((item) => (
             <div key={item.step} className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-start gap-3">
               <span className="w-6 h-6 rounded-full bg-primary/10 text-primary font-black text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{item.step}</span>
@@ -2058,7 +1987,6 @@ export const isDisposableEmail = (email) => {
             </div>
           ))}
         </div>
-
 
         <SectionTitle>7. 7 Bugs Found & Fixed During v7.0 Refactor</SectionTitle>
         <div className="space-y-4 mb-8">
@@ -2184,13 +2112,13 @@ export const isDisposableEmail = (email) => {
     competitors: (
       <>
         <DocHeader title="Why Choose CVify Pro?" badge="The Honest Truth" />
-        
+
         {/* The Honest Acknowledgement */}
         <div className="p-6 bg-amber-500/5 border border-amber-500/10 rounded-2xl mb-8">
           <h4 className="font-black text-amber-400 text-sm mb-3 flex items-center gap-2"><Award size={16} /> Let's Be Real</h4>
           <p className="text-text-secondary text-[14px] leading-relaxed">
-            Giants like <strong className="text-text-primary">LinkedIn</strong>, <strong className="text-text-primary">Indeed</strong>, <strong className="text-text-primary">Canva</strong>, <strong className="text-text-primary">Zety</strong>, <strong className="text-text-primary">Jobscan</strong>, and <strong className="text-text-primary">Rezi</strong> exist — 
-            they're reliable, credible, trustworthy, and backed by billions. We respect them. They've shaped the industry. 
+            Giants like <strong className="text-text-primary">LinkedIn</strong>, <strong className="text-text-primary">Indeed</strong>, <strong className="text-text-primary">Canva</strong>, <strong className="text-text-primary">Zety</strong>, <strong className="text-text-primary">Jobscan</strong>, and <strong className="text-text-primary">Rezi</strong> exist —
+            they're reliable, credible, trustworthy, and backed by billions. We respect them. They've shaped the industry.
             <strong className="text-primary"> So why should you choose us?</strong>
           </p>
         </div>
@@ -2204,38 +2132,38 @@ export const isDisposableEmail = (email) => {
 
         {/* The Answer */}
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          Because the giants solve <em>one piece</em> of the puzzle. LinkedIn is a network, not an ATS auditor. Canva makes pretty resumes that 
-          <strong className="text-red-400"> fail ATS parsing</strong> (75% rejection before human eyes). Jobscan matches keywords but doesn't know if you're a fresher 
+          Because the giants solve <em>one piece</em> of the puzzle. LinkedIn is a network, not an ATS auditor. Canva makes pretty resumes that
+          <strong className="text-red-400"> fail ATS parsing</strong> (75% rejection before human eyes). Jobscan matches keywords but doesn't know if you're a fresher
           or a senior. <strong className="text-text-primary">No single platform combines all of these — except CVify Pro.</strong>
         </p>
 
         {/* For Job Seekers */}
         <SectionTitle>Why Job Seekers Choose Us</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-          <InfoCard icon={<Brain size={16} />} color="emerald" title="Your Resume Gets UNDERSTOOD" 
+          <InfoCard icon={<Brain size={16} />} color="emerald" title="Your Resume Gets UNDERSTOOD"
             desc="We don't just count keywords. Our 3-Layer Engine understands context — a fresher missing AWS gets encouragement, a senior gets a critical alert. No other tool does this." />
-          <InfoCard icon={<Eye size={16} />} color="blue" title="You See What Recruiters See" 
+          <InfoCard icon={<Eye size={16} />} color="blue" title="You See What Recruiters See"
             desc="6-Second Recruiter Impression, strong bullet highlights, and exact before→after rewrites. You don't guess what's wrong — you KNOW and you get the fix." />
-          <InfoCard icon={<Shield size={16} />} color="purple" title="No Lies, No Inflation" 
+          <InfoCard icon={<Shield size={16} />} color="purple" title="No Lies, No Inflation"
             desc="Our Anti-Hallucination Engine has 6 strict rules. Every feedback quotes YOUR actual resume. If your score is 45, we say 45 — then we show you HOW to make it 85." />
-          <InfoCard icon={<Sparkles size={16} />} color="amber" title="Complete Career Ecosystem" 
+          <InfoCard icon={<Sparkles size={16} />} color="amber" title="Complete Career Ecosystem"
             desc="ATS Scanner + AI Cover Letters + Live Portfolio + GitHub Integration + SEO + Theme Customization — all in one place. No switching between 5 different tools." />
-          <InfoCard icon={<Heart size={16} />} color="red" title="Empathy-First Coaching" 
+          <InfoCard icon={<Heart size={16} />} color="red" title="Empathy-First Coaching"
             desc="We highlight your STRENGTHS first, then suggest improvements with rewritten examples. You'll never feel crushed — you'll feel guided, like having a personal career coach." />
-          <InfoCard icon={<Globe size={16} />} color="blue" title="Globally Inclusive" 
+          <InfoCard icon={<Globe size={16} />} color="blue" title="Globally Inclusive"
             desc="Optimized for English, Urdu, and Dutch. Market-specific scoring for Pakistani HR, European Remote, Freelance, and Standard modes. Not western-centric — built for the world." />
         </div>
 
         {/* For Recruiters */}
         <SectionTitle>Why Recruiters Trust Us</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-          <InfoCard icon={<Award size={16} />} color="emerald" title="Proof-Based Candidates" 
+          <InfoCard icon={<Award size={16} />} color="emerald" title="Proof-Based Candidates"
             desc="Skills aren't just text — they're backed by live GitHub repos, project counts, and ATS audit scores. You see PROOF, not promises." />
-          <InfoCard icon={<Target size={16} />} color="blue" title="Pre-Screened Resumes" 
+          <InfoCard icon={<Target size={16} />} color="blue" title="Pre-Screened Resumes"
             desc="Candidates who use CVify Pro have already passed a 3-layer AI audit and optimized for YOUR JD. Less screening time, better matches." />
-          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="Transparent Scoring" 
+          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="Transparent Scoring"
             desc="Every score comes with a justification. You know WHY a candidate scored 85 in keywords and 60 in quantification — no black boxes." />
-          <InfoCard icon={<Rocket size={16} />} color="amber" title="One-Click Discovery" 
+          <InfoCard icon={<Rocket size={16} />} color="amber" title="One-Click Discovery"
             desc="10 seconds: repos, projects, ATS score, experience timeline, contact buttons — all on one HUD dashboard. No PDF downloading needed." />
         </div>
 
@@ -2301,8 +2229,8 @@ export const isDisposableEmail = (email) => {
         <div className="mt-8 p-6 bg-primary/5 border border-primary/10 rounded-2xl text-center">
           <p className="text-text-primary font-black text-lg mb-2">The Bottom Line</p>
           <p className="text-text-secondary text-[14px] leading-relaxed max-w-2xl mx-auto mb-4">
-            Giants build platforms. We build <strong className="text-primary">precision</strong>. They give you templates — we give you 
-            intelligence. They count keywords — we understand careers. If you want a pretty PDF, use Canva. 
+            Giants build platforms. We build <strong className="text-primary">precision</strong>. They give you templates — we give you
+            intelligence. They count keywords — we understand careers. If you want a pretty PDF, use Canva.
             If you want to <strong className="text-primary">actually get hired</strong>, use CVify Pro.
           </p>
           <p className="text-text-muted text-[12px] italic">
@@ -2389,7 +2317,7 @@ export const isDisposableEmail = (email) => {
     roadmap: (
       <>
         <DocHeader title="Future Roadmap" badge="Product Vision" />
-        
+
         <SectionTitle>Recently Released (Live Now! 🚀)</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
@@ -2407,18 +2335,15 @@ export const isDisposableEmail = (email) => {
             { title: "GitHub Intelligence Panel", desc: "Real-time GitHub DNA insights, repository highlights, and language synthesis.", status: "ACTIVE" },
             { title: "Magic AI Import", desc: "Instant resume hydration from PDF/DOCX using deep semantic parsing.", status: "ACTIVE" },
           ].map((item, i) => (
-            <div key={i} className={`p-5 rounded-2xl flex justify-between items-start gap-4 border ${
-              item.status === "NEW" ? "bg-primary/5 border-primary/20" : item.status === "FIX" ? "bg-amber-500/5 border-amber-500/15" : "bg-emerald-500/5 border-emerald-500/10"
-            }`}>
+            <div key={i} className={`p-5 rounded-2xl flex justify-between items-start gap-4 border ${item.status === "NEW" ? "bg-primary/5 border-primary/20" : item.status === "FIX" ? "bg-amber-500/5 border-amber-500/15" : "bg-emerald-500/5 border-emerald-500/10"
+              }`}>
               <div>
-                <p className={`font-black text-sm ${
-                  item.status === "NEW" ? "text-primary" : item.status === "FIX" ? "text-amber-400" : "text-emerald-400"
-                }`}>{item.title}</p>
+                <p className={`font-black text-sm ${item.status === "NEW" ? "text-primary" : item.status === "FIX" ? "text-amber-400" : "text-emerald-400"
+                  }`}>{item.title}</p>
                 <p className="text-text-secondary text-[12px] font-medium leading-relaxed">{item.desc}</p>
               </div>
-              <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0 ${
-                item.status === "NEW" ? "bg-primary text-white" : item.status === "FIX" ? "bg-amber-500/20 text-amber-400" : "bg-emerald-500/10 text-emerald-500"
-              }`}>{item.status}</span>
+              <span className={`px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full flex-shrink-0 ${item.status === "NEW" ? "bg-primary text-white" : item.status === "FIX" ? "bg-amber-500/20 text-amber-400" : "bg-emerald-500/10 text-emerald-500"
+                }`}>{item.status}</span>
             </div>
           ))}
         </div>
@@ -2762,11 +2687,10 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
   const NavItem = ({ id, icon, label }) => (
     <button
       onClick={() => { setActiveSection(id); setMobileNav(false); }}
-      className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${
-        activeSection === id
+      className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${activeSection === id
           ? "bg-primary/10 text-primary border border-primary/20"
           : "text-text-muted hover:bg-white/5 hover:text-text-primary"
-      }`}
+        }`}
     >
       <span className={activeSection === id ? "text-primary" : "text-text-muted opacity-60"}>{icon}</span>
       {label}
@@ -2805,7 +2729,7 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
         {/* ── MOBILE NAV ── */}
         <AnimatePresence>
           {mobileNav && (
-            <motion.aside 
+            <motion.aside
               initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }}
               className="fixed left-0 top-24 w-72 h-[calc(100vh-96px)] z-40 overflow-y-auto border-r border-border-subtle p-4 pb-12 space-y-6 bg-background lg:hidden"
             >
