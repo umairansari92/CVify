@@ -1673,18 +1673,112 @@ export const isDisposableEmail = (email) => {
 
     "security-v7": (
       <>
-        <DocHeader title="🛡️ Security v7.0 — Triple-Lock Architecture" badge="Latest Security Update" />
-        <p className="text-slate-300 text-[15px] leading-relaxed mb-4">
+        <DocHeader title="🛡️ Security v7.0 — Triple-Lock Architecture & Threat Model" badge="Latest Security Update" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
           In July 2026, CVify Pro underwent the most comprehensive authentication security hardening in its history.
           The primary motivation was a red-team analysis that exposed <strong className="text-red-400">4 realistic brute-force bypass scenarios</strong> in the previous single-layer rate limiter.
-          All changes are production-deployed and backward-compatible.
+          All changes are production-deployed, backward-compatible, and aligned with enterprise SOC standards.
         </p>
-        <div className="p-4 bg-red-500/5 border border-red-500/10 rounded-2xl mb-8 flex items-start gap-3">
-          <AlertCircle size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
-          <p className="text-[13px] text-text-secondary leading-relaxed"><strong className="text-red-400">What the red team found:</strong> The previous <code className="text-xs bg-primary/10 px-1 rounded">express-rate-limit</code> was in-memory only. On Vercel's serverless architecture, each cold start creates a fresh memory store — meaning attempt counts reset on every new function instance. An attacker using distributed IPs could trivially bypass per-IP limits by rotating proxies.</p>
+
+        {/* ─── 1. THREAT MODEL ─── */}
+        <SectionTitle>1. Threat Model & Trust Boundaries</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          CVify Pro enforces zero-trust data validation at every network boundary to protect critical user assets and session artifacts.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <h4 className="font-black text-sm text-primary mb-3 flex items-center gap-2">
+              <ShieldCheck size={16} /> Assets Protected
+            </h4>
+            <div className="space-y-2 text-[12px]">
+              {[
+                { title: "Authentication", desc: "User credentials, bcrypt hashes, pepper keys, OTP tokens" },
+                { title: "User Sessions", desc: "HttpOnly, Secure JWT auth cookies & refresh state" },
+                { title: "AI Credits", desc: "Diamond balances & atomic consumption transactions" },
+                { title: "Resume & Portfolio Data", desc: "Personal identity, career history, documents, public slugs" },
+              ].map((asset, i) => (
+                <div key={i} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/5">
+                  <span className="font-bold text-text-primary block mb-0.5">{asset.title}</span>
+                  <span className="text-text-muted text-[11px]">{asset.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col justify-between">
+            <div>
+              <h4 className="font-black text-sm text-emerald-400 mb-3 flex items-center gap-2">
+                <Layers size={16} /> Trust Boundaries
+              </h4>
+              <pre className="font-mono text-[10px] md:text-[11px] bg-slate-950 border border-white/5 p-4 rounded-xl leading-relaxed text-emerald-400 overflow-x-auto">
+{` Browser (Untrusted Client)
+    │
+    ▼ [TLS 1.3 / Encrypted Transit]
+ Cloudflare WAF (DDoS / Edge Filtering)
+    │
+    ▼ [Origin Cloaked]
+ Vercel Serverless Edge Gateway
+    │
+    ▼ [Isolated Process]
+ Express API Engine (BFF)
+    │
+    ▼ [TLS / Connection Pool]
+ MongoDB Atlas (Encrypted Database)`}
+              </pre>
+            </div>
+            <p className="text-text-muted text-[11px] mt-3 italic">
+              Each boundary enforces strict sanitization, origin checks, and cryptographic token verification.
+            </p>
+          </div>
         </div>
 
-        <SectionTitle>The 4 Bypass Scenarios (Before v7.0)</SectionTitle>
+        {/* ─── 2. ARCHITECTURE DIAGRAM (FULL REQUEST PIPELINE) ─── */}
+        <SectionTitle>2. End-to-End Request Security Pipeline</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Every incoming authentication request traverses 10 distinct security checkpoints before reaching controller logic.
+        </p>
+        <div className="bg-slate-950 border border-white/10 rounded-2xl p-5 mb-8 overflow-x-auto">
+          <pre className="font-mono text-[10px] md:text-[11px] leading-relaxed text-emerald-400">
+{` [ Incoming HTTP Request ]
+           │
+           ▼
+ 1. Cloudflare WAF ───────────► [ Drop Layer 7 DDoS & Malicious Scrapers ]
+           │
+           ▼
+ 2. Vercel Serverless Edge ───► [ Enforce SSL/TLS 1.3 & HSTS ]
+           │
+           ▼
+ 3. Helmet Headers ───────────► [ Inject CSP, X-Frame-Options, Referrer-Policy ]
+           │
+           ▼
+ 4. Rate Limiter ─────────────► [ IP+Email Bucket Check (express-rate-limit) ]
+           │
+           ▼
+ 5. IP Reputation Guard ──────► [ Block Malicious Proxy & Known VPN Ranges ]
+           │
+           ▼
+ 6. Honeypot Validation ──────► [ Check Hidden Input _honey (Bot Trap) ]
+           │
+           ▼
+ 7. Triple-Lock Engine ───────► [ Parallel Lookup: Combo, Email, IP in MongoDB ]
+           │
+           ▼
+ 8. Custom CAPTCHA ───────────► [ Validate HMAC-SHA256 Signed Math Challenge ]
+           │
+           ▼
+ 9. JWT / Cookie Auth ────────► [ Verify HttpOnly Token & Session Integrity ]
+           │
+           ▼
+ 10. Controller Execution ───► [ Process Request & Log HMAC Integrity Chain ]
+           │
+           ▼
+ [ Secure Response Sent ]`}
+          </pre>
+        </div>
+
+        {/* ─── RED TEAM BYPASS SCENARIOS ─── */}
+        <SectionTitle>3. The 4 Bypass Scenarios Solved in v7.0</SectionTitle>
         <div className="space-y-3 mb-8">
           {[
             { id: "1", color: "red", title: "Distributed IP Rotation", problem: "Attacker rotates 1,000 proxy IPs targeting 1 email. Per-IP limiter triggers at 10 — but with 1,000 IPs they get 10,000 attempts before any single IP is blocked.", fix: "Email Lock: SHA256(email) independently tracks all attempts per target email regardless of source IP." },
@@ -1711,26 +1805,9 @@ export const isDisposableEmail = (email) => {
           ))}
         </div>
 
-        <SectionTitle>Triple-Lock Architecture</SectionTitle>
-        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">Three independent SHA-256 hashed identifiers are computed on every login attempt. All three are checked in parallel before the auth controller processes the request.</p>
-        <pre className="font-mono text-[11px] bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400 mb-6">{`POST /api/auth/login
-         ↓
-  checkBackoff middleware
-         ↓
-  MongoDB parallel lookup (3 keys):
-  ┌─────────────────────────────────────────────────┐
-  │  comboKey = SHA256("combo:" + email + ":" + ip) │ → Brute force (1 account, 1 IP)
-  │  emailKey = SHA256("email:" + email)            │ → Distributed rotation (1 account, N IPs)
-  │  ipKey    = SHA256("ip:"    + ip)               │ → Password spraying (N accounts, 1 IP)
-  └─────────────────────────────────────────────────┘
-         ↓
-  Any locked? → 429 / 403 (CAPTCHA required)
-         ↓
-  auth.controller.js → bcrypt.compare()
-         ↓
-  Success → resetAttempts() → delete all 3 DB records`}</pre>
-
-        <SectionTitle>Per-Lock Thresholds (Separated in v7.0)</SectionTitle>
+        <SectionTitle>4. Triple-Lock Architecture & Per-Lock Thresholds</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">Three independent SHA-256 hashed identifiers are computed on every login attempt and evaluated with progressive thresholds.</p>
+        
         <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -1758,19 +1835,89 @@ export const isDisposableEmail = (email) => {
           </table>
         </div>
 
-        <SectionTitle>CAPTCHA System — Custom HMAC-SHA256</SectionTitle>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <InfoCard icon={<ShieldCheck size={16} />} color="blue" title="Server-Signed Math Challenge"
-            desc="Server generates an arithmetic question (e.g. 14 + 7), computes HMAC-SHA256(answer:expiry:ip) and returns a signed token. Client cannot forge the answer without knowing the server secret." />
-          <InfoCard icon={<Zap size={16} />} color="emerald" title="IP-Bound Token"
-            desc="Token contains the client IP. If the attacker solves the CAPTCHA on one machine and tries to use the token from a different IP, verification fails with ip_mismatch." />
-          <InfoCard icon={<Shield size={16} />} color="amber" title="60-Second Expiry"
-            desc="CAPTCHA tokens expire in 60 seconds. Stored tokens cannot be reused. Each login block requires a fresh CAPTCHA solve." />
-          <InfoCard icon={<Brain size={16} />} color="purple" title="Zero Third-Party Dependency"
-            desc="No reCAPTCHA, no hCaptcha. The entire system is built on Node's built-in crypto module — zero external dependency, zero privacy leakage to Google." />
+        {/* ─── 3. SECURITY HEADERS TABLE ─── */}
+        <SectionTitle>5. Enterprise Security Headers Matrix</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Configured globally via Helmet middleware to enforce browser-level security policies.
+        </p>
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/[0.03]">
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Header</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary">Purpose & Defense</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-emerald-400 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody className="text-[12px]">
+              {[
+                ["Strict-Transport-Security (HSTS)", "Enforces HTTPS connections for 2 years (includeSubDomains, preload). Prevents SSL stripping.", "✔ Active"],
+                ["Content-Security-Policy (CSP)", "Restricts script execution to whitelisted origins. Prevents XSS & data exfiltration.", "✔ Active"],
+                ["Permissions-Policy", "Disables camera, microphone, geolocation, and payment APIs for application pages.", "✔ Active"],
+                ["Referrer-Policy", "Sets strict-origin-when-cross-origin to prevent leaking URL parameters to 3rd parties.", "✔ Active"],
+                ["X-Frame-Options", "Set to DENY — prevents Clickjacking attacks by disallowing iframe embedding.", "✔ Active"],
+                ["Cross-Origin-Opener-Policy (COOP)", "Set to same-origin — isolates browsing context from cross-origin popup windows.", "✔ Active"],
+                ["Cross-Origin-Resource-Policy (CORP)", "Set to same-site — prevents unauthorized cross-origin reading of static assets.", "✔ Active"],
+              ].map(([header, purpose, status], i) => (
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 text-primary font-black font-mono text-[11px]">{header}</td>
+                  <td className="py-3 px-4 text-text-secondary font-medium">{purpose}</td>
+                  <td className="py-3 px-4 text-emerald-400 font-black text-center">{status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        <SectionTitle>7 Bugs Found & Fixed During v7.0</SectionTitle>
+        {/* ─── 4. FUTURE ROADMAP (v8.0) ─── */}
+        <SectionTitle>6. Security Roadmap (Upcoming v8.0 Architecture)</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          CVify Pro's security architecture is continuously evolving. The upcoming v8.0 release introduces active observability and next-gen auth controls.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-5 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
+            <span className="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full mb-2 inline-block">Phase 1 — Advanced Session Controls</span>
+            <h4 className="font-black text-sm text-text-primary mb-2">Refresh Token Rotation & Session Dashboard</h4>
+            <ul className="space-y-1.5 text-[12px] text-text-secondary list-disc pl-4">
+              <li>Automatic token family revocation on reuse detection (theft mitigation)</li>
+              <li>Active session management dashboard with remote single-click logout</li>
+              <li>Concurrent session caps per account tier</li>
+            </ul>
+          </div>
+
+          <div className="p-5 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+            <span className="text-[10px] font-black uppercase tracking-widest text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full mb-2 inline-block">Phase 2 — Passwordless & Passkeys</span>
+            <h4 className="font-black text-sm text-text-primary mb-2">WebAuthn / Passkey Native Integration</h4>
+            <ul className="space-y-1.5 text-[12px] text-text-secondary list-disc pl-4">
+              <li>Hardware key authentication (YubiKey, Touch ID, Face ID, Windows Hello)</li>
+              <li>Risk-based adaptive step-up authentication on suspicious logins</li>
+              <li>Passwordless biometric auth fallback</li>
+            </ul>
+          </div>
+
+          <div className="p-5 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full mb-2 inline-block">Phase 3 — Enterprise Observability</span>
+            <h4 className="font-black text-sm text-text-primary mb-2">SIEM Telemetry & Security Operations Dashboard</h4>
+            <ul className="space-y-1.5 text-[12px] text-text-secondary list-disc pl-4">
+              <li>Real-time telemetry stream for SOC teams (Failed logins, honeypot hits, travel flags)</li>
+              <li>AI prompt injection defense monitoring & automated threat scoring</li>
+              <li>Automated security event webhooks for enterprise customers</li>
+            </ul>
+          </div>
+
+          <div className="p-5 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full mb-2 inline-block">Phase 4 — Zero Trust Continuous Auth</span>
+            <h4 className="font-black text-sm text-text-primary mb-2">Continuous Behavioral Verification</h4>
+            <ul className="space-y-1.5 text-[12px] text-text-secondary list-disc pl-4">
+              <li>Real-time IP reputation tracking during active user sessions</li>
+              <li>Context-aware re-authentication before sensitive asset modification</li>
+              <li>Automated compliance audit log export (SOC 2 / ISO 27001 ready)</li>
+            </ul>
+          </div>
+        </div>
+
+        <SectionTitle>7. 7 Bugs Found & Fixed During v7.0 Refactor</SectionTitle>
         <div className="space-y-4 mb-8">
           {[
             {
@@ -1835,33 +1982,7 @@ export const isDisposableEmail = (email) => {
           ))}
         </div>
 
-        <SectionTitle>Updated Security Checklist (v7.0)</SectionTitle>
-        <div className="space-y-2 mb-8">
-          {[
-            { done: true, label: "Triple-Lock: Combo + Email + IP SHA-256 hashed identifiers (MongoDB persistent)" },
-            { done: true, label: "Progressive backoff delay schedule: 0 → 10 → 25 → 40 → 60 → 300 → 600 → 1800s" },
-            { done: true, label: "Custom HMAC-SHA256 math CAPTCHA — zero external dependency, IP-bound tokens" },
-            { done: true, label: "Per-lock-type thresholds (Combo/Email: 5/6, IP: 30/50)" },
-            { done: true, label: "captchaSolved state preserved across wrong-password retries" },
-            { done: true, label: "Honeypot field type=hidden (immune to browser autofill)" },
-            { done: true, label: "CAPTCHA verify receives email → correct SHA-256 keys computed" },
-            { done: true, label: "HMAC key derivation for ADMIN_LOG_SECRET and CAPTCHA_SECRET (no hardcoded strings)" },
-            { done: true, label: "Axios 401 handler: SESSION_EXPIRED only on authenticated API calls, never on login form" },
-            { done: true, label: "Security state: GET /api/auth/security-state → authoritative countdown from MongoDB" },
-            { done: true, label: "Countdown timer visible independently of Redux error state" },
-            { done: true, label: "Device fingerprinting: SHA-256(UA+IP+Headers) — new device alert email" },
-            { done: true, label: "Impossible travel detection: 1000km gap in < 3h → security flag" },
-            { done: true, label: "IP reputation check before login processing" },
-            { done: true, label: "Admin HMAC-signed audit log (chain-verified integrity)" },
-          ].map((item, i) => (
-            <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border text-[13px] ${item.done ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-white/[0.02] border-white/5'}`}>
-              <span className={`font-black text-xs ${item.done ? 'text-emerald-400' : 'text-text-muted'}`}>{item.done ? '✅' : '⬜'}</span>
-              <span className={item.done ? 'text-text-primary' : 'text-text-muted'}>{item.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <SectionTitle>Security v7.0 — FAQ</SectionTitle>
+        <SectionTitle>8. Security v7.0 — FAQ</SectionTitle>
         <div className="space-y-4">
           {[
             {
