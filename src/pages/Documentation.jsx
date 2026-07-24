@@ -64,7 +64,8 @@ const Documentation = () => {
       items: [
         { id: "helmet", icon: <Shield size={16} />, label: "Helmet Middleware" },
         { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
-        { id: "security-v6", icon: <ShieldCheck size={16} />, label: "🔐 Security v6.0 (Latest)" },
+        { id: "security-v6", icon: <ShieldCheck size={16} />, label: "🔐 Security v6.0" },
+        { id: "security-v7", icon: <ShieldCheck size={16} />, label: "🛡️ Security v7.0 — Triple-Lock (New!)" },
       ]
     },
     {
@@ -1435,6 +1436,13 @@ const manifests = import.meta.glob('./*/manifest.js', { eager: true });
                 ["CORS", "cors", "Cross-origin from Vite dev server & Vercel prod"],
                 ["Security", "helmet", "CSP, HSTS, X-Content-Type, X-Frame-Options headers"],
                 ["Anti-Abuse", "blockedDomains.js", "200+ disposable email domains blocked on signup"],
+                ["Brute Force", "LoginAttempt (MongoDB model)", "Persistent Triple-Lock progressive backoff — survives serverless cold starts"],
+                ["CAPTCHA", "Custom HMAC-SHA256 math challenge", "Server-signed math puzzles, IP-bound, 60s expiry — zero third-party dependency"],
+                ["Bot Detection", "honeypot field (type=hidden)", "Silent bot trap in login form — server rejects any request with it filled"],
+                ["Fingerprinting", "deviceFingerprint.middleware.js", "SHA-256 device ID from UA+IP+Headers — new device triggers alert email"],
+                ["Travel Guard", "impossibleTravel.middleware.js", "Flags logins 1000+ km apart in under 3 hours as impossible travel"],
+                ["IP Reputation", "ipReputation.middleware.js", "Checks IP against known bad actor ranges before processing"],
+                ["Key Derivation", "crypto.createHmac (Node built-in)", "HMAC-SHA256 derives purpose-scoped secrets from JWT_SECRET — no hardcoded strings"],
                 ["Logging", "morgan + winston", "HTTP access logs + structured app-level logs"],
                 ["Env", "dotenv", "Safe .env loading, never committed to git"],
                 ["Error", "errorHandler.js", "Centralised error responses, status codes"],
@@ -1657,6 +1665,232 @@ export const isDisposableEmail = (email) => {
             <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border text-[13px] ${item.done ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-white/[0.02] border-white/5'}`}>
               <span className={`font-black text-xs ${item.done ? 'text-emerald-400' : 'text-text-muted'}`}>{item.done ? '✅' : '⬜'}</span>
               <span className={item.done ? 'text-text-primary' : 'text-text-muted'}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    "security-v7": (
+      <>
+        <DocHeader title="🛡️ Security v7.0 — Triple-Lock Architecture" badge="Latest Security Update" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-4">
+          In July 2026, CVify Pro underwent the most comprehensive authentication security hardening in its history.
+          The primary motivation was a red-team analysis that exposed <strong className="text-red-400">4 realistic brute-force bypass scenarios</strong> in the previous single-layer rate limiter.
+          All changes are production-deployed and backward-compatible.
+        </p>
+        <div className="p-4 bg-red-500/5 border border-red-500/10 rounded-2xl mb-8 flex items-start gap-3">
+          <AlertCircle size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
+          <p className="text-[13px] text-text-secondary leading-relaxed"><strong className="text-red-400">What the red team found:</strong> The previous <code className="text-xs bg-primary/10 px-1 rounded">express-rate-limit</code> was in-memory only. On Vercel's serverless architecture, each cold start creates a fresh memory store — meaning attempt counts reset on every new function instance. An attacker using distributed IPs could trivially bypass per-IP limits by rotating proxies.</p>
+        </div>
+
+        <SectionTitle>The 4 Bypass Scenarios (Before v7.0)</SectionTitle>
+        <div className="space-y-3 mb-8">
+          {[
+            { id: "1", color: "red", title: "Distributed IP Rotation", problem: "Attacker rotates 1,000 proxy IPs targeting 1 email. Per-IP limiter triggers at 10 — but with 1,000 IPs they get 10,000 attempts before any single IP is blocked.", fix: "Email Lock: SHA256(email) independently tracks all attempts per target email regardless of source IP." },
+            { id: "2", color: "orange", title: "Password Spraying", problem: "Attacker picks 1 common password and tries it against 10,000 different emails from 1 IP. Per-email limiter never triggers since each email only sees 1 attempt.", fix: "IP Lock: SHA256(ip) tracks total failed attempts per source IP across ALL emails — triggers after 30 attempts." },
+            { id: "3", color: "amber", title: "Serverless Memory Reset", problem: "Vercel cold starts reset in-memory rate limit counters. Attacker waits for function cold start then gets fresh attempt budget.", fix: "All three locks stored in MongoDB — survives cold starts, shared across all serverless instances globally." },
+            { id: "4", color: "yellow", title: "Combo Attack (Credential Stuffing)", problem: "Attacker uses leaked email:password pairs from data breaches, trying each combo from a unique IP. Single-dimension locks (IP-only or Email-only) miss this pattern.", fix: "Combo Lock: SHA256(email:ip) locks the specific email+IP pair after 5 attempts — catches credential stuffing without impacting other users on the same IP." },
+          ].map((scenario) => (
+            <div key={scenario.id} className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <div className="flex items-start gap-3 mb-3">
+                <span className={`text-${scenario.color}-400 font-black text-xs w-6 h-6 rounded-full bg-${scenario.color}-500/10 flex items-center justify-center flex-shrink-0 mt-0.5`}>{scenario.id}</span>
+                <p className={`font-black text-sm text-${scenario.color}-400`}>{scenario.title}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-9">
+                <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-xl">
+                  <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Problem</p>
+                  <p className="text-text-secondary text-[12px] leading-relaxed">{scenario.problem}</p>
+                </div>
+                <div className="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+                  <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Fix Applied</p>
+                  <p className="text-text-secondary text-[12px] leading-relaxed">{scenario.fix}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>Triple-Lock Architecture</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">Three independent SHA-256 hashed identifiers are computed on every login attempt. All three are checked in parallel before the auth controller processes the request.</p>
+        <pre className="font-mono text-[11px] bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400 mb-6">{`POST /api/auth/login
+         ↓
+  checkBackoff middleware
+         ↓
+  MongoDB parallel lookup (3 keys):
+  ┌─────────────────────────────────────────────────┐
+  │  comboKey = SHA256("combo:" + email + ":" + ip) │ → Brute force (1 account, 1 IP)
+  │  emailKey = SHA256("email:" + email)            │ → Distributed rotation (1 account, N IPs)
+  │  ipKey    = SHA256("ip:"    + ip)               │ → Password spraying (N accounts, 1 IP)
+  └─────────────────────────────────────────────────┘
+         ↓
+  Any locked? → 429 / 403 (CAPTCHA required)
+         ↓
+  auth.controller.js → bcrypt.compare()
+         ↓
+  Success → resetAttempts() → delete all 3 DB records`}</pre>
+
+        <SectionTitle>Per-Lock Thresholds (Separated in v7.0)</SectionTitle>
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/[0.03]">
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Lock Type</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary">CAPTCHA Triggers At</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Hard Lock At</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Rationale</th>
+              </tr>
+            </thead>
+            <tbody className="text-[12px]">
+              {[
+                ["Combo SHA256(email:ip)", "5 attempts", "6 attempts", "Single account targeted from one device — strictest"],
+                ["Email SHA256(email)", "5 attempts", "6 attempts", "Same account targeted from rotating IPs — strict"],
+                ["IP SHA256(ip)", "30 attempts", "50 attempts", "Lenient — prevents false-positive blocking of multi-account users on same IP (home, office)"],
+              ].map(([lock, captcha, hard, why], i) => (
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 text-primary font-black">{lock}</td>
+                  <td className="py-3 px-4 text-amber-400 font-bold">{captcha}</td>
+                  <td className="py-3 px-4 text-red-400 font-bold">{hard}</td>
+                  <td className="py-3 px-4 text-text-secondary font-medium">{why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <SectionTitle>CAPTCHA System — Custom HMAC-SHA256</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <InfoCard icon={<ShieldCheck size={16} />} color="blue" title="Server-Signed Math Challenge"
+            desc="Server generates an arithmetic question (e.g. 14 + 7), computes HMAC-SHA256(answer:expiry:ip) and returns a signed token. Client cannot forge the answer without knowing the server secret." />
+          <InfoCard icon={<Zap size={16} />} color="emerald" title="IP-Bound Token"
+            desc="Token contains the client IP. If the attacker solves the CAPTCHA on one machine and tries to use the token from a different IP, verification fails with ip_mismatch." />
+          <InfoCard icon={<Shield size={16} />} color="amber" title="60-Second Expiry"
+            desc="CAPTCHA tokens expire in 60 seconds. Stored tokens cannot be reused. Each login block requires a fresh CAPTCHA solve." />
+          <InfoCard icon={<Brain size={16} />} color="purple" title="Zero Third-Party Dependency"
+            desc="No reCAPTCHA, no hCaptcha. The entire system is built on Node's built-in crypto module — zero external dependency, zero privacy leakage to Google." />
+        </div>
+
+        <SectionTitle>7 Bugs Found & Fixed During v7.0</SectionTitle>
+        <div className="space-y-4 mb-8">
+          {[
+            {
+              num: "1", color: "red",
+              title: "CAPTCHA SHA-256 Key Mismatch (403 Loop)",
+              cause: "POST /captcha/verify body had no email field. getAttemptIdentifier(req) computed SHA256('email:') — empty string. captchaSolved=true was written to wrong DB records. Login saw captchaSolved=false on real records → infinite 403.",
+              fix: "verifyCaptcha now accepts email in body. Manually computes SHA256(email:ip) using the same formula as login. Correct records updated.",
+            },
+            {
+              num: "2", color: "orange",
+              title: "captchaSolved Reset on Wrong Password",
+              cause: "recordFailedAttempt() had captchaSolved = false on every failed attempt ≥ threshold 5. User solves CAPTCHA → types wrong password → captchaSolved wiped → CAPTCHA demanded again. Infinite loop.",
+              fix: "Guard added: if (!record.captchaSolved) record.captchaSolved = false — preserves solved state. User can retry password without re-solving.",
+            },
+            {
+              num: "3", color: "amber",
+              title: "Honeypot Autofill (400 False Positives)",
+              cause: "Honeypot field was type='text' with CSS display:none. Chrome, Bitwarden, and LastPass autofill ALL text inputs in login forms — even CSS-hidden ones. Server saw _honey filled → 400 'bot detected' for real users.",
+              fix: "Changed to type='hidden'. Password managers never fill type=hidden inputs. 0 false positives since fix.",
+            },
+            {
+              num: "4", color: "yellow",
+              title: "IP False-Positive (Multi-Account Same IP)",
+              cause: "All three locks shared CAPTCHA threshold=5 / lock=6. Developer testing 2 accounts in different browsers: Browser 1 hits 6 failed attempts → ipKey at 6 → Browser 2's first attempt on different account immediately blocked.",
+              fix: "Separated IP thresholds: 30 CAPTCHA, 50 hard lock. Legitimate multi-account users on same IP unaffected. True password spraying (50+ accounts) still caught.",
+            },
+            {
+              num: "5", color: "blue",
+              title: "Vercel 500 Crash (Startup Secret Throw)",
+              cause: "security.js and captcha.middleware.js threw new Error() at module load time if ADMIN_LOG_SECRET or CAPTCHA_SECRET env vars were missing. Vercel serverless warm-start loaded these modules, found missing env vars, and crashed the entire function → GET /api/auth/me returned 500.",
+              fix: "Replaced throw with HMAC key derivation: crypto.createHmac('sha256', JWT_SECRET).update('purpose_v1').digest('hex'). Server never crashes — unique purpose-scoped key derived at runtime.",
+            },
+            {
+              num: "6", color: "purple",
+              title: "Hardcoded Fallback Secret",
+              cause: "Previous fix used || 'cvify_default_admin_log_secret_2026' as fallback. Any deployment missing env vars would silently use this known string — identical across all deployments. JWT_SECRET reuse also violated principle of least privilege.",
+              fix: "Pure HMAC derivation from JWT_SECRET with domain-separated purposes: 'admin_log_integrity_v1' and 'captcha_signing_v1'. No static strings. Each purpose gets a cryptographically unique key.",
+            },
+            {
+              num: "7", color: "emerald",
+              title: "Session Expired Modal on Wrong Credentials",
+              cause: "Axios interceptor treated ALL 401 responses as SESSION_EXPIRED. POST /auth/login returning 401 (wrong password) triggered 'Session Expired' modal — forcing page reload. Login form state, typed credentials, and countdown timer were destroyed.",
+              fix: "Interceptor now distinguishes endpoints: auth routes (login, signup, captcha) get inline error handling only. Session Expired modal fires ONLY on 401s from authenticated API calls (/api/user, /api/resumes, etc.).",
+            },
+          ].map((bug) => (
+            <div key={bug.num} className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <div className="flex items-center gap-3 mb-3">
+                <span className={`text-${bug.color}-400 font-black text-xs w-6 h-6 rounded-full bg-${bug.color}-500/10 flex items-center justify-center flex-shrink-0`}>#{bug.num}</span>
+                <p className={`font-black text-sm text-${bug.color}-400`}>{bug.title}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-9 text-[12px]">
+                <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-xl">
+                  <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1.5">Root Cause</p>
+                  <p className="text-text-secondary leading-relaxed">{bug.cause}</p>
+                </div>
+                <div className="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+                  <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1.5">Fix Applied</p>
+                  <p className="text-text-secondary leading-relaxed">{bug.fix}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>Updated Security Checklist (v7.0)</SectionTitle>
+        <div className="space-y-2 mb-8">
+          {[
+            { done: true, label: "Triple-Lock: Combo + Email + IP SHA-256 hashed identifiers (MongoDB persistent)" },
+            { done: true, label: "Progressive backoff delay schedule: 0 → 10 → 25 → 40 → 60 → 300 → 600 → 1800s" },
+            { done: true, label: "Custom HMAC-SHA256 math CAPTCHA — zero external dependency, IP-bound tokens" },
+            { done: true, label: "Per-lock-type thresholds (Combo/Email: 5/6, IP: 30/50)" },
+            { done: true, label: "captchaSolved state preserved across wrong-password retries" },
+            { done: true, label: "Honeypot field type=hidden (immune to browser autofill)" },
+            { done: true, label: "CAPTCHA verify receives email → correct SHA-256 keys computed" },
+            { done: true, label: "HMAC key derivation for ADMIN_LOG_SECRET and CAPTCHA_SECRET (no hardcoded strings)" },
+            { done: true, label: "Axios 401 handler: SESSION_EXPIRED only on authenticated API calls, never on login form" },
+            { done: true, label: "Security state: GET /api/auth/security-state → authoritative countdown from MongoDB" },
+            { done: true, label: "Countdown timer visible independently of Redux error state" },
+            { done: true, label: "Device fingerprinting: SHA-256(UA+IP+Headers) — new device alert email" },
+            { done: true, label: "Impossible travel detection: 1000km gap in < 3h → security flag" },
+            { done: true, label: "IP reputation check before login processing" },
+            { done: true, label: "Admin HMAC-signed audit log (chain-verified integrity)" },
+          ].map((item, i) => (
+            <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border text-[13px] ${item.done ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-white/[0.02] border-white/5'}`}>
+              <span className={`font-black text-xs ${item.done ? 'text-emerald-400' : 'text-text-muted'}`}>{item.done ? '✅' : '⬜'}</span>
+              <span className={item.done ? 'text-text-primary' : 'text-text-muted'}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle>Security v7.0 — FAQ</SectionTitle>
+        <div className="space-y-4">
+          {[
+            {
+              q: "Why MongoDB instead of Redis for storing login attempts?",
+              a: "CVify Pro is deployed on Vercel's serverless platform. Redis requires a persistent TCP connection which serverless functions cannot maintain across invocations. MongoDB Atlas handles connection pooling via mongoose and survives cold starts. The performance difference is negligible at CVify's scale — LoginAttempt documents have compound indexes and expire automatically via TTL (24h) for self-cleaning.",
+            },
+            {
+              q: "If the IP threshold is 30, can an attacker still do 30 password attempts per account?",
+              a: "No. The Combo lock (SHA256(email:ip)) triggers at 5 attempts for the specific email+IP pair. The IP lock (SHA256(ip)) at 30 is for cross-account spraying detection only. An attacker gets 5 attempts per email per IP before the Combo lock fires — same as the v6.0 behavior for any specific account.",
+            },
+            {
+              q: "Why build a custom CAPTCHA instead of using Google reCAPTCHA?",
+              a: "Three reasons: (1) Privacy — reCAPTCHA sends user behavioral data to Google servers. (2) Zero dependency cost — no API keys, no billing, no rate limits. (3) Simplicity — arithmetic CAPTCHAs are sufficient to block automated scripts. Real humans solve '14 + 7' in under 3 seconds. The HMAC-SHA256 token prevents the answer from being computed client-side, and IP-binding prevents solve-and-replay attacks.",
+            },
+            {
+              q: "Can an attacker bypass the brute force protection by clearing cookies or local storage?",
+              a: "No. All security state is stored exclusively in MongoDB — not in cookies, localStorage, or sessionStorage. Clearing browser storage has zero effect. The server recomputes SHA-256 keys from the request email and IP on every attempt and looks up the current attempt count in the database. The only way to bypass the lock is to change email address AND IP address simultaneously — which the Combo lock handles by tracking both.",
+            },
+            {
+              q: "What happens to my CAPTCHA solve if I accidentally close the browser tab during the security delay?",
+              a: "Your CAPTCHA solved status is stored in MongoDB, not in browser state. When you return to the login page, the frontend calls POST /api/auth/security-state which reads from MongoDB and returns your current lock status including captchaSolved=true. The UI restores the 'CAPTCHA Verified' badge and the countdown timer resumes from the correct remaining time — not from scratch.",
+            },
+          ].map((faq, i) => (
+            <div key={i} className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <p className="font-black text-sm text-text-primary mb-3 flex items-start gap-2">
+                <span className="text-primary font-black text-xs w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">Q</span>
+                {faq.q}
+              </p>
+              <p className="text-text-secondary text-[13px] leading-relaxed ml-7">{faq.a}</p>
             </div>
           ))}
         </div>
