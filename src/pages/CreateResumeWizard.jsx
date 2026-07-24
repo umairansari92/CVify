@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+import Swal from "sweetalert2";
+
 const CreateResumeWizard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,14 +66,15 @@ const CreateResumeWizard = () => {
     { id: "Creative", label: "Creative Portfolio", desc: "Design & portfolio focus." },
   ];
 
-  const handleFinishWizard = async () => {
+  const handleFinishWizard = async (useDiamonds = false) => {
     setIsCreating(true);
-    const toastId = toast.loading("Initializing your AI Career Resume...");
+    const toastId = toast.loading(useDiamonds ? "Unlocking with 30 💎..." : "Initializing your AI Career Resume...");
 
     try {
       const newResumeData = {
         title: `${careerGoal} Resume (${experienceLevel})`,
         templateId: selectedTemplate,
+        useDiamonds,
         personalInfo: {
           jobTitle: careerGoal,
           location: targetCountry,
@@ -87,12 +90,31 @@ const CreateResumeWizard = () => {
 
       const result = await dispatch(createResume(newResumeData));
       if (result.type.includes("fulfilled")) {
-        toast.success("Resume workspace created!", { id: toastId });
+        toast.success(useDiamonds ? "Unlocked & Created!" : "Resume workspace created!", { id: toastId });
         const createdId = result.payload?._id || result.payload?.data?._id;
         if (createdId) {
           navigate(`/builder/${createdId}`);
         } else {
-          navigate("/builder");
+          navigate("/dashboard");
+        }
+      } else if (result.payload?.limitReached) {
+        toast.dismiss(toastId);
+        const confirm = await Swal.fire({
+          title: "Resume Limit Reached",
+          text: `You have reached the free limit of 2 resumes. Would you like to use 30 Diamonds to unlock & create another resume? Current balance: ${user?.diamonds || 0} 💎`,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Unlock with 30 Diamonds",
+          cancelButtonText: "Go to Dashboard",
+          background: "#0f172a",
+          color: "#ffffff",
+          customClass: { popup: "glass-medium", confirmButton: "btn-primary", cancelButton: "btn-secondary" },
+        });
+
+        if (confirm.isConfirmed) {
+          handleFinishWizard(true);
+        } else {
+          navigate("/dashboard");
         }
       } else {
         throw new Error(result.payload?.message || "Creation failed");
