@@ -103,13 +103,14 @@ const AppRoutes = () => {
 
       {/* New Resume Builder (Full Screen) */}
       <Route
-        path="/builder/:id?"
+        path="/builder/:id"
         element={
           <ProtectedRoute>
             <ResumeBuilder />
           </ProtectedRoute>
         }
       />
+      <Route path="/builder" element={<Navigate to="/create-resume" replace />} />
 
       {/* Protected Routes with Layout */}
       <Route

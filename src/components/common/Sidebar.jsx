@@ -26,7 +26,7 @@ const Sidebar = ({ onClose }) => {
 
   const careerOsItems = [
     { path: "/", label: "Command Center", icon: <FaHome /> },
-    { path: "/builder", label: "Resume Studio", icon: <FaFileAlt /> },
+    { path: "/create-resume", label: "Resume Studio", icon: <FaFileAlt /> },
     { path: "/ats", label: "ATS Intelligence", icon: <FaChartLine /> },
     { path: "/cover-letter", label: "Cover Letter AI", icon: <FaEnvelopeOpenText /> },
     { path: "/templates", label: "Portfolio Lab", icon: <FaThLarge /> },
