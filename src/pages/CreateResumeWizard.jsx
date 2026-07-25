@@ -71,13 +71,18 @@ const CreateResumeWizard = () => {
     const toastId = toast.loading(useDiamonds ? "Unlocking with 30 💎..." : "Initializing your AI Career Resume...");
 
     try {
+      const userFullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.username || "Professional Name";
+
       const newResumeData = {
         title: `${careerGoal} Resume (${experienceLevel})`,
         templateId: selectedTemplate,
         useDiamonds,
         personalInfo: {
+          fullName: userFullName,
           jobTitle: careerGoal,
           location: targetCountry,
+          email: user?.email || "",
+          phone: user?.phoneNumber || "",
         },
         metadata: {
           startingPoint,
