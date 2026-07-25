@@ -9,7 +9,7 @@ const CreateResumeWizard = lazy(() => import("../pages/CreateResumeWizard"));
 const Login = lazy(() => import("../pages/Login"));
 const Signup = lazy(() => import("../pages/Signup"));
 const VerifyOtp = lazy(() => import("../pages/VerifyOtp"));
-const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Dashboard = lazy(() => import("../app/Dashboard"));
 const CreateResume = lazy(() => import("../pages/CreateResume"));
 const ResumeBuilder = lazy(() => import("../pages/ResumeBuilder/ResumeBuilderLayout"));
 const Templates = lazy(() => import("../pages/Templates"));

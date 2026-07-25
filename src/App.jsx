@@ -8,6 +8,7 @@ import { getMe } from "./features/auth/authThunk";
 import PWAInstall from "./components/common/PWAInstall";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import NetworkStatus from "./components/common/NetworkStatus";
+import "./core/registry/index.js";
 
 const App = () => {
   const dispatch = useDispatch();
