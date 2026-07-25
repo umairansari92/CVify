@@ -178,7 +178,11 @@ const resumeSlice = createSlice({
 
       // DELETE
       .addCase(deleteResume.fulfilled, (state, action) => {
-        state.resumes = state.resumes.filter((r) => r._id !== action.payload);
+        const deletedId = action.payload;
+        state.resumes = state.resumes.filter((r) => r._id !== deletedId && r.id !== deletedId);
+        if (state.currentResume && (state.currentResume._id === deletedId || state.currentResume.id === deletedId)) {
+          state.currentResume = null;
+        }
       })
       // CLONE
       .addCase(cloneResume.pending, (state) => {
