@@ -345,7 +345,7 @@ const CreateResumeWizard = () => {
           </button>
         ) : (
           <button
-            onClick={handleFinishWizard}
+            onClick={() => handleFinishWizard(false)}
             disabled={isCreating}
             className="flex items-center gap-2 px-8 py-3.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all disabled:opacity-30"
           >
