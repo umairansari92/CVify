@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { m } from "framer-motion";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { FaHome, FaSignOutAlt, FaShieldAlt, FaUsers, FaFileInvoice, FaChartLine, FaFileAlt, FaCog } from "react-icons/fa";
-import * as FaIcons from "react-icons/fa";
-import * as HiIcons from "react-icons/hi";
+import {
+  FaHome, FaFileAlt, FaSignOutAlt, FaUser, FaThLarge,
+  FaEnvelopeOpenText, FaChartLine, FaShieldAlt, FaUsers,
+  FaFileInvoice, FaCog, FaBook, FaMicrophoneAlt, FaMapSigns, FaBriefcase
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import Logo from "../../components/common/Logo";
-import { ModuleRegistry } from "../../core/registry/ModuleRegistry";
-
-// Helper to resolve icon from string
-const resolveIcon = (iconString) => {
-  if (iconString && iconString.startsWith("Fa")) {
-    const Icon = FaIcons[iconString];
-    return Icon ? <Icon /> : <FaFileAlt />;
-  }
-  if (iconString && iconString.startsWith("Hi")) {
-    const Icon = HiIcons[iconString];
-    return Icon ? <Icon /> : <FaFileAlt />;
-  }
-  return <FaFileAlt />;
-};
 
 const Sidebar = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useSelector((state) => state.auth);
-  
-  const [modules, setModules] = useState([]);
-
-  useEffect(() => {
-    // Load modules from registry
-    setModules(ModuleRegistry.getModules());
-  }, []);
 
   const isAdminArea = location.pathname.startsWith("/admin");
 
@@ -42,22 +23,17 @@ const Sidebar = ({ onClose }) => {
     navigate("/login");
   };
 
-  // Base Command Center item
-  const commandCenterItem = { path: "/dashboard", label: "Command Center", icon: <FaHome /> };
-
-  // Generate Career OS items dynamically from the Module Registry
-  const dynamicCareerOsItems = modules.map(mod => ({
-    path: mod.manifest.routes.main,
-    label: mod.manifest.name,
-    icon: resolveIcon(mod.manifest.icon)
-  }));
-
-  const profileItem = { path: "/profile", label: "Profile", icon: <FaIcons.FaUser /> };
-
   const careerOsItems = [
-    commandCenterItem,
-    ...dynamicCareerOsItems,
-    profileItem,
+    { path: "/dashboard", label: "Command Center", icon: <FaHome /> },
+    { path: "/resume-builder", label: "AI Resume Builder", icon: <FaFileAlt /> },
+    { path: "/ats", label: "ATS Intelligence", icon: <FaChartLine /> },
+    { path: "/cover-letter", label: "Cover Letter AI", icon: <FaEnvelopeOpenText /> },
+    { path: "/templates", label: "Portfolio Lab", icon: <FaThLarge /> },
+    { path: "/job-matcher", label: "Job Matcher", icon: <FaBriefcase /> },
+    { path: "/interview", label: "Interview Simulator", icon: <FaMicrophoneAlt /> },
+    { path: "/roadmap", label: "Career Roadmap", icon: <FaMapSigns /> },
+    { path: "/profile", label: "Profile", icon: <FaUser /> },
+    { path: "/documentation", label: "Documentation", icon: <FaBook /> },
     ...((user?.role === "admin" || user?.role === "superadmin")
       ? [{ path: "/admin/dashboard", label: "Admin Panel", icon: <FaShieldAlt /> }]
       : []),
@@ -93,7 +69,7 @@ const Sidebar = ({ onClose }) => {
       <nav className="flex-1 px-5 py-4 space-y-1.5 relative z-10 overflow-y-auto custom-scrollbar-thin pr-3">
         <div className="flex items-center gap-2 px-5 mb-5 mt-2">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-50">
-            {isAdminArea ? "Control Plane" : "Career OS Modules"}
+            {isAdminArea ? "Control Plane" : "Career OS"}
           </p>
         </div>
         {itemsToRender.map((item) => (
