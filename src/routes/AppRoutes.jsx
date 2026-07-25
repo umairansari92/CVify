@@ -87,7 +87,7 @@ const AppRoutes = () => {
         element={
           !isInitialized
             ? <LoadingScreen />
-            : <Navigate to={user ? "/dashboard" : "/resume-builder"} replace />
+            : <Navigate to={user ? "/dashboard" : "/login"} replace />
         }
       />
 
