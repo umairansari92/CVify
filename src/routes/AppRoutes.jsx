@@ -76,7 +76,7 @@ const BuilderLegacyRedirect = () => {
 };
 
 const AppRoutes = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { user, isInitialized } = useSelector((state) => state.auth);
 
   return (
     <Suspense fallback={<LoadingScreen />}>
@@ -84,7 +84,11 @@ const AppRoutes = () => {
 
       <Route
         path="/"
-        element={<Navigate to={token ? "/dashboard" : "/resume-builder"} replace />}
+        element={
+          !isInitialized
+            ? <LoadingScreen />
+            : <Navigate to={user ? "/dashboard" : "/resume-builder"} replace />
+        }
       />
 
       {/* Public Auth routes */}
