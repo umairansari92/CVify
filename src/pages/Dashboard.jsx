@@ -70,39 +70,34 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = async (id, e) => {
-    e.stopPropagation();
+  const handleDelete = async (id, title, e) => {
+    if (e) e.stopPropagation();
     const result = await Swal.fire({
       title: "Delete Resume?",
-      text: "This action cannot be undone. Your resume will be permanently deleted.",
+      text: `Are you sure you want to delete "${title || "this resume"}"? This action cannot be undone.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#64748b",
       confirmButtonText: "Yes, Delete It",
       cancelButtonText: "Cancel",
-      background: "var(--midground)",
-      color: "var(--text-main)",
+      background: "#0f172a",
+      color: "#ffffff",
       customClass: {
         popup: "glass-medium",
-        confirmButton: "btn-primary",
+        confirmButton: "btn-danger",
         cancelButton: "btn-secondary",
       },
     });
 
     if (result.isConfirmed) {
-      await dispatch(deleteResume(id));
-      dispatch(fetchDashboardData());
-      Swal.fire({
-        title: "Deleted!",
-        text: "Your resume has been deleted successfully.",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-        background: "var(--midground)",
-        color: "var(--text-main)",
-        customClass: { popup: "glass-medium" },
-      });
+      const res = await dispatch(deleteResume(id));
+      if (res.type.includes("fulfilled")) {
+        dispatch(fetchDashboardData());
+        toast.success("Resume deleted successfully");
+      } else {
+        toast.error(res.payload || "Failed to delete resume");
+      }
     }
   };
 
@@ -240,17 +235,26 @@ const Dashboard = () => {
           <h2 className="text-xl font-bold text-text-primary tracking-tight">Active Resumes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {resumes?.map((resume) => (
-              <Card key={resume.id} variant="elevated" className="!p-6 flex flex-col gap-6">
+              <Card key={resume.id} variant="elevated" className="!p-6 flex flex-col gap-6 relative group">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-lg font-bold text-text-primary truncate mb-1">{resume.title}</h3>
                     <p className="text-xs text-text-muted uppercase tracking-wider">{resume.status}</p>
                   </div>
-                  {resume.atsScore ? (
-                    <Badge variant={resume.atsScore > 75 ? "score" : "warning"}>
-                      ATS {resume.atsScore}
-                    </Badge>
-                  ) : null}
+                  <div className="flex items-center gap-2">
+                    {resume.atsScore ? (
+                      <Badge variant={resume.atsScore > 75 ? "score" : "warning"}>
+                        ATS {resume.atsScore}
+                      </Badge>
+                    ) : null}
+                    <button
+                      onClick={(e) => handleDelete(resume.id, resume.title, e)}
+                      title="Delete Resume"
+                      className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all border border-red-500/20 flex items-center justify-center"
+                    >
+                      <FiTrash2 size={14} />
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="flex gap-2">
@@ -262,6 +266,9 @@ const Dashboard = () => {
                   </Button>
                   <Button variant="ghost" className="flex-1 !bg-white/5 hover:!bg-white/10 !h-10 text-xs" onClick={() => setShareModalData(resume)} icon={FiShare2}>
                     Share
+                  </Button>
+                  <Button variant="ghost" className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 !h-10 px-3 text-xs" onClick={(e) => handleDelete(resume.id, resume.title, e)} icon={FiTrash2}>
+                    Delete
                   </Button>
                 </div>
               </Card>
