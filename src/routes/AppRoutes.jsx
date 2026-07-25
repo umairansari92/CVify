@@ -66,7 +66,13 @@ const AdminRoute = ({ children }) => {
 
 const ResumeRedirect = () => {
   const { id } = useParams();
-  return <Navigate to={id ? `/builder/${id}` : "/builder"} replace />;
+  return <Navigate to={id ? `/resume-builder/editor/${id}` : "/resume-builder/create"} replace />;
+};
+
+// Carries the legacy :id param from old /builder/:id → new /resume-builder/editor/:id
+const BuilderLegacyRedirect = () => {
+  const { id } = useParams();
+  return <Navigate to={`/resume-builder/editor/${id}`} replace />;
 };
 
 const AppRoutes = () => {
@@ -78,11 +84,10 @@ const AppRoutes = () => {
 
       <Route
         path="/"
-        element={<Navigate to={token ? "/dashboard" : "/landing"} replace />}
+        element={<Navigate to={token ? "/dashboard" : "/resume-builder"} replace />}
       />
 
-      {/* Public Landing & Auth routes */}
-      <Route path="/landing" element={<LandingPage />} />
+      {/* Public Auth routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
@@ -91,28 +96,35 @@ const AppRoutes = () => {
       <Route path="/share/r/:slug" element={<PublicResumeViewer />} />
       <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
 
-      {/* Multi-Step Create Resume Wizard */}
+      {/* Standalone SaaS Product Landing Page (NO App Sidebar) */}
+      <Route path="/resume-builder" element={<LandingPage />} />
+      <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
+
+      {/* Standalone Multi-Step Onboarding Wizard (NO App Sidebar) */}
       <Route
-        path="/create-resume"
+        path="/resume-builder/create"
         element={
           <ProtectedRoute>
             <CreateResumeWizard />
           </ProtectedRoute>
         }
       />
+      <Route path="/create-resume" element={<Navigate to="/resume-builder/create" replace />} />
 
-      {/* New Resume Builder (Full Screen) */}
+      {/* Standalone Full-Screen Resume Builder Workspace (NO App Sidebar) */}
       <Route
-        path="/builder/:id"
+        path="/resume-builder/editor/:id"
         element={
           <ProtectedRoute>
             <ResumeBuilder />
           </ProtectedRoute>
         }
       />
-      <Route path="/builder" element={<Navigate to="/create-resume" replace />} />
+      <Route path="/resume-builder/editor" element={<Navigate to="/resume-builder/create" replace />} />
+      <Route path="/builder/:id" element={<BuilderLegacyRedirect />} />
+      <Route path="/builder" element={<Navigate to="/resume-builder/create" replace />} />
 
-      {/* Protected Routes with Layout */}
+      {/* Protected App Routes wrapped in AppLayout (with App Sidebar) */}
       <Route
         element={
           <ProtectedRoute>
@@ -121,7 +133,7 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create" element={<Navigate to="/create-resume" replace />} />
+        <Route path="/create" element={<Navigate to="/resume-builder/create" replace />} />
         <Route path="/edit/:id" element={<ResumeRedirect />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/cover-letter" element={<CoverLetterPage />} />

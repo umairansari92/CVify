@@ -106,7 +106,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleEdit = (id) => navigate(`/builder/${id}`);
+  const handleEdit = (id) => navigate(`/resume-builder/editor/${id}`);
 
   const handleClone = async (id, e, useDiamonds = false) => {
     if (e) e.stopPropagation();
@@ -146,7 +146,7 @@ const Dashboard = () => {
 
   const handleCreateNew = () => {
     dispatch(clearCurrentResume());
-    navigate("/builder");
+    navigate("/resume-builder/create");
   };
 
   const handleScan = (id) => navigate("/ats", { state: { preSelectedResumeId: id } });

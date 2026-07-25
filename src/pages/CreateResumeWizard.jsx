@@ -93,7 +93,7 @@ const CreateResumeWizard = () => {
         toast.success(useDiamonds ? "Unlocked & Created!" : "Resume workspace created!", { id: toastId });
         const createdId = result.payload?._id || result.payload?.data?._id;
         if (createdId) {
-          navigate(`/builder/${createdId}`);
+          navigate(`/resume-builder/editor/${createdId}`);
         } else {
           navigate("/dashboard");
         }

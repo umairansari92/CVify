@@ -106,8 +106,8 @@ const LandingPage = () => {
           <Link to="/login" className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
             Sign In
           </Link>
-          <Link to="/create-resume" className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all">
-            Start Free
+          <Link to="/resume-builder/create" className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all">
+            Create Resume
           </Link>
         </div>
       </nav>
@@ -128,11 +128,11 @@ const LandingPage = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-16">
-          <Link to="/create-resume" className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all flex items-center justify-center gap-3">
+          <Link to="/resume-builder/create" className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all flex items-center justify-center gap-3">
             <span>Start Building Free</span>
             <ArrowRight size={16} />
           </Link>
-          <button onClick={() => navigate("/create-resume")} className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-white/10 text-slate-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center gap-2">
+          <button onClick={() => navigate("/resume-builder/create")} className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-white/10 text-slate-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center gap-2">
             <Play size={14} className="text-primary" />
             <span>Interactive Demo</span>
           </button>
@@ -365,7 +365,7 @@ const LandingPage = () => {
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 font-medium mb-6 leading-relaxed">{tmpl.desc}</p>
-                <Link to="/create-resume" className="w-full py-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all flex items-center justify-center gap-2">
+                <Link to="/resume-builder/create" className="w-full py-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all flex items-center justify-center gap-2">
                   <span>Use This Template</span>
                   <ArrowRight size={12} />
                 </Link>
@@ -450,7 +450,7 @@ const LandingPage = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link to="/create-resume" className="w-full sm:w-auto px-10 py-5 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all">
+            <Link to="/resume-builder/create" className="w-full sm:w-auto px-10 py-5 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all">
               Build Your Resume Free ⚡
             </Link>
           </div>
@@ -474,7 +474,7 @@ const LandingPage = () => {
           <div className="flex gap-6 text-[10px] font-black uppercase tracking-wider text-slate-400">
             <Link to="/documentation" className="hover:text-white">Documentation</Link>
             <Link to="/login" className="hover:text-white">Sign In</Link>
-            <Link to="/create-resume" className="hover:text-white">Create Resume</Link>
+            <Link to="/resume-builder/create" className="hover:text-white">Create Resume</Link>
           </div>
         </div>
       </footer>
