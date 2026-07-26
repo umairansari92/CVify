@@ -190,54 +190,159 @@ const ProfileCard = ({ user, healthScore, navigate }) => {
   );
 };
 
-// ─── Career Status Card ───────────────────────────────────────────────────────
-const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate }) => (
-  <Card variant="glass" className="relative p-7 lg:p-9 overflow-hidden h-full">
-    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] pointer-events-none" />
-    <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 h-full">
-      <div className="flex-1">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-2">Career OS — Active Session</p>
-        <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight mb-3">
-          Welcome back, {user?.firstName || user?.name?.split(" ")[0] || "User"} 👋
-        </h1>
-        <div className="text-sm text-text-secondary font-medium flex items-center gap-2 mb-7">
-          <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
-          <TypeAnimation
-            sequence={["AI Workspace Active", 3000, "Intelligence Synchronized", 3000, "Career OS — Elite Mode", 3000]}
-            repeat={Infinity}
-            wrapper="span"
-          />
+// ─── Career Status Card (2026 Executive SaaS Command Hub) ──────────────────────
+const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, resumes, stats }) => {
+  const latestResume = resumes && resumes.length > 0 ? resumes[0] : null;
+
+  return (
+    <Card variant="glass" className="relative p-6 lg:p-8 overflow-hidden h-full flex flex-col justify-between gap-6">
+      {/* Background ambient lighting */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* TOP: Header & Status Badges */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Career OS — Command Hub</span>
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34d399]" />
+          </div>
+          <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight">
+            Welcome back, {user?.firstName || user?.name?.split(" ")[0] || "User"} 👋
+          </h1>
+          <div className="text-xs text-text-secondary font-medium flex items-center gap-2 mt-1">
+            <TypeAnimation
+              sequence={[
+                "AI Workspace Active • All Engines Nominal", 3000,
+                "ATS Scanner Ready • Real-Time Scoring On", 3000,
+                "Career Intelligence • Elite Optimization Mode", 3000
+              ]}
+              repeat={Infinity}
+              wrapper="span"
+            />
+          </div>
         </div>
-        <div className="flex gap-3 flex-wrap">
-          <Button variant="glow" onClick={onCreateResume} icon={FiPlus}>New Resume</Button>
-          <Button variant="ghost" onClick={() => navigate("/ats")} icon={FaSearchPlus}>ATS Scan</Button>
-          <Button variant="ghost" onClick={() => navigate("/cover-letter")} icon={FaEnvelopeOpenText}>Cover Letter</Button>
+
+        {/* Live Badges */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2">
+            <FaGem className="text-primary text-xs" />
+            <span className="text-xs font-bold text-primary">{user?.diamonds || 0} Credits</span>
+          </div>
+          <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-secondary">
+            Pro Active
+          </div>
         </div>
       </div>
 
-      {/* Career Health Ring */}
-      <div className="relative w-36 h-36 shrink-0 self-center">
-        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="42" className="stroke-card-border fill-none" strokeWidth="6" />
-          <m.circle
-            cx="50" cy="50" r="42" fill="none"
-            stroke="var(--primary)" strokeWidth="8" strokeLinecap="round"
-            initial={{ strokeDasharray: "0, 1000" }}
-            animate={{ strokeDasharray: `${hiringProbability * 2.6389}, 1000` }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="filter drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold text-text-primary">
-            {hiringProbability}<span className="text-lg text-text-muted">%</span>
-          </span>
-          <span className="text-[8px] font-bold text-text-secondary uppercase tracking-[0.15em] mt-1 text-center">Job Ready</span>
+      {/* MIDDLE: Quick Action Dock */}
+      <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="w-full !py-2.5 !text-xs font-bold">
+          New Resume
+        </Button>
+        <Button variant="ghost" onClick={() => navigate("/ats")} icon={FaSearchPlus} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+          ATS Analyzer
+        </Button>
+        <Button variant="ghost" onClick={() => navigate("/cover-letter")} icon={FaEnvelopeOpenText} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+          Cover Letter
+        </Button>
+        <Button variant="ghost" onClick={() => navigate("/interview")} icon={FiZap} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+          Mock Interview
+        </Button>
+      </div>
+
+      {/* BOTTOM GRID: Readiness Meter + Active Resume Spotlight */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Box A: Job Readiness Score */}
+        <div className="p-4 rounded-2xl bg-midground/80 border border-border-subtle flex items-center gap-5">
+          <div className="relative w-24 h-24 shrink-0">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" className="stroke-card-border fill-none" strokeWidth="7" />
+              <m.circle
+                cx="50" cy="50" r="40" fill="none"
+                stroke="var(--primary)" strokeWidth="8" strokeLinecap="round"
+                initial={{ strokeDasharray: "0, 1000" }}
+                animate={{ strokeDasharray: `${hiringProbability * 2.513}, 1000` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-text-primary">{hiringProbability}%</span>
+              <span className="text-[7px] font-black uppercase text-text-muted tracking-wider">Job Ready</span>
+            </div>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h4 className="text-xs font-bold text-text-primary mb-1">Career Health Score</h4>
+            <p className="text-[11px] text-text-muted leading-relaxed mb-2">
+              Evaluated across 14 ATS algorithms and profile parameters.
+            </p>
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+              ▲ +5% vs last week
+            </span>
+          </div>
+        </div>
+
+        {/* Box B: Latest Active Draft Spotlight */}
+        <div className="p-4 rounded-2xl bg-midground/80 border border-border-subtle flex flex-col justify-between">
+          {latestResume ? (
+            <>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary rounded-full animate-ping" />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-text-muted">Active Draft</span>
+                </div>
+                {latestResume.atsScore ? (
+                  <Badge variant="score" className="!text-[10px]">
+                    ATS {latestResume.atsScore}
+                  </Badge>
+                ) : null}
+              </div>
+              <h4 className="text-sm font-bold text-text-primary truncate mb-1">{latestResume.title}</h4>
+              <p className="text-[11px] text-text-muted mb-3">Last updated: {new Date(latestResume.updatedAt || Date.now()).toLocaleDateString()}</p>
+              <Button
+                variant="ghost"
+                onClick={() => navigate(`/resume-builder/editor/${latestResume.id}`)}
+                className="w-full !h-8 !text-xs !bg-primary/10 hover:!bg-primary/20 !text-primary border border-primary/20 flex items-center justify-center gap-2"
+              >
+                <span>Continue Editing</span>
+                <FiArrowRight size={12} />
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center text-center justify-center h-full py-2">
+              <p className="text-xs font-bold text-text-primary mb-1">No Active Resume Draft</p>
+              <p className="text-[11px] text-text-muted mb-3">Create your first resume to unlock AI insights.</p>
+              <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="!h-8 !text-xs">
+                Create First Resume
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  </Card>
-);
+
+      {/* FOOTER: AI Co-Pilot Recommendation Bar */}
+      <div className="relative z-10 p-3.5 rounded-xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border border-primary/20 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary shrink-0">
+            <FiZap size={16} />
+          </div>
+          <p className="text-xs text-text-secondary leading-snug truncate">
+            <strong className="text-text-primary font-semibold">AI Insight:</strong> Your profile matches 88% of Senior MERN roles. Target job scan recommended.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/ats")}
+          className="text-xs font-bold text-primary hover:underline whitespace-nowrap shrink-0 flex items-center gap-1"
+        >
+          <span>Run Scan</span>
+          <FiChevronRight size={12} />
+        </button>
+      </div>
+    </Card>
+  );
+};
 
 // ─── KPI Section ──────────────────────────────────────────────────────────────
 const KpiSection = ({ resumes, coverLetters, stats, healthScore }) => (
@@ -471,6 +576,8 @@ const Dashboard = () => {
             hiringProbability={hiringProbability}
             onCreateResume={handleCreateNew}
             navigate={navigate}
+            resumes={resumes}
+            stats={stats}
           />
         </div>
       </div>
