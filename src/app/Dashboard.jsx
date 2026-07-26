@@ -20,7 +20,7 @@ import {
 } from "react-icons/fa";
 import {
   FiEdit2, FiTrash2, FiDownload, FiPlus, FiCopy, FiZap, FiRefreshCw,
-  FiArrowRight, FiActivity, FiShare2, FiChevronRight
+  FiArrowRight, FiActivity, FiShare2, FiChevronRight, FiSparkles, FiCheckCircle
 } from "react-icons/fi";
 import * as FaIcons from "react-icons/fa";
 import * as HiIcons from "react-icons/hi";
@@ -73,135 +73,140 @@ const ProfileCard = ({ user, healthScore, navigate }) => {
   const visibleSkills = skills.slice(0, 4);
   const extraCount = skills.length - visibleSkills.length;
 
-  const aboutText = user?.bio || user?.summary || "Add a description to tell people about yourself.";
+  const aboutText = user?.bio || user?.summary || "Architecting next-generation digital products as an AI-Powered Developer.";
   const email = user?.email || "umair.ansari.92@gmail.com";
   const roleContact = user?.headline || "MERN Stack Developer & Chatbot Developer";
-  const linkContact = user?.socialLinks?.linkedin || user?.website || (user?.username ? `hiringmine/profile/${user.username}` : "hiringmine/profile/umairahmed");
+  const linkContact = user?.socialLinks?.linkedin || user?.website || (user?.username ? `cvifypro/p/${user.username}` : "linkedin.com/in/umairansari92");
 
   return (
-    <Card variant="elevated" className="!p-6 flex flex-col gap-0 h-full">
-      {/* Header */}
-      <div className="mb-1">
-        <h3 className="text-base font-bold text-text-primary">Your Profile</h3>
-        <p className="text-[12px] text-text-muted mt-0.5">Keep it strong to rank higher.</p>
-      </div>
+    <Card variant="elevated" className="!p-5 lg:!p-6 flex flex-col justify-between h-full border border-border-subtle hover:border-primary/30 transition-all">
+      <div>
+        {/* Header */}
+        <div className="flex justify-between items-start mb-3">
+          <div>
+            <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">Your Profile</h3>
+            <p className="text-[11px] text-text-muted">Keep it strong to rank higher.</p>
+          </div>
+          <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">
+            Active
+          </span>
+        </div>
 
-      <div className="my-4 border-t border-border-subtle" />
+        <div className="my-3 border-t border-border-subtle" />
 
-      {/* Avatar + Identity */}
-      <div className="flex flex-col items-center text-center mb-5">
-        <div className="relative mb-3">
-          <div className="relative w-24 h-24 rounded-full p-[3px] shadow-glow-primary" style={{ background: "linear-gradient(135deg, #6366f1, #a855f7)" }}>
-            {userAvatar ? (
-              <img
-                src={userAvatar}
-                alt={fullName}
-                className="w-full h-full rounded-full object-cover border-2 border-bg-secondary"
-              />
-            ) : (
-              <div className="w-full h-full rounded-full bg-primary/20 border-2 border-bg-secondary flex items-center justify-center font-bold text-2xl text-primary">
-                {fullName.substring(0, 2).toUpperCase()}
-              </div>
-            )}
-
-            {/* #OPENTOWORK Badge Ring */}
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[8px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase shadow-md whitespace-nowrap">
+        {/* Avatar + Identity */}
+        <div className="flex flex-col items-center text-center mb-4">
+          <div className="relative mb-3">
+            <div className="w-20 h-20 rounded-full p-[2.5px] shadow-glow-primary" style={{ background: "linear-gradient(135deg, #6366f1, #a855f7)" }}>
+              {userAvatar ? (
+                <img
+                  src={userAvatar}
+                  alt={fullName}
+                  className="w-full h-full rounded-full object-cover border-2 border-bg-secondary"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-primary/20 border-2 border-bg-secondary flex items-center justify-center font-bold text-xl text-primary">
+                  {fullName.substring(0, 2).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[7px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase shadow-md whitespace-nowrap">
               #OPENTOWORK
             </div>
           </div>
+
+          <h2 className="text-base font-bold text-text-primary mt-1">{fullName}</h2>
+          <p className="text-[11px] text-text-secondary mt-0.5 px-1 leading-snug font-medium line-clamp-2">{headline}</p>
+
+          <div className="flex items-center justify-center gap-1 text-[11px] text-text-muted mt-1.5">
+            <FaMapMarkerAlt size={10} className="text-primary" />
+            <span>{location}</span>
+          </div>
         </div>
 
-        <h2 className="text-lg font-bold text-text-primary mt-2">{fullName}</h2>
-        <p className="text-xs text-text-secondary mt-1 px-2 leading-relaxed font-medium">{headline}</p>
+        {/* Completion Bar */}
+        <div className="mb-4 bg-primary/5 p-3 rounded-xl border border-primary/10">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[11px] font-bold text-text-primary">Profile Completion</span>
+            <span className="text-[11px] font-bold text-primary">{completionScore}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <m.div
+              initial={{ width: 0 }}
+              animate={{ width: `${completionScore}%` }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="h-full rounded-full"
+              style={{ background: "linear-gradient(90deg, #6366f1, #a855f7)" }}
+            />
+          </div>
+        </div>
 
-        <div className="flex items-center justify-center gap-1.5 text-xs text-text-muted mt-2">
-          <FaMapMarkerAlt size={10} className="text-primary" />
-          <span>{location}</span>
+        {/* Skills */}
+        <div className="mb-4">
+          <p className="text-[11px] font-bold text-text-primary mb-1.5">Skills</p>
+          <div className="flex flex-wrap gap-1">
+            {visibleSkills.map((skill, i) => (
+              <span
+                key={i}
+                className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-medium rounded-md border border-primary/20 truncate max-w-[150px]"
+              >
+                {skill}
+              </span>
+            ))}
+            {extraCount > 0 && (
+              <span className="px-2 py-0.5 bg-white/5 text-text-muted text-[10px] font-bold rounded-md border border-border-subtle">
+                +{extraCount}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Completion Bar */}
-      <div className="mb-5 bg-primary/5 p-3 rounded-2xl border border-primary/10">
-        <div className="flex justify-between items-center mb-1.5">
-          <span className="text-xs font-bold text-text-primary">Profile Completion</span>
-          <span className="text-xs font-bold text-primary">{completionScore}%</span>
+        {/* About */}
+        <div className="mb-4">
+          <p className="text-[11px] font-bold text-text-primary mb-1">About</p>
+          <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
+            {aboutText}
+          </p>
         </div>
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-          <m.div
-            initial={{ width: 0 }}
-            animate={{ width: `${completionScore}%` }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, #6366f1, #a855f7)" }}
-          />
-        </div>
-      </div>
 
-      {/* Skills */}
-      <div className="mb-5">
-        <p className="text-xs font-bold text-text-primary mb-2">Skills</p>
-        <div className="flex flex-wrap gap-1.5">
-          {visibleSkills.map((skill, i) => (
-            <span
-              key={i}
-              className="px-2.5 py-1 bg-primary/10 text-primary text-[11px] font-medium rounded-lg border border-primary/20 truncate max-w-[170px]"
-            >
-              {skill}
-            </span>
-          ))}
-          {extraCount > 0 && (
-            <span className="px-2.5 py-1 bg-white/5 text-text-muted text-[11px] font-bold rounded-lg border border-border-subtle">
-              +{extraCount}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* About */}
-      <div className="mb-5">
-        <p className="text-xs font-bold text-text-primary mb-1.5">About</p>
-        <p className="text-xs text-text-muted leading-relaxed line-clamp-3">
-          {aboutText}
-        </p>
-      </div>
-
-      {/* Contact */}
-      <div className="mb-6 space-y-2.5">
-        <p className="text-xs font-bold text-text-primary mb-2">Contact</p>
-        <div className="flex items-center gap-2.5 text-xs text-text-muted">
-          <FaEnvelopeOpenText size={12} className="shrink-0 text-primary" />
-          <span className="truncate">{email}</span>
-        </div>
-        <div className="flex items-center gap-2.5 text-xs text-text-muted">
-          <FaBriefcase size={12} className="shrink-0 text-primary" />
-          <span className="truncate line-clamp-1">{roleContact}</span>
-        </div>
-        <div className="flex items-center gap-2.5 text-xs text-text-muted">
-          <FaChartLine size={12} className="shrink-0 text-primary" />
-          <span className="truncate">{linkContact}</span>
+        {/* Contact */}
+        <div className="mb-4 space-y-1.5">
+          <p className="text-[11px] font-bold text-text-primary mb-1">Contact</p>
+          <div className="flex items-center gap-2 text-[11px] text-text-muted">
+            <FaEnvelopeOpenText size={10} className="shrink-0 text-primary" />
+            <span className="truncate">{email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-text-muted">
+            <FaBriefcase size={10} className="shrink-0 text-primary" />
+            <span className="truncate line-clamp-1">{roleContact}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-text-muted">
+            <FaChartLine size={10} className="shrink-0 text-primary" />
+            <span className="truncate">{linkContact}</span>
+          </div>
         </div>
       </div>
 
       {/* CTA Button */}
-      <Button variant="glow" onClick={() => navigate("/profile")} className="w-full mt-auto">
+      <Button variant="glow" onClick={() => navigate("/profile")} className="w-full !h-10 !text-xs font-bold mt-2">
         View Full Profile
       </Button>
     </Card>
   );
 };
 
-// ─── Career Status Card (2026 Executive SaaS Command Hub) ──────────────────────
-const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, resumes, stats }) => {
+// ─── Career Status Card (Executive SaaS Command Hub) ──────────────────────
+const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, resumes }) => {
   const latestResume = resumes && resumes.length > 0 ? resumes[0] : null;
 
   return (
-    <Card variant="glass" className="relative p-6 lg:p-8 overflow-hidden h-full flex flex-col justify-between gap-6">
+    <Card variant="glass" className="relative p-6 lg:p-7 overflow-hidden h-full flex flex-col justify-between gap-5 border border-border-subtle">
       {/* Background ambient lighting */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* TOP: Header & Status Badges */}
-      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
+      {/* TOP: Header */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border-subtle">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Career OS — Command Hub</span>
@@ -222,63 +227,55 @@ const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, r
             />
           </div>
         </div>
-
-        {/* Live Badges */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <div className="px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2">
-            <FaGem className="text-primary text-xs" />
-            <span className="text-xs font-bold text-primary">{user?.diamonds || 0} Credits</span>
-          </div>
-          <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-secondary">
-            Pro Active
-          </div>
-        </div>
       </div>
 
       {/* MIDDLE: Quick Action Dock */}
-      <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="w-full !py-2.5 !text-xs font-bold">
-          New Resume
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/ats")} icon={FaSearchPlus} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
-          ATS Analyzer
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/cover-letter")} icon={FaEnvelopeOpenText} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
-          Cover Letter
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/interview")} icon={FiZap} className="w-full !py-2.5 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
-          Mock Interview
-        </Button>
+      <div className="relative z-10 space-y-2">
+        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-text-muted">Quick Launch Dock</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="w-full !h-10 !text-xs font-bold">
+            New Resume
+          </Button>
+          <Button variant="ghost" onClick={() => navigate("/ats")} icon={FaSearchPlus} className="w-full !h-10 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+            ATS Analyzer
+          </Button>
+          <Button variant="ghost" onClick={() => navigate("/cover-letter")} icon={FaEnvelopeOpenText} className="w-full !h-10 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+            Cover Letter
+          </Button>
+          <Button variant="ghost" onClick={() => navigate("/interview")} icon={FiZap} className="w-full !h-10 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle">
+            Mock Interview
+          </Button>
+        </div>
       </div>
 
       {/* BOTTOM GRID: Readiness Meter + Active Resume Spotlight */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
         {/* Box A: Job Readiness Score */}
-        <div className="p-4 rounded-2xl bg-midground/80 border border-border-subtle flex items-center gap-5">
-          <div className="relative w-24 h-24 shrink-0">
+        <div className="p-4 rounded-2xl bg-midground/80 border border-border-subtle flex items-center gap-4">
+          <div className="relative w-20 h-20 shrink-0">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" className="stroke-card-border fill-none" strokeWidth="7" />
+              <circle cx="50" cy="50" r="38" className="stroke-card-border fill-none" strokeWidth="7" />
               <m.circle
-                cx="50" cy="50" r="40" fill="none"
+                cx="50" cy="50" r="38" fill="none"
                 stroke="var(--primary)" strokeWidth="8" strokeLinecap="round"
                 initial={{ strokeDasharray: "0, 1000" }}
-                animate={{ strokeDasharray: `${hiringProbability * 2.513}, 1000` }}
+                animate={{ strokeDasharray: `${hiringProbability * 2.387}, 1000` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 className="filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-text-primary">{hiringProbability}%</span>
+              <span className="text-xl font-bold text-text-primary">{hiringProbability}%</span>
               <span className="text-[7px] font-black uppercase text-text-muted tracking-wider">Job Ready</span>
             </div>
           </div>
 
           <div className="flex-1 min-w-0">
-            <h4 className="text-xs font-bold text-text-primary mb-1">Career Health Score</h4>
-            <p className="text-[11px] text-text-muted leading-relaxed mb-2">
+            <h4 className="text-xs font-bold text-text-primary mb-0.5">Career Health Score</h4>
+            <p className="text-[11px] text-text-muted leading-relaxed mb-1.5">
               Evaluated across 14 ATS algorithms and profile parameters.
             </p>
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
               ▲ +5% vs last week
             </span>
           </div>
@@ -288,33 +285,33 @@ const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, r
         <div className="p-4 rounded-2xl bg-midground/80 border border-border-subtle flex flex-col justify-between">
           {latestResume ? (
             <>
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center gap-2">
+              <div className="flex justify-between items-start mb-1">
+                <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-primary rounded-full animate-ping" />
                   <span className="text-[10px] font-black uppercase tracking-wider text-text-muted">Active Draft</span>
                 </div>
                 {latestResume.atsScore ? (
-                  <Badge variant="score" className="!text-[10px]">
+                  <Badge variant="score" className="!text-[10px] !py-0.5 !px-2">
                     ATS {latestResume.atsScore}
                   </Badge>
                 ) : null}
               </div>
-              <h4 className="text-sm font-bold text-text-primary truncate mb-1">{latestResume.title}</h4>
-              <p className="text-[11px] text-text-muted mb-3">Last updated: {new Date(latestResume.updatedAt || Date.now()).toLocaleDateString()}</p>
+              <h4 className="text-xs font-bold text-text-primary truncate mb-0.5">{latestResume.title}</h4>
+              <p className="text-[10px] text-text-muted mb-2">Last updated: {new Date(latestResume.updatedAt || Date.now()).toLocaleDateString()}</p>
               <Button
                 variant="ghost"
                 onClick={() => navigate(`/resume-builder/editor/${latestResume.id}`)}
-                className="w-full !h-8 !text-xs !bg-primary/10 hover:!bg-primary/20 !text-primary border border-primary/20 flex items-center justify-center gap-2"
+                className="w-full !h-7 !text-[11px] !bg-primary/10 hover:!bg-primary/20 !text-primary border border-primary/20 flex items-center justify-center gap-1.5 font-bold"
               >
                 <span>Continue Editing</span>
-                <FiArrowRight size={12} />
+                <FiArrowRight size={11} />
               </Button>
             </>
           ) : (
-            <div className="flex flex-col items-center text-center justify-center h-full py-2">
+            <div className="flex flex-col items-center text-center justify-center h-full py-1">
               <p className="text-xs font-bold text-text-primary mb-1">No Active Resume Draft</p>
-              <p className="text-[11px] text-text-muted mb-3">Create your first resume to unlock AI insights.</p>
-              <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="!h-8 !text-xs">
+              <p className="text-[10px] text-text-muted mb-2">Create your first resume to unlock AI insights.</p>
+              <Button variant="glow" onClick={onCreateResume} icon={FiPlus} className="!h-7 !text-[11px]">
                 Create First Resume
               </Button>
             </div>
@@ -323,21 +320,21 @@ const CareerStatusCard = ({ user, hiringProbability, onCreateResume, navigate, r
       </div>
 
       {/* FOOTER: AI Co-Pilot Recommendation Bar */}
-      <div className="relative z-10 p-3.5 rounded-xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border border-primary/20 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary shrink-0">
-            <FiZap size={16} />
+      <div className="relative z-10 p-3 rounded-xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border border-primary/20 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center text-primary shrink-0">
+            <FiZap size={14} />
           </div>
-          <p className="text-xs text-text-secondary leading-snug truncate">
-            <strong className="text-text-primary font-semibold">AI Insight:</strong> Your profile matches 88% of Senior MERN roles. Target job scan recommended.
+          <p className="text-[11px] text-text-secondary leading-tight truncate">
+            <strong className="text-text-primary font-semibold">AI Insight:</strong> Your profile matches 88% of Senior MERN roles. Scan target jobs now.
           </p>
         </div>
         <button
           onClick={() => navigate("/ats")}
-          className="text-xs font-bold text-primary hover:underline whitespace-nowrap shrink-0 flex items-center gap-1"
+          className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap shrink-0 flex items-center gap-1"
         >
           <span>Run Scan</span>
-          <FiChevronRight size={12} />
+          <FiChevronRight size={11} />
         </button>
       </div>
     </Card>
@@ -358,38 +355,65 @@ const KpiSection = ({ resumes, coverLetters, stats, healthScore }) => (
 const ResumeSection = ({ resumes, onEdit, onScan, onShare, onDelete, onCreateNew }) => (
   <div className="space-y-4">
     <div className="flex items-center justify-between">
-      <h2 className="text-xl font-bold text-text-primary tracking-tight">Active Resumes</h2>
-      <Button variant="ghost" onClick={onCreateNew} icon={FiPlus} className="!text-sm !h-9">New Resume</Button>
+      <div className="flex items-center gap-3">
+        <h2 className="text-lg font-bold text-text-primary tracking-tight">Active Resumes</h2>
+        <Badge variant="default">{resumes?.length || 0}</Badge>
+      </div>
+      <Button variant="ghost" onClick={onCreateNew} icon={FiPlus} className="!text-xs !h-8 !px-3">New Resume</Button>
     </div>
 
     {(!resumes || resumes.length === 0) ? (
-      <div className="text-center p-12 border border-dashed border-border-subtle rounded-3xl text-text-muted">
-        <FaFileAlt size={32} className="mx-auto mb-3 opacity-30" />
-        <p className="font-semibold">No resumes yet</p>
-        <p className="text-sm mt-1">Create your first resume to get started.</p>
-        <Button variant="glow" onClick={onCreateNew} icon={FiPlus} className="mt-4">Create Resume</Button>
+      <div className="text-center p-10 border border-dashed border-border-subtle rounded-3xl text-text-muted">
+        <FaFileAlt size={28} className="mx-auto mb-2 opacity-30" />
+        <p className="font-semibold text-sm">No resumes yet</p>
+        <p className="text-xs mt-0.5">Create your first resume to get started.</p>
+        <Button variant="glow" onClick={onCreateNew} icon={FiPlus} className="mt-3 !h-9 !text-xs">Create Resume</Button>
       </div>
     ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {resumes.map((resume) => (
           <m.div key={resume.id} whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-            <Card variant="elevated" className="!p-6 flex flex-col gap-5 h-full">
-              <div className="flex justify-between items-start">
+            <Card variant="elevated" className="!p-5 flex flex-col justify-between gap-4 h-full border border-border-subtle hover:border-primary/30 transition-all">
+              <div className="flex justify-between items-start gap-2">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-bold text-text-primary truncate mb-1">{resume.title}</h3>
-                  <p className="text-xs text-text-muted uppercase tracking-wider">{resume.jobTitle || resume.status || "Draft"}</p>
+                  <h3 className="text-sm font-bold text-text-primary truncate mb-0.5">{resume.title}</h3>
+                  <p className="text-[11px] text-text-muted uppercase tracking-wider font-semibold">{resume.jobTitle || resume.status || "Draft"}</p>
                 </div>
                 {resume.atsScore ? (
-                  <Badge variant={resume.atsScore > 75 ? "score" : "warning"} className="shrink-0 ml-2">
+                  <Badge variant={resume.atsScore > 75 ? "score" : "warning"} className="shrink-0">
                     ATS {resume.atsScore}
                   </Badge>
                 ) : null}
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="ghost" className="!bg-primary/5 hover:!bg-primary/10 !text-primary !h-9 text-xs" onClick={() => onEdit(resume.id)} icon={FiEdit2}>Edit</Button>
-                <Button variant="ghost" className="!bg-white/5 hover:!bg-white/10 !h-9 text-xs" onClick={() => onScan(resume.id)} icon={FaSearchPlus}>Scan</Button>
-                <Button variant="ghost" className="!bg-white/5 hover:!bg-white/10 !h-9 text-xs" onClick={() => onShare(resume)} icon={FiShare2}>Share</Button>
-                <Button variant="ghost" className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 !h-9 text-xs" onClick={(e) => onDelete(resume.id, resume.title, e)} icon={FiTrash2}>Delete</Button>
+              <div className="grid grid-cols-4 gap-1.5 pt-2 border-t border-border-subtle/60">
+                <button
+                  onClick={() => onEdit(resume.id)}
+                  className="px-2 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-bold text-[11px] flex items-center justify-center gap-1 transition-all"
+                >
+                  <FiEdit2 size={11} />
+                  <span>Edit</span>
+                </button>
+                <button
+                  onClick={() => onScan(resume.id)}
+                  className="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-text-secondary font-bold text-[11px] flex items-center justify-center gap-1 transition-all"
+                >
+                  <FaSearchPlus size={11} />
+                  <span>Scan</span>
+                </button>
+                <button
+                  onClick={() => onShare(resume)}
+                  className="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-text-secondary font-bold text-[11px] flex items-center justify-center gap-1 transition-all"
+                >
+                  <FiShare2 size={11} />
+                  <span>Share</span>
+                </button>
+                <button
+                  onClick={(e) => onDelete(resume.id, resume.title, e)}
+                  className="px-2 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-[11px] flex items-center justify-center gap-1 transition-all"
+                >
+                  <FiTrash2 size={11} />
+                  <span>Delete</span>
+                </button>
               </div>
             </Card>
           </m.div>
@@ -404,17 +428,37 @@ const CoverLetterSection = ({ coverLetters, onDelete, onDownload }) => {
   if (!coverLetters || coverLetters.length === 0) return null;
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-text-primary tracking-tight">Cover Letters</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="flex items-center gap-3">
+        <h2 className="text-lg font-bold text-text-primary tracking-tight">Cover Letters</h2>
+        <Badge variant="default">{coverLetters.length}</Badge>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {coverLetters.map((letter) => (
-          <Card key={letter._id || letter.id} variant="elevated" className="!p-5 flex flex-col gap-4">
-            <div>
-              <h3 className="text-sm font-bold text-text-primary truncate mb-1">{letter.title || "Cover Letter"}</h3>
-              <p className="text-xs text-text-muted">{letter.company || ""}</p>
+          <Card key={letter._id || letter.id} variant="elevated" className="!p-4 flex flex-col justify-between gap-3 border border-border-subtle">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                <FaEnvelopeOpenText size={14} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-xs font-bold text-text-primary truncate mb-0.5">{letter.title || "Cover Letter"}</h3>
+                <p className="text-[11px] text-text-muted truncate">{letter.company || "Target Company"}</p>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="ghost" className="flex-1 !h-8 text-xs !bg-white/5 hover:!bg-white/10" onClick={() => onDownload(letter)} icon={FiDownload}>Download</Button>
-              <Button variant="ghost" className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 !h-8 px-3 text-xs" onClick={(e) => onDelete(letter._id || letter.id, e)} icon={FiTrash2}>Delete</Button>
+            <div className="flex gap-2 pt-2 border-t border-border-subtle/60">
+              <button
+                onClick={() => onDownload(letter)}
+                className="flex-1 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-text-secondary font-bold text-[11px] flex items-center justify-center gap-1.5 transition-all"
+              >
+                <FiDownload size={11} />
+                <span>Download</span>
+              </button>
+              <button
+                onClick={(e) => onDelete(letter._id || letter.id, e)}
+                className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-[11px] flex items-center justify-center gap-1 transition-all"
+              >
+                <FiTrash2 size={11} />
+                <span>Delete</span>
+              </button>
             </div>
           </Card>
         ))}
@@ -426,8 +470,8 @@ const CoverLetterSection = ({ coverLetters, onDelete, onDownload }) => {
 // ─── Next Actions + QuestWidget ───────────────────────────────────────────────
 const NextActionsSection = ({ navigate, quests }) => (
   <div className="space-y-4">
-    <h2 className="text-xl font-bold text-text-primary tracking-tight">Recommended Actions</h2>
-    <div className="space-y-3">
+    <h2 className="text-lg font-bold text-text-primary tracking-tight">Recommended Actions</h2>
+    <div className="space-y-2.5">
       {[
         { icon: <FiZap className="text-primary" />, bg: "bg-primary/10", title: "Practice Interview", desc: "Your interview readiness is holding back your hiring probability.", path: "/interview" },
         { icon: <FaSearchPlus className="text-yellow-400" />, bg: "bg-yellow-500/10", title: "Improve ATS Score", desc: "Your latest resume scored 72%. Push it past 85% with AI.", path: "/ats" },
@@ -437,14 +481,14 @@ const NextActionsSection = ({ navigate, quests }) => (
         <div
           key={action.title}
           onClick={() => navigate(action.path)}
-          className="p-4 rounded-2xl bg-midground border border-border-subtle flex gap-4 items-start hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+          className="p-3.5 rounded-2xl bg-midground border border-border-subtle flex gap-3.5 items-center hover:border-primary/30 transition-all duration-200 cursor-pointer group"
         >
-          <div className={`w-9 h-9 rounded-xl ${action.bg} flex items-center justify-center shrink-0`}>{action.icon}</div>
+          <div className={`w-8 h-8 rounded-xl ${action.bg} flex items-center justify-center shrink-0`}>{action.icon}</div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-text-primary mb-0.5">{action.title}</p>
-            <p className="text-xs text-text-muted leading-relaxed">{action.desc}</p>
+            <p className="text-xs font-bold text-text-primary mb-0.5">{action.title}</p>
+            <p className="text-[11px] text-text-muted leading-tight line-clamp-1">{action.desc}</p>
           </div>
-          <FiChevronRight className="text-text-muted group-hover:text-primary transition-colors shrink-0 mt-1" size={14} />
+          <FiChevronRight className="text-text-muted group-hover:text-primary transition-colors shrink-0" size={13} />
         </div>
       ))}
     </div>
@@ -458,7 +502,7 @@ const ModuleLauncherSection = ({ modules, navigate }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <h2 className="text-xl font-bold text-text-primary tracking-tight">Career OS Modules</h2>
+        <h2 className="text-lg font-bold text-text-primary tracking-tight">Career OS Modules</h2>
         <Badge variant="default">{modules.length} Active</Badge>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -468,17 +512,17 @@ const ModuleLauncherSection = ({ modules, navigate }) => {
             whileHover={{ y: -3 }}
             transition={{ duration: 0.2 }}
             onClick={() => navigate(mod.manifest.routes.main)}
-            className="p-5 rounded-2xl bg-midground border border-border-subtle cursor-pointer hover:border-primary/40 transition-all duration-200 flex flex-col gap-3 group"
+            className="p-4 rounded-2xl bg-midground border border-border-subtle cursor-pointer hover:border-primary/40 transition-all duration-200 flex flex-col gap-3 group"
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${mod.manifest.color}15`, color: mod.manifest.color }}>
-              {resolveIcon(mod.manifest.icon, 20)}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${mod.manifest.color}15`, color: mod.manifest.color }}>
+              {resolveIcon(mod.manifest.icon, 18)}
             </div>
             <div>
-              <h3 className="text-sm font-bold text-text-primary mb-0.5 group-hover:text-primary transition-colors">{mod.manifest.name}</h3>
-              <p className="text-xs text-text-muted leading-relaxed line-clamp-2">{mod.manifest.description}</p>
+              <h3 className="text-xs font-bold text-text-primary mb-0.5 group-hover:text-primary transition-colors">{mod.manifest.name}</h3>
+              <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">{mod.manifest.description}</p>
             </div>
             <div className="flex items-center gap-1 mt-auto">
-              <span className="text-xs text-text-muted font-medium">Open</span>
+              <span className="text-[11px] text-text-muted font-medium">Open</span>
               <FiArrowRight size={11} className="text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
             </div>
           </m.div>
@@ -498,7 +542,7 @@ const Dashboard = () => {
   const loading = useSelector(selectDashboardLoading);
   const isRefreshing = useSelector(selectIsRefreshing);
 
-  // Combine auth user (full DB profile) with dashboard API metrics
+  // Combine auth user profile data with dashboard API metrics
   const user = { ...authUser, ...dashboard?.user };
   const { resumes, coverLetters, stats } = dashboard;
   const [shareModalData, setShareModalData] = useState(null);
@@ -560,24 +604,21 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-10 lg:space-y-12 pb-20 max-w-[1400px] mx-auto">
+    <div className="space-y-8 lg:space-y-10 pb-20 max-w-[1400px] mx-auto">
 
-      {/* 1. HERO: Profile Card (left) + Career Status (right) */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Profile Summary Card */}
-        <div className="xl:col-span-1">
+      {/* 1. HERO ROW: Profile Card (1 col) + Career Status Hub (2 cols) — EQUAL HEIGHT */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
+        <div className="xl:col-span-1 h-full">
           <ProfileCard user={user} healthScore={healthScore} navigate={navigate} />
         </div>
 
-        {/* Career Status + Quick Actions */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-2 h-full">
           <CareerStatusCard
             user={user}
             hiringProbability={hiringProbability}
             onCreateResume={handleCreateNew}
             navigate={navigate}
             resumes={resumes}
-            stats={stats}
           />
         </div>
       </div>
@@ -586,7 +627,7 @@ const Dashboard = () => {
       <KpiSection resumes={resumes} coverLetters={coverLetters} stats={dashboard.stats} healthScore={healthScore} />
 
       {/* 3. RESUMES + NEXT ACTIONS */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2">
           <ResumeSection
             resumes={resumes}
@@ -609,7 +650,7 @@ const Dashboard = () => {
         onDownload={handleDownloadLetter}
       />
 
-      {/* 5. MODULE LAUNCHER — last section */}
+      {/* 5. MODULE LAUNCHER */}
       <ModuleLauncherSection modules={modules} navigate={navigate} />
 
       {/* Syncing indicator */}
