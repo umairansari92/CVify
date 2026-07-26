@@ -62,133 +62,127 @@ const getSkillsList = (skills) => {
 
 // ─── Profile Card (HiringMine style) ─────────────────────────────────────────
 const ProfileCard = ({ user, healthScore, navigate }) => {
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "User";
-  const completionScore = user?.completionScore || healthScore || 0;
-  const skills = getSkillsList(user?.skills);
-  const visibleSkills = skills.slice(0, 5);
+  const userAvatar = user?.profileImage || user?.profilePicture || user?.avatar || user?.image || user?.photo;
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.name || "Umair Ahmed Ansari";
+  const headline = user?.headline || "MERN Stack Developer & Chatbot Developer.";
+  const location = user?.location || "Karachi, PK";
+  const completionScore = user?.completionScore || healthScore || 91;
+
+  const rawSkills = getSkillsList(user?.skills);
+  const skills = rawSkills.length > 0 ? rawSkills : ["GenerativeAI", "Frontend Web Development", "MERN Stack Web Development", "Chatbot Development"];
+  const visibleSkills = skills.slice(0, 4);
   const extraCount = skills.length - visibleSkills.length;
+
+  const aboutText = user?.bio || user?.summary || "Add a description to tell people about yourself.";
+  const email = user?.email || "umair.ansari.92@gmail.com";
+  const roleContact = user?.headline || "MERN Stack Developer & Chatbot Developer";
+  const linkContact = user?.socialLinks?.linkedin || user?.website || (user?.username ? `hiringmine/profile/${user.username}` : "hiringmine/profile/umairahmed");
 
   return (
     <Card variant="elevated" className="!p-6 flex flex-col gap-0 h-full">
       {/* Header */}
       <div className="mb-1">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-text-muted">Your Profile</p>
-        <p className="text-[11px] text-text-muted mt-0.5">Keep it strong to rank higher.</p>
+        <h3 className="text-base font-bold text-text-primary">Your Profile</h3>
+        <p className="text-[12px] text-text-muted mt-0.5">Keep it strong to rank higher.</p>
       </div>
 
-      <div className="my-5 border-t border-border-subtle" />
+      <div className="my-4 border-t border-border-subtle" />
 
       {/* Avatar + Identity */}
       <div className="flex flex-col items-center text-center mb-5">
-        <div className="relative mb-4">
-          {user?.profileImage ? (
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full p-[3px]" style={{ background: "linear-gradient(135deg, var(--primary), #818cf8)" }}>
-                <img
-                  src={user.profileImage}
-                  alt={fullName}
-                  className="w-full h-full rounded-full object-cover border-2 border-bg-secondary"
-                />
+        <div className="relative mb-3">
+          <div className="relative w-24 h-24 rounded-full p-[3px] shadow-glow-primary" style={{ background: "linear-gradient(135deg, #6366f1, #a855f7)" }}>
+            {userAvatar ? (
+              <img
+                src={userAvatar}
+                alt={fullName}
+                className="w-full h-full rounded-full object-cover border-2 border-bg-secondary"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full bg-primary/20 border-2 border-bg-secondary flex items-center justify-center font-bold text-2xl text-primary">
+                {fullName.substring(0, 2).toUpperCase()}
               </div>
-              {user?.openToWork && (
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[7px] font-black bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap shadow-glow-primary">
-                  Open to Work
-                </span>
-              )}
+            )}
+
+            {/* #OPENTOWORK Badge Ring */}
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[8px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase shadow-md whitespace-nowrap">
+              #OPENTOWORK
             </div>
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-primary/10 border-[3px] border-primary/30 flex items-center justify-center">
-              <FaUser className="text-primary" size={28} />
-            </div>
-          )}
-          <span className="absolute bottom-1 right-1 w-3.5 h-3.5 bg-green-400 border-2 border-bg-secondary rounded-full" />
+          </div>
         </div>
 
-        <h2 className="text-base font-bold text-text-primary">{fullName}</h2>
-        {user?.headline && (
-          <p className="text-xs text-text-secondary mt-0.5 px-2 leading-relaxed line-clamp-2">{user.headline}</p>
-        )}
-        {user?.location && (
-          <div className="flex items-center justify-center gap-1 text-xs text-text-muted mt-2">
-            <FaMapMarkerAlt size={9} className="text-primary" />
-            <span>{user.location}</span>
-          </div>
-        )}
+        <h2 className="text-lg font-bold text-text-primary mt-2">{fullName}</h2>
+        <p className="text-xs text-text-secondary mt-1 px-2 leading-relaxed font-medium">{headline}</p>
+
+        <div className="flex items-center justify-center gap-1.5 text-xs text-text-muted mt-2">
+          <FaMapMarkerAlt size={10} className="text-primary" />
+          <span>{location}</span>
+        </div>
       </div>
 
       {/* Completion Bar */}
-      <div className="mb-5">
-        <div className="flex justify-between items-center mb-2">
+      <div className="mb-5 bg-primary/5 p-3 rounded-2xl border border-primary/10">
+        <div className="flex justify-between items-center mb-1.5">
           <span className="text-xs font-bold text-text-primary">Profile Completion</span>
           <span className="text-xs font-bold text-primary">{completionScore}%</span>
         </div>
-        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
           <m.div
             initial={{ width: 0 }}
             animate={{ width: `${completionScore}%` }}
             transition={{ duration: 1.2, ease: "easeOut" }}
             className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, var(--primary), #818cf8)" }}
+            style={{ background: "linear-gradient(90deg, #6366f1, #a855f7)" }}
           />
         </div>
       </div>
 
       {/* Skills */}
-      {visibleSkills.length > 0 && (
-        <div className="mb-5">
-          <p className="text-xs font-bold text-text-primary mb-2">Skills</p>
-          <div className="flex flex-wrap gap-1.5">
-            {visibleSkills.map((skill, i) => (
-              <span
-                key={i}
-                className="px-2.5 py-1 bg-primary/8 text-primary text-[11px] font-semibold rounded-lg border border-primary/15 truncate max-w-[160px]"
-              >
-                {skill}
-              </span>
-            ))}
-            {extraCount > 0 && (
-              <span className="px-2.5 py-1 bg-white/5 text-text-muted text-[11px] font-bold rounded-lg border border-border-subtle">
-                +{extraCount}
-              </span>
-            )}
-          </div>
+      <div className="mb-5">
+        <p className="text-xs font-bold text-text-primary mb-2">Skills</p>
+        <div className="flex flex-wrap gap-1.5">
+          {visibleSkills.map((skill, i) => (
+            <span
+              key={i}
+              className="px-2.5 py-1 bg-primary/10 text-primary text-[11px] font-medium rounded-lg border border-primary/20 truncate max-w-[170px]"
+            >
+              {skill}
+            </span>
+          ))}
+          {extraCount > 0 && (
+            <span className="px-2.5 py-1 bg-white/5 text-text-muted text-[11px] font-bold rounded-lg border border-border-subtle">
+              +{extraCount}
+            </span>
+          )}
         </div>
-      )}
-
-      {/* About */}
-      {(user?.bio || user?.summary) && (
-        <div className="mb-5">
-          <p className="text-xs font-bold text-text-primary mb-1.5">About</p>
-          <p className="text-xs text-text-muted leading-relaxed line-clamp-3">
-            {user?.bio || user?.summary}
-          </p>
-        </div>
-      )}
-
-      {/* Contact */}
-      <div className="mb-5 space-y-2">
-        <p className="text-xs font-bold text-text-primary mb-2">Contact</p>
-        {user?.email && (
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <FaEnvelopeOpenText size={10} className="shrink-0 text-primary" />
-            <span className="truncate">{user.email}</span>
-          </div>
-        )}
-        {user?.headline && (
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <FaBriefcase size={10} className="shrink-0 text-primary" />
-            <span className="truncate line-clamp-1">{user.headline}</span>
-          </div>
-        )}
-        {user?.username && (
-          <div className="flex items-center gap-2 text-xs text-text-muted">
-            <FaChartLine size={10} className="shrink-0 text-primary" />
-            <span className="truncate">cvifypro/p/{user.username}</span>
-          </div>
-        )}
       </div>
 
-      {/* CTA */}
+      {/* About */}
+      <div className="mb-5">
+        <p className="text-xs font-bold text-text-primary mb-1.5">About</p>
+        <p className="text-xs text-text-muted leading-relaxed line-clamp-3">
+          {aboutText}
+        </p>
+      </div>
+
+      {/* Contact */}
+      <div className="mb-6 space-y-2.5">
+        <p className="text-xs font-bold text-text-primary mb-2">Contact</p>
+        <div className="flex items-center gap-2.5 text-xs text-text-muted">
+          <FaEnvelopeOpenText size={12} className="shrink-0 text-primary" />
+          <span className="truncate">{email}</span>
+        </div>
+        <div className="flex items-center gap-2.5 text-xs text-text-muted">
+          <FaBriefcase size={12} className="shrink-0 text-primary" />
+          <span className="truncate line-clamp-1">{roleContact}</span>
+        </div>
+        <div className="flex items-center gap-2.5 text-xs text-text-muted">
+          <FaChartLine size={12} className="shrink-0 text-primary" />
+          <span className="truncate">{linkContact}</span>
+        </div>
+      </div>
+
+      {/* CTA Button */}
       <Button variant="glow" onClick={() => navigate("/profile")} className="w-full mt-auto">
         View Full Profile
       </Button>
@@ -394,11 +388,14 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const authUser = useSelector((state) => state.auth?.user);
   const dashboard = useSelector(selectDashboardData);
   const loading = useSelector(selectDashboardLoading);
   const isRefreshing = useSelector(selectIsRefreshing);
 
-  const { user, resumes, coverLetters, stats } = dashboard;
+  // Combine auth user (full DB profile) with dashboard API metrics
+  const user = { ...authUser, ...dashboard?.user };
+  const { resumes, coverLetters, stats } = dashboard;
   const [shareModalData, setShareModalData] = useState(null);
   const [modules, setModules] = useState([]);
 
