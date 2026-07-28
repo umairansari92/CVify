@@ -6,7 +6,7 @@
  * Used by: Sidebar, Dashboard, AppRouter, Analytics, Feature Flags.
  */
 
-const manifest = {
+export const manifest = {
   id: "RESUME_BUILDER",
   name: "AI Resume Builder",
   version: "1.0.0",
@@ -81,5 +81,3 @@ const manifest = {
     },
   ],
 };
-
-export default manifest;
