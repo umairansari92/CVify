@@ -392,9 +392,9 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
           >
             {section?.title}
           </h2>
-          {Array.isArray(section?.content) && (
+          {((Array.isArray(section?.items) && section.items.length > 0) || (Array.isArray(section?.content) && section.content.length > 0)) && (
             <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-              {section.content.map((item, j) => (
+              {(section.items || section.content).map((item, j) => (
                 <li key={j}>{item}</li>
               ))}
             </ul>

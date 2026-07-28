@@ -12,13 +12,15 @@ const CustomSectionsForm = () => {
   };
 
   const addSection = () => {
+    const initialBullets = [
+      "Developing new initiatives...",
+      "Coordinating cross-functional teams...",
+    ];
     const newSection = {
       id: Date.now().toString(),
       title: "New Section",
-      items: [
-        "Developing new initiatives...",
-        "Coordinating cross-functional teams...",
-      ],
+      items: initialBullets,
+      content: initialBullets,
     };
     updateSections([...customSections, newSection]);
   };
@@ -35,32 +37,34 @@ const CustomSectionsForm = () => {
 
   const addItem = (sectionId) => {
     updateSections(
-      customSections.map((s) =>
-        s.id === sectionId ? { ...s, items: [...s.items, ""] } : s,
-      ),
+      customSections.map((s) => {
+        if (s.id !== sectionId) return s;
+        const currentList = Array.isArray(s.items) ? s.items : Array.isArray(s.content) ? s.content : [];
+        const newList = [...currentList, ""];
+        return { ...s, items: newList, content: newList };
+      }),
     );
   };
 
   const updateItem = (sectionId, index, value) => {
     updateSections(
-      customSections.map((s) =>
-        s.id === sectionId
-          ? {
-              ...s,
-              items: s.items.map((item, i) => (i === index ? value : item)),
-            }
-          : s,
-      ),
+      customSections.map((s) => {
+        if (s.id !== sectionId) return s;
+        const currentList = Array.isArray(s.items) ? s.items : Array.isArray(s.content) ? s.content : [];
+        const newList = currentList.map((item, i) => (i === index ? value : item));
+        return { ...s, items: newList, content: newList };
+      }),
     );
   };
 
   const removeItem = (sectionId, index) => {
     updateSections(
-      customSections.map((s) =>
-        s.id === sectionId
-          ? { ...s, items: s.items.filter((_, i) => i !== index) }
-          : s,
-      ),
+      customSections.map((s) => {
+        if (s.id !== sectionId) return s;
+        const currentList = Array.isArray(s.items) ? s.items : Array.isArray(s.content) ? s.content : [];
+        const newList = currentList.filter((_, i) => i !== index);
+        return { ...s, items: newList, content: newList };
+      }),
     );
   };
 
