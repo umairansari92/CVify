@@ -44,26 +44,26 @@ const CreateResumeWizard = () => {
   ];
 
   const startingOptions = [
-    { id: "blank", label: "Start Fresh (Blank)", icon: FileText, desc: "Build step-by-step with AI guidance." },
-    { id: "pdf", label: "Import Existing PDF CV", icon: Upload, desc: "Parse text and experience automatically." },
-    { id: "linkedin", label: "Import LinkedIn Data", icon: Linkedin, desc: "Sync your professional profile." },
-    { id: "ai", label: "Generate with AI Copilot", icon: Zap, desc: "Auto-fill using target role intent." },
+    { id: "blank", label: "Start Fresh (Blank)", icon: FileText, desc: "Build step-by-step with clean layout & AI guidance." },
+    { id: "profile", label: "Sync CVify Profile Data", icon: UserCheck, desc: "Auto-fill using your saved CVify profile experience, education & skills." },
+    { id: "pdf", label: "Import Existing PDF CV", icon: Upload, desc: "Parse text and experience from your existing resume PDF." },
+    { id: "ai", label: "Generate with AI Copilot", icon: Zap, desc: "Auto-generate tailored summary, achievements & skills for target role." },
   ];
 
   const careerGoals = ["Student", "Developer", "Designer", "Manager", "Marketing", "Finance", "Healthcare", "Custom"];
   const experienceLevels = [
-    { id: "Entry", label: "Entry Level (0-2 Yrs)", desc: "Focus on projects & education." },
-    { id: "Mid", label: "Mid Level (3-5 Yrs)", desc: "Focus on technical achievements." },
-    { id: "Senior", label: "Senior Level (6-10 Yrs)", desc: "Focus on impact metrics & leadership." },
-    { id: "Executive", label: "Executive (10+ Yrs)", desc: "Focus on P&L and organizational growth." },
+    { id: "Entry", label: "Entry Level (0-2 Yrs)", desc: "Focus on projects, degree & core fundamentals." },
+    { id: "Mid", label: "Mid Level (3-5 Yrs)", desc: "Focus on technical achievements & standalone projects." },
+    { id: "Senior", label: "Senior Level (6-10 Yrs)", desc: "Focus on business impact metrics & team leadership." },
+    { id: "Executive", label: "Executive (10+ Yrs)", desc: "Focus on strategic growth, P&L, & organizational vision." },
   ];
 
   const targetCountries = ["Remote / Global", "USA", "Canada", "UK", "Pakistan", "UAE / Gulf"];
   const resumeStyles = [
-    { id: "ATS", label: "Strict ATS Safe", desc: "Maximized parsing score." },
-    { id: "Executive", label: "Executive Leadership", desc: "Refined typography for management." },
-    { id: "Modern", label: "Modern Minimalist", desc: "Clean spacing & sleek aesthetic." },
-    { id: "Creative", label: "Creative Portfolio", desc: "Design & portfolio focus." },
+    { id: "ATS", label: "Strict ATS Safe", desc: "Monochrome, maximum parsing density & single-column safety." },
+    { id: "Executive", label: "Executive Leadership", desc: "Refined serif typography & authoritative metric highlights." },
+    { id: "Modern", label: "Modern Minimalist", desc: "Sleek spacing, clean line accents & high readability." },
+    { id: "Creative", label: "Creative Portfolio", desc: "Subtle brand accent colors & portfolio link focus." },
   ];
 
   const handleFinishWizard = async (useDiamonds = false) => {
@@ -73,16 +73,73 @@ const CreateResumeWizard = () => {
     try {
       const userFullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.username || "Professional Name";
 
+      // ── Populate content based on starting point ──
+      let initialSummary = "";
+      let initialExperience = [];
+      let initialEducation = [];
+      let initialSkills = { technical: [], soft: [], strategic: [] };
+      let initialProjects = [];
+      let initialCertifications = [];
+
+      if (startingPoint === "profile") {
+        // Sync directly from user's CVify profile in database
+        initialSummary = user?.summary || user?.bio || "";
+        initialExperience = Array.isArray(user?.experience) ? user.experience : [];
+        initialEducation = Array.isArray(user?.education) ? user.education : [];
+        initialProjects = Array.isArray(user?.projects) ? user.projects : [];
+        initialCertifications = Array.isArray(user?.certifications) ? user.certifications : [];
+
+        if (Array.isArray(user?.skills)) {
+          initialSkills = { technical: user.skills.map(s => typeof s === 'object' ? s.name : s), soft: [], strategic: [] };
+        } else if (user?.skills && typeof user.skills === 'object') {
+          initialSkills = user.skills;
+        }
+      } else if (startingPoint === "ai") {
+        // AI Copilot initial starter content based on goal & level
+        initialSummary = `Results-driven ${careerGoal} with ${experienceLevel} level expertise. Proven track record of delivering high-impact solutions, optimizing team workflows, and achieving key performance metrics.`;
+        initialExperience = [
+          {
+            title: `${experienceLevel === "Executive" ? "Head of" : experienceLevel === "Senior" ? "Lead" : "Specialist"} ${careerGoal}`,
+            company: "Tech Innovations Inc.",
+            location: targetCountry,
+            startDate: "2022-01",
+            endDate: "Present",
+            current: true,
+            description: `Spearheaded key initiatives for ${careerGoal} domain. Engineered scalable workflows resulting in a 35% efficiency boost and improved core team performance.`,
+            achievements: ["Increased operational throughput by 35%", "Led cross-functional team across 4 major project deliverables"]
+          }
+        ];
+        initialSkills = {
+          technical: [careerGoal, "System Optimization", "Data Analysis", "Agile / Scrum"],
+          soft: ["Problem Solving", "Strategic Planning", "Cross-Functional Collaboration"],
+          strategic: ["Product Architecture", "Process Automation"]
+        };
+      }
+
       const newResumeData = {
         title: `${careerGoal} Resume (${experienceLevel})`,
         templateId: selectedTemplate,
         useDiamonds,
+        summary: initialSummary,
+        experience: initialExperience,
+        education: initialEducation,
+        skills: initialSkills,
+        projects: initialProjects,
+        certifications: initialCertifications,
         personalInfo: {
           fullName: userFullName,
           jobTitle: careerGoal,
           location: targetCountry,
           email: user?.email || "",
           phone: user?.phoneNumber || "",
+          website: user?.socialLinks?.website || "",
+          linkedin: user?.socialLinks?.linkedin || "",
+          github: user?.socialLinks?.github || "",
+        },
+        themeSettings: {
+          preferredStyle,
+          targetRegion: targetCountry,
+          experienceLevel,
         },
         metadata: {
           startingPoint,
@@ -90,12 +147,18 @@ const CreateResumeWizard = () => {
           experienceLevel,
           targetCountry,
           preferredStyle,
+          openPdfImport: startingPoint === "pdf",
         },
       };
 
       const result = await dispatch(createResume(newResumeData));
       if (result.type.includes("fulfilled")) {
-        toast.success(useDiamonds ? "Unlocked & Created!" : "Resume workspace created!", { id: toastId });
+        toast.success(
+          startingPoint === "profile" 
+            ? "Synced from CVify Profile!" 
+            : useDiamonds ? "Unlocked & Created!" : "Resume workspace created!", 
+          { id: toastId }
+        );
         const createdId = result.payload?._id || result.payload?.data?._id;
         if (createdId) {
           navigate(`/resume-builder/editor/${createdId}`);
@@ -306,8 +369,9 @@ const CreateResumeWizard = () => {
         {currentStep === 6 && (
           <div className="space-y-6 animate-fadeIn">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">Step 6</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">Step 6 of 6</span>
               <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tighter mt-1">Choose your resume design style.</h2>
+              <p className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Tailors visual typography, spacing density, and section accent styling.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -315,14 +379,25 @@ const CreateResumeWizard = () => {
                 <div
                   key={style.id}
                   onClick={() => setPreferredStyle(style.id)}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-6 rounded-2xl border cursor-pointer transition-all ${
                     preferredStyle === style.id
                       ? "border-primary bg-primary/10 ring-2 ring-primary/20 shadow-lg"
                       : "border-white/5 bg-bg-secondary hover:border-white/20"
                   }`}
                 >
-                  <h3 className="text-sm font-black text-white mb-1">{style.label}</h3>
-                  <p className="text-xs text-slate-400">{style.desc}</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Palette size={16} className="text-primary" />
+                      <h3 className="text-sm font-black text-white">{style.label}</h3>
+                    </div>
+                    {preferredStyle === style.id && <Check size={16} className="text-primary" />}
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-3">{style.desc}</p>
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                      {style.id === "ATS" ? "Monochrome • 100% Parse" : style.id === "Executive" ? "Serif • Leadership" : style.id === "Modern" ? "Sans-Serif • Clean" : "Accent Highlights • Links"}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

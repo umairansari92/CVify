@@ -320,29 +320,76 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* How It Works Section: Detailed Wizard Guide */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-white/5">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">6-Step Velocity Pipeline</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">6-Step Interactive Resume Creation Guide</span>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
-              How CVifyPro turns applications into interviews.
+              How selecting options in the Resume Wizard shapes your CV.
             </h2>
+            <p className="text-slate-400 text-sm sm:text-base font-medium">
+              Every choice in our 6-step creation wizard configures AI prompts, layout density, ATS parsing rules, and visual typography.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "Choose Starting Point", desc: "Start fresh, import an existing PDF CV, or sync your LinkedIn profile." },
-              { step: "02", title: "Select Proven Template", desc: "Pick from 12+ ATS-safe, executive, or modern developer layouts." },
-              { step: "03", title: "AI Intent Rewrite", desc: "Let AI rewrite your experience bullets to highlight quantifiable impact." },
-              { step: "04", title: "Real-Time ATS Audit", desc: "Audit formatting, verb density, and readability score live while editing." },
-              { step: "05", title: "Match Target Job URL", desc: "Paste your target job post link to fill keyword gaps in seconds." },
-              { step: "06", title: "Export & Land Interviews", desc: "Download high-res PDF CV + publish your live custom web portfolio." },
+              {
+                step: "01",
+                title: "Step 1: Choose Layout Template",
+                subtitle: "Executive Classic, Tech Minimalist, ATS Safe, Modern Studio",
+                desc: "Selects the foundational HTML/PDF structure. Executive Classic optimizes dense experience, Tech Minimalist focuses on clean single-column code, ATS Safe guarantees 100% parse proofing, and Modern Studio highlights visual portfolio accents.",
+                tag: "Layout & Structure"
+              },
+              {
+                step: "02",
+                title: "Step 2: Choose Starting Mode",
+                subtitle: "Start Fresh • Sync CVify Profile • Import PDF • AI Copilot",
+                desc: "• Sync CVify Profile: Instant 1-click import of your saved work, education & skills.\n• Start Fresh: Clean slate with smart AI prompts.\n• Import PDF: Automatically parses text from your existing resume.\n• AI Copilot: Auto-generates tailored summary & bullet points.",
+                tag: "Data Ingestion"
+              },
+              {
+                step: "03",
+                title: "Step 3: Primary Career Goal",
+                subtitle: "Developer, Manager, Designer, Finance, Student, Healthcare",
+                desc: "Instructs AI on skill density & domain terminology. Selecting Developer loads technical stack categories, while Manager shifts focus to team size, budgets, and leadership impact.",
+                tag: "AI Context Engine"
+              },
+              {
+                step: "04",
+                title: "Step 4: Experience Level",
+                subtitle: "Entry (0-2 Yrs), Mid (3-5 Yrs), Senior (6-10 Yrs), Executive (10+ Yrs)",
+                desc: "Adjusts structural weighting. Entry level prioritizes projects & education sections. Senior & Executive levels expand bullet points into quantifiable P&L impact metrics.",
+                tag: "Section Weighting"
+              },
+              {
+                step: "05",
+                title: "Step 5: Target Region & Market",
+                subtitle: "Remote / Global, USA, Canada, UK, Pakistan, UAE / Gulf",
+                desc: "Enforces regional compliance standards. US/Canada formats enforce 1-page strict rules without photos, while International/Gulf CV formats allow multi-page depth & identity details.",
+                tag: "Regional Compliance"
+              },
+              {
+                step: "06",
+                title: "Step 6: Choose Resume Design Style",
+                subtitle: "Strict ATS Safe, Executive Leadership, Modern Minimalist, Creative",
+                desc: "Sets final visual presentation. Strict ATS uses high-contrast monochrome fonts. Executive applies serif headers for authority. Modern Minimalist adds airy line accents, and Creative highlights live link badges.",
+                tag: "Visual Design System"
+              },
             ].map((s) => (
-              <div key={s.step} className="bg-bg-secondary border border-white/5 rounded-3xl p-6 relative overflow-hidden group hover:border-primary/30 transition-all">
-                <span className="text-4xl font-black text-primary/20 group-hover:text-primary/40 transition-colors">{s.step}</span>
-                <h3 className="text-lg font-black text-white mt-2 mb-2">{s.title}</h3>
-                <p className="text-xs text-slate-400 font-medium leading-relaxed">{s.desc}</p>
+              <div key={s.step} className="bg-bg-secondary border border-white/5 rounded-3xl p-7 relative overflow-hidden group hover:border-primary/40 transition-all flex flex-col justify-between space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">{s.step}</span>
+                    <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 text-slate-300 border border-white/10 rounded-full">
+                      {s.tag}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-black text-white mb-1">{s.title}</h3>
+                  <p className="text-xs font-bold text-primary mb-3">{s.subtitle}</p>
+                  <p className="text-xs text-slate-400 font-medium leading-relaxed whitespace-pre-line">{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
