@@ -103,47 +103,105 @@ const CreateResumeWizard = () => {
     try {
       const userFullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.username || "Professional Name";
 
-      // ── Comprehensive Profile Ingestion ──
+      // ── Comprehensive Profile Ingestion & Schema Normalization ──
       let initialSummary = "";
       let initialExperience = [];
       let initialEducation = [];
-      let initialSkills = { technical: [], soft: [], strategic: [] };
+      let initialSkills = [];
+      let initialTechnicalSkills = { frontend: [], backend: [], database: [], aiDevOps: [], security: [], tools: [], learningRoadmap: [] };
       let initialProjects = [];
       let initialCertifications = [];
 
       if (startingPoint === "profile") {
-        // Full ingestion from User MongoDB model (projects, certs, skills, links)
+        // Profile Summary
         initialSummary = user?.summary || user?.bio || "";
-        initialExperience = Array.isArray(user?.experience) ? user.experience : [];
-        initialEducation = Array.isArray(user?.education) ? user.education : [];
-        initialProjects = Array.isArray(user?.projects) ? user.projects : (Array.isArray(user?.portfolio) ? user.portfolio : []);
-        initialCertifications = Array.isArray(user?.certifications) ? user.certifications : [];
 
+        // Experience Normalization (Mongoose requires `position`, `company`, `responsibilities: [String]`)
+        if (Array.isArray(user?.experience) && user.experience.length > 0) {
+          initialExperience = user.experience.map((exp) => ({
+            position: exp.position || exp.title || exp.role || "Specialist",
+            company: exp.company || exp.organization || "Company Name",
+            startDate: exp.startDate || "",
+            endDate: exp.endDate || (exp.current ? "Present" : ""),
+            responsibilities: Array.isArray(exp.responsibilities) && exp.responsibilities.length > 0
+              ? exp.responsibilities
+              : Array.isArray(exp.achievements) && exp.achievements.length > 0
+                ? exp.achievements
+                : Array.isArray(exp.description) && exp.description.length > 0
+                  ? exp.description
+                  : typeof exp.description === "string" && exp.description.trim()
+                    ? [exp.description.trim()]
+                    : ["Spearheaded core domain tasks and contributed to team deliverables."],
+          }));
+        }
+
+        // Education Normalization (Mongoose requires `degree`, `institution`)
+        if (Array.isArray(user?.education) && user.education.length > 0) {
+          initialEducation = user.education.map((edu) => ({
+            degree: edu.degree || edu.title || "Degree",
+            institution: edu.institution || edu.school || edu.university || "Institution",
+            startDate: edu.startDate || "",
+            endDate: edu.endDate || "",
+            specialization: edu.specialization || edu.fieldOfStudy || "",
+            description: Array.isArray(edu.description)
+              ? edu.description
+              : typeof edu.description === "string" && edu.description.trim()
+                ? [edu.description.trim()]
+                : [],
+          }));
+        }
+
+        // Projects Normalization (Mongoose requires `name`, `description: [String]`, `link`)
+        const userProjList = Array.isArray(user?.projects) && user.projects.length > 0
+          ? user.projects
+          : Array.isArray(user?.portfolio) ? user.portfolio : [];
+
+        if (userProjList.length > 0) {
+          initialProjects = userProjList.map((p) => ({
+            name: p.name || p.title || "Project Title",
+            description: Array.isArray(p.description)
+              ? p.description
+              : typeof p.description === "string" && p.description.trim()
+                ? [p.description.trim()]
+                : ["Delivered scalable features and clean code structure."],
+            link: p.link || p.liveLink || p.githubLink || "",
+          }));
+        }
+
+        // Skills Normalization (Mongoose `skills` is [String], `technicalSkills` is object)
         if (Array.isArray(user?.skills)) {
-          initialSkills = { technical: user.skills.map(s => typeof s === 'object' ? s.name : s), soft: [], strategic: [] };
-        } else if (user?.skills && typeof user.skills === 'object') {
-          initialSkills = user.skills;
+          initialSkills = user.skills.map((s) => (typeof s === "object" ? s.name || s.title || String(s) : String(s))).filter(Boolean);
+          initialTechnicalSkills.tools = [...initialSkills];
+        } else if (user?.skills && typeof user.skills === "object") {
+          const techList = Array.isArray(user.skills.technical) ? user.skills.technical : [];
+          const softList = Array.isArray(user.skills.soft) ? user.skills.soft : [];
+          const stratList = Array.isArray(user.skills.strategic) ? user.skills.strategic : [];
+          
+          initialSkills = [...techList, ...softList, ...stratList].map(String).filter(Boolean);
+          initialTechnicalSkills.tools = techList;
+        }
+
+        // Certifications
+        if (Array.isArray(user?.certifications)) {
+          initialCertifications = user.certifications;
         }
       } else if (startingPoint === "ai") {
-        // AI Copilot initial starter content based on goal & level
+        // AI Copilot Initial Content
         initialSummary = `Results-driven ${careerGoal} with ${experienceLevel} level expertise. Proven track record of delivering high-impact solutions, optimizing team workflows, and achieving key performance metrics.`;
         initialExperience = [
           {
-            title: `${experienceLevel === "Executive" ? "Head of" : experienceLevel === "Senior" ? "Lead" : "Specialist"} ${careerGoal}`,
+            position: `${experienceLevel === "Executive" ? "Head of" : experienceLevel === "Senior" ? "Lead" : "Specialist"} ${careerGoal}`,
             company: "Tech Innovations Inc.",
-            location: targetCountry,
             startDate: "2022-01",
             endDate: "Present",
-            current: true,
-            description: `Spearheaded key initiatives for ${careerGoal} domain. Engineered scalable workflows resulting in a 35% efficiency boost and improved core team performance.`,
-            achievements: ["Increased operational throughput by 35%", "Led cross-functional team across 4 major project deliverables"]
+            responsibilities: [
+              `Spearheaded key initiatives for ${careerGoal} domain. Engineered scalable workflows resulting in a 35% efficiency boost.`,
+              "Led cross-functional team across 4 major project deliverables and optimized sprint cadence."
+            ]
           }
         ];
-        initialSkills = {
-          technical: [careerGoal, "System Optimization", "Data Analysis", "Agile / Scrum"],
-          soft: ["Problem Solving", "Strategic Planning", "Cross-Functional Collaboration"],
-          strategic: ["Product Architecture", "Process Automation"]
-        };
+        initialSkills = [careerGoal, "System Optimization", "Data Analysis", "Agile / Scrum", "Problem Solving", "Process Automation"];
+        initialTechnicalSkills.tools = [careerGoal, "Agile", "CI/CD"];
       }
 
       const marketStrategy = getMarketStrategy(targetCountry);
@@ -153,22 +211,23 @@ const CreateResumeWizard = () => {
         title: `${careerGoal} Resume (${experienceLevel} • ${targetCountry})`,
         templateId: selectedTemplate,
         useDiamonds,
-        summary: initialSummary,
-        experience: initialExperience,
-        education: initialEducation,
-        skills: initialSkills,
-        projects: initialProjects,
-        certifications: initialCertifications,
         personalInfo: {
           fullName: userFullName,
           jobTitle: careerGoal,
           location: targetCountry,
           email: user?.email || "",
           phone: user?.phoneNumber || "",
-          website: user?.socialLinks?.portfolio || user?.socialLinks?.website || "",
           linkedin: user?.socialLinks?.linkedin || "",
           github: user?.socialLinks?.github || "",
+          portfolio: user?.socialLinks?.portfolio || user?.socialLinks?.website || "",
+          profileSummary: initialSummary,
         },
+        experience: initialExperience,
+        education: initialEducation,
+        skills: initialSkills,
+        technicalSkills: initialTechnicalSkills,
+        projects: initialProjects,
+        competencies: initialSkills.slice(0, 5),
         themeSettings: {
           preferredStyle,
           targetRegion: targetCountry,
