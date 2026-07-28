@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 // Lazy Loading Pages to shred the 5MB bundle
-const LandingPage = lazy(() => import("../pages/LandingPage"));
+const ResumeLandingPage = lazy(() => import("../modules/resume/pages/landing/ResumeLandingPage"));
 const CreateResumeWizard = lazy(() => import("../pages/CreateResumeWizard"));
 const Login = lazy(() => import("../pages/Login"));
 const Signup = lazy(() => import("../pages/Signup"));
@@ -103,7 +103,7 @@ const AppRoutes = () => {
       <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
 
       {/* Standalone SaaS Product Landing Page (NO App Sidebar) */}
-      <Route path="/resume-builder" element={<LandingPage />} />
+      <Route path="/resume-builder" element={<ResumeLandingPage />} />
       <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
 
       {/* Standalone Multi-Step Onboarding Wizard (NO App Sidebar) */}
