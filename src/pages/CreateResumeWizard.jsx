@@ -29,10 +29,10 @@ const CreateResumeWizard = () => {
 
   // Wizard state
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
-  const [startingPoint, setStartingPoint] = useState("blank");
+  const [startingPoint, setStartingPoint] = useState("profile");
   const [careerGoal, setCareerGoal] = useState("Developer");
   const [experienceLevel, setExperienceLevel] = useState("Mid");
-  const [targetCountry, setTargetCountry] = useState("Remote");
+  const [targetCountry, setTargetCountry] = useState("USA");
   const [preferredStyle, setPreferredStyle] = useState("ATS");
   const [isCreating, setIsCreating] = useState(false);
 
@@ -44,10 +44,10 @@ const CreateResumeWizard = () => {
   ];
 
   const startingOptions = [
-    { id: "blank", label: "Start Fresh (Blank)", icon: FileText, desc: "Build step-by-step with clean layout & AI guidance." },
-    { id: "profile", label: "Sync CVify Profile Data", icon: UserCheck, desc: "Auto-fill using your saved CVify profile experience, education & skills." },
-    { id: "pdf", label: "Import Existing PDF CV", icon: Upload, desc: "Parse text and experience from your existing resume PDF." },
+    { id: "profile", label: "Sync CVify Profile Data", icon: UserCheck, desc: "Auto-fill using your saved CVify profile experience, education, skills & projects." },
     { id: "ai", label: "Generate with AI Copilot", icon: Zap, desc: "Auto-generate tailored summary, achievements & skills for target role." },
+    { id: "pdf", label: "Import Existing PDF CV", icon: Upload, desc: "Parse text and experience from your existing resume PDF." },
+    { id: "blank", label: "Start Fresh (Blank)", icon: FileText, desc: "Build step-by-step with clean layout & AI guidance." },
   ];
 
   const careerGoals = ["Student", "Developer", "Designer", "Manager", "Marketing", "Finance", "Healthcare", "Custom"];
@@ -58,13 +58,41 @@ const CreateResumeWizard = () => {
     { id: "Executive", label: "Executive (10+ Yrs)", desc: "Focus on strategic growth, P&L, & organizational vision." },
   ];
 
-  const targetCountries = ["Remote / Global", "USA", "Canada", "UK", "Pakistan", "UAE / Gulf"];
+  const targetCountries = ["USA", "Canada", "UK", "Pakistan", "UAE / Gulf", "Remote / Global"];
   const resumeStyles = [
     { id: "ATS", label: "Strict ATS Safe", desc: "Monochrome, maximum parsing density & single-column safety." },
     { id: "Executive", label: "Executive Leadership", desc: "Refined serif typography & authoritative metric highlights." },
     { id: "Modern", label: "Modern Minimalist", desc: "Sleek spacing, clean line accents & high readability." },
     { id: "Creative", label: "Creative Portfolio", desc: "Subtle brand accent colors & portfolio link focus." },
   ];
+
+  // ── Strategy Generators (Resume Strategy Engine) ──
+  const getMarketStrategy = (country) => {
+    const isNorthAmerica = ["USA", "Canada"].includes(country);
+    return {
+      market: country,
+      maxPages: isNorthAmerica ? 1 : 2,
+      photoAllowed: !isNorthAmerica, // Strict ATS in North America rejects photos
+      atsMode: isNorthAmerica ? "strict" : "hybrid",
+      keywordDensity: "high",
+      quantifiedImpact: "required",
+    };
+  };
+
+  const getRenderConfig = (style) => {
+    switch (style) {
+      case "ATS":
+        return { allowIcons: false, allowTables: false, allowColumns: false, colorMode: "monochrome", fontStyle: "sans" };
+      case "Executive":
+        return { allowIcons: false, allowTables: false, allowColumns: true, colorMode: "navy_gold", fontStyle: "serif" };
+      case "Modern":
+        return { allowIcons: true, allowTables: false, allowColumns: true, colorMode: "slate_blue", fontStyle: "sans" };
+      case "Creative":
+        return { allowIcons: true, allowTables: true, allowColumns: true, colorMode: "vibrant_accent", fontStyle: "sans" };
+      default:
+        return { allowIcons: false, allowTables: false, allowColumns: false, colorMode: "monochrome", fontStyle: "sans" };
+    }
+  };
 
   const handleFinishWizard = async (useDiamonds = false) => {
     setIsCreating(true);
@@ -73,7 +101,7 @@ const CreateResumeWizard = () => {
     try {
       const userFullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.username || "Professional Name";
 
-      // ── Populate content based on starting point ──
+      // ── Comprehensive Profile Ingestion ──
       let initialSummary = "";
       let initialExperience = [];
       let initialEducation = [];
@@ -82,11 +110,11 @@ const CreateResumeWizard = () => {
       let initialCertifications = [];
 
       if (startingPoint === "profile") {
-        // Sync directly from user's CVify profile in database
+        // Full ingestion from User MongoDB model (projects, certs, skills, links)
         initialSummary = user?.summary || user?.bio || "";
         initialExperience = Array.isArray(user?.experience) ? user.experience : [];
         initialEducation = Array.isArray(user?.education) ? user.education : [];
-        initialProjects = Array.isArray(user?.projects) ? user.projects : [];
+        initialProjects = Array.isArray(user?.projects) ? user.projects : (Array.isArray(user?.portfolio) ? user.portfolio : []);
         initialCertifications = Array.isArray(user?.certifications) ? user.certifications : [];
 
         if (Array.isArray(user?.skills)) {
@@ -116,8 +144,11 @@ const CreateResumeWizard = () => {
         };
       }
 
+      const marketStrategy = getMarketStrategy(targetCountry);
+      const renderConfig = getRenderConfig(preferredStyle);
+
       const newResumeData = {
-        title: `${careerGoal} Resume (${experienceLevel})`,
+        title: `${careerGoal} Resume (${experienceLevel} • ${targetCountry})`,
         templateId: selectedTemplate,
         useDiamonds,
         summary: initialSummary,
@@ -132,7 +163,7 @@ const CreateResumeWizard = () => {
           location: targetCountry,
           email: user?.email || "",
           phone: user?.phoneNumber || "",
-          website: user?.socialLinks?.website || "",
+          website: user?.socialLinks?.portfolio || user?.socialLinks?.website || "",
           linkedin: user?.socialLinks?.linkedin || "",
           github: user?.socialLinks?.github || "",
         },
@@ -140,6 +171,7 @@ const CreateResumeWizard = () => {
           preferredStyle,
           targetRegion: targetCountry,
           experienceLevel,
+          renderConfig,
         },
         metadata: {
           startingPoint,
@@ -147,6 +179,8 @@ const CreateResumeWizard = () => {
           experienceLevel,
           targetCountry,
           preferredStyle,
+          resumeStrategy: marketStrategy,
+          renderConfig,
           openPdfImport: startingPoint === "pdf",
         },
       };
@@ -207,10 +241,10 @@ const CreateResumeWizard = () => {
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
-            Step {currentStep} of 6
+            Step {currentStep} of 7
           </span>
-          <div className="w-24 h-1.5 bg-slate-900 rounded-full overflow-hidden">
-            <div className="h-full bg-primary transition-all duration-300" style={{ width: `${(currentStep / 6) * 100}%` }} />
+          <div className="w-28 h-1.5 bg-slate-900 rounded-full overflow-hidden">
+            <div className="h-full bg-primary transition-all duration-300" style={{ width: `${(currentStep / 7) * 100}%` }} />
           </div>
         </div>
       </div>
@@ -403,6 +437,65 @@ const CreateResumeWizard = () => {
             </div>
           </div>
         )}
+
+        {/* Step 7: Strategy Summary & Launch Brief */}
+        {currentStep === 7 && (
+          <div className="space-y-6 animate-fadeIn">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">Step 7 of 7 — Resume Strategy Brief</span>
+              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tighter mt-1">Review your AI Career Strategy.</h2>
+              <p className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Your choices have configured layout constraints, market compliance rules, and AI ingestion targets.</p>
+            </div>
+
+            <div className="bg-bg-secondary border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-6 border-b border-white/5">
+                <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/5">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Selected Template</span>
+                  <p className="text-sm font-black text-white mt-1 capitalize">{templates.find(t => t.id === selectedTemplate)?.name || selectedTemplate}</p>
+                </div>
+                <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/5">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Ingestion Mode</span>
+                  <p className="text-sm font-black text-primary mt-1">{startingOptions.find(o => o.id === startingPoint)?.label || startingPoint}</p>
+                </div>
+                <div className="bg-slate-900/80 p-4 rounded-2xl border border-white/5">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Target Goal</span>
+                  <p className="text-sm font-black text-emerald-400 mt-1">{careerGoal} ({experienceLevel})</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-slate-900/60 p-5 rounded-2xl border border-white/5 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase text-primary">
+                    <Globe size={14} />
+                    <span>Market Compliance ({targetCountry})</span>
+                  </div>
+                  <ul className="text-xs text-slate-400 space-y-1 font-medium">
+                    <li>• Max Length: <strong className="text-white">{getMarketStrategy(targetCountry).maxPages} Page(s) Strict</strong></li>
+                    <li>• ATS Mode: <strong className="text-white">{getMarketStrategy(targetCountry).atsMode.toUpperCase()} Parsing</strong></li>
+                    <li>• Photo Policy: <strong className="text-white">{getMarketStrategy(targetCountry).photoAllowed ? "Allowed / Optional" : "Forbidden (US ATS Standard)"}</strong></li>
+                  </ul>
+                </div>
+
+                <div className="bg-slate-900/60 p-5 rounded-2xl border border-white/5 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase text-indigo-400">
+                    <Palette size={14} />
+                    <span>Render Engine ({preferredStyle})</span>
+                  </div>
+                  <ul className="text-xs text-slate-400 space-y-1 font-medium">
+                    <li>• Typography: <strong className="text-white capitalize">{getRenderConfig(preferredStyle).fontStyle}</strong></li>
+                    <li>• Structural Icons: <strong className="text-white">{getRenderConfig(preferredStyle).allowIcons ? "Enabled" : "Disabled (ATS Safe)"}</strong></li>
+                    <li>• Color Palette: <strong className="text-white capitalize">{getRenderConfig(preferredStyle).colorMode.replace("_", " ")}</strong></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400">
+                <span>Estimated Starting ATS Index</span>
+                <span className="text-base font-black">85+ / 100 EXCELLENT</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer Navigation Bar */}
@@ -415,7 +508,7 @@ const CreateResumeWizard = () => {
           <ArrowLeft size={14} /> Back
         </button>
 
-        {currentStep < 6 ? (
+        {currentStep < 7 ? (
           <button
             onClick={() => setCurrentStep(currentStep + 1)}
             className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-glow-primary hover:scale-105 transition-all"
