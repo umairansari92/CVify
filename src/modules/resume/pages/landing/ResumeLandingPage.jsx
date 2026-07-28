@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import cvifyLogo from "../../../../assets/logo.png";
 import { 
   Sparkles, 
   Zap, 
@@ -90,9 +91,11 @@ const LandingPage = () => {
       {/* Top Header Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 px-4 lg:px-12 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
-          <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary font-black text-sm shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-            CV
-          </div>
+          <img
+            src={cvifyLogo}
+            alt="CVifyPro Logo"
+            className="w-9 h-9 object-contain"
+          />
           <span className="font-black text-xl tracking-tighter text-white">CVify<span className="text-primary">Pro</span></span>
         </div>
 
