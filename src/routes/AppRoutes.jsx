@@ -103,7 +103,11 @@ const AppRoutes = () => {
       <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
 
       {/* Standalone SaaS Product Landing Page (NO App Sidebar) */}
-      <Route path="/resume-builder" element={<LandingPage />} />
+      {/* Authenticated users → skip marketing page → go directly to their workspace */}
+      <Route
+        path="/resume-builder"
+        element={user ? <Navigate to="/resume/library" replace /> : <LandingPage />}
+      />
       <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
 
       {/* Standalone Multi-Step Onboarding Wizard (NO App Sidebar) */}
