@@ -62,10 +62,30 @@ const CreateResumeWizard = () => {
 
   const targetCountries = ["USA", "Canada", "UK", "Pakistan", "UAE / Gulf", "Remote / Global"];
   const resumeStyles = [
-    { id: "ATS", label: "Strict ATS Safe", desc: "Monochrome, maximum parsing density & single-column safety." },
-    { id: "Executive", label: "Executive Leadership", desc: "Refined serif typography & authoritative metric highlights." },
-    { id: "Modern", label: "Modern Minimalist", desc: "Sleek spacing, clean line accents & high readability." },
-    { id: "Creative", label: "Creative Portfolio", desc: "Subtle brand accent colors & portfolio link focus." },
+    { 
+      id: "ATS", 
+      label: "Strict ATS Safe", 
+      desc: "Monochrome, maximum parsing density & single-column safety.",
+      useCases: "✓ Workday • Greenhouse • Lever • Enterprise Portals" 
+    },
+    { 
+      id: "Executive", 
+      label: "Executive Leadership", 
+      desc: "Refined serif typography & authoritative metric highlights.",
+      useCases: "✓ Directors • VPs • Senior Management • Executive Recruiters" 
+    },
+    { 
+      id: "Modern", 
+      label: "Modern Minimalist", 
+      desc: "Sleek spacing, clean line accents & high readability.",
+      useCases: "✓ Software Engineers • Tech • Product Managers • Startups" 
+    },
+    { 
+      id: "Creative", 
+      label: "Creative Portfolio", 
+      desc: "Subtle brand accent colors & portfolio link focus.",
+      useCases: "✓ UI/UX Designers • Graphic Design • Portfolio Showcase" 
+    },
   ];
 
   // ── Strategy Generators (Resume Strategy Engine) ──
@@ -488,10 +508,8 @@ const CreateResumeWizard = () => {
                     {preferredStyle === style.id && <Check size={16} className="text-primary" />}
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-3">{style.desc}</p>
-                  <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    <span className="px-2 py-0.5 rounded bg-white/5 border border-white/5">
-                      {style.id === "ATS" ? "Monochrome • 100% Parse" : style.id === "Executive" ? "Serif • Leadership" : style.id === "Modern" ? "Sans-Serif • Clean" : "Accent Highlights • Links"}
-                    </span>
+                  <div className="p-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-bold text-emerald-400">
+                    {style.useCases}
                   </div>
                 </div>
               ))}
@@ -551,8 +569,8 @@ const CreateResumeWizard = () => {
               </div>
 
               <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400">
-                <span>Estimated Starting ATS Index</span>
-                <span className="text-base font-black">85+ / 100 EXCELLENT</span>
+                <span>Expected ATS Readiness Potential</span>
+                <span className="text-base font-black">80 – 90 (Strategy Calibrated)</span>
               </div>
             </div>
           </div>
