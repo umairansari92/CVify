@@ -93,10 +93,11 @@ const LibraryHeader = ({
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-text-primary focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
+            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
+            style={{ colorScheme: "dark" }}
           >
             {FILTER_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-bg-secondary">
+              <option key={opt.value} value={opt.value} style={{ background: "#18181b", color: "#f8fafc" }}>
                 {opt.label}
               </option>
             ))}
@@ -109,10 +110,11 @@ const LibraryHeader = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-text-primary focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
+            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
+            style={{ colorScheme: "dark" }}
           >
             {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-bg-secondary">
+              <option key={opt.value} value={opt.value} style={{ background: "#18181b", color: "#f8fafc" }}>
                 {opt.label}
               </option>
             ))}
