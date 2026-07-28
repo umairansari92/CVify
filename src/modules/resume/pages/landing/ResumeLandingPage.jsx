@@ -88,7 +88,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary selection:bg-primary selection:text-white font-sans antialiased overflow-x-hidden">
       {/* Top Header Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 px-4 lg:px-12 py-4 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 px-4 lg:px-12 py-2 flex items-center justify-between">
         <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
           <img
             src="/CVify Logo Dark.jpg"
