@@ -4,17 +4,33 @@
  * Information hierarchy (top → bottom):
  *   PDF Preview → Title → Type/Visibility → ATS → Updated → Tags → AI Insight → Actions → Overflow Menu
  *
- * Rule 8: Renders actual first page of PDF using react-pdf.
- *         Falls back gracefully to a styled placeholder on load error.
+ * Rule 8: Thumbnail renders real PDF content using @react-pdf/renderer blob → react-pdf canvas.
+ *         Same approach as MobilePDFViewer in PDFPreviewPanel — canvas-based, scales correctly.
  * Rule 10: Only 2 visible CTA buttons. Everything else in ••• overflow menu.
- * Rule 14: PDF rendering is lazy — only mounts Document/Page when card is in view.
+ * Rule 15: Reuse pattern, not import — blob approach avoids iframe scaling issues.
  */
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { Suspense, useState, useEffect, useCallback } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document as PdfDocument, Page as PdfPage, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+
+// ── PDF Template map (same as PDFPreviewPanel — configuration only, not logic) ──
+import ModernPDF from "../../../components/pdf/ModernPDF";
+import ProfessionalPDF from "../../../components/pdf/ProfessionalPDF";
+import TechnicalPDF from "../../../components/pdf/TechnicalPDF";
+import ExecutivePDF from "../../../components/pdf/ExecutivePDF";
+import MinimalPDF from "../../../components/pdf/MinimalPDF";
+import TraditionalPDF from "../../../components/pdf/TraditionalPDF";
+import ClassicPDF from "../../../components/pdf/ClassicPDF";
+import BoldPDF from "../../../components/pdf/BoldPDF";
+import ElegantPDF from "../../../components/pdf/ElegantPDF";
+import ClearPDF from "../../../components/pdf/ClearPDF";
+import GlobalPDF from "../../../components/pdf/GlobalPDF";
+import ElitePDF from "../../../components/pdf/ElitePDF";
+import StandardPDF from "../../../components/pdf/StandardPDF";
+
 import {
   FaGlobe, FaLock, FaFilePdf, FaEdit, FaCopy, FaShareAlt,
   FaTrashAlt, FaDownload, FaBolt,
@@ -24,55 +40,110 @@ import { Button } from "../../../components/ui/Button";
 import Card from "../../../components/ui/Card";
 import { getAtsLabel, getAtsPotential, getAiInsight, formatRelativeTime } from "../utils/ats.utils";
 
-// ── Configure PDF.js worker ────────────────────────────────────────────────
+// ── Worker config (same version as PDFPreviewPanel) ──
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-// ── PDF Thumbnail ──────────────────────────────────────────────────────────
+// ── Template Lookup ──
+const getTemplatePdfComponent = (templateId, data) => {
+  switch (templateId) {
+    case "modern":        return <ModernPDF data={data} />;
+    case "professional":  return <ProfessionalPDF data={data} />;
+    case "technical":     return <TechnicalPDF data={data} />;
+    case "executive":     return <ExecutivePDF data={data} />;
+    case "minimal":       return <MinimalPDF data={data} />;
+    case "traditional":   return <TraditionalPDF data={data} />;
+    case "classic":       return <ClassicPDF data={data} />;
+    case "bold":          return <BoldPDF data={data} />;
+    case "elegant":       return <ElegantPDF data={data} />;
+    case "clear":         return <ClearPDF data={data} />;
+    case "global":        return <GlobalPDF data={data} />;
+    case "elite":         return <ElitePDF data={data} />;
+    default:              return <StandardPDF data={data} />;
+  }
+};
 
-const PdfThumbnail = ({ pdfUrl, resumeTitle }) => {
-  const [loadError, setLoadError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+// ── PDF Thumbnail (canvas-based — works everywhere, no iframe scaling issues) ──
+const PdfThumbnail = ({ resume }) => {
+  const [blobUrl, setBlobUrl] = useState(null);
+  const [error, setError] = useState(false);
+  const templateId = resume?.templateId || "classic";
 
-  if (!pdfUrl || loadError) {
+  useEffect(() => {
+    let active = true;
+    let objectUrl = null;
+
+    const generate = async () => {
+      try {
+        const { pdf } = await import("@react-pdf/renderer");
+        const pdfComponent = getTemplatePdfComponent(templateId, resume);
+        const blob = await pdf(pdfComponent).toBlob();
+        if (active) {
+          objectUrl = URL.createObjectURL(blob);
+          setBlobUrl(objectUrl);
+        }
+      } catch (err) {
+        console.error("[ResumeThumbnail] Failed to generate blob:", err);
+        if (active) setError(true);
+      }
+    };
+
+    if (resume) generate();
+
+    return () => {
+      active = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [resume?._id || resume?.id, templateId]);
+
+  // Fallback state
+  if (!resume || error) {
     return (
-      <div className="w-full h-44 rounded-2xl bg-gradient-to-br from-primary/10 via-midground to-bg-secondary border border-border-subtle flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+      <div className="w-full h-48 rounded-2xl bg-gradient-to-br from-primary/10 via-midground to-bg-secondary border border-border-subtle flex flex-col items-center justify-center gap-2 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-        <FaFilePdf size={28} className="text-primary/40 relative z-10" />
-        <div className="space-y-1.5 relative z-10 w-2/3">
+        <FaFilePdf size={24} className="text-primary/40 relative z-10" />
+        <div className="space-y-1.5 relative z-10 w-2/3 px-4">
           <div className="h-1.5 bg-text-primary/20 rounded-full w-full" />
           <div className="h-1 bg-text-muted/15 rounded-full w-4/5" />
           <div className="h-1 bg-text-muted/10 rounded-full w-3/5" />
-          <div className="h-1 bg-text-muted/10 rounded-full w-4/5" />
         </div>
         <p className="text-[10px] text-text-muted relative z-10 font-medium">Preview unavailable</p>
       </div>
     );
   }
 
+  // Loading state while blob generates
+  if (!blobUrl) {
+    return (
+      <div className="w-full h-48 rounded-2xl bg-white/5 border border-border-subtle flex flex-col items-center justify-center gap-3 overflow-hidden">
+        <div className="w-5 h-5 border-2 border-primary/40 border-t-primary rounded-full animate-spin" />
+        <p className="text-[10px] text-text-muted font-medium">Generating preview...</p>
+      </div>
+    );
+  }
+
+  // Render first page as canvas thumbnail
   return (
-    <div className="w-full h-44 rounded-2xl overflow-hidden border border-border-subtle bg-white relative">
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-midground to-bg-secondary flex items-center justify-center">
-          <div className="w-5 h-5 border-2 border-primary/40 border-t-primary rounded-full animate-spin" />
-        </div>
-      )}
-      <Document
-        file={pdfUrl}
-        onLoadError={() => setLoadError(true)}
+    <div
+      className="w-full h-48 rounded-2xl overflow-hidden border border-border-subtle bg-white"
+      style={{ pointerEvents: "none" }}
+    >
+      <PdfDocument
+        file={blobUrl}
         loading={null}
+        onLoadError={() => setError(true)}
       >
-        <Page
+        <PdfPage
           pageNumber={1}
-          width={280}
-          onRenderSuccess={() => setIsLoaded(true)}
+          width={340}
           renderAnnotationLayer={false}
           renderTextLayer={false}
-          className="!w-full !h-full object-cover"
+          className="!w-full"
         />
-      </Document>
+      </PdfDocument>
     </div>
   );
 };
+
 
 // ── ATS Badge ─────────────────────────────────────────────────────────────
 
@@ -160,7 +231,6 @@ const ResumeCard = ({
 }) => {
   const resumeId = resume.id || resume._id;
   const atsScore = resume.atsScore || 0;
-  const pdfUrl = resume.fileUrl || resume.pdfUrl || null;
   const aiInsight = getAiInsight(atsScore);
   const isPublic = !!resume.sharing?.enabled;
   const techTags = Array.isArray(resume.skills)
@@ -187,7 +257,7 @@ const ResumeCard = ({
           className="cursor-pointer mb-4 relative"
           onClick={() => onEdit(resumeId)}
         >
-          <PdfThumbnail pdfUrl={pdfUrl} resumeTitle={resume.title} />
+          <PdfThumbnail resume={resume} />
           {/* Hover overlay */}
           <div className="absolute inset-0 rounded-2xl bg-primary/0 group-hover:bg-primary/8 transition-all duration-200 flex items-center justify-center">
             <span className="opacity-0 group-hover:opacity-100 transition-all text-[10px] font-black uppercase tracking-wider text-primary bg-bg-primary/90 px-3 py-1.5 rounded-full border border-primary/30">
