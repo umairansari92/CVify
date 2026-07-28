@@ -258,7 +258,10 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
       )}
 
       {/* Technical Skills */}
-      {((skills?.technical?.length > 0) || (skills?.strategic?.length > 0) || (technicalSkills && Object.values(technicalSkills).some((arr) => arr?.length > 0))) && (
+      {((Array.isArray(skills) && skills.length > 0) ||
+        (Array.isArray(skills?.technical) && skills.technical.length > 0) ||
+        (Array.isArray(skills?.strategic) && skills.strategic.length > 0) ||
+        (technicalSkills && typeof technicalSkills === "object" && Object.values(technicalSkills).some((arr) => Array.isArray(arr) && arr.length > 0))) && (
         <div className="mb-6">
           <h2
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
@@ -267,14 +270,21 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
             Technical Expertise
           </h2>
           <div className="grid grid-cols-2 text-sm text-gray-700">
-            {/* New Structure */}
-            {skills?.technical?.length > 0 && (
+            {/* Flat Array Support */}
+            {Array.isArray(skills) && skills.length > 0 && (
+              <div className="mb-2 mr-8 col-span-2">
+                <span className="font-bold">Skills:</span>{" "}
+                {skills.join(", ")}
+              </div>
+            )}
+            {/* Object Structure Support */}
+            {!Array.isArray(skills) && Array.isArray(skills?.technical) && skills.technical.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Technical:</span>{" "}
                 {skills.technical.join(", ")}
               </div>
             )}
-            {skills?.strategic?.length > 0 && (
+            {!Array.isArray(skills) && Array.isArray(skills?.strategic) && skills.strategic.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Strategic:</span>{" "}
                 {skills.strategic.join(", ")}
@@ -282,43 +292,43 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
             )}
 
             {/* Legacy Fallback */}
-            {technicalSkills?.frontend?.length > 0 && (
+            {Array.isArray(technicalSkills?.frontend) && technicalSkills.frontend.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Skills:</span>{" "}
                 {technicalSkills.frontend.join(", ")}
               </div>
             )}
-            {technicalSkills?.learningRoadmap?.length > 0 && (
+            {Array.isArray(technicalSkills?.learningRoadmap) && technicalSkills.learningRoadmap.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Currently Learning:</span>{" "}
                 {technicalSkills.learningRoadmap.join(", ")}
               </div>
             )}
-            {technicalSkills?.backend?.length > 0 && (
+            {Array.isArray(technicalSkills?.backend) && technicalSkills.backend.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Backend:</span>{" "}
                 {technicalSkills.backend.join(", ")}
               </div>
             )}
-            {technicalSkills?.database?.length > 0 && (
+            {Array.isArray(technicalSkills?.database) && technicalSkills.database.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Database:</span>{" "}
                 {technicalSkills.database.join(", ")}
               </div>
             )}
-            {technicalSkills?.aiDevOps?.length > 0 && (
+            {Array.isArray(technicalSkills?.aiDevOps) && technicalSkills.aiDevOps.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">AI / DevOps:</span>{" "}
                 {technicalSkills.aiDevOps.join(", ")}
               </div>
             )}
-            {technicalSkills?.security?.length > 0 && (
+            {Array.isArray(technicalSkills?.security) && technicalSkills.security.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Security:</span>{" "}
                 {technicalSkills.security.join(", ")}
               </div>
             )}
-            {technicalSkills?.tools?.length > 0 && (
+            {Array.isArray(technicalSkills?.tools) && technicalSkills.tools.length > 0 && (
               <div className="mb-2 mr-8">
                 <span className="font-bold">Tools:</span>{" "}
                 {technicalSkills.tools.join(", ")}
@@ -329,8 +339,8 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
       )}
 
       {/* Competencies & Proficiency */}
-      {(competencies?.length > 0 ||
-        softwareProficiency?.length > 0) && (
+      {((Array.isArray(competencies) && competencies.length > 0) ||
+        (Array.isArray(softwareProficiency) && softwareProficiency.length > 0)) && (
         <div className="mb-6">
           <h2
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
@@ -342,13 +352,13 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
             className="text-sm text-gray-700"
             style={{ pageBreakInside: "avoid" }}
           >
-            {softwareProficiency?.length > 0 && (
+            {Array.isArray(softwareProficiency) && softwareProficiency.length > 0 && (
               <div className="mb-2">
                 <span className="font-bold">Software:</span>{" "}
                 {softwareProficiency.join(", ")}
               </div>
             )}
-            {competencies?.length > 0 && (
+            {Array.isArray(competencies) && competencies.length > 0 && (
               <div className="mb-2">
                 <span className="font-bold">Competencies:</span>{" "}
                 {competencies.join(" • ")}
@@ -359,7 +369,7 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
       )}
 
       {/* Interests */}
-      {interests?.length > 0 && (
+      {Array.isArray(interests) && interests.length > 0 && (
         <div className="mb-6">
           <h2
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
@@ -368,25 +378,27 @@ const ClassicTemplate = ({ data, isEditable = false }) => {
             Interests & Hobbies
           </h2>
           <div className="text-sm text-gray-700 leading-relaxed italic">
-            {(interests || []).join(", ")}
+            {interests.join(", ")}
           </div>
         </div>
       )}
 
       {/* Custom Sections */}
-      {customSections?.map((section, i) => (
+      {Array.isArray(customSections) && customSections.map((section, i) => (
         <div key={i} className="mb-6">
           <h2
             className="text-xl font-bold uppercase border-b mb-4 pb-1"
             style={{ color: themeColor, borderColor: `${themeColor}40` }}
           >
-            {section.title}
+            {section?.title}
           </h2>
-          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-            {section.content.map((item, j) => (
-              <li key={j}>{item}</li>
-            ))}
-          </ul>
+          {Array.isArray(section?.content) && (
+            <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+              {section.content.map((item, j) => (
+                <li key={j}>{item}</li>
+              ))}
+            </ul>
+          )}
         </div>
       ))}
     </div>
