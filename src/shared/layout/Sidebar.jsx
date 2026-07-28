@@ -37,7 +37,7 @@ const Sidebar = ({ onClose }) => {
       isSubmenu: true,
       children: [
         { path: "/resume/library", label: "My Resumes" },
-        { path: "/resume-builder/create", label: "Resume Builder" },
+        { path: "/resume-builder", label: "Resume Builder" },
         { path: "/ats", label: "Resume Checker" },
       ]
     },
