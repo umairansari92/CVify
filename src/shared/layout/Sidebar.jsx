@@ -1,11 +1,12 @@
-import React from "react";
-import { m } from "framer-motion";
+import React, { useState } from "react";
+import { m, AnimatePresence } from "framer-motion";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   FaHome, FaFileAlt, FaSignOutAlt, FaUser, FaThLarge,
   FaEnvelopeOpenText, FaChartLine, FaShieldAlt, FaUsers,
   FaFileInvoice, FaCog, FaBook, FaMicrophoneAlt, FaMapSigns, FaBriefcase
 } from "react-icons/fa";
+import { FiChevronDown, FiChevronUp, FiPlusCircle, FiCheckCircle } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
 import Logo from "../../components/common/Logo";
@@ -16,6 +17,10 @@ const Sidebar = ({ onClose }) => {
   const location = useLocation();
   const { user } = useSelector((state) => state.auth);
 
+  const [isResumeOpen, setIsResumeOpen] = useState(
+    location.pathname.startsWith("/resume-builder") || location.pathname === "/ats"
+  );
+
   const isAdminArea = location.pathname.startsWith("/admin");
 
   const handleLogout = () => {
@@ -25,7 +30,17 @@ const Sidebar = ({ onClose }) => {
 
   const careerOsItems = [
     { path: "/dashboard", label: "Command Center", icon: <FaHome /> },
-    { path: "/resume-builder", label: "AI Resume Builder", icon: <FaFileAlt /> },
+    {
+      id: "resume-parent",
+      label: "Resume",
+      icon: <FaFileAlt />,
+      isSubmenu: true,
+      children: [
+        { path: "/resume-builder/my-resumes", label: "My Resumes" },
+        { path: "/resume-builder/create", label: "Resume Builder" },
+        { path: "/ats", label: "Resume Checker" },
+      ]
+    },
     { path: "/ats", label: "ATS Intelligence", icon: <FaChartLine /> },
     { path: "/cover-letter", label: "Cover Letter AI", icon: <FaEnvelopeOpenText /> },
     { path: "/templates", label: "Portfolio Lab", icon: <FaThLarge /> },
@@ -72,31 +87,85 @@ const Sidebar = ({ onClose }) => {
             {isAdminArea ? "Control Plane" : "Career OS"}
           </p>
         </div>
-        {itemsToRender.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `flex items-center gap-4 px-6 py-3.5 rounded-[14px] transition-all duration-200 font-semibold text-[14px] ${
-                isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-text-muted hover:text-text-main hover:bg-white/5"
-              }`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <span className={`text-[1.1rem] transition-all duration-200 ${isActive ? "text-primary" : ""}`}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-                {isActive && (
-                  <m.div layoutId="active-nav" className="absolute left-0 w-1 h-6 bg-primary rounded-r-full shadow-glow-primary" />
-                )}
-              </>
-            )}
-          </NavLink>
-        ))}
+
+        {itemsToRender.map((item) => {
+          if (item.isSubmenu) {
+            const isChildActive = item.children.some((c) => location.pathname === c.path);
+            return (
+              <div key={item.id} className="space-y-1">
+                <button
+                  onClick={() => setIsResumeOpen(!isResumeOpen)}
+                  className={`flex items-center justify-between w-full px-6 py-3.5 rounded-[14px] transition-all duration-200 font-semibold text-[14px] ${
+                    isChildActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-text-muted hover:text-text-main hover:bg-white/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`text-[1.1rem] transition-all duration-200 ${isChildActive ? "text-primary" : ""}`}>
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
+                  {isResumeOpen ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
+                </button>
+
+                <AnimatePresence>
+                  {isResumeOpen && (
+                    <m.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="pl-12 space-y-1 overflow-hidden"
+                    >
+                      {item.children.map((subItem) => (
+                        <NavLink
+                          key={subItem.path}
+                          to={subItem.path}
+                          className={({ isActive }) =>
+                            `block px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                              isActive
+                                ? "bg-primary/20 text-primary border-l-2 border-primary"
+                                : "text-text-muted hover:text-text-main hover:bg-white/5"
+                            }`
+                          }
+                        >
+                          {subItem.label}
+                        </NavLink>
+                      ))}
+                    </m.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          }
+
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex items-center gap-4 px-6 py-3.5 rounded-[14px] transition-all duration-200 font-semibold text-[14px] ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-text-muted hover:text-text-main hover:bg-white/5"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <span className={`text-[1.1rem] transition-all duration-200 ${isActive ? "text-primary" : ""}`}>
+                    {item.icon}
+                  </span>
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <m.div layoutId="active-nav" className="absolute left-0 w-1 h-6 bg-primary rounded-r-full shadow-glow-primary" />
+                  )}
+                </>
+              )}
+            </NavLink>
+          );
+        })}
       </nav>
 
       <div className="p-8 pt-0 relative z-10">

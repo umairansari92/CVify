@@ -11,6 +11,7 @@ const Signup = lazy(() => import("../pages/Signup"));
 const VerifyOtp = lazy(() => import("../pages/VerifyOtp"));
 const Dashboard = lazy(() => import("../modules/dashboard/DashboardPage"));
 const CreateResume = lazy(() => import("../pages/CreateResume"));
+const MyResumesPage = lazy(() => import("../pages/MyResumesPage"));
 const ResumeBuilder = lazy(() => import("../pages/ResumeBuilder/ResumeBuilderLayout"));
 const Templates = lazy(() => import("../pages/Templates"));
 const CoverLetterPage = lazy(() => import("../pages/CoverLetterPage"));
@@ -137,6 +138,8 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/resume-builder/my-resumes" element={<MyResumesPage />} />
+        <Route path="/resumes" element={<Navigate to="/resume-builder/my-resumes" replace />} />
         <Route path="/create" element={<Navigate to="/resume-builder/create" replace />} />
         <Route path="/edit/:id" element={<ResumeRedirect />} />
         <Route path="/templates" element={<Templates />} />
