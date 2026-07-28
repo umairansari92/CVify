@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { 
   Sparkles, 
   Zap, 
@@ -25,6 +26,7 @@ import { FaGem, FaGoogle, FaMicrosoft, FaAmazon, FaSpotify } from "react-icons/f
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const [activeTemplateTab, setActiveTemplateTab] = useState("All");
   const [openFaq, setOpenFaq] = useState(null);
   const [simulatedScore, setSimulatedScore] = useState(72);
@@ -103,12 +105,42 @@ const LandingPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/login" className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
-            Sign In
-          </Link>
-          <Link to="/resume-builder/create" className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all">
-            Create Resume
-          </Link>
+          {user ? (
+            // ── Authenticated: show user identity + workspace link ──
+            <>
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors"
+              >
+                ← Dashboard
+              </button>
+              <button
+                onClick={() => navigate("/resume/library")}
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black text-white hover:bg-white/10 transition-all"
+              >
+                {user.profileImage ? (
+                  <img src={user.profileImage} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary text-[10px] font-black">
+                    {(user.firstName?.[0] || user.username?.[0] || "U").toUpperCase()}
+                  </div>
+                )}
+                <span className="hidden sm:inline">
+                  {user.firstName || user.username || "Account"}
+                </span>
+              </button>
+            </>
+          ) : (
+            // ── Unauthenticated: public Sign In / Create Resume ──
+            <>
+              <Link to="/login" className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
+                Sign In
+              </Link>
+              <Link to="/resume-builder/create" className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all">
+                Create Resume
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
