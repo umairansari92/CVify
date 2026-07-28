@@ -18,7 +18,7 @@ const Sidebar = ({ onClose }) => {
   const { user } = useSelector((state) => state.auth);
 
   const [isResumeOpen, setIsResumeOpen] = useState(
-    location.pathname.startsWith("/resume-builder") || location.pathname === "/ats"
+    location.pathname.startsWith("/resume") || location.pathname === "/ats"
   );
 
   const isAdminArea = location.pathname.startsWith("/admin");
@@ -36,7 +36,7 @@ const Sidebar = ({ onClose }) => {
       icon: <FaFileAlt />,
       isSubmenu: true,
       children: [
-        { path: "/resume-builder/my-resumes", label: "My Resumes" },
+        { path: "/resume/library", label: "My Resumes" },
         { path: "/resume-builder/create", label: "Resume Builder" },
         { path: "/ats", label: "Resume Checker" },
       ]
