@@ -93,7 +93,7 @@ const LandingPage = () => {
           <img
             src="/CVify Logo Dark.jpg"
             alt="CVifyPro Logo"
-            className="h-16 w-auto object-contain"
+            className="h-25 w-auto object-contain"
           />
         </div>
 
