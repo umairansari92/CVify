@@ -15,7 +15,9 @@ import {
   Briefcase, 
   Globe, 
   Award, 
-  Palette 
+  Palette,
+  UserCheck,
+  User
 } from "lucide-react";
 import toast from "react-hot-toast";
 
