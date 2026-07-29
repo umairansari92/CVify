@@ -202,53 +202,66 @@ const resumeSlice = createSlice({
       })
       .addCase(parseResume.fulfilled, (state, action) => {
         state.loading = false;
-        if (!action.payload || !action.payload.data) return;
+        if (!action.payload) return;
 
-        const { data, analysis } = action.payload;
+        const { data, analysis, resume } = action.payload;
         state.parsingAnalysis = analysis;
         
-        // Map AI structured data to Resume model
-        state.currentResume = {
-          ...state.currentResume,
-          personalInfo: {
-            ...state.currentResume?.personalInfo,
-            fullName: data.basics?.name || "",
-            email: data.basics?.email || "",
-            phone: data.basics?.phone || "",
-            location: data.basics?.location || "",
-            jobTitle: data.basics?.headline || "",
-            profileSummary: data.basics?.summary || "",
-          },
-          experience: (data.experience || []).map(exp => ({
-            company: exp.company,
-            position: exp.role,
-            startDate: exp.startDate,
-            endDate: exp.endDate,
-            location: exp.location,
-            responsibilities: exp.bullets || [],
-            impactScore: exp.impactScore || 0
-          })),
-          education: (data.education || []).map(edu => ({
-            institution: edu.institution,
-            degree: edu.degree,
-            startDate: edu.startDate,
-            endDate: edu.endDate,
-            specialization: edu.fieldOfStudy
-          })),
-          projects: (data.projects || []).map(proj => ({
-            name: proj.name,
-            description: proj.description || [],
-            link: proj.link
-          })),
-          skills: [
-            ...(data.skills?.technical || []),
-            ...(data.skills?.soft || [])
-          ],
-          technicalSkills: {
-            ...state.currentResume?.technicalSkills,
-            tools: data.skills?.technical || []
+        if (resume) {
+          state.currentResume = resume;
+          // Add to resumes array if not already included
+          if (Array.isArray(state.resumes)) {
+            const exists = state.resumes.some(r => (r._id || r.id) === (resume._id || resume.id));
+            if (!exists) {
+              state.resumes.unshift(resume);
+            }
+          } else {
+            state.resumes = [resume];
           }
-        };
+        } else if (data) {
+          // Fallback client mapping if resume document wasn't created
+          state.currentResume = {
+            ...state.currentResume,
+            personalInfo: {
+              ...state.currentResume?.personalInfo,
+              fullName: data.basics?.name || "",
+              email: data.basics?.email || "",
+              phone: data.basics?.phone || "",
+              location: data.basics?.location || "",
+              jobTitle: data.basics?.headline || "",
+              profileSummary: data.basics?.summary || "",
+            },
+            experience: (data.experience || []).map(exp => ({
+              company: exp.company,
+              position: exp.role || exp.position,
+              startDate: exp.startDate,
+              endDate: exp.endDate,
+              location: exp.location,
+              responsibilities: exp.bullets || exp.responsibilities || [],
+              impactScore: exp.impactScore || 0
+            })),
+            education: (data.education || []).map(edu => ({
+              institution: edu.institution,
+              degree: edu.degree,
+              startDate: edu.startDate,
+              endDate: edu.endDate,
+              specialization: edu.fieldOfStudy || edu.specialization
+            })),
+            projects: (data.projects || []).map(proj => ({
+              name: proj.name,
+              description: Array.isArray(proj.description) ? proj.description : [proj.description].filter(Boolean),
+              link: proj.link
+            })),
+            skills: [
+              ...(data.skills?.technical || []),
+              ...(data.skills?.soft || [])
+            ],
+            technicalSkills: {
+              ...state.currentResume?.technicalSkills,
+              tools: data.skills?.technical || []
+            }
+          };
+        }
       })
       .addCase(parseResume.rejected, (state, action) => {
         state.loading = false;
