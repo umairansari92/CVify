@@ -204,25 +204,19 @@ const resumeSlice = createSlice({
         state.loading = false;
         if (!action.payload) return;
 
-        // ── DIAGNOSTIC: Remove after confirming library fix ──────────────
-        console.log("[parseResume.fulfilled] payload keys:", Object.keys(action.payload));
-        console.log("[parseResume.fulfilled] resume object:", action.payload.resume);
-        console.log("[parseResume.fulfilled] resume._id:", action.payload.resume?._id);
-        // ─────────────────────────────────────────────────────────────────
-
-        const { data, analysis, resume } = action.payload;
+        const { data, analysis, resume, canonical } = action.payload;
         state.parsingAnalysis = analysis;
+        state.canonicalDTO = canonical || null;
         
         if (resume) {
           state.currentResume = resume;
-          // Add to resumes array if not already included
           if (Array.isArray(state.resumes)) {
             const exists = state.resumes.some(r => (r._id || r.id) === (resume._id || resume.id));
             if (!exists) {
               state.resumes.unshift(resume);
-              console.log("[parseResume.fulfilled] ✅ Resume unshifted into state.resumes. Total:", state.resumes.length);
             } else {
-              console.log("[parseResume.fulfilled] ⚠️ Resume already in state (dedup hit)");
+              // Update existing in array
+              state.resumes = state.resumes.map(r => (r._id || r.id) === (resume._id || resume.id) ? resume : r);
             }
           } else {
             state.resumes = [resume];
