@@ -18,7 +18,7 @@ const Sidebar = ({ onClose }) => {
   const { user } = useSelector((state) => state.auth);
 
   const [isResumeOpen, setIsResumeOpen] = useState(
-    location.pathname.startsWith("/resume") || location.pathname === "/ats"
+    location.pathname.startsWith("/resume") || location.pathname === "/ats" || location.pathname === "/templates"
   );
 
   const isAdminArea = location.pathname.startsWith("/admin");
@@ -39,11 +39,11 @@ const Sidebar = ({ onClose }) => {
         { path: "/resume/library", label: "My Resumes" },
         { path: "/resume-builder", label: "Resume Builder" },
         { path: "/ats", label: "Resume Checker" },
+        { path: "/templates", label: "Templates" },
       ]
     },
     { path: "/ats", label: "ATS Intelligence", icon: <FaChartLine /> },
     { path: "/cover-letter", label: "Cover Letter AI", icon: <FaEnvelopeOpenText /> },
-    { path: "/templates", label: "Portfolio Lab", icon: <FaThLarge /> },
     { path: "/job-matcher", label: "Job Matcher", icon: <FaBriefcase /> },
     { path: "/interview", label: "Interview Simulator", icon: <FaMicrophoneAlt /> },
     { path: "/roadmap", label: "Career Roadmap", icon: <FaMapSigns /> },
