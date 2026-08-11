@@ -67,6 +67,7 @@ const Documentation = () => {
         { id: "disposable-email", icon: <Mail size={16} />, label: "Disposable Email Blocking" },
         { id: "security-v6", icon: <ShieldCheck size={16} />, label: "🔐 Security v6.0" },
         { id: "security-v7", icon: <ShieldCheck size={16} />, label: "🛡️ Security v7.0 — Triple-Lock (New!)" },
+        { id: "device-fingerprint", icon: <Mail size={16} />, label: "📱 Device Fingerprint & Alert Email (New!)" },
       ]
     },
     {
@@ -2085,6 +2086,125 @@ export const isDisposableEmail = (email) => {
               <p className="text-text-secondary text-[13px] leading-relaxed ml-7">{faq.a}</p>
             </div>
           ))}
+        </div>
+      </>
+    ),
+
+    "device-fingerprint": (
+      <>
+        <DocHeader title="📱 Device Fingerprinting & Security Alert Email System" badge="Security Operations" />
+        <p className="text-slate-300 text-[15px] leading-relaxed mb-6">
+          CVify Pro automatically detects logins from un-recognized devices and issues immediate, geo-located, timezone-aware security alert notifications.
+          The system operates silently without blocking user workflows, maintaining a 10-device rolling history per account in MongoDB.
+        </p>
+
+        {/* ─── 1. ARCHITECTURE DIAGRAM (ASCII FIRST) ─── */}
+        <SectionTitle>1. Device Detection & Alert Pipeline</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Every successful login triggers background fingerprint analysis and geo-resolution.
+        </p>
+        <div className="bg-slate-950 border border-white/10 rounded-2xl p-5 mb-8 overflow-x-auto">
+          <pre className="font-mono text-[10px] md:text-[11px] leading-relaxed text-emerald-400">
+            {` [ User Authenticates (POST /api/auth/login) ]
+                          │
+                          ▼
+  ┌───────────────────────────────────────────────┐
+  │ 1. Extract Headers: UA, Lang, Encoding, IP    │
+  │ 2. Parse User-Agent: Browser & OS Name/Version│
+  │ 3. GeoIP Lookup: Country ISO & IANA Timezone  │
+  └───────────────────────┬───────────────────────┘
+                          │
+                          ▼
+  ┌───────────────────────────────────────────────┐
+  │ SHA-256 Hash -> 32-char Device Fingerprint     │
+  └───────────────────────┬───────────────────────┘
+                          │
+                          ▼
+           [ Match user.knownDevices Array ]
+                          │
+         ┌────────────────┴────────────────┐
+         ▼                                 ▼
+  [ Known Device ]                  [ NEW DEVICE DETECTED ]
+  Update lastSeen timestamp         ├── Push to knownDevices (Max 10)
+                                    └── Trigger sendNewDeviceAlertEmail()
+                                               │
+                                               ▼
+                                    ┌───────────────────────────────┐
+                                    │ Dark HTML Security Template   │
+                                    │ • Full Country Name           │
+                                    │ • Local Time (IANA + UTC Off) │
+                                    │ • Monospace IP & Browser Info │
+                                    │ • /profile Security Link CTA  │
+                                    └───────────────────────────────┘`}
+          </pre>
+        </div>
+
+        {/* ─── 2. CORE TECHNICAL CAPABILITIES ─── */}
+        <SectionTitle>2. Key Engine Capabilities</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<ShieldCheck size={18} />} color="emerald" title="SHA-256 Lightweight Fingerprinting"
+            desc="Generates a deterministic 32-character hash from User-Agent, language, encoding, platform, and country. Avoids invasive client scripts while providing fast anomaly detection." />
+          <InfoCard icon={<Globe size={18} />} color="blue" title="ISO → Full Country Name Resolution"
+            desc="Maps raw ISO-3166-1 alpha-2 country codes (e.g. PK, US, GB) to human-readable names (Pakistan, United States, United Kingdom) using a zero-dependency server lookup table." />
+          <InfoCard icon={<Zap size={18} />} color="purple" title="IANA Timezone Localization"
+            desc="Resolves IP to IANA Timezone (geo.timezone e.g. Asia/Karachi) and formats local login timestamps with UTC offset (e.g. August 11, 2026, 8:43 PM (Asia/Karachi, UTC+05:00))." />
+          <InfoCard icon={<Mail size={18} />} color="amber" title="Non-Blocking Fire-and-Forget Dispatch"
+            desc="Alert emails run asynchronously post-login. Email service latency or delivery failures never delay or crash the primary authentication flow." />
+        </div>
+
+        {/* ─── 3. EMAIL TEMPLATE ARCHITECTURE ─── */}
+        <SectionTitle>3. Dark Security Alert Email Specifications</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          Redesigned to match CVify Pro's dark ecosystem design system (#060608 canvas, #121218 card, #1e1e2c borders).
+        </p>
+
+        <div className="overflow-x-auto rounded-2xl border border-white/5 mb-8">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/[0.03]">
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Component</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-primary">Design & Payload Specification</th>
+                <th className="py-3 px-4 text-[10px] font-black uppercase tracking-widest text-text-muted">Security / UX Rationale</th>
+              </tr>
+            </thead>
+            <tbody className="text-[12px]">
+              {[
+                ["Header", "CVifyPro Logo + 'Security Operations Center' subtitle", "Establishes immediate brand trust and authority"],
+                ["Alert Banner", "Linear gradient (#1a0a0a → #1a1218) with red pill badge '⚠ SECURITY ALERT'", "Visual urgency signal before user reads text"],
+                ["Session Details", "Browser, OS, Full Country Name, Monospace Teal IP, Local Time (IANA + Offset)", "Precise diagnostic data for account owner verification"],
+                ["Action Blocks", "Green '✓ This was you?' (Ignore) / Red '⚠ Not you?' (Password change)", "Dual-choice UI eliminates ambiguity for non-technical users"],
+                ["CTA Button", "Solid Red (#ef4444) 'Secure My Account' pointing to /profile", "Direct navigation to profile security settings"],
+                ["Footer", "CVify Pro branding + DataVerse attribution + Automated email warning", "Compliance with anti-phishing email standards"],
+              ].map(([comp, spec, why], i) => (
+                <tr key={i} className="border-t border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 text-primary font-black font-mono text-[11px]">{comp}</td>
+                  <td className="py-3 px-4 text-text-secondary font-medium">{spec}</td>
+                  <td className="py-3 px-4 text-text-muted font-medium">{why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ─── 4. DATABASE & MIDDLEWARE SPECIFICATIONS ─── */}
+        <SectionTitle>4. Device Storage & Performance Limits</SectionTitle>
+        <div className="space-y-3 mb-8">
+          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <p className="font-black text-sm text-text-primary mb-1">Rolling Device Cap (10 Max)</p>
+            <p className="text-text-secondary text-[12px] leading-relaxed">
+              To prevent un-bounded document growth in MongoDB, user.knownDevices is sliced to retain only the <strong className="text-primary">10 most recent devices</strong>:
+              <code className="block mt-2 font-mono text-[11px] text-emerald-400 bg-slate-950 p-2.5 rounded-xl border border-white/5">
+                if (user.knownDevices.length &gt; 10) user.knownDevices = user.knownDevices.slice(-10);
+              </code>
+            </p>
+          </div>
+          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <p className="font-black text-sm text-text-primary mb-1">Known Device Touch Handling</p>
+            <p className="text-text-secondary text-[12px] leading-relaxed">
+              When a login matches an existing fingerprint in <code className="text-primary">user.knownDevices</code>, no email alert is dispatched.
+              The engine simply updates the <code className="text-primary">lastSeen</code> timestamp for that device in MongoDB.
+            </p>
+          </div>
         </div>
       </>
     ),
