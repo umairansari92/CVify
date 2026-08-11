@@ -83,12 +83,13 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       {/* "CREATIVE" watermark */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none select-none overflow-hidden">
         <span
-          className="font-black uppercase whitespace-nowrap leading-none w-full text-center tracking-tighter"
+          className="font-black uppercase whitespace-nowrap leading-none w-full text-center"
           style={{
             fontFamily: tokens.fonts.display,
-            fontSize: "clamp(4.5rem, 17vw, 16rem)",
-            color: "rgba(255, 255, 255, 0.07)",
-            textShadow: `0 0 80px ${tokens.colors.primary}15`,
+            fontSize: "clamp(6rem, 23vw, 22rem)",
+            color: "rgba(255, 255, 255, 0.085)",
+            letterSpacing: "0.02em",
+            textShadow: `0 0 100px ${tokens.colors.primary}20`,
           }}
         >
           CREATIVE
@@ -96,16 +97,16 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       </div>
 
       {/* Portrait — profileImage */}
-      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-6 md:pb-16 pt-16">
+      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-0 pt-8 items-end">
         {(user?.profileImage || user?.profilePicture) ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="relative flex items-center justify-center pointer-events-none"
+            className="relative flex items-end justify-center pointer-events-none"
             style={{
-              height: "clamp(340px, 62vh, 620px)",
-              maxHeight: "75vh",
+              height: "clamp(420px, 78vh, 780px)",
+              maxHeight: "88vh",
               aspectRatio: "3/4",
             }}
           >
@@ -119,9 +120,9 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
             />
             {/* Soft gradient fade at bottom to blend seamlessly with background */}
             <div 
-              className="absolute inset-x-0 bottom-0 h-1/3 z-10 pointer-events-none"
+              className="absolute inset-x-0 bottom-0 h-2/5 z-10 pointer-events-none"
               style={{
-                background: `linear-gradient(to top, ${tokens.colors.background} 15%, transparent)`
+                background: `linear-gradient(to top, ${tokens.colors.background} 20%, transparent)`
               }}
             />
           </motion.div>
