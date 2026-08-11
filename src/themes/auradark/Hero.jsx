@@ -55,11 +55,10 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       className="relative w-full overflow-hidden"
       style={{ height: "100vh", minHeight: 700, backgroundColor: tokens.colors.background }}
     >
-      {/* TOP: Tags marquee */}
+      {/* TOP: Tags marquee — positioned cleanly below floating navbar */}
       {tags.length > 0 && (
         <div
-          className="absolute top-0 left-0 right-0 z-40 flex items-center justify-center gap-8 px-20 py-6 pointer-events-none"
-          style={{ borderBottom: `1px solid ${tokens.colors.borderFaint}` }}
+          className="absolute top-20 md:top-24 left-0 right-0 z-20 flex items-center justify-center gap-8 px-20 py-2 pointer-events-none opacity-40"
         >
           {tags.map((tag, i) => (
             <React.Fragment key={i}>
@@ -83,12 +82,12 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       {/* "CREATIVE" watermark */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none select-none overflow-hidden">
         <span
-          className="font-black uppercase whitespace-nowrap leading-none w-full text-center"
+          className="font-black uppercase whitespace-nowrap leading-none w-full text-center tracking-tighter"
           style={{
             fontFamily: tokens.fonts.display,
-            fontSize: "clamp(4rem, 15vw, 14rem)",
-            color: "rgba(255,255,255,0.06)",
-            letterSpacing: "-0.02em",
+            fontSize: "clamp(4.5rem, 17vw, 16rem)",
+            color: "rgba(255, 255, 255, 0.07)",
+            textShadow: `0 0 80px ${tokens.colors.primary}15`,
           }}
         >
           CREATIVE
@@ -96,42 +95,32 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       </div>
 
       {/* Portrait — profileImage */}
-      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-10 md:pb-24">
+      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-6 md:pb-16 pt-16">
         {(user?.profileImage || user?.profilePicture) ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="relative shadow-2xl flex items-center justify-center overflow-hidden"
+            className="relative flex items-center justify-center pointer-events-none"
             style={{
-              width: "clamp(280px, 85vw, 500px)",
+              height: "clamp(340px, 62vh, 620px)",
+              maxHeight: "75vh",
               aspectRatio: "3/4",
-              padding: "2px",
-              background: `linear-gradient(135deg, ${tokens.colors.primary}, rgba(255,255,255,0.05), ${tokens.colors.primary}80)`,
-              borderRadius: "999px", // Oval/pill shape
             }}
           >
+            <img
+              src={user.profileImage || user.profilePicture}
+              alt={fullName}
+              className="w-full h-full object-cover object-top"
+              fetchPriority="high"
+              loading="eager"
+              style={{ filter: "contrast(1.05) brightness(1.05)" }}
+            />
+            {/* Soft gradient fade at bottom to blend seamlessly with background */}
             <div 
-              className="w-full h-full overflow-hidden"
+              className="absolute inset-x-0 bottom-0 h-1/3 z-10 pointer-events-none"
               style={{
-                borderRadius: "999px",
-              }}
-            >
-              <img
-                src={user.profileImage || user.profilePicture}
-                alt={fullName}
-                className="w-full h-full object-cover object-top"
-                fetchPriority="high"
-                loading="eager"
-                style={{ filter: "contrast(1.05) brightness(1.05)" }}
-              />
-            </div>
-            {/* Soft gradient fade at bottom to blend with background */}
-            <div 
-              className="absolute inset-x-0 bottom-0 h-1/4 z-10 pointer-events-none"
-              style={{
-                borderRadius: "0 0 999px 999px",
-                background: `linear-gradient(to top, ${tokens.colors.background}, transparent)`
+                background: `linear-gradient(to top, ${tokens.colors.background} 15%, transparent)`
               }}
             />
           </motion.div>
@@ -153,7 +142,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
       </div>
 
       {/* 4-CORNER LAYOUT */}
-      <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 md:p-14 pt-20 md:pt-28">
+      <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 md:p-14 pt-28 md:pt-36 pb-8 md:pb-12">
         {/* TOP ROW */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0">
           {/* TOP LEFT: Name + headline */}
