@@ -74,12 +74,14 @@ const AuraDarkTheme = ({
       >
         {/* Minimal hamburger nav removed — using universal premium navbar instead */}
 
-        <Hero
-          user={user}
-          isOwner={isOwner}
-          handleLiveUpdate={handleLiveUpdate}
-          setShowResumeModal={setShowResumeModal}
-        />
+        <div id="hero-ad">
+          <Hero
+            user={user}
+            isOwner={isOwner}
+            handleLiveUpdate={handleLiveUpdate}
+            setShowResumeModal={setShowResumeModal}
+          />
+        </div>
 
         {/* GitHub Insights */}
         <GithubStats

@@ -52,6 +52,7 @@ const Hero = ({ user, isOwner, handleLiveUpdate, setShowResumeModal }) => {
 
   return (
     <section
+      id="ad-hero-name"
       className="relative w-full overflow-hidden"
       style={{ height: "100vh", minHeight: 700, backgroundColor: tokens.colors.background }}
     >
