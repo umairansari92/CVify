@@ -16,7 +16,15 @@ const ResumeLibraryPage = lazy(() => import("../modules/resume/pages/ResumeLibra
 const ResumeBuilder = lazy(() => import("../pages/ResumeBuilder/ResumeBuilderLayout"));
 const Templates = lazy(() => import("../pages/Templates"));
 const CoverLetterPage = lazy(() => import("../pages/CoverLetterPage"));
-const ATSPage = lazy(() => import("../pages/ATSPage"));
+
+// ATS Intelligence Micro-SaaS Module System
+const ATSModuleLayout = lazy(() => import("../modules/ats/ATSModuleLayout"));
+const ATSLandingPage = lazy(() => import("../modules/ats/pages/ATSLandingPage"));
+const ATSWorkspacePage = lazy(() => import("../modules/ats/pages/ATSWorkspacePage"));
+const ATSReportsPage = lazy(() => import("../modules/ats/pages/ATSReportsPage"));
+const ATSHistoryPage = lazy(() => import("../modules/ats/pages/ATSHistoryPage"));
+const ATSGuidePage = lazy(() => import("../modules/ats/pages/ATSGuidePage"));
+
 const ReferralPage = lazy(() => import("../pages/ReferralPage"));
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword"));
@@ -148,7 +156,17 @@ const AppRoutes = () => {
         <Route path="/edit/:id" element={<ResumeRedirect />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/cover-letter" element={<CoverLetterPage />} />
-        <Route path="/ats" element={<ATSPage />} />
+        
+        {/* ── ATS Intelligence Product Module System ── */}
+        <Route path="/ats" element={<ATSModuleLayout />}>
+          <Route index element={<ATSLandingPage />} />
+          <Route path="scan" element={<ATSWorkspacePage />} />
+          <Route path="reports" element={<ATSReportsPage />} />
+          <Route path="reports/:id" element={<ATSReportsPage />} />
+          <Route path="history" element={<ATSHistoryPage />} />
+          <Route path="guide" element={<ATSGuidePage />} />
+        </Route>
+
         <Route path="/referral" element={<ReferralPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/job-matcher" element={<JobMatcher />} />

@@ -11,7 +11,9 @@ export const manifest = {
   routes: {
     main: "/ats",
     workspace: "/ats/scan",
-    history: "/ats/reports"
+    reports: "/ats/reports",
+    history: "/ats/history",
+    guide: "/ats/guide"
   },
   navigation: {
     sidebarGroup: "Career Tools",
