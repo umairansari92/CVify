@@ -235,6 +235,80 @@ const ATSLandingPage = () => {
         </div>
       </section>
 
+      {/* ── 3.5 REGIONAL MARKET MODES BREAKDOWN ── */}
+      <section className="space-y-8 bg-slate-900/40 border border-slate-800 rounded-3xl p-8 sm:p-12">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
+            <Globe className="w-3.5 h-3.5" />
+            TARGET MARKET ADAPTABILITY
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100">
+            How ATS Scoring Adapts to Regional Markets
+          </h2>
+          <p className="text-slate-400 text-sm">
+            Recruiter expectations and ATS filtering rules differ drastically across global regions. Select your target market for tailored intelligence.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+          {/* Market 1: Global Tech Standard */}
+          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+              🌐
+            </div>
+            <h3 className="font-bold text-slate-100 text-sm">Global Tech Standard</h3>
+            <p className="text-slate-400 leading-relaxed">
+              Universal keyword vector matching, DOM layout safety, standard experience extraction across international remote job boards.
+            </p>
+            <div className="pt-2 border-t border-slate-800/80 text-[11px] text-emerald-400 font-medium">
+              Key Focus: Layout Safety & Keyword Match
+            </div>
+          </div>
+
+          {/* Market 2: US Remote Market */}
+          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
+              🇺🇸
+            </div>
+            <h3 className="font-bold text-slate-100 text-sm">US Remote ($80k+)</h3>
+            <p className="text-slate-400 leading-relaxed">
+              Extreme bullet point quantification required ($, %, DAU scale, latency numbers), strict 1-page length, and aggressive action verbs.
+            </p>
+            <div className="pt-2 border-t border-slate-800/80 text-[11px] text-blue-400 font-medium">
+              Key Focus: Metric Density & Action Verbs
+            </div>
+          </div>
+
+          {/* Market 3: European Union Market */}
+          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
+              🇪🇺
+            </div>
+            <h3 className="font-bold text-slate-100 text-sm">European Union</h3>
+            <p className="text-slate-400 leading-relaxed">
+              GDPR data privacy compliance, clean single-column structure, support for European CV conventions (optional photo & language levels).
+            </p>
+            <div className="pt-2 border-t border-slate-800/80 text-[11px] text-amber-400 font-medium">
+              Key Focus: GDPR Safety & Clear Structure
+            </div>
+          </div>
+
+          {/* Market 4: Freelance / Pakistan Local Market */}
+          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold">
+              🇵🇰
+            </div>
+            <h3 className="font-bold text-slate-100 text-sm">Freelance & Pakistan</h3>
+            <p className="text-slate-400 leading-relaxed">
+              Client ROI metrics, project turnaround velocity, agency vs direct client signals, and high tech stack density for remote agency hiring.
+            </p>
+            <div className="pt-2 border-t border-slate-800/80 text-[11px] text-purple-400 font-medium">
+              Key Focus: Client ROI & Tech Stack Density
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── 4. INTERACTIVE BEFORE/AFTER DEMO ── */}
       <section className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
