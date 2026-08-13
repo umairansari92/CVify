@@ -12,9 +12,6 @@ import {
   TrendingUp,
   ShieldAlert,
   Lightbulb,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
   ChevronDown,
   ChevronUp,
   ArrowRight,
@@ -84,7 +81,41 @@ const ATSReportsPage = () => {
   }
 
   // ── Data extraction ──────────────────────────────────────────────────────
-  const score         = result.overallScore || result.atsScore || result.score || 0;
+  const score =
+    result.overallScore ||
+    result.atsScore ||
+    result.score?.overall ||
+    (typeof result.score === "number" ? result.score : 0);
+
+  // Sub-scores supporting all legacy and new server payload formats
+  const keywordScore =
+    result.scores?.keywords ??
+    result.scores?.keywordMatch ??
+    result.score?.keywordMatch ??
+    result.categoryScores?.keywords ??
+    result.keywordScore ??
+    result.keywordMatch ??
+    0;
+
+  const impactScore =
+    result.scores?.impact ??
+    result.scores?.quantification ??
+    result.score?.impact ??
+    result.score?.quantification ??
+    result.score?.relevance ??
+    result.categoryScores?.impact ??
+    result.quantificationRate ??
+    result.impactScore ??
+    0;
+
+  const formattingScore =
+    result.scores?.formatting ??
+    result.score?.formatting ??
+    result.score?.structure ??
+    result.categoryScores?.formatting ??
+    result.formattingScore ??
+    0;
+
   const coaching      = result.coachingHints || result.coaching || {};
   const alignment     = coaching.alignmentMeter || {};
   const dealbreakers  = Array.isArray(coaching.dealbreakers)    ? coaching.dealbreakers    : [];
@@ -94,8 +125,58 @@ const ATSReportsPage = () => {
   const potentialScore= coaching.potentialTotalScore || null;
   const bulletFixes   = Array.isArray(result.bulletFixes)       ? result.bulletFixes        :
                         Array.isArray(result.weakBullets)        ? result.weakBullets        : [];
-  const foundKeywords   = result.foundKeywords   || [];
-  const missingKeywords = result.missingKeywords || result.keywordGaps || [];
+
+  // Robust Keyword extraction (strings & objects)
+  const rawFound =
+    result.foundKeywords ||
+    result.feedback?.positives ||
+    result.feedback?.foundKeywords ||
+    result.keywordAnalysis?.found ||
+    result.localMetrics?.found ||
+    result.found ||
+    [];
+
+  const foundKeywords = Array.isArray(rawFound)
+    ? rawFound
+        .map((k) => (typeof k === "string" ? k : k?.keyword || k?.name || k?.text || ""))
+        .filter((k) => k && typeof k === "string" && !k.startsWith("http") && k.length < 50)
+    : [];
+
+  const rawMissing =
+    result.missingKeywords ||
+    result.feedback?.missingKeywords ||
+    result.keywordAnalysis?.missing ||
+    result.localMetrics?.missing ||
+    result.keywordGaps ||
+    [];
+
+  const missingKeywords = Array.isArray(rawMissing)
+    ? rawMissing
+        .map((k) => (typeof k === "string" ? k : k?.keyword || k?.name || k?.text || ""))
+        .filter((k) => k && typeof k === "string" && k.length < 50)
+    : [];
+
+  // Dynamic Recruiter Impression Summary
+  const headlineAdvantage =
+    result.recruiterImpression?.advantage ||
+    result.feedback?.positives?.[0] ||
+    result.overallVerdict ||
+    result.detailedMetrics?.recruiterFirstImpression ||
+    "Strong technical foundation in modern stack.";
+
+  const secondaryFlag =
+    result.recruiterImpression?.flag ||
+    loopholes[0]?.issue ||
+    result.scoreJustifications?.quantification ||
+    result.feedback?.improvements?.[0] ||
+    "Work experience bullets lack concrete metrics (DAU scale, latency numbers).";
+
+  const primaryRisk =
+    result.recruiterImpression?.risk ||
+    dealbreakers[0]?.requirement ||
+    (missingKeywords.length > 0 ? `Missing critical keywords: ${missingKeywords.slice(0, 3).join(", ")}` : null) ||
+    result.scoreJustifications?.keywordMatch ||
+    "Missing essential role keywords or cloud credentials.";
 
   let statusBadge = { label: "ACTION REQUIRED", color: "bg-red-500/10 text-red-400 border-red-500/20" };
   if (score >= 85) statusBadge = { label: "RECRUITER READY",  color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
@@ -154,10 +235,10 @@ const ATSReportsPage = () => {
           <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400 font-medium">Keyword Match</span>
-              <span className="font-bold text-slate-200">{result.categoryScores?.keywords || result.keywordScore || 0}%</span>
+              <span className="font-bold text-slate-200">{keywordScore}%</span>
             </div>
             <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${result.categoryScores?.keywords || result.keywordScore || 0}%` }} />
+              <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${keywordScore}%` }} />
             </div>
             <span className="text-[10px] text-slate-500 block">Target Skill Distance</span>
           </div>
@@ -165,10 +246,10 @@ const ATSReportsPage = () => {
           <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400 font-medium">Impact & Quantification</span>
-              <span className="font-bold text-slate-200">{result.categoryScores?.impact || result.impactScore || 0}%</span>
+              <span className="font-bold text-slate-200">{impactScore}%</span>
             </div>
             <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-teal-400 h-full rounded-full transition-all duration-500" style={{ width: `${result.categoryScores?.impact || result.impactScore || 0}%` }} />
+              <div className="bg-teal-400 h-full rounded-full transition-all duration-500" style={{ width: `${impactScore}%` }} />
             </div>
             <span className="text-[10px] text-slate-500 block">Metric density rate</span>
           </div>
@@ -176,10 +257,10 @@ const ATSReportsPage = () => {
           <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-400 font-medium">Formatting Safety</span>
-              <span className="font-bold text-slate-200">{result.categoryScores?.formatting || result.formattingScore || 0}%</span>
+              <span className="font-bold text-slate-200">{formattingScore}%</span>
             </div>
             <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${result.categoryScores?.formatting || result.formattingScore || 0}%` }} />
+              <div className="bg-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${formattingScore}%` }} />
             </div>
             <span className="text-[10px] text-slate-500 block">DOM & font readability</span>
           </div>
@@ -226,25 +307,25 @@ const ATSReportsPage = () => {
       <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
         <div className="flex items-center gap-2 text-sm font-bold text-slate-100">
           <Eye className="w-4 h-4 text-emerald-400" />
-          Recruiter 3-Second First Impression
+          Recruiter 3-Second First Impression Summary
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
             <span className="font-bold text-emerald-400 block">🟢 Headline Advantage</span>
             <p className="text-slate-300 leading-relaxed">
-              {result.recruiterImpression?.advantage || result.detailedMetrics?.recruiterFirstImpression || "Strong technical foundation in modern stack."}
+              {headlineAdvantage}
             </p>
           </div>
           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
             <span className="font-bold text-amber-400 block">🟡 Secondary Flag</span>
             <p className="text-slate-300 leading-relaxed">
-              {result.recruiterImpression?.flag || "Work experience bullets lack concrete metrics (DAU scale, latency numbers)."}
+              {secondaryFlag}
             </p>
           </div>
           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
             <span className="font-bold text-red-400 block">🔴 Primary Rejection Risk</span>
             <p className="text-slate-300 leading-relaxed">
-              {result.recruiterImpression?.risk || "Missing essential cloud & DevOps keywords."}
+              {primaryRisk}
             </p>
           </div>
         </div>
