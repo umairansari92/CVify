@@ -97,11 +97,55 @@ const ATSWorkspacePage = () => {
     }
   };
 
+  // ─── Intelligent Sample JD Library ────────────────────────────────────────
+  // Keyed by experienceLevel → marketMode (fallback to "Standard")
+  const SAMPLE_JD_LIBRARY = {
+    "Entry-Level": {
+      "Standard": `We are hiring a Junior Full Stack Developer (0–2 years) to join our growing engineering team. You will assist in building web features using React.js and Node.js, write clean REST APIs with Express, and persist data in MongoDB. Exposure to Git version control, basic debugging, and agile sprint workflows is expected. Candidates with internship experience or personal/academic projects demonstrating initiative are strongly encouraged to apply. Bonus: familiarity with TypeScript or any cloud platform.`,
+
+      "US Remote": `Remote Junior Software Engineer (0–2 yrs) — $55k–$75k/year. You will contribute to frontend features in React, assist backend engineers with Node.js API tasks, and learn CI/CD practices. Strong fundamentals in JavaScript (ES6+), HTML/CSS, and REST APIs required. Bonus: unit testing with Jest, any AWS exposure. Must be able to communicate asynchronously and deliver in 2-week sprint cycles independently.`,
+
+      "European Union": `We are seeking a Graduate Software Developer for our EU-based product team. Role involves assisting with React.js frontend development, contributing to Node.js microservices, and participating in code reviews. GDPR-compliant data handling knowledge preferred. Clean, single-column CV required for Workday ATS. Candidates should demonstrate structured academic background in Computer Science, Software Engineering, or related field. English + any European language is a plus.`,
+
+      "MENA / Gulf": `Junior Web Developer — Dubai/Remote Hybrid. We are looking for a motivated fresh graduate or early-career developer with hands-on exposure to React.js, Node.js, and MongoDB. You will support senior developers in feature delivery, bug fixes, and client-facing dashboards. Portfolio projects or GitHub repositories will be evaluated. Immediate joiners preferred.`,
+    },
+
+    "Mid-Level": {
+      "Standard": `We are looking for a Mid-Level Full Stack Engineer (3–5 years) with strong ownership of product features end-to-end. Responsibilities include designing and implementing REST and GraphQL APIs with Node.js/Express, building scalable React.js frontends, managing MongoDB schemas, and participating in architecture discussions. You should have experience with Docker, Git branching strategies, and CI/CD pipelines. Proven ability to mentor junior engineers and independently drive sprint deliverables.`,
+
+      "US Remote": `Mid-Level Software Engineer — Remote USA ($85k–$110k). Own full feature cycles from design to production deployment. Required: 3+ years in React, Node.js, and cloud infrastructure (AWS preferred). You should be able to independently reduce API latency, implement caching strategies with Redis, and write integration tests. Metrics-driven candidates preferred — quantify your impact (throughput improvements, DAU scale, uptime SLAs). Must handle async collaboration across US time zones.`,
+
+      "European Union": `Mid-Level Backend Developer (3–5 yrs) — EU-based. You will design and maintain REST APIs in Node.js, manage PostgreSQL/MongoDB data models, and ensure GDPR-compliant data flows. Experience with Docker and Kubernetes in production environments is required. Agile/Scrum team experience expected. Applicants must have a clear, chronological CV with dates, education, and key achievements. All data processing workflows must meet EU regulatory standards.`,
+
+      "MENA / Gulf": `Full Stack Developer (3–5 yrs) — Riyadh / Dubai. You will lead frontend delivery in React.js, build Node.js APIs, and collaborate with product and QA teams. Experience in e-commerce, fintech, or SaaS products preferred. Hands-on experience with cloud deployment (AWS/GCP/Azure) and performance optimization expected. Must demonstrate client-facing delivery experience and ROI-driven achievements in prior roles.`,
+    },
+
+    "Senior": {
+      "Standard": `We are looking for a Senior Full Stack Engineer (5+ years) to architect and deliver high-scale distributed systems. You will own technical decisions, mentor a team of 4–6 engineers, design microservices on AWS, and drive platform reliability. Required: deep expertise in React.js, Node.js, TypeScript, MongoDB, Redis, Docker, Kubernetes, and CI/CD. Proven track record of improving system latency, shipping features under pressure, and leading cross-functional engineering initiatives.`,
+
+      "US Remote": `Senior Software Engineer — Remote ($130k–$175k). Lead engineering on a high-traffic SaaS platform (1M+ MAU). You will architect RESTful and event-driven microservices, define database partitioning strategy, and own quarterly engineering OKRs. Must demonstrate measurable impact: response time reductions, infra cost savings, feature velocity improvements. Stack: React, Node.js, TypeScript, PostgreSQL, Redis, Kafka, AWS. Team leadership and technical mentorship are core expectations.`,
+
+      "European Union": `Senior Engineer / Tech Lead (5+ yrs) — EU / Remote. Architect and deliver critical platform components, define backend infrastructure strategy, and ensure full GDPR and SOC 2 compliance. Experience with distributed systems, microservices orchestration (Kubernetes), and EU data residency requirements essential. Expected to drive technical roadmap discussions with CTO and cross-functional product teams. CV must document system scale (traffic volume, team sizes, data sets).`,
+
+      "MENA / Gulf": `Senior Full Stack Developer — UAE/KSA Enterprise. Lead a team of developers delivering enterprise-grade SaaS solutions. 5+ years of hands-on experience with React, Node.js, and cloud infrastructure (AWS/Azure). Must show evidence of large-scale project delivery (government, fintech, or enterprise ERP integrations preferred). Executive stakeholder communication and bilingual documentation (Arabic/English) a strong advantage.`,
+    },
+
+    "Executive": {
+      "Standard": `We are hiring a VP of Engineering / Engineering Director to scale our product engineering organization from 20 to 60 engineers. You will define the technical architecture vision, own quarterly engineering roadmaps, manage engineering budgets, and partner with the CEO and CPO on product strategy. Required: 10+ years in software engineering, 5+ years in engineering leadership, experience scaling distributed teams across 3+ time zones, and a track record of delivering products used by 1M+ users.`,
+
+      "US Remote": `VP Engineering — Fully Remote, USA ($200k–$280k + equity). Drive organizational engineering excellence across 4 product squads. Own system architecture decisions, engineering hiring, and cross-team delivery accountability. Must have 10+ years of software engineering with 5+ in senior leadership. Quantified achievements required: team growth metrics, system scalability wins, revenue-impacting feature launches. SaaS B2B / PLG experience strongly preferred.`,
+
+      "European Union": `CTO / Head of Engineering — EU HQ (Hybrid). Lead a 30-person engineering organization building GDPR-compliant SaaS infrastructure across 5 EU countries. Define technical governance, data compliance standards, and EU AI Act readiness. Partner with board and investors on technical due diligence. Required: leadership of multi-disciplinary engineering teams, cloud-native architecture expertise, and hands-on experience with European regulatory environments.`,
+
+      "MENA / Gulf": `Chief Technology Officer — Gulf Enterprise Group. Lead technology transformation for a 500M+ AED enterprise. Define the cloud migration roadmap, AI adoption strategy, and engineering hiring plan. 12+ years of technology leadership. Prior CTO/Head of Engineering experience in GCC or MENA region preferred. Bilingual (Arabic/English), executive presence, and government stakeholder engagement experience are key requirements.`,
+    },
+  };
+
   const handleLoadSampleJD = () => {
-    setJobDescription(
-      `We are looking for a Senior Full Stack Engineer (MERN) with 3+ years of experience building scalable microservices and high-performance React frontends. Requirements: Strong proficiency in React, Node.js, Express, MongoDB, REST APIs, TypeScript, Docker, and AWS. Proven track record of improving latency, team leadership, and CI/CD pipelines.`
-    );
-    toast.success("Sample Job Description loaded!");
+    const levelMap  = SAMPLE_JD_LIBRARY[experienceLevel] || SAMPLE_JD_LIBRARY["Mid-Level"];
+    const sampleJD  = levelMap[marketMode] || levelMap["Standard"];
+    setJobDescription(sampleJD);
+    toast.success(`Sample JD loaded for ${experienceLevel} · ${marketMode}`);
   };
 
   const handleExecuteScan = async () => {
