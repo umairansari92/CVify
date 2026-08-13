@@ -29,6 +29,8 @@ const Documentation = () => {
     {
       label: "Architecture & Tech",
       items: [
+        { id: "structure-constitution", icon: <Layers size={16} />, label: "🏛️ Master Constitution (STRUCTURE.md)" },
+        { id: "resume-intelligence-v5", icon: <Cpu size={16} />, label: "🧠 Resume Intelligence v5.0 (New!)" },
         { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
         { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
         { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
@@ -39,8 +41,8 @@ const Documentation = () => {
     {
       label: "Core Features",
       items: [
-        { id: "ats", icon: <Target size={16} />, label: "ATS v4.0 Precision Engine" },
-        { id: "coach", icon: <Brain size={16} />, label: "AI Resume Coach PRO" },
+        { id: "ats", icon: <Target size={16} />, label: "ATS v2.0 Micro-SaaS Engine (New!)" },
+        { id: "coach", icon: <Brain size={16} />, label: "AI Career Coach & Debrief HUD" },
         { id: "cover-letter", icon: <MessageSquare size={16} />, label: "AI Cover Letters" },
         { id: "portfolio", icon: <Globe size={16} />, label: "Live Portfolio & SEO" },
         { id: "shareable-links", icon: <Globe size={16} />, label: "Public Shareable Links (New!)" },
@@ -363,56 +365,201 @@ const Documentation = () => {
       </>
     ),
 
-    ats: (
+    "structure-constitution": (
       <>
-        <DocHeader title="ATS v4.0 Precision Engine" badge="Core Feature" />
+        <DocHeader title="Master Architecture Constitution (STRUCTURE.md)" badge="Architecture & Tech" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          CVify Pro's ATS Scanner is a <strong className="text-text-primary">3-Layer Intelligence Engine</strong> that audits your resume with 99.99% accuracy.
+          CVify Pro operates under a strict <strong className="text-text-primary">Micro-SaaS Sub-Application Architecture</strong>. The platform is not a monolithic dashboard — it is a Career Operating System hosting autonomous, isolated product modules.
         </p>
 
-        <SectionTitle>Deep Scan Process</SectionTitle>
+        <SectionTitle>The 10 Golden Engineering Laws</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<ShieldCheck size={18} />} color="emerald" title="1. Failure Isolation Guarantee"
+            desc="If any sub-application throws a runtime exception, local ErrorBoundaries prevent the parent Career OS shell or sibling applications from crashing." />
+          <InfoCard icon={<Layers size={18} />} color="blue" title="2. Independent Micro-SaaS Routing"
+            desc="Every sidebar feature owns dedicated sub-routes: Landing (/), Workstation (/scan), Mission Reports (/reports), History (/history), and Guide (/guide)." />
+          <InfoCard icon={<Globe size={18} />} color="purple" title="3. Regional Market Adaptation"
+            desc="Intelligence algorithms calibrate scoring based on 4 distinct hiring markets: Standard Global, US Remote ($80k+), European Union (GDPR), and MENA / Gulf." />
+          <InfoCard icon={<Database size={18} />} color="amber" title="4. Canonical DTO Contract"
+            desc="All AI and deterministic parsers must output into a single strongly-typed CanonicalResumeDTO contract before downstream consumption." />
+        </div>
+
+        <SectionTitle>Sub-Application Pipeline Flow</SectionTitle>
+        <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400 mb-8">
+{`┌────────────────────────────────────────────────────────────┐
+│                    CAREER OS SHELL                         │
+│   [ Global Auth ]  [ Diamonds Economy ]  [ Sidebar Shell ]  │
+└──────────────────────────────┬─────────────────────────────┘
+                               │
+                ┌──────────────┴──────────────┐
+                │ Local Error Boundary Sandbox│
+                ▼                             ▼
+┌──────────────────────────────┐ ┌───────────────────────────┐
+│     ATS INTELLIGENCE SUB-APP │ │   PORTFOLIO ENGINE SUB-APP│
+│ ├─ /ats       (Landing Page) │ │ ├─ /p/:slug (Theme Engine)│
+│ ├─ /ats/scan  (Workstation)  │ │ ├─ HUD Analytics Dock     │
+│ ├─ /ats/reports (Debrief HUD)│ │ └─ Universal Floating Nav │
+│ ├─ /ats/history (Timeline)   │ └───────────────────────────┘
+│ └─ /ats/guide (Mini-Course)  │
+└──────────────────────────────┘`}
+        </pre>
+      </>
+    ),
+
+    "resume-intelligence-v5": (
+      <>
+        <DocHeader title="Resume Intelligence Platform v5" badge="Intelligence Hub" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          Resume Intelligence Platform v5 is a <strong className="text-text-primary">9-Stage Decoupled Parsing & Healing Pipeline</strong>. The parser is treated strictly as an input module; layout analysis, text re-sequencing, validation, repair, and confidence scoring run as standalone deterministic engines.
+        </p>
+
+        <SectionTitle>9-Stage Pipeline Architecture</SectionTitle>
+        <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-blue-400 mb-8">
+{`[Input Document] ──► [Parser Matrix] (Gemini / OCR / DOCX / Deterministic)
+                            │
+                            ▼
+                    [Layout Engine] (DOM, Columns, Tables, Margin Safety)
+                            │
+                            ▼
+                    [Reading Order Engine] (Untangles Multi-Column Text Flow)
+                            │
+                            ▼
+                    [Section Detector] (Fuzzy Heading Classification)
+                            │
+                            ▼
+                    [CanonicalResumeDTO] (Strict Unified Schema Contract)
+                            │
+                            ▼
+                    [Validation Engine] (Flags Missing/Malformed Fields)
+                            │
+                            ▼
+                    [Repair Engine] (Auto-Heals Dates, URLs & Skills via Normalizer)
+                            │
+                            ▼
+                    [Confidence Engine] (0-100% Deterministic Section Certainty)
+                            │
+                            ▼
+                    [Benchmark Suite] (Automated CI/CD Regression Runner)`}
+        </pre>
+
+        <SectionTitle>Core Engines Breakdown</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<Cpu size={18} />} color="blue" title="1. Layout & Reading Order"
+            desc="Detects Single vs Multi-Column text clustering, table grids, and re-sequences blocks top-to-bottom, left-to-right to fix column interleaving." />
+          <InfoCard icon={<Target size={18} />} color="emerald" title="2. Section & DTO Mapping"
+            desc="Fuzzy regex detector classifies headers and maps raw parser data into CanonicalResumeDTO with contact, experience, education, skills, and projects." />
+          <InfoCard icon={<ShieldCheck size={18} />} color="purple" title="3. Validation & Repair Engine"
+            desc="Checks email/phone/date syntax, auto-converts dates to ISO (YYYY-MM-DD), infers current jobs, and deduplicates skills via SkillNormalizer." />
+          <InfoCard icon={<BarChart3 size={18} />} color="amber" title="4. Confidence Engine & Benchmarks"
+            desc="Scores certainty 0-100% per section (Contact 25%, Experience 35%, Education 20%, Skills 20%). Validated via automated regression test suite." />
+        </div>
+
+        <SectionTitle>Benchmark Suite Results</SectionTitle>
+        <div className="space-y-2 mb-6">
+          <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-200 font-semibold">TC-001: Well-Formatted Senior Engineer Resume</span>
+            <span className="text-emerald-400 font-bold">100% Confidence (HIGH) · EXCELLENT (77ms)</span>
+          </div>
+          <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-200 font-semibold">TC-002: Incomplete Fresher Resume (Missing Email/Phone)</span>
+            <span className="text-amber-400 font-bold">45% Confidence (LOW) · FAIR (0ms)</span>
+          </div>
+          <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-200 font-semibold">TC-003: Skill Alias Normalization (reactjs → React.js, ml → ML)</span>
+            <span className="text-emerald-400 font-bold">90% Confidence (HIGH) · EXCELLENT (2ms)</span>
+          </div>
+        </div>
+      </>
+    ),
+
+    ats: (
+      <>
+        <DocHeader title="ATS v2.0 Micro-SaaS Engine" badge="Core Feature" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro's ATS Intelligence System is an autonomous <strong className="text-text-primary">Micro-SaaS Sub-Application</strong> hosted at <code className="text-primary text-xs bg-primary/10 px-2 py-0.5 rounded-lg">/ats</code>. It audits your resume against real Workday, Taleo, and Greenhouse parsing algorithms.
+        </p>
+
+        <SectionTitle>Sub-Application Navigation Matrix</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="4-Dimension Score" desc="Formatting, Keywords, Quantification, Impact — each with WHY justification." />
-          <InfoCard icon={<Eye size={16} />} color="amber" title="6-Second Verdict" desc="Psychological simulation of what a recruiter thinks at first glance." />
+          <InfoCard icon={<Globe size={16} />} color="emerald" title="/ats (Landing Page)" desc="Dual-mode scanner hero, 5-step journey, two-tier system breakdown, and interactive demo." />
+          <InfoCard icon={<Zap size={16} />} color="blue" title="/ats/scan (Workstation)" desc="Dual input (Upload PDF/DOCX or select Platform Resume), contextual parameters, and live telemetry." />
+          <InfoCard icon={<BarChart3 size={16} />} color="purple" title="/ats/reports (Debrief HUD)" desc="Mission Debrief Report with score meters, status badges, keyword gaps, and AI coaching." />
+          <InfoCard icon={<TrendingUp size={16} />} color="amber" title="/ats/history & /ats/guide" desc="Career Growth Timeline archive and interactive educational mini-course on ATS mechanics." />
+        </div>
+
+        <SectionTitle>Contextual Parameters (4 × 4 JD Matrix)</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          The scanner adapts keyword weighting and prompt logic dynamically based on user selection:
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 text-xs">
+          <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-1">
+            <span className="text-emerald-400 font-bold block">4 Target Market Modes</span>
+            <p className="text-slate-400">Standard Global Tech · US Remote ($80k+ High Quantification) · European Union (GDPR / Clean Format) · MENA & Gulf Enterprise.</p>
+          </div>
+          <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-1">
+            <span className="text-blue-400 font-bold block">4 Experience Levels</span>
+            <p className="text-slate-400">Entry-Level / Junior (0–2 Yrs) · Mid-Level Engineer (3–5 Yrs) · Senior / Staff (5+ Yrs) · Executive / Director.</p>
+          </div>
+        </div>
+
+        <SectionTitle>Live Telemetry Pipeline</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          During execution, the scanner broadcasts real-time phase updates to the user:
+        </p>
+        <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl font-mono text-xs text-slate-300 space-y-2 mb-6">
+          <div className="text-emerald-400">1. Reading document DOM & font encodings...</div>
+          <div className="text-emerald-400">2. Extracting experience headings & dates...</div>
+          <div className="text-emerald-400">3. Evaluating structural layout safety...</div>
+          <div className="text-emerald-400">4. Calculating quantification density (% & metrics)...</div>
+          <div className="text-emerald-400">5. Measuring action verb initiation strength...</div>
+          <div className="text-emerald-400">6. Vector-matching skills against target Job Description...</div>
+          <div className="text-emerald-400">7. Synthesizing Gemini 2.5 Flash Recruiter Intelligence...</div>
         </div>
 
         <p className="text-slate-400 text-[13px] italic">
-          Full AI ATS Scan costs <strong className="text-primary">50 💎</strong> per new version. Re-scans within 24h of the same content are discounted or FREE.
+          Scan Cost: <strong className="text-amber-400">50 💎</strong>. Re-scans of the same document within 24 hours cost 50% less (<strong className="text-amber-400">25 💎</strong>).
         </p>
       </>
     ),
 
     coach: (
       <>
-        <DocHeader title="AI Resume Coach PRO" badge="Premium Intelligence" />
+        <DocHeader title="AI Career Coach & Mission Debrief HUD" badge="Premium Intelligence" />
         <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
-          The AI Resume Coach is your **Interactive Career Strategist**. It doesn't just scan; it guides you through a personalized "Healing Plan" to optimize your resume scientifically.
+          The AI Career Coach is an <strong className="text-text-primary">Interactive Diagnostic HUD</strong> embedded directly within the ATS Mission Debrief Report (<code className="text-primary text-xs bg-primary/10 px-2 py-0.5 rounded-lg">/ats/reports</code>). It converts raw ATS scan scores into a structured, step-by-step optimization plan.
         </p>
 
-        <SectionTitle>Key Optimization Metrics</SectionTitle>
+        <SectionTitle>The 6 Core Coaching Modules</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="Potential Score Meter"
-            desc="Gemini calculates your 'Actual' vs 'Potential' score. Implement all fixes to reach your scientific goal (e.g., 68% -> 92%)." />
-          <InfoCard icon={<ShieldCheck size={18} />} color="blue" title="Reality & Dealbreaker Check"
-            desc="6 strict rules prevent lying. If a job has a hard requirement (Visa/Language/Exp) you lack, the AI flags it as a Dealbreaker." />
-          <InfoCard icon={<GitBranch size={18} />} color="purple" title="Interactive Checklist"
-            desc="Every loophole and win is a checkable task. Progress is saved in LocalStorage per scan so you never lose your flow." />
-          <InfoCard icon={<Eye size={18} />} color="amber" title="Recruiter First Impression"
-            desc="A psychological simulation of what a hiring manager thinks after seeing the 'Fixed' version of your resume." />
+          <InfoCard icon={<TrendingUp size={18} />} color="emerald" title="1. Alignment Meter (Potential Score)"
+            desc="Compares Current Score vs Potential Score after recommended fixes. Displays achievable score gains (e.g. +24% gain) and strategic advice." />
+          <InfoCard icon={<ShieldCheck size={18} />} color="red" title="2. Dealbreaker Reality Check"
+            desc="Scans hard requirements from the JD. Classifies gaps into CAN FIX vs HARD NO badges with direct advice before wasting time on applications." />
+          <InfoCard icon={<GitBranch size={18} />} color="amber" title="3. Experience Gap Analysis"
+            desc="Direct side-by-side comparison of 'JD Requires' vs 'Your Resume Shows' with gap severity ratings and bridging strategies." />
+          <InfoCard icon={<Book size={18} />} color="purple" title="4. Section-by-Section Loopholes"
+            desc="Drills down into each section (Summary, Experience, Skills) with Issue Identified, Suggested Fix, and Recruiter Reality Check." />
+          <InfoCard icon={<Sparkles size={18} />} color="blue" title="5. Quick Wins Checklist"
+            desc="Ranked list of highest-impact, lowest-effort actions. Labeled with LOW, MEDIUM, and HIGH effort tags for fast execution." />
+          <InfoCard icon={<Zap size={18} />} color="emerald" title="6. AI Bullet Improvements"
+            desc="Highlights weak bullets with critique, original text quote, and a fully rewritten, quantified MERN/tech replacement bullet." />
         </div>
 
-        <SectionTitle>The Strategy Report (PDF)</SectionTitle>
-        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
-          Download a branded **Coaching Bible** (PDF) that includes all your section rewrites, quick wins, and the overall game plan. Perfect for offline reference while editing.
-        </p>
-
-        <SectionTitle>How to Use the Coach</SectionTitle>
-        <Steps items={[
-          { step: "1", title: "Run ATS Scan", desc: "Coaching hints are generated automatically with every scan (0 extra diamond cost)." },
-          { step: "2", title: "Review Reality Checks", desc: "Check for Dealbreakers first — if it's a hard 'No', don't waste time on the resume." },
-          { step: "3", title: "Implementation Cycle", desc: "Check off items in the HUD. Watch your Potential Score bar reach the goal." },
-          { step: "4", title: "Jump to Builder", desc: "Click 'Fix in Builder' on any hint to jump to that specific resume section instantly." },
-        ]} />
+        <SectionTitle>Mission Report Status Badges</SectionTitle>
+        <div className="space-y-2 mb-6">
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-between text-xs">
+            <span className="text-emerald-400 font-bold">RECRUITER READY (Score ≥ 85%)</span>
+            <span className="text-slate-300">Resume is highly competitive and ready for Tier-1 ATS submissions.</span>
+          </div>
+          <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between text-xs">
+            <span className="text-amber-400 font-bold">COMPETITIVE (Score 70% – 84%)</span>
+            <span className="text-slate-300">Solid foundation, but requires missing keywords and metric quantification.</span>
+          </div>
+          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-between text-xs">
+            <span className="text-red-400 font-bold">ACTION REQUIRED (Score &lt; 70%)</span>
+            <span className="text-slate-300">High risk of automated ATS rejection. Implement Quick Wins before applying.</span>
+          </div>
+        </div>
       </>
     ),
 
