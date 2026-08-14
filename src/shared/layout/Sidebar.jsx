@@ -158,7 +158,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                   </NavLink>
 
                   <NavLink
-                    to="/resume-builder/create"
+                    to="/resume-builder"
                     onClick={onClose}
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -169,7 +169,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                     }
                   >
                     <span>Resume Builder</span>
-                    {location.pathname === "/resume-builder/create" && <div className="w-1 h-1 rounded-full bg-blue-400" />}
+                    {location.pathname === "/resume-builder" && <div className="w-1 h-1 rounded-full bg-blue-400" />}
                   </NavLink>
 
                   <NavLink
