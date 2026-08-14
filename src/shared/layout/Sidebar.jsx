@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -15,10 +15,11 @@ import {
   Gem,
   User,
   LogOut,
-  Shield,
-  BookOpen,
+  ChevronDown,
   Sparkles,
-  ChevronRight
+  Scan,
+  TrendingUp,
+  BookOpen
 } from "lucide-react";
 
 const Sidebar = ({ onClose = () => {} }) => {
@@ -27,87 +28,31 @@ const Sidebar = ({ onClose = () => {} }) => {
   const location = useLocation();
   const { user } = useSelector((state) => state.auth);
 
+  // Accordion state for expandable sections
+  const [isResumeOpen, setIsResumeOpen] = useState(
+    location.pathname.startsWith("/resume") || location.pathname === "/templates"
+  );
+  const [isAtsOpen, setIsAtsOpen] = useState(
+    location.pathname.startsWith("/ats")
+  );
+
+  // Auto-expand if user navigates to a sub-route
+  useEffect(() => {
+    if (location.pathname.startsWith("/resume") || location.pathname === "/templates") {
+      setIsResumeOpen(true);
+    }
+    if (location.pathname.startsWith("/ats")) {
+      setIsAtsOpen(true);
+    }
+  }, [location.pathname]);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
-  const coreNavItems = [
-    {
-      path: "/dashboard",
-      label: "Command Center",
-      icon: LayoutDashboard,
-      color: "text-slate-400 group-hover:text-emerald-400",
-      activeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
-    },
-    {
-      path: "/resume/library",
-      label: "My Resumes",
-      icon: FileText,
-      color: "text-slate-400 group-hover:text-blue-400",
-      activeColor: "text-blue-400 bg-blue-500/10 border-blue-500/30"
-    },
-    {
-      path: "/templates",
-      label: "ATS Templates",
-      icon: Layers,
-      color: "text-slate-400 group-hover:text-indigo-400",
-      activeColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/30"
-    },
-  ];
-
-  const aiCareerTools = [
-    {
-      path: "/ats/scan",
-      activePaths: ["/ats/scan", "/ats/reports", "/ats/history", "/ats/guide"],
-      label: "ATS Intelligence",
-      icon: Target,
-      tag: "v5.1",
-      tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-      activeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
-      dotColor: "bg-emerald-400"
-    },
-    {
-      path: "/job-matcher",
-      activePaths: ["/job-matcher"],
-      label: "Job Matcher",
-      icon: Briefcase,
-      tag: "AI",
-      tagColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
-      activeColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
-      dotColor: "bg-cyan-400"
-    },
-    {
-      path: "/interview",
-      activePaths: ["/interview"],
-      label: "Interview Simulator",
-      icon: Mic,
-      tag: "NEW",
-      tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-      activeColor: "text-amber-400 bg-amber-500/10 border-amber-500/30",
-      dotColor: "bg-amber-400"
-    },
-    {
-      path: "/roadmap",
-      activePaths: ["/roadmap"],
-      label: "Career Roadmap",
-      icon: Compass,
-      tag: "NEW",
-      tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-      activeColor: "text-purple-400 bg-purple-500/10 border-purple-500/30",
-      dotColor: "bg-purple-400"
-    },
-    {
-      path: "/cover-letter",
-      activePaths: ["/cover-letter"],
-      label: "Cover Letter AI",
-      icon: Mail,
-      tag: "AI",
-      tagColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
-      activeColor: "text-rose-400 bg-rose-500/10 border-rose-500/30",
-      dotColor: "bg-rose-400"
-    },
-  ];
+  const isResumeActive = location.pathname.startsWith("/resume") || location.pathname === "/templates";
+  const isAtsActive = location.pathname.startsWith("/ats");
 
   return (
     <aside className="w-72 bg-slate-950/90 backdrop-blur-2xl border-r border-slate-800/80 h-screen flex flex-col justify-between relative z-30 transition-all duration-300 overflow-hidden">
@@ -145,36 +90,106 @@ const Sidebar = ({ onClose = () => {} }) => {
         </div>
 
         {/* ── Main Navigation List ── */}
-        <nav className="px-3 py-2 space-y-5 overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar">
+        <nav className="px-3 py-2 space-y-4 overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar">
           
           {/* Section 1: Core Workspace */}
           <div className="space-y-1">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 px-3 block mb-1.5">
               Workspace Core
             </span>
-            {coreNavItems.map((item, idx) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
 
-              return (
-                <NavLink
-                  key={idx}
-                  to={item.path}
-                  onClick={onClose}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
-                    isActive
-                      ? `border ${item.activeColor}`
-                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 ${isActive ? "" : item.color} transition-colors`} />
-                    <span>{item.label}</span>
-                  </div>
-                  {isActive && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                </NavLink>
-              );
-            })}
+            {/* Command Center */}
+            <NavLink
+              to="/dashboard"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <LayoutDashboard className="w-4 h-4 transition-colors" />
+                <span>Command Center</span>
+              </div>
+              {location.pathname === "/dashboard" && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+            </NavLink>
+
+            {/* ── Resume Studio (Expandable Submenu) ── */}
+            <div className="space-y-0.5">
+              <button
+                onClick={() => setIsResumeOpen(!isResumeOpen)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isResumeActive
+                    ? "text-blue-400 bg-blue-500/10 border border-blue-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText className="w-4 h-4 text-blue-400" />
+                  <span>Resume Studio</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-blue-400 bg-blue-500/10 border-blue-500/20">
+                    PRO
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isResumeOpen ? "rotate-180" : ""}`} />
+                </div>
+              </button>
+
+              {/* Resume Submenu Items */}
+              {isResumeOpen && (
+                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-slate-800/80 ml-5 animate-in fade-in duration-150">
+                  <NavLink
+                    to="/resume/library"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-blue-300 bg-blue-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>My Resumes</span>
+                    {location.pathname === "/resume/library" && <div className="w-1 h-1 rounded-full bg-blue-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/resume-builder/create"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-blue-300 bg-blue-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>Resume Builder</span>
+                    {location.pathname === "/resume-builder/create" && <div className="w-1 h-1 rounded-full bg-blue-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/templates"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-blue-300 bg-blue-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>ATS Templates</span>
+                    {location.pathname === "/templates" && <div className="w-1 h-1 rounded-full bg-blue-400" />}
+                  </NavLink>
+                </div>
+              )}
+            </div>
+
           </div>
 
           {/* Section 2: AI Career Tools */}
@@ -182,31 +197,179 @@ const Sidebar = ({ onClose = () => {} }) => {
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 px-3 block mb-1.5">
               AI Career Copilots
             </span>
-            {aiCareerTools.map((tool, idx) => {
-              const Icon = tool.icon;
-              const isActive = tool.activePaths.some((p) => location.pathname.startsWith(p));
 
-              return (
-                <NavLink
-                  key={idx}
-                  to={tool.path}
-                  onClick={onClose}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
-                    isActive
-                      ? `border ${tool.activeColor}`
-                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4 transition-colors" />
-                    <span>{tool.label}</span>
-                  </div>
-                  <span className={`text-[9px] font-black px-1.5 py-0.2 rounded border ${tool.tagColor}`}>
-                    {tool.tag}
+            {/* ── ATS Intelligence (Expandable Submenu) ── */}
+            <div className="space-y-0.5">
+              <button
+                onClick={() => setIsAtsOpen(!isAtsOpen)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isAtsActive
+                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Target className="w-4 h-4 text-emerald-400" />
+                  <span>ATS Intelligence</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                    v5.1
                   </span>
-                </NavLink>
-              );
-            })}
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isAtsOpen ? "rotate-180" : ""}`} />
+                </div>
+              </button>
+
+              {/* ATS Submenu Items */}
+              {isAtsOpen && (
+                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-slate-800/80 ml-5 animate-in fade-in duration-150">
+                  <NavLink
+                    to="/ats/scan"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-emerald-300 bg-emerald-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>Intelligence Scanner</span>
+                    {location.pathname === "/ats/scan" && <div className="w-1 h-1 rounded-full bg-emerald-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/ats/reports"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-emerald-300 bg-emerald-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>Debrief Reports</span>
+                    {location.pathname.startsWith("/ats/reports") && <div className="w-1 h-1 rounded-full bg-emerald-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/ats/history"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-emerald-300 bg-emerald-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>Score Evolution</span>
+                    {location.pathname === "/ats/history" && <div className="w-1 h-1 rounded-full bg-emerald-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/ats/guide"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-emerald-300 bg-emerald-500/10 font-bold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                      }`
+                    }
+                  >
+                    <span>ATS Blueprint Guide</span>
+                    {location.pathname === "/ats/guide" && <div className="w-1 h-1 rounded-full bg-emerald-400" />}
+                  </NavLink>
+                </div>
+              )}
+            </div>
+
+            {/* Job Matcher */}
+            <NavLink
+              to="/job-matcher"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-cyan-400 bg-cyan-500/10 border border-cyan-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Briefcase className="w-4 h-4 text-cyan-400" />
+                <span>Job Matcher</span>
+              </div>
+              <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-cyan-400 bg-cyan-500/10 border-cyan-500/20">
+                AI
+              </span>
+            </NavLink>
+
+            {/* Interview Simulator */}
+            <NavLink
+              to="/interview"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-amber-400 bg-amber-500/10 border border-amber-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Mic className="w-4 h-4 text-amber-400" />
+                <span>Interview Simulator</span>
+              </div>
+              <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-amber-400 bg-amber-500/10 border-amber-500/20">
+                NEW
+              </span>
+            </NavLink>
+
+            {/* Career Roadmap */}
+            <NavLink
+              to="/roadmap"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-purple-400 bg-purple-500/10 border border-purple-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Compass className="w-4 h-4 text-purple-400" />
+                <span>Career Roadmap</span>
+              </div>
+              <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                NEW
+              </span>
+            </NavLink>
+
+            {/* Cover Letter AI */}
+            <NavLink
+              to="/cover-letter"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-rose-400 bg-rose-500/10 border border-rose-500/30"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-rose-400" />
+                <span>Cover Letter AI</span>
+              </div>
+              <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-rose-400 bg-rose-500/10 border-rose-500/20">
+                AI
+              </span>
+            </NavLink>
+
           </div>
 
         </nav>
