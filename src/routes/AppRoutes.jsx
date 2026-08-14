@@ -1,9 +1,8 @@
-import { Suspense, lazy, useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
 
-// Lazy Loading Pages to shred the 5MB bundle
+// Lazy Loading Pages
 const ResumeLandingPage = lazy(() => import("../modules/resume/pages/landing/ResumeLandingPage"));
 const CreateResumeWizard = lazy(() => import("../pages/CreateResumeWizard"));
 const Login = lazy(() => import("../pages/Login"));
@@ -46,9 +45,10 @@ const JobMatcher = lazy(() => import("../pages/JobMatcher"));
 const InterviewSimulator = lazy(() => import("../pages/InterviewSimulator"));
 const CareerRoadmap = lazy(() => import("../pages/CareerRoadmap"));
 
+// Layouts
 import Layout from "../components/common/Layout";
+import MarketingLayout from "../components/common/MarketingLayout";
 import LoadingScreen from "../components/common/LoadingScreen";
-
 
 const ProtectedRoute = ({ children }) => {
   const { user, isInitialized } = useSelector((state) => state.auth);
@@ -92,168 +92,175 @@ const AppRoutes = () => {
     <Suspense fallback={<LoadingScreen />}>
       <Routes>
 
-      <Route
-        path="/"
-        element={
-          !isInitialized
-            ? <LoadingScreen />
-            : <Navigate to={user ? "/dashboard" : "/login"} replace />
-        }
-      />
+        {/* Root Route: Redirect based on auth state */}
+        <Route
+          path="/"
+          element={
+            !isInitialized ? (
+              <LoadingScreen />
+            ) : user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/resume-builder" replace />
+            )
+          }
+        />
 
-      {/* Public Auth routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/verify-otp" element={<VerifyOtp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/share/r/:slug" element={<PublicResumeViewer />} />
-      <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
+        {/* Public Auth routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/share/r/:slug" element={<PublicResumeViewer />} />
+        <Route path="/share/resume/:id" element={<Navigate to="/" replace />} />
 
-      {/* Standalone SaaS Product Landing Page (NO App Sidebar) */}
-      <Route path="/resume-builder" element={<ResumeLandingPage />} />
-      <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
-
-      {/* Standalone Multi-Step Onboarding Wizard (NO App Sidebar) */}
-      <Route
-        path="/resume-builder/create"
-        element={
-          <ProtectedRoute>
-            <CreateResumeWizard />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/create-resume" element={<Navigate to="/resume-builder/create" replace />} />
-
-      {/* Standalone Full-Screen Resume Builder Workspace (NO App Sidebar) */}
-      <Route
-        path="/resume-builder/editor/:id"
-        element={
-          <ProtectedRoute>
-            <ResumeBuilder />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/resume-builder/editor" element={<Navigate to="/resume-builder/create" replace />} />
-      <Route path="/builder/:id" element={<BuilderLegacyRedirect />} />
-      <Route path="/builder" element={<Navigate to="/resume-builder/create" replace />} />
-
-      {/* Protected App Routes wrapped in AppLayout (with App Sidebar) */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/dashboard" element={<Dashboard />} />
-        {/* ── Resume Library — Canonical Route (Constitution Ch.5) ── */}
-        <Route path="/resume/library" element={<ResumeLibraryPage />} />
-        {/* ── Legacy Redirects — No bookmark breakage (Constitution Ch.3) ── */}
-        <Route path="/resume-builder/my-resumes" element={<Navigate to="/resume/library" replace />} />
-        <Route path="/resumes" element={<Navigate to="/resume/library" replace />} />
-        <Route path="/create" element={<Navigate to="/resume-builder/create" replace />} />
-        <Route path="/edit/:id" element={<ResumeRedirect />} />
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/cover-letter" element={<CoverLetterPage />} />
-        
-        {/* ── ATS Intelligence Product Module System ── */}
-        <Route path="/ats" element={<ATSModuleLayout />}>
-          <Route index element={<ATSLandingPage />} />
-          <Route path="scan" element={<ATSWorkspacePage />} />
-          <Route path="reports" element={<ATSReportsPage />} />
-          <Route path="reports/:id" element={<ATSReportsPage />} />
-          <Route path="history" element={<ATSHistoryPage />} />
-          <Route path="guide" element={<ATSGuidePage />} />
+        {/* ── Public / Marketing Pages wrapped in MarketingLayout (Mega Navbar, NO Sidebar) ── */}
+        <Route element={<MarketingLayout />}>
+          <Route path="/resume-builder" element={<ResumeLandingPage />} />
+          <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
+          <Route path="/documentation" element={<Documentation />} />
         </Route>
 
-        <Route path="/referral" element={<ReferralPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/job-matcher" element={<JobMatcher />} />
-        <Route path="/interview" element={<InterviewSimulator />} />
-        <Route path="/roadmap" element={<CareerRoadmap />} />
+        {/* ── Standalone Fullscreen Creation Flows (NO Sidebar, Focused Creation) ── */}
         <Route
-          path="/admin/dashboard"
+          path="/resume-builder/create"
           element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
+            <ProtectedRoute>
+              <CreateResumeWizard />
+            </ProtectedRoute>
           }
         />
-        <Route
-          path="/admin/analytics"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users/:id"
-          element={
-            <AdminRoute>
-              <AdminUserDetail />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/resumes"
-          element={
-            <AdminRoute>
-              <AdminResumes />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/ats-scans"
-          element={
-            <AdminRoute>
-              <AdminATSScans />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/settings"
-          element={
-            <AdminRoute>
-              <AdminSettings />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/cover-letters"
-          element={
-            <AdminRoute>
-              <AdminCoverLetters />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/economy"
-          element={
-            <AdminRoute>
-              <AdminEconomy />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/logs"
-          element={
-            <AdminRoute>
-              <AdminLogs />
-            </AdminRoute>
-          }
-        />
-      </Route>
+        <Route path="/create-resume" element={<Navigate to="/resume-builder/create" replace />} />
 
-      <Route path="/p/:username" element={<PublicProfile />} />
-      <Route path="/documentation" element={<Documentation />} />
-      <Route path="/maintenance" element={<Maintenance />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route
+          path="/resume-builder/editor/:id"
+          element={
+            <ProtectedRoute>
+              <ResumeBuilder />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/resume-builder/editor" element={<Navigate to="/resume-builder/create" replace />} />
+        <Route path="/builder/:id" element={<BuilderLegacyRedirect />} />
+        <Route path="/builder" element={<Navigate to="/resume-builder/create" replace />} />
+
+        {/* ── Protected App Workspaces wrapped in Layout (Workspace Sidebar + Workspace Header) ── */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/resume/library" element={<ResumeLibraryPage />} />
+          
+          {/* Legacy Redirects */}
+          <Route path="/resume-builder/my-resumes" element={<Navigate to="/resume/library" replace />} />
+          <Route path="/resumes" element={<Navigate to="/resume/library" replace />} />
+          <Route path="/create" element={<Navigate to="/resume-builder/create" replace />} />
+          <Route path="/edit/:id" element={<ResumeRedirect />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/cover-letter" element={<CoverLetterPage />} />
+          
+          {/* ATS Intelligence Micro-Product Module System */}
+          <Route path="/ats" element={<ATSModuleLayout />}>
+            <Route index element={<ATSLandingPage />} />
+            <Route path="scan" element={<ATSWorkspacePage />} />
+            <Route path="reports" element={<ATSReportsPage />} />
+            <Route path="reports/:id" element={<ATSReportsPage />} />
+            <Route path="history" element={<ATSHistoryPage />} />
+            <Route path="guide" element={<ATSGuidePage />} />
+          </Route>
+
+          <Route path="/referral" element={<ReferralPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/job-matcher" element={<JobMatcher />} />
+          <Route path="/interview" element={<InterviewSimulator />} />
+          <Route path="/roadmap" element={<CareerRoadmap />} />
+
+          {/* Admin Control Plane */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users/:id"
+            element={
+              <AdminRoute>
+                <AdminUserDetail />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/resumes"
+            element={
+              <AdminRoute>
+                <AdminResumes />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/ats-scans"
+            element={
+              <AdminRoute>
+                <AdminATSScans />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <AdminRoute>
+                <AdminSettings />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/cover-letters"
+            element={
+              <AdminRoute>
+                <AdminCoverLetters />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/economy"
+            element={
+              <AdminRoute>
+                <AdminEconomy />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/logs"
+            element={
+              <AdminRoute>
+                <AdminLogs />
+              </AdminRoute>
+            }
+          />
+        </Route>
+
+        <Route path="/p/:username" element={<PublicProfile />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Suspense>
   );
 };
-
 
 export default AppRoutes;

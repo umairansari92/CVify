@@ -1,87 +1,123 @@
 import React from "react";
-import ThemeToggle from "./ThemeToggle";
 import { useSelector } from "react-redux";
-import { FaUserCircle, FaCrown, FaStar, FaGem, FaBars, FaDownload } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import { 
+  Menu, 
+  Gem, 
+  Search, 
+  Sparkles, 
+  Target, 
+  FileText, 
+  Briefcase, 
+  Mic, 
+  Compass, 
+  Mail,
+  User,
+  Crown
+} from "lucide-react";
 import NotificationCenter from "./NotificationCenter";
-import Logo from "./Logo";
-
+import ThemeToggle from "./ThemeToggle";
+import AppSwitcherDropdown from "../navigation/AppSwitcherDropdown";
 
 const Header = ({ onMenuClick }) => {
   const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
+
+  // Determine current active workspace app badge
+  const getActiveAppBadge = () => {
+    const path = location.pathname;
+    if (path.startsWith("/ats")) return { name: "ATS Intelligence", icon: Target, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" };
+    if (path.startsWith("/resume") || path.startsWith("/templates")) return { name: "Resume Studio", icon: FileText, color: "text-blue-400 bg-blue-500/10 border-blue-500/30" };
+    if (path.startsWith("/job-matcher")) return { name: "Job Matcher", icon: Briefcase, color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" };
+    if (path.startsWith("/interview")) return { name: "Interview Simulator", icon: Mic, color: "text-amber-400 bg-amber-500/10 border-amber-500/30" };
+    if (path.startsWith("/roadmap")) return { name: "Career Roadmap", icon: Compass, color: "text-purple-400 bg-purple-500/10 border-purple-500/30" };
+    if (path.startsWith("/cover-letter")) return { name: "Cover Letter AI", icon: Mail, color: "text-rose-400 bg-rose-500/10 border-rose-500/30" };
+    return { name: "Command Center", icon: Sparkles, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" };
+  };
+
+  const activeApp = getActiveAppBadge();
+  const ActiveIcon = activeApp.icon;
 
   return (
-    <header className="h-16 lg:h-20 glass-strong border-b border-card-border flex items-center justify-between px-6 lg:px-12 transition-all duration-500 sticky top-0 z-50 overflow-hidden group/header">
-      {/* Immersive HUD Header Glow */}
-      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover/header:opacity-100 transition-opacity duration-1000" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none" />
-
-      <div className="flex items-center gap-4 lg:gap-6 relative z-10 lg:hidden">
+    <header className="h-16 lg:h-18 bg-slate-950/80 backdrop-blur-2xl border-b border-slate-800/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40 transition-all">
+      
+      {/* ── Left: Mobile Toggle & Active Workspace Context ── */}
+      <div className="flex items-center gap-3 sm:gap-4">
         <button
           onClick={onMenuClick}
-          className="p-3 rounded-2xl glass-soft hover:glass-medium hover:text-primary transition-all active:scale-95 duration-200"
-          type="button"
-          aria-label="Open Menu"
+          className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+          aria-label="Open Sidebar"
         >
-          <FaBars size={20} />
+          <Menu className="w-4 h-4" />
         </button>
-      </div>
 
-      {/* Dynamic System Status */}
-      <div className="hidden lg:flex items-center gap-4 relative z-10">
-        <div className="flex items-center gap-2 px-3 py-1.5 glass-soft rounded-lg border-white/5">
-           <div className="w-1 h-1 bg-success rounded-full animate-pulse shadow-[0_0_8px_var(--success)]" />
-           <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted opacity-80">Workspace Active</span>
-        </div>
-      </div>
+        {/* Active Workspace App Badge */}
+        <div className="flex items-center gap-2">
+          <div className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl border text-xs font-bold ${activeApp.color}`}>
+            <ActiveIcon className="w-3.5 h-3.5" />
+            <span>{activeApp.name}</span>
+          </div>
 
-      <div className="flex items-center gap-4 lg:gap-8 relative z-10">
-        {/* Premium Diamond HUD */}
-        <div className="flex items-center gap-3 px-4 py-2 bg-midground rounded-xl border border-primary/20 group/diamonds hover:shadow-hover transition-all cursor-pointer">
-          <FaGem className="text-primary text-sm shadow-[0_0_15px_rgba(15,157,138,0.2)]" />
-          <div className="flex flex-col">
-            <span className="text-[8px] font-bold text-text-secondary uppercase tracking-[0.1em] leading-none mb-1">
-              Credits
-            </span>
-            <span className="text-sm font-bold text-text-primary leading-none tabular-nums">
-              {user?.diamonds || 0}
-            </span>
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/60 border border-slate-800 text-[10px] text-slate-400 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Workspace Active</span>
           </div>
         </div>
+      </div>
+
+      {/* ── Center: Spotlight Quick Action ── */}
+      <div className="hidden lg:flex items-center">
+        <Link
+          to="/ats/scan"
+          className="flex items-center gap-3 px-4 py-1.5 bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl text-xs text-slate-400 hover:text-slate-200 transition-all shadow-inner"
+        >
+          <Search className="w-3.5 h-3.5 text-slate-500" />
+          <span>Quick scan or match...</span>
+          <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-400">
+            Ctrl K
+          </kbd>
+        </Link>
+      </div>
+
+      {/* ── Right: App Switcher, Diamond HUD, Notifications & Profile ── */}
+      <div className="flex items-center gap-2.5 sm:gap-4">
         
-        <div className="flex items-center gap-2 lg:gap-4">
-           <NotificationCenter />
-           <ThemeToggle />
-        </div>
+        {/* App Switcher 9-Dots Matrix */}
+        <AppSwitcherDropdown isWorkspaceMode={true} />
 
-        <div className="flex items-center gap-3 lg:gap-5 pl-5 lg:pl-10 border-l border-card-border h-8">
-          <div className="flex flex-col items-end hidden sm:flex group cursor-pointer">
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] font-bold text-text-main tracking-tight group-hover:text-primary transition-colors">
-                {user?.firstName} {user?.lastName}
-              </span>
-              {user?.role === 'admin' && <FaCrown className="text-amber-500 text-[10px]" />}
-            </div>
-            <span className="text-[9px] text-text-muted font-bold opacity-50 uppercase tracking-widest">{user?.role || 'User'}</span>
-          </div>
+        {/* Diamond Credits Pill */}
+        <Link
+          to="/referral"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 rounded-xl text-xs font-mono font-bold text-emerald-400 transition-all group"
+        >
+          <Gem className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <span>{user?.diamonds || 0}</span>
+        </Link>
 
-          <div className="relative group cursor-pointer">
+        {/* Notification Center */}
+        <NotificationCenter />
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
+        {/* User Identity Avatar */}
+        <Link
+          to="/profile"
+          className="flex items-center gap-2 pl-2 border-l border-slate-800/80 group"
+        >
+          <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 group-hover:border-emerald-500/50 flex items-center justify-center overflow-hidden transition-colors">
             {user?.profileImage ? (
-              <img
-                src={user.profileImage}
-                alt="Profile"
-                className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl object-cover border border-card-border group-hover:border-primary/50 transition-all duration-medium relative z-10"
-              />
+              <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-white text-text-muted flex items-center justify-center border border-card-border group-hover:border-primary/40 transition-all duration-medium relative z-10">
-                <FaUserCircle size={20} />
-              </div>
+              <User className="w-4 h-4 text-slate-400" />
             )}
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white bg-success z-20" />
           </div>
-        </div>
+        </Link>
+
       </div>
+
     </header>
   );
 };
 
-export default Header;
+export default React.memo(Header);
