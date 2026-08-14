@@ -118,6 +118,7 @@ const AppRoutes = () => {
         {/* ── Public / Marketing Pages wrapped in MarketingLayout (Mega Navbar, NO Sidebar) ── */}
         <Route element={<MarketingLayout />}>
           <Route path="/resume-builder" element={<ResumeLandingPage />} />
+          <Route path="/ats" element={<ATSLandingPage />} />
           <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
           <Route path="/documentation" element={<Documentation />} />
         </Route>
@@ -166,7 +167,6 @@ const AppRoutes = () => {
           
           {/* ATS Intelligence Micro-Product Module System */}
           <Route path="/ats" element={<ATSModuleLayout />}>
-            <Route index element={<ATSLandingPage />} />
             <Route path="scan" element={<ATSWorkspacePage />} />
             <Route path="reports" element={<ATSReportsPage />} />
             <Route path="reports/:id" element={<ATSReportsPage />} />

@@ -14,7 +14,6 @@ const ATSModuleLayout = () => {
   const location = useLocation();
 
   const navItems = [
-    { label: "Overview", path: "/ats", icon: Sparkles, exact: true },
     { label: "Scanner", path: "/ats/scan", icon: Scan },
     { label: "Debrief Reports", path: "/ats/reports", icon: FileText },
     { label: "Growth Timeline", path: "/ats/history", icon: TrendingUp },
