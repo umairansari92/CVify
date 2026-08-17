@@ -30,12 +30,14 @@ const Documentation = () => {
       label: "Architecture & Tech",
       items: [
         { id: "structure-constitution", icon: <Layers size={16} />, label: "🏛️ Master Constitution (STRUCTURE.md)" },
+        { id: "doc-standards", icon: <FileText size={16} />, label: "⚡ Token & AI Docs Standard (New!)" },
+        { id: "design-system-v2", icon: <Palette size={16} />, label: "🎨 Light Design System v2.0 (New!)" },
         { id: "resume-intelligence-v5", icon: <Cpu size={16} />, label: "🧠 Resume Intelligence v5.0 (New!)" },
         { id: "project-structure", icon: <Layers size={16} />, label: "Project Structure" },
         { id: "technology", icon: <Cpu size={16} />, label: "Tech Stack Overview" },
         { id: "bff", icon: <Layers size={16} />, label: "Backend For Frontend (BFF)" },
         { id: "ai-gateway", icon: <ShieldCheck size={16} />, label: "Enterprise AI Gateway (New!)" },
-        { id: "theme-engine", icon: <Palette size={16} />, label: "🎨 Theme Engine v4.0 (New!)" },
+        { id: "theme-engine", icon: <Palette size={16} />, label: "🎨 Theme Engine v4.0" },
       ]
     },
     {
@@ -403,6 +405,205 @@ const Documentation = () => {
 │ └─ /ats/guide (Mini-Course)  │
 └──────────────────────────────┘`}
         </pre>
+      </>
+    ),
+
+    "doc-standards": (
+      <>
+        <DocHeader title="Token-Efficient Technical Architecture & AI Documentation Standards" badge="Engineering Constitution" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro enforces a strict <strong className="text-text-primary">Token-Efficient Technical Documentation Standard</strong> (<code className="text-primary text-xs bg-primary/10 px-2 py-0.5 rounded-lg">.agents/documentation.md</code>). Built specifically for AI-native engineering, this standard minimizes token waste, prevents server load, eliminates hallucination risks, and ensures single-source-of-truth reliability across 100+ modules.
+        </p>
+
+        <SectionTitle>0. AI Behavioral Posture & Critical Peer Policy</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <InfoCard icon={<ShieldCheck size={18} />} color="emerald" title="Independent Architectural Audit"
+            desc="AI coding agents must critically evaluate every request for security leaks, token inefficiencies, and structural flaws before making code changes." />
+          <InfoCard icon={<Shield size={18} />} color="purple" title="Strict Anti-Sycophancy"
+            desc="No submissive fillers ('yes sir', 'as you wish', 'apologies'). State technical boundaries, errors, and optimizations directly as peer engineers." />
+          <InfoCard icon={<Zap size={18} />} color="amber" title="Zero Token/Image Waste"
+            desc="Exclude generative image assets from documentation workflows; utilize ASCII flowcharts and client-rendered Mermaid diagrams exclusively." />
+          <InfoCard icon={<Database size={18} />} color="blue" title="SaaS Cost & Rate Controls"
+            desc="Actively enforce monetization guards, rate limits, and token budgets across both client and server boundaries." />
+        </div>
+
+        <SectionTitle>1. Golden Rule: Zero Token Waste</SectionTitle>
+        <ComparisonTable items={[
+          { left: "❌ Generating images for diagrams", right: "✅ ASCII art in <pre> tags (Zero tokens, instant diffs)" },
+          { left: "❌ Long narrative prose & fillers", right: "✅ Bullet lists, key-value tables, and inverted pyramids" },
+          { left: "❌ 'Please', 'I would like', fluff", right: "✅ Direct imperative instructions" },
+          { left: "❌ Redundant scattered definitions", right: "✅ Single Source of Truth (SSOT)" },
+          { left: "❌ Open-ended conversational advice", right: "✅ Constrained schemas & typed contracts" },
+        ]} />
+
+        <SectionTitle>2. Diagram Standard: ASCII-First Architecture</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          All architectural flows and sequence diagrams in CVify Pro are authored in raw ASCII art. This delivers zero server load, zero AI image token consumption, Git diff readability, dark-mode auto-adaptation, and instant copy-paste usability:
+        </p>
+        <pre className="font-mono text-[10px] md:text-xs bg-slate-950 border border-white/5 p-5 rounded-2xl overflow-x-auto leading-relaxed text-emerald-400 mb-8">
+{`┌─────────────────┐       Token-Efficient Payload       ┌─────────────────┐
+│ User / Recruiter│────────────────────────────────────▶│   API Gateway   │
+└────────┬────────┘                                     └────────┬────────┘
+         ▲                                                       │
+         │ Render Hydrated UI                                    ▼
+┌────────┴────────┐      Normalized DTO Contract        ┌─────────────────┐
+│ Public Profile  │◀────────────────────────────────────│ ViewModel Layer │
+└─────────────────┘                                     └─────────────────┘`}
+        </pre>
+
+        <SectionTitle>3. Content Structure: Inverted Pyramid</SectionTitle>
+        <div className="p-5 bg-white/[0.03] border border-white/5 rounded-2xl mb-8">
+          <pre className="text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre">{`┌────────────────────────────────────────────────────────────┐
+│ 1. ONE-LINE SUMMARY       │ 10 words max — core takeaway   │
+├───────────────────────────┼────────────────────────────────┤
+│ 2. KEY POINTS             │ 3–5 high-impact bullet items   │
+├───────────────────────────┼────────────────────────────────┤
+│ 3. TECHNICAL DETAILS      │ Schema tables & code blocks    │
+├───────────────────────────┼────────────────────────────────┤
+│ 4. EDGE CASES             │ Explicit validation boundaries │
+└────────────────────────────────────────────────────────────┘`}</pre>
+        </div>
+
+        <SectionTitle>4. Schema-First API & AI Prompt Contracts</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl">
+            <span className="text-blue-400 font-bold text-xs uppercase tracking-wider block mb-2">OpenAPI Machine-Readable Schema</span>
+            <pre className="font-mono text-[10px] text-slate-300 overflow-x-auto">{`POST /api/v1/resumes/audit
+Headers: Authorization: Bearer <JWT>
+Body:
+  resumeId: string  required (MongoDB ObjectId)
+  jdText:   string  optional (max: 4000 chars)
+  market:   enum    ['global', 'us_remote', 'eu', 'mena']
+Response: 200 { score, breakdown, confidence, gaps }`}</pre>
+          </div>
+          <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl">
+            <span className="text-purple-400 font-bold text-xs uppercase tracking-wider block mb-2">Constraint-Heavy Prompt Template</span>
+            <pre className="font-mono text-[10px] text-slate-300 overflow-x-auto">{`Role: ATS Optimization Expert. Direct, no filler.
+Input: resumeText (max 5000 chars), jobDescription (max 2000 chars)
+Output: Valid JSON matching strict schema
+Rules:
+- NEVER explain reasoning outside JSON
+- NEVER emit markdown formatting inside JSON
+- MAX output budget: 500 tokens`}</pre>
+          </div>
+        </div>
+
+        <SectionTitle>5. SaaS Resource Budgets & Review Checklist</SectionTitle>
+        <ComparisonTable items={[
+          { left: "AI Token Budget", right: "10K tokens/day per user → Fallback to heuristic parser if exceeded" },
+          { left: "API Rate Budget", right: "100 req/min per IP → Progressive exponential backoff queue" },
+          { left: "Storage Budget", right: "1GB per account → Automated document compression and pruning" },
+        ]} />
+
+        <div className="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl mt-6">
+          <p className="text-[11px] font-black uppercase tracking-widest text-emerald-400 mb-3">Pre-Ship Documentation Checklist</p>
+          <ul className="text-text-secondary text-[13px] space-y-1.5 list-disc ml-5">
+            <li>Zero generative image dependencies (ASCII flowcharts only).</li>
+            <li>No filler words ("please", "very", "as you can see").</li>
+            <li>Inverted pyramid format with 10-word summary headline.</li>
+            <li>Language tags on all code blocks with verified syntax.</li>
+            <li>Max 3 levels of nesting with strict token limit under 500 tokens per section.</li>
+          </ul>
+        </div>
+      </>
+    ),
+
+    "design-system-v2": (
+      <>
+        <DocHeader title="Dual-Theme & Light Design System v2.0" badge="Design System v2.0" />
+        <p className="text-text-secondary text-[15px] leading-relaxed mb-6">
+          CVify Pro utilizes an enterprise SaaS dual-theme design system inspired by <strong className="text-text-primary">Linear, Vercel, Framer, and Stripe</strong>. The system provides two distinct visual personalities: <strong className="text-emerald-400">Daylight Executive</strong> (Light) and <strong className="text-blue-400">Midnight Pro</strong> (Dark), unified by a shared semantic CSS variable cascade.
+        </p>
+
+        <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl mb-8">
+          <p className="text-[13px] text-emerald-400 font-black uppercase tracking-widest mb-1">Core Light Design Principle</p>
+          <p className="text-[13px] text-text-secondary leading-relaxed">
+            "CVify Pro in Light Mode should look <strong className="text-text-primary">white first, sage second, mauve third</strong> — clean, calm, and executive. Never pastel, washed out, or childish."
+          </p>
+        </div>
+
+        <SectionTitle>Dual-Theme Palette Matrix</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-5 bg-white/[0.03] border border-white/10 rounded-2xl space-y-3">
+            <span className="text-emerald-400 font-black text-sm uppercase tracking-wider block">☀️ Light Mode (:root - Default)</span>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAFBFA] text-slate-800 border border-slate-200">
+                <span>Page Background</span>
+                <code className="font-bold">#FAFBFA (60% UI)</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-white text-slate-800 border border-slate-200">
+                <span>Cards & Panels</span>
+                <code className="font-bold">#FFFFFF (Surface)</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#66907D] text-white">
+                <span>Primary CTA (Sage)</span>
+                <code className="font-bold">#66907D</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#906688] text-white">
+                <span>AI Copilot (Mauve)</span>
+                <code className="font-bold">#906688</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#CCF6E3] text-emerald-900">
+                <span>Soft Badge Tint</span>
+                <code className="font-bold">#CCF6E3 (Tints only)</code>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 bg-slate-950 border border-slate-800 rounded-2xl space-y-3">
+            <span className="text-blue-400 font-black text-sm uppercase tracking-wider block">🌙 Dark Mode (.dark - Midnight Pro)</span>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#09090b] text-slate-200 border border-slate-800">
+                <span>Page Background</span>
+                <code className="font-bold">#09090b (Midnight)</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#18181b] text-slate-200 border border-slate-700">
+                <span>Cards & Panels</span>
+                <code className="font-bold">#18181b (Surface)</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#3b82f6] text-white">
+                <span>Primary CTA (Electric)</span>
+                <code className="font-bold">#3b82f6</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-[#a855f7] text-white">
+                <span>AI Copilot (Purple)</span>
+                <code className="font-bold">#a855f7</code>
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/30">
+                <span>Soft Glass Badge</span>
+                <code className="font-bold">rgba(59,130,246,0.1)</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <SectionTitle>Strict CTA Button Hierarchy (Non-Negotiable)</SectionTitle>
+        <ComparisonTable items={[
+          { left: "Primary Action Button", right: "var(--primary) = #66907D (Sage) → Hover: #527965" },
+          { left: "Soft State / Badges Only", right: "var(--primary-soft) = #CCF6E3 → NEVER used as button background" },
+          { left: "AI Action Button", right: "var(--ai-primary) = #906688 (Mauve) → Hover: #76536F" },
+          { left: "Attention / Destructive", right: "var(--attention) = #906666 (Rose) → Soft bg: #F6CCCC" },
+        ]} />
+
+        <SectionTitle>Global ATS Score Semantic Tokens</SectionTitle>
+        <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+          ATS score colors are centralized in <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-xs">index.css</code> rather than scattered across individual card components:
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 mb-8 text-center text-xs">
+          <div className="p-3 rounded-xl bg-[#F6CCCC] text-[#906666] font-bold border border-[#906666]/30">0–39 Critical<br/><span className="text-[10px] font-mono">--ats-critical</span></div>
+          <div className="p-3 rounded-xl bg-[#FFF0D8] text-[#A27A45] font-bold border border-[#A27A45]/30">40–59 Needs Work<br/><span className="text-[10px] font-mono">--ats-needs</span></div>
+          <div className="p-3 rounded-xl bg-[#E8EFF6] text-[#66809A] font-bold border border-[#66809A]/30">60–74 Fair<br/><span className="text-[10px] font-mono">--ats-fair</span></div>
+          <div className="p-3 rounded-xl bg-[#CCF6E3] text-[#66907D] font-bold border border-[#66907D]/30">75–89 Strong<br/><span className="text-[10px] font-mono">--ats-strong</span></div>
+          <div className="p-3 rounded-xl bg-[#E2F2E8] text-[#416050] font-bold border border-[#416050]/30">90–100 Excellent<br/><span className="text-[10px] font-mono">--ats-excellent</span></div>
+        </div>
+
+        <SectionTitle>Shell Architecture Refactor</SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <InfoCard icon={<Layout size={18} />} color="emerald" title="Sidebar & Header Modernization"
+            desc="Replaced hardcoded slate-950 dark classes with dynamic CSS variable tokens (var(--surface), var(--border), var(--text-primary)), while preserving active module identity accents." />
+          <InfoCard icon={<Palette size={18} />} color="blue" title="ThemeToggle & Inputs"
+            desc="ThemeToggle dynamically syncs with ThemeContext and localStorage without DOM flickering. All form inputs utilize theme-aware border rings." />
+        </div>
       </>
     ),
 
