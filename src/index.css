@@ -4,89 +4,215 @@
 
 @variant dark (&:where(.dark, .dark *));
 
-/* 
-  CVify Premium Design System v2.0 - Dhammakay Dar (Phase 2)
-  Themes: Daylight Executive & Midnight Pro
+/*/* 
+  CVify Design System v2.0
+  Light: Sage + Mauve + Rose (Daylight Executive)
+  Dark:  Electric Blue + Cyan (Midnight Pro) — preserved exactly
 */
 
-:root, .dark {
+/* =====================================================
+   LIGHT THEME — :root (DEFAULT)
+   CVifyPro Design System v2.0 — Sage+Mauve+Rose
+   ===================================================== */
+:root {
+  /* ── Brand: Sage (Career Growth) ── */
+  --primary:          #66907D;   /* Primary CTA, active states */
+  --primary-hover:    #527965;   /* Button hover */
+  --primary-active:   #416050;   /* Button pressed */
+  --primary-soft:     #CCF6E3;   /* Soft tint — NEVER on CTA buttons */
+  --accent:           #527965;   /* Secondary accent */
+
+  /* ── AI: Mauve (Intelligence) ── */
+  --ai-primary:       #906688;
+  --ai-hover:         #76536F;
+  --ai-active:        #60445A;
+  --ai-soft:          #F0CCF6;   /* AI card tint — NEVER on CTA buttons */
+
+  /* ── Status ── */
+  --success:          #66907D;
+  --warning:          #A27A45;
+  --danger:           #906666;
+  --attention:        #906666;
+  --attention-soft:   #F6CCCC;
+
+  /* ── Surfaces (60% of UI) ── */
+  --background:       #FAFBFA;   /* Page canvas */
+  --surface:          #FFFFFF;   /* Cards, panels, sidebar */
+  --surface-muted:    #F5F7F6;   /* Alt surface, inputs bg */
+  --surface-elevated: #FFFFFF;   /* Modals, dropdowns */
+  --surface-hover:    #F2F8F5;   /* Interactive element hover bg */
+
+  /* ── Legacy aliases (zero breaking changes) ── */
+  --midground:        #FFFFFF;
+  --foreground:       #F5F7F6;
+  --bg-primary:       #FAFBFA;
+  --bg-secondary:     #F5F7F6;
+
+  /* ── Cards ── */
+  --card-bg:          #FFFFFF;
+  --card-tint:        rgba(102, 144, 125, 0.02);
+  --card-border:      #E4E8E5;
+
+  /* ── Text ── */
+  --text-primary:     #202422;
+  --text-secondary:   #4D5551;
+  --text-muted:       #7A827E;
+  --text-disabled:    #A8AEAB;
+
+  /* ── Borders ── */
+  --border:           #E4E8E5;
+  --border-strong:    #D4DAD6;
+  --border-focus:     #66907D;
+
+  /* ── Glass System (light) ── */
+  --glass-soft-bg:    rgba(255, 255, 255, 0.75);
+  --glass-medium-bg:  rgba(255, 255, 255, 0.88);
+  --glass-strong-bg:  rgba(255, 255, 255, 0.96);
+  --glass-border:     #E4E8E5;
+
+  /* ── Shadows (warm, subtle) ── */
+  --elevation-1:      0 1px 2px rgba(24,29,26,0.04), 0 2px 8px rgba(24,29,26,0.06);
+  --elevation-2:      0 8px 24px rgba(24,29,26,0.08);
+  --elevation-3:      0 16px 40px rgba(24,29,26,0.10);
+
+  --shadow-premium:   var(--elevation-1);
+  --shadow-hover:     var(--elevation-2);
+
+  /* ── ATS Score Semantic Tokens (global — not component-level) ── */
+  --ats-critical-bg:  #F6CCCC;  --ats-critical-fg:  #906666;  /* 0–39  */
+  --ats-needs-bg:     #FFF0D8;  --ats-needs-fg:     #A27A45;  /* 40–59 */
+  --ats-fair-bg:      #E8EFF6;  --ats-fair-fg:      #66809A;  /* 60–74 */
+  --ats-strong-bg:    #CCF6E3;  --ats-strong-fg:    #66907D;  /* 75–89 */
+  --ats-excellent-bg: #E2F2E8;  --ats-excellent-fg: #416050;  /* 90–100 */
+
+  /* ── Motion System ── */
+  --duration-fast:    150ms;
+  --duration-medium:  200ms;
+  --duration-slow:    350ms;
+  --ease-premium:     cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* =====================================================
+   DARK THEME — .dark (preserved exactly as before)
+   ===================================================== */
+.dark {
   /* Executive Dark - Linear × Stripe × Perplexity */
-  --primary: #3b82f6; /* Electric Blue */
-  --accent: #06b6d4; /* Cyan Glow */
-  --success: #22c55e; /* Soft Green */
-  --warning: #f59e0b; /* Amber */
-  --danger: #ef4444; /* Muted Red */
+  --primary:          #3b82f6; /* Electric Blue */
+  --primary-hover:    #2563eb;
+  --primary-active:   #1d4ed8;
+  --primary-soft:     rgba(59, 130, 246, 0.1);
+  --accent:           #06b6d4; /* Cyan Glow */
 
-  --background: #09090b; /* Charcoal black */
-  --midground: #18181b; /* Layered dark gray */
-  --foreground: #000000;
+  --ai-primary:       #a855f7;
+  --ai-hover:         #9333ea;
+  --ai-soft:          rgba(168, 85, 247, 0.1);
 
-  /* Semantic Tokens */
-  --bg-primary: var(--background);
-  --bg-secondary: var(--foreground);
-  --card-bg: rgba(24, 24, 27, 0.6);
-  --card-tint: rgba(59, 130, 246, 0.03);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --text-primary: #f8fafc;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --success:          #22c55e;
+  --warning:          #f59e0b;
+  --danger:           #ef4444;
+  --attention:        #ef4444;
+  --attention-soft:   rgba(239, 68, 68, 0.1);
 
-  /* Glass System Tokens - Subtle */
-  --glass-soft-bg: rgba(24, 24, 27, 0.4);
-  --glass-medium-bg: rgba(24, 24, 27, 0.6);
-  --glass-strong-bg: rgba(24, 24, 27, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  --background:       #09090b; /* Charcoal black */
+  --surface:          #18181b;
+  --surface-muted:    #000000;
+  --surface-elevated: #18181b;
+  --surface-hover:    rgba(255, 255, 255, 0.05);
 
-  /* Premium Elevation System - Soft shadows */
-  --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --elevation-2: 0 12px 36px rgba(0, 0, 0, 0.6);
-  --elevation-3: 0 24px 48px rgba(0, 0, 0, 0.8);
+  --midground:        #18181b; /* Layered dark gray */
+  --foreground:       #000000;
+  --bg-primary:       #09090b;
+  --bg-secondary:     #000000;
 
-  --shadow-premium: var(--elevation-1);
-  --shadow-hover: var(--elevation-2);
+  --card-bg:          rgba(24, 24, 27, 0.6);
+  --card-tint:        rgba(59, 130, 246, 0.03);
+  --card-border:      rgba(255, 255, 255, 0.08);
 
-  /* Motion System */
-  --duration-fast: 150ms;
-  --duration-medium: 200ms;
-  --duration-slow: 350ms;
-  --ease-premium: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --text-primary:     #f8fafc;
+  --text-secondary:   #a1a1aa;
+  --text-muted:       #71717a;
+  --text-disabled:    #52525b;
+
+  --border:           rgba(255, 255, 255, 0.08);
+  --border-strong:    rgba(255, 255, 255, 0.12);
+  --border-focus:     #3b82f6;
+
+  --glass-soft-bg:    rgba(24, 24, 27, 0.4);
+  --glass-medium-bg:  rgba(24, 24, 27, 0.6);
+  --glass-strong-bg:  rgba(24, 24, 27, 0.8);
+  --glass-border:     rgba(255, 255, 255, 0.06);
+
+  --elevation-1:      0 4px 12px rgba(0, 0, 0, 0.4);
+  --elevation-2:      0 12px 36px rgba(0, 0, 0, 0.6);
+  --elevation-3:      0 24px 48px rgba(0, 0, 0, 0.8);
+
+  --shadow-premium:   var(--elevation-1);
+  --shadow-hover:     var(--elevation-2);
+
+  /* ── ATS Score Tokens (dark mode — readable on dark bg) ── */
+  --ats-critical-bg:  rgba(144, 102, 102, 0.15); --ats-critical-fg:  #e8a0a0;
+  --ats-needs-bg:     rgba(162, 122, 69, 0.15);  --ats-needs-fg:     #e8bb7a;
+  --ats-fair-bg:      rgba(102, 128, 154, 0.15); --ats-fair-fg:      #8ab0cc;
+  --ats-strong-bg:    rgba(102, 144, 125, 0.15); --ats-strong-fg:    #82c4a4;
+  --ats-excellent-bg: rgba(65, 96, 80, 0.15);    --ats-excellent-fg: #66b890;
+
+  --duration-fast:    150ms;
+  --duration-medium:  200ms;
+  --duration-slow:    350ms;
+  --ease-premium:     cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans:    "Inter", system-ui, sans-serif;
   --font-heading: "Plus Jakarta Sans", sans-serif;
 
-  --color-primary: var(--primary);
-  --color-accent: var(--accent);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
+  /* Brand */
+  --color-primary:  var(--primary);
+  --color-accent:   var(--accent);
+  --color-success:  var(--success);
+  --color-warning:  var(--warning);
+  --color-danger:   var(--danger);
 
-  --color-background: var(--bg-primary);
-  --color-midground: var(--card-bg);
+  /* Surfaces */
+  --color-background:       var(--background);
+  --color-surface:          var(--surface);
+  --color-surface-muted:    var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-hover:    var(--surface-hover);
+
+  /* Legacy aliases — preserved so existing Tailwind classes still work */
+  --color-midground:  var(--card-bg);
   --color-foreground: var(--bg-secondary);
 
-  --color-text-main: var(--text-primary);
-  --color-text-muted: var(--text-secondary);
-  --color-text-dim: var(--text-muted);
-  --color-border-subtle: var(--card-border);
+  /* Text */
+  --color-text-main:      var(--text-primary);
+  --color-text-muted:     var(--text-secondary);
+  --color-text-dim:       var(--text-muted);
+  --color-text-primary:   var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
 
-  --shadow-premium: var(--elevation-1);
-  --shadow-hover: var(--elevation-2);
+  /* Borders */
+  --color-border-subtle: var(--card-border);
+  --color-border:        var(--border);
+  --color-border-strong: var(--border-strong);
+
+  /* Shadows */
+  --shadow-premium:  var(--elevation-1);
+  --shadow-hover:    var(--elevation-2);
   --shadow-ultimate: var(--elevation-3);
 
   --shadow-glow-primary:
     0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.05);
   --shadow-glow-accent: 0 0 30px rgba(6, 182, 212, 0.1);
 
-  --duration-fast: 150ms;
+  --duration-fast:   150ms;
   --duration-medium: 200ms;
-  --duration-slow: 350ms;
-  --ease-premium: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-slow:   350ms;
+  --ease-premium:    cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  --animate-float: float 8s ease-in-out infinite;
-  --animate-shimmer: shimmer 1.5s infinite;
-  --animate-bg-shift: bg-shift 15s ease infinite;
+  --animate-float:      float 8s ease-in-out infinite;
+  --animate-shimmer:    shimmer 1.5s infinite;
+  --animate-bg-shift:   bg-shift 15s ease infinite;
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -228,25 +354,39 @@
 }
 
 .input-premium {
-  @apply w-full px-5 rounded-[14px] bg-white/5 border border-border-subtle 
+  @apply w-full px-5 rounded-[14px] border border-border-subtle 
          text-text-main placeholder:text-text-dim/40 outline-none transition-all font-semibold;
+  background: var(--surface-muted);
   height: 52px;
   transition-duration: var(--duration-fast);
 }
 
 .input-premium:focus {
-  @apply border-primary bg-white/10 ring-4 ring-primary/12;
+  border-color: var(--border-focus);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px rgba(102, 144, 125, 0.1);
+}
+
+.dark .input-premium:focus {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
 }
 
 .input-premium-sm {
-  @apply w-full px-4 rounded-[10px] bg-white/5 border border-border-subtle 
+  @apply w-full px-4 rounded-[10px] border border-border-subtle 
          text-text-main placeholder:text-text-dim/40 outline-none transition-all font-semibold;
+  background: var(--surface-muted);
   height: 40px;
   transition-duration: var(--duration-fast);
 }
 
 .input-premium-sm:focus {
-  @apply border-primary bg-white/10 ring-4 ring-primary/12;
+  border-color: var(--border-focus);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px rgba(102, 144, 125, 0.1);
+}
+
+.dark .input-premium-sm:focus {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
 }
 
 /* Premium Buttons with States */
@@ -260,7 +400,7 @@
 
 .btn-primary:hover {
   @apply -translate-y-[1px];
-  background: var(--accent);
+  background: var(--primary-hover);
 }
 
 .btn-primary:disabled {
@@ -268,12 +408,16 @@
 }
 
 .btn-secondary {
-  @apply px-6 rounded-[14px] font-semibold border border-border-subtle 
-         hover:bg-white/10 hover:border-primary transition-all;
+  @apply px-6 rounded-[14px] font-semibold border border-border-subtle transition-all;
   height: 48px;
   transition-duration: var(--duration-fast);
-  background: transparent;
-  color: var(--text-main);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
 }
 
 /* Three.js Canvas Container */
@@ -469,27 +613,24 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary, #0b1121);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--background);
+  border-left: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-color, #2dd4bf);
+  background: var(--primary);
   border-radius: 10px;
-  /* Adds a transparent border around the thumb to make it look thinner and padded */
-  border: 3px solid var(--bg-primary, #0b1121);
+  border: 3px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color, #2dd4bf);
-  /* Fallback hover effect */
-  opacity: 0.8;
+  background: var(--primary-hover);
 }
 
 /* For Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--primary-color, #2dd4bf) var(--bg-primary, #0b1121);
+  scrollbar-color: var(--primary) var(--background);
 }
 
 /* =====================================================================

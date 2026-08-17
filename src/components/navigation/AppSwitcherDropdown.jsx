@@ -121,25 +121,25 @@ const AppSwitcherDropdown = ({ isWorkspaceMode = false }) => {
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all duration-200 text-xs font-bold ${
           isOpen
-            ? "bg-slate-800 border-slate-700 text-slate-100 shadow-lg shadow-emerald-500/5"
-            : "bg-slate-900/80 hover:bg-slate-800/80 border-slate-800 text-slate-300 hover:text-slate-100"
+            ? "bg-[var(--surface-muted)] border-[var(--border-strong)] text-[var(--text-primary)] shadow-lg shadow-emerald-500/5"
+            : "bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
         }`}
         aria-label="App Switcher"
       >
         <Grid className="w-3.5 h-3.5 text-emerald-400" />
         <span className="hidden sm:inline">Apps</span>
-        <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-3 h-3 text-[var(--text-muted)] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Matrix */}
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-80 sm:w-96 p-3 bg-slate-950/95 backdrop-blur-2xl border border-slate-800/90 rounded-2xl shadow-2xl shadow-black/80 z-[100] animate-in fade-in zoom-in-95 duration-150">
-          <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-slate-800/80">
-            <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
+        <div className="absolute left-0 mt-2 w-80 sm:w-96 p-3 bg-[var(--surface-elevated)]/98 backdrop-blur-2xl border border-[var(--border)] rounded-2xl shadow-2xl z-[100] animate-in fade-in zoom-in-95 duration-150">
+          <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-[var(--border)]">
+            <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               CVify Pro Ecosystem
             </div>
-            <span className="text-[10px] text-slate-500 font-mono">6 AI Tools</span>
+            <span className="text-[10px] text-[var(--text-muted)] font-mono">6 AI Tools</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -154,8 +154,8 @@ const AppSwitcherDropdown = ({ isWorkspaceMode = false }) => {
                   to={targetRoute}
                   className={`p-2.5 rounded-xl border transition-all duration-200 flex flex-col justify-between group ${
                     isActive
-                      ? "bg-slate-900 border-slate-700 shadow-md shadow-emerald-500/5"
-                      : "bg-slate-900/40 hover:bg-slate-900 border-slate-800/60 hover:border-slate-700"
+                      ? "bg-[var(--surface-hover)] border-[var(--border-strong)] shadow-md shadow-emerald-500/5"
+                      : "bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] border-[var(--border)] hover:border-[var(--border-strong)]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1 mb-1.5">
@@ -168,10 +168,10 @@ const AppSwitcherDropdown = ({ isWorkspaceMode = false }) => {
                   </div>
 
                   <div>
-                    <span className="text-xs font-bold text-slate-200 group-hover:text-white block tracking-tight">
+                    <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-[var(--text-primary)] block tracking-tight">
                       {app.name}
                     </span>
-                    <span className="text-[10px] text-slate-400 line-clamp-1">
+                    <span className="text-[10px] text-[var(--text-muted)] line-clamp-1">
                       {app.tagline}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ const AppSwitcherDropdown = ({ isWorkspaceMode = false }) => {
             })}
           </div>
 
-          <div className="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between px-2 text-[10px] text-slate-400">
+          <div className="mt-2.5 pt-2 border-t border-[var(--border)] flex items-center justify-between px-2 text-[10px] text-[var(--text-muted)]">
             <span>Unified Diamond Economy</span>
             <Link to="/dashboard" className="text-emerald-400 hover:underline font-bold flex items-center gap-1">
               Command Center →

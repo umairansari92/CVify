@@ -26,7 +26,7 @@ const SlimSidebar = () => {
           <FaChevronLeft size={14} />
         </div>
         {/* Tooltip */}
-        <div className="absolute left-full ml-4 px-3 py-1 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+        <div className="absolute left-full ml-4 px-3 py-1 bg-[var(--surface-elevated)] border border-[var(--border)] text-[var(--text-primary)] text-[10px] font-black uppercase tracking-widest rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
           Back to Dashboard
         </div>
       </NavLink>
@@ -40,7 +40,7 @@ const SlimSidebar = () => {
               `w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 relative group ${
                 isActive
                   ? "glass-medium text-primary border border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                  : "text-text-secondary hover:text-text-primary hover:bg-white/[0.05]"
+                  : "text-text-secondary hover:text-text-primary hover:bg-[var(--surface-hover)]"
               }`
             }
           >
@@ -51,7 +51,7 @@ const SlimSidebar = () => {
                 </span>
                 
                 {/* Modern Tooltip */}
-                <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 whitespace-nowrap z-50 shadow-2xl border border-white/5">
+                <div className="absolute left-full ml-4 px-3 py-2 bg-[var(--surface-elevated)] border border-[var(--border)] text-[var(--text-primary)] text-[9px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 whitespace-nowrap z-50 shadow-xl">
                   {item.label}
                 </div>
 

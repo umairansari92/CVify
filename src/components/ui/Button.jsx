@@ -12,9 +12,9 @@ export const Button = ({
   type = "button"
 }) => {
   const variants = {
-    primary: "bg-primary text-white shadow-premium hover:bg-accent",
-    ghost: "bg-transparent text-text-main hover:bg-white/5",
-    glow: "bg-primary text-white shadow-glow-primary hover:shadow-[0_0_60px_rgba(59,130,246,0.3)]",
+    primary: "bg-primary text-white shadow-premium hover:bg-[var(--primary-hover)]",
+    ghost: "bg-transparent text-text-main hover:bg-[var(--surface-hover)]",
+    glow: "bg-primary text-white shadow-glow-primary hover:shadow-[0_0_60px_rgba(59,130,246,0.3)] hover:bg-[var(--primary-hover)]",
   };
 
   return (

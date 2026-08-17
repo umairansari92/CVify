@@ -55,11 +55,11 @@ const Sidebar = ({ onClose = () => {} }) => {
   const isAtsActive = location.pathname.startsWith("/ats");
 
   return (
-    <aside className="w-72 bg-slate-950/90 backdrop-blur-2xl border-r border-slate-800/80 h-screen flex flex-col justify-between relative z-30 transition-all duration-300 overflow-hidden">
+    <aside className="w-72 bg-[var(--surface)]/95 backdrop-blur-2xl border-r border-[var(--border)] h-screen flex flex-col justify-between relative z-30 transition-all duration-300 overflow-hidden">
       
       {/* ── Top Header & Logo ── */}
       <div>
-        <div className="p-6 pb-4 flex items-center justify-between border-b border-slate-800/60">
+        <div className="p-6 pb-4 flex items-center justify-between border-b border-[var(--border)]">
           <NavLink to="/dashboard" onClick={onClose} className="flex items-center gap-2 group">
             <img
               src="/CVify Logo Dark.jpg"
@@ -71,7 +71,7 @@ const Sidebar = ({ onClose = () => {} }) => {
           {/* Mobile Close Button */}
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white"
+            className="lg:hidden p-1.5 rounded-lg bg-[var(--surface-muted)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
           >
             ✕
           </button>
@@ -94,7 +94,7 @@ const Sidebar = ({ onClose = () => {} }) => {
           
           {/* Section 1: Core Workspace */}
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 px-3 block mb-1.5">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] opacity-60 px-3 block mb-1.5">
               Workspace Core
             </span>
 
@@ -106,7 +106,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isActive
                     ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`
               }
             >
@@ -124,7 +124,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isResumeActive
                     ? "text-blue-400 bg-blue-500/10 border border-blue-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -141,7 +141,7 @@ const Sidebar = ({ onClose = () => {} }) => {
 
               {/* Resume Submenu Items */}
               {isResumeOpen && (
-                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-slate-800/80 ml-5 animate-in fade-in duration-150">
+                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-[var(--border)] ml-5 animate-in fade-in duration-150">
                   <NavLink
                     to="/resume/library"
                     onClick={onClose}
@@ -164,7 +164,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-blue-300 bg-blue-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -194,7 +194,7 @@ const Sidebar = ({ onClose = () => {} }) => {
 
           {/* Section 2: AI Career Tools */}
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 px-3 block mb-1.5">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] opacity-60 px-3 block mb-1.5">
               AI Career Copilots
             </span>
 
@@ -205,7 +205,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isAtsActive
                     ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -222,7 +222,7 @@ const Sidebar = ({ onClose = () => {} }) => {
 
               {/* ATS Submenu Items */}
               {isAtsOpen && (
-                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-slate-800/80 ml-5 animate-in fade-in duration-150">
+                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-[var(--border)] ml-5 animate-in fade-in duration-150">
                   <NavLink
                     to="/ats/scan"
                     onClick={onClose}
@@ -230,7 +230,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-emerald-300 bg-emerald-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -294,7 +294,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isActive
                     ? "text-cyan-400 bg-cyan-500/10 border border-cyan-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`
               }
             >
@@ -315,7 +315,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isActive
                     ? "text-amber-400 bg-amber-500/10 border border-amber-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`
               }
             >
@@ -336,7 +336,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isActive
                     ? "text-purple-400 bg-purple-500/10 border border-purple-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`
               }
             >
@@ -357,7 +357,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
                   isActive
                     ? "text-rose-400 bg-rose-500/10 border border-rose-500/30"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
                 }`
               }
             >
@@ -376,20 +376,20 @@ const Sidebar = ({ onClose = () => {} }) => {
       </div>
 
       {/* ── Bottom Section: Diamonds & User Drawer ── */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-950 space-y-2.5">
+      <div className="p-3 border-t border-[var(--border)] bg-[var(--surface)] space-y-2.5">
         
         {/* Diamond Wallet Widget */}
         <NavLink
           to="/referral"
           onClick={onClose}
-          className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 transition-all flex items-center justify-between group"
+          className="p-2.5 rounded-xl bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] border border-emerald-500/20 hover:border-emerald-500/40 transition-all flex items-center justify-between group"
         >
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
               <Gem className="w-3.5 h-3.5 text-emerald-400" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase block leading-none">Diamond Balance</span>
+              <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase block leading-none">Diamond Balance</span>
               <span className="text-xs font-black text-emerald-400 font-mono">{user?.diamonds || 0} Credits</span>
             </div>
           </div>
@@ -397,24 +397,24 @@ const Sidebar = ({ onClose = () => {} }) => {
         </NavLink>
 
         {/* User Profile & Utilities Bar */}
-        <div className="p-2.5 rounded-xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-2.5 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] flex items-center justify-between">
           <NavLink
             to="/profile"
             onClick={onClose}
             className="flex items-center gap-2.5 min-w-0 group flex-1"
           >
-            <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] overflow-hidden shrink-0 flex items-center justify-center">
               {user?.profileImage ? (
                 <img src={user.profileImage} alt="User" className="w-full h-full object-cover" />
               ) : (
-                <User className="w-4 h-4 text-slate-400" />
+                <User className="w-4 h-4 text-[var(--text-muted)]" />
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <span className="text-xs font-bold text-slate-200 group-hover:text-white truncate block">
+              <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-[var(--text-primary)] truncate block">
                 {user?.firstName || user?.username || "Account"}
               </span>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">
+              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider block">
                 {user?.role === "admin" ? "Administrator" : "Candidate Pro"}
               </span>
             </div>
@@ -430,8 +430,8 @@ const Sidebar = ({ onClose = () => {} }) => {
         </div>
 
         {/* Subtle Links (Admin & Docs) */}
-        <div className="flex items-center justify-between px-2 text-[10px] text-slate-500">
-          <NavLink to="/documentation" onClick={onClose} className="hover:text-slate-300">
+        <div className="flex items-center justify-between px-2 text-[10px] text-[var(--text-muted)]">
+          <NavLink to="/documentation" onClick={onClose} className="hover:text-[var(--text-primary)] transition-colors">
             Documentation
           </NavLink>
           {user?.role === "admin" && (

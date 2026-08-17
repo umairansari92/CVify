@@ -39,13 +39,13 @@ const Header = ({ onMenuClick }) => {
   const ActiveIcon = activeApp.icon;
 
   return (
-    <header className="h-16 lg:h-18 bg-slate-950/80 backdrop-blur-2xl border-b border-slate-800/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40 transition-all">
+    <header className="h-16 lg:h-18 bg-[var(--surface)]/90 backdrop-blur-2xl border-b border-[var(--border)] flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-40 transition-all">
       
       {/* ── Left: Mobile Toggle & Active Workspace Context ── */}
       <div className="flex items-center gap-3 sm:gap-4">
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+          className="lg:hidden p-2 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           aria-label="Open Sidebar"
         >
           <Menu className="w-4 h-4" />
@@ -58,7 +58,7 @@ const Header = ({ onMenuClick }) => {
             <span>{activeApp.name}</span>
           </div>
 
-          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/60 border border-slate-800 text-[10px] text-slate-400 font-medium">
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[var(--surface-muted)] border border-[var(--border)] text-[10px] text-[var(--text-muted)] font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>Workspace Active</span>
           </div>
@@ -69,11 +69,11 @@ const Header = ({ onMenuClick }) => {
       <div className="hidden lg:flex items-center">
         <Link
           to="/ats/scan"
-          className="flex items-center gap-3 px-4 py-1.5 bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl text-xs text-slate-400 hover:text-slate-200 transition-all shadow-inner"
+          className="flex items-center gap-3 px-4 py-1.5 bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] border border-[var(--border)] hover:border-[var(--border-strong)] rounded-xl text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shadow-inner"
         >
-          <Search className="w-3.5 h-3.5 text-slate-500" />
+          <Search className="w-3.5 h-3.5 text-[var(--text-muted)]" />
           <span>Quick scan or match...</span>
-          <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-400">
+          <kbd className="px-1.5 py-0.5 rounded bg-[var(--surface-muted)] border border-[var(--border)] text-[10px] font-mono text-[var(--text-muted)]">
             Ctrl K
           </kbd>
         </Link>
@@ -88,7 +88,7 @@ const Header = ({ onMenuClick }) => {
         {/* Diamond Credits Pill */}
         <Link
           to="/referral"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 rounded-xl text-xs font-mono font-bold text-emerald-400 transition-all group"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] border border-emerald-500/20 hover:border-emerald-500/40 rounded-xl text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 transition-all group"
         >
           <Gem className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
           <span>{user?.diamonds || 0}</span>
@@ -103,13 +103,13 @@ const Header = ({ onMenuClick }) => {
         {/* User Identity Avatar */}
         <Link
           to="/profile"
-          className="flex items-center gap-2 pl-2 border-l border-slate-800/80 group"
+          className="flex items-center gap-2 pl-2 border-l border-[var(--border)] group"
         >
-          <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 group-hover:border-emerald-500/50 flex items-center justify-center overflow-hidden transition-colors">
+          <div className="w-8 h-8 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] group-hover:border-emerald-500/50 flex items-center justify-center overflow-hidden transition-colors">
             {user?.profileImage ? (
               <img src={user.profileImage} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <User className="w-4 h-4 text-slate-400" />
+              <User className="w-4 h-4 text-[var(--text-muted)]" />
             )}
           </div>
         </Link>

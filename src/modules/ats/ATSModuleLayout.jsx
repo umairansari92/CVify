@@ -24,7 +24,7 @@ const ATSModuleLayout = () => {
     <ATSErrorBoundary>
       <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
         {/* Sub-Header Navigation */}
-        <header className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3">
+        <header className="sticky top-0 z-30 bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--border)] px-4 lg:px-8 py-3">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* Title & Badge */}
@@ -34,7 +34,7 @@ const ATSModuleLayout = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-bold text-slate-100 tracking-tight">
+                  <h1 className="text-lg font-bold text-[var(--text-primary)] tracking-tight">
                     ATS Intelligence System
                   </h1>
                   <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1">
@@ -42,14 +42,14 @@ const ATSModuleLayout = () => {
                     v2.0
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 hidden sm:block">
+                <p className="text-xs text-[var(--text-muted)] hidden sm:block">
                   Recruiter Decoding & AI Intelligence Engine
                 </p>
               </div>
             </div>
 
             {/* Sub-Routes Nav Pills */}
-            <nav className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 overflow-x-auto max-w-full">
+            <nav className="flex items-center gap-1 bg-[var(--surface-muted)] p-1 rounded-xl border border-[var(--border)] overflow-x-auto max-w-full">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.exact 
@@ -65,7 +65,7 @@ const ATSModuleLayout = () => {
                       `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                         isActive
                           ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-semibold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
