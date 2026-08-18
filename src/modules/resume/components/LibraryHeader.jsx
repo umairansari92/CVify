@@ -93,16 +93,15 @@ const LibraryHeader = ({
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
-            style={{ colorScheme: "dark" }}
+            className="h-9 pl-3 pr-7 bg-[var(--surface-muted)] border border-[var(--border)] rounded-xl text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500/50 cursor-pointer appearance-none transition-all hover:bg-[var(--surface-hover)]"
           >
             {FILTER_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} style={{ background: "#18181b", color: "#f8fafc" }}>
+              <option key={opt.value} value={opt.value} className="bg-[var(--surface-elevated)] text-[var(--text-primary)]">
                 {opt.label}
               </option>
             ))}
           </select>
-          <FiChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+          <FiChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
         </div>
 
         {/* Sort Dropdown */}
@@ -110,16 +109,15 @@ const LibraryHeader = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="h-9 pl-3 pr-7 bg-white/5 border border-border-subtle rounded-xl text-xs font-bold text-white focus:outline-none focus:border-primary/50 cursor-pointer appearance-none transition-all hover:bg-white/8"
-            style={{ colorScheme: "dark" }}
+            className="h-9 pl-3 pr-7 bg-[var(--surface-muted)] border border-[var(--border)] rounded-xl text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500/50 cursor-pointer appearance-none transition-all hover:bg-[var(--surface-hover)]"
           >
             {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} style={{ background: "#18181b", color: "#f8fafc" }}>
+              <option key={opt.value} value={opt.value} className="bg-[var(--surface-elevated)] text-[var(--text-primary)]">
                 {opt.label}
               </option>
             ))}
           </select>
-          <FiChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+          <FiChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
         </div>
 
         {/* Grid / List Toggle */}
