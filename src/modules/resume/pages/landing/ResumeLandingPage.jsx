@@ -86,184 +86,126 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary selection:bg-primary selection:text-white font-sans antialiased overflow-x-hidden">
-      {/* Top Header Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/80 backdrop-blur-xl border-b border-white/5 px-4 lg:px-12 py-2 flex items-center justify-between">
-        <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
-          <img
-            src="/CVify Logo Dark.jpg"
-            alt="CVifyPro Logo"
-            className="h-25 w-auto object-contain"
-          />
-        </div>
-
-        <div className="hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-widest text-slate-400">
-          <a href="#why-cvify" className="hover:text-white transition-colors">Why CVifyPro</a>
-          <a href="#features" className="hover:text-white transition-colors">AI Features</a>
-          <a href="#templates" className="hover:text-white transition-colors">Templates</a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-          <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {user ? (
-            // ── Authenticated: show user identity + workspace link ──
-            <>
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors"
-              >
-                ← Dashboard
-              </button>
-              <button
-                onClick={() => navigate("/resume/library")}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black text-white hover:bg-white/10 transition-all"
-              >
-                {user.profileImage ? (
-                  <img src={user.profileImage} alt="avatar" className="w-6 h-6 rounded-full object-cover" />
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary text-[10px] font-black">
-                    {(user.firstName?.[0] || user.username?.[0] || "U").toUpperCase()}
-                  </div>
-                )}
-                <span className="hidden sm:inline">
-                  {user.firstName || user.username || "Account"}
-                </span>
-              </button>
-            </>
-          ) : (
-            // ── Unauthenticated: public Sign In / Create Resume ──
-            <>
-              <Link to="/login" className="px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
-                Sign In
-              </Link>
-              <Link to="/resume-builder/create" className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-[1.03] transition-all">
-                Create Resume
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-
+    <div className="space-y-16 pb-12 font-sans antialiased text-[var(--text-primary)]">
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-primary/20 text-primary text-[10px] sm:text-xs font-black uppercase tracking-widest mb-8 animate-fadeIn">
+      <section className="pt-8 pb-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-xs font-black uppercase tracking-widest mb-8 animate-fadeIn">
           <Sparkles size={14} className="animate-pulse" />
           <span>The Next Generation AI Career Operating System</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-white max-w-5xl leading-[1.1] mb-6">
-          Build resumes that recruiters <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-indigo-500">actually read.</span>
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-[var(--text-primary)] max-w-5xl leading-[1.1] mb-6">
+          Build resumes that recruiters <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500">actually read.</span>
         </h1>
 
-        <p className="text-base sm:text-xl text-slate-400 max-w-3xl font-medium leading-relaxed mb-10">
+        <p className="text-base sm:text-xl text-[var(--text-secondary)] max-w-3xl font-medium leading-relaxed mb-10">
           Traditional resume builders help you write resumes. CVifyPro combines AI content rewriting, real-time ATS optimization, recruiter psychology, and career intelligence to get you hired.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-16">
-          <Link to="/resume-builder/create" className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all flex items-center justify-center gap-3">
+          <Link to="/resume-builder/create" className="w-full sm:w-auto px-8 py-4 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all flex items-center justify-center gap-3">
             <span>Start Building Free</span>
             <ArrowRight size={16} />
           </Link>
-          <button onClick={() => navigate("/resume-builder/create")} className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-white/10 text-slate-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 hover:text-white transition-all flex items-center justify-center gap-2">
-            <Play size={14} className="text-primary" />
+          <button onClick={() => navigate("/resume-builder/create")} className="w-full sm:w-auto px-8 py-4 bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--text-primary)] rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[var(--surface-hover)] transition-all flex items-center justify-center gap-2">
+            <Play size={14} className="text-emerald-500" />
             <span>Interactive Demo</span>
           </button>
         </div>
 
         {/* Live Interactive Hero Simulator Canvas */}
-        <div className="w-full max-w-5xl bg-bg-secondary border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden text-left">
-          <div className="absolute top-0 right-0 px-6 py-2 bg-primary/10 border-b border-l border-primary/20 text-primary text-[9px] font-black uppercase tracking-widest rounded-bl-2xl">
+        <div className="w-full max-w-5xl bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden text-left">
+          <div className="absolute top-0 right-0 px-6 py-2 bg-emerald-500/10 border-b border-l border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-bl-2xl">
             Live AI Optimization Sandbox
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-4">
             <div className="space-y-4">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Input Raw Bullet Point:</span>
-              <div className="p-4 rounded-xl bg-slate-950 border border-white/5 text-sm text-slate-300 font-mono">
+              <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Input Raw Bullet Point:</span>
+              <div className="p-4 rounded-xl bg-[var(--surface-muted)] border border-[var(--border)] text-sm text-[var(--text-primary)] font-mono">
                 "{simulatedBullet}"
               </div>
               <button 
                 onClick={handleSimulateAI}
                 disabled={isSimulating}
-                className="w-full py-3 bg-primary/20 border border-primary/30 text-primary rounded-xl text-xs font-black uppercase tracking-wider hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-500/10"
               >
                 <Zap size={14} />
                 <span>{isSimulating ? "AI Processing..." : "Enhance With AI Intent (30 💎)"}</span>
               </button>
             </div>
 
-            <div className="space-y-4 bg-slate-900 p-6 rounded-2xl border border-white/5">
+            <div className="space-y-4 bg-[var(--surface-muted)] p-6 rounded-2xl border border-[var(--border)]">
               <div className="flex justify-between items-center">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">ATS Readiness Metric</span>
-                <span className={`text-sm font-black ${simulatedScore >= 90 ? "text-emerald-400" : "text-amber-400"}`}>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">ATS Readiness Metric</span>
+                <span className={`text-sm font-black ${simulatedScore >= 90 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-500"}`}>
                   {simulatedScore}/100 {simulatedScore >= 90 ? "EXCELLENT" : "AVERAGE"}
                 </span>
               </div>
-              <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
-                <div className="h-full bg-primary transition-all duration-700" style={{ width: `${simulatedScore}%` }} />
+              <div className="h-2 w-full bg-[var(--surface)] rounded-full overflow-hidden border border-[var(--border)]">
+                <div className="h-full bg-[var(--primary)] transition-all duration-700" style={{ width: `${simulatedScore}%` }} />
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">
-                • Action verb strength: <span className="text-emerald-400 font-bold">Strong</span> <br />
-                • Quantified result: <span className="text-emerald-400 font-bold">$1.4M ARR</span> <br />
-                • ATS keyword alignment: <span className="text-emerald-400 font-bold">100% Parsed</span>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
+                • Action verb strength: <span className="text-emerald-600 dark:text-emerald-400 font-bold">Strong</span> <br />
+                • Quantified result: <span className="text-emerald-600 dark:text-emerald-400 font-bold">$1.4M ARR</span> <br />
+                • ATS keyword alignment: <span className="text-emerald-600 dark:text-emerald-400 font-bold">100% Parsed</span>
               </p>
             </div>
           </div>
         </div>
 
         {/* Social Proof Logomark Grid */}
-        <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-5xl">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 mb-8">Candidates Hired At Top Global Companies</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all">
-            <span className="flex items-center gap-2 text-slate-300 font-bold"><FaGoogle size={20} /> Google</span>
-            <span className="flex items-center gap-2 text-slate-300 font-bold"><FaMicrosoft size={20} /> Microsoft</span>
-            <span className="flex items-center gap-2 text-slate-300 font-bold"><FaAmazon size={20} /> Amazon</span>
-            <span className="flex items-center gap-2 text-slate-300 font-bold"><FaSpotify size={20} /> Spotify</span>
+        <div className="mt-16 pt-12 border-t border-[var(--border)] w-full max-w-5xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--text-muted)] mb-8">Candidates Hired At Top Global Companies</p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all">
+            <span className="flex items-center gap-2 text-[var(--text-secondary)] font-bold"><FaGoogle size={20} /> Google</span>
+            <span className="flex items-center gap-2 text-[var(--text-secondary)] font-bold"><FaMicrosoft size={20} /> Microsoft</span>
+            <span className="flex items-center gap-2 text-[var(--text-secondary)] font-bold"><FaAmazon size={20} /> Amazon</span>
+            <span className="flex items-center gap-2 text-[var(--text-secondary)] font-bold"><FaSpotify size={20} /> Spotify</span>
           </div>
         </div>
       </section>
 
       {/* Why Traditional Builders Fail Section */}
-      <section id="why-cvify" className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-white/5">
+      <section id="why-cvify" className="py-20 px-4 sm:px-6 lg:px-12 bg-[var(--surface-muted)]/50 border-y border-[var(--border)]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">The Harsh Hiring Reality</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">The Harsh Hiring Reality</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
               Why traditional resume builders fail candidates in 2026.
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base font-medium">
+            <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium">
               Most resume builders focus purely on colors and PDF layouts while ignoring the algorithms and recruiters that stand between you and your next offer.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 space-y-4">
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 space-y-4 shadow-sm">
               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
                 <XCircle size={24} />
               </div>
-              <h3 className="text-xl font-black text-white">The 75% ATS Black Hole</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">
+              <h3 className="text-xl font-black text-[var(--text-primary)]">The 75% ATS Black Hole</h3>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                 Traditional templates use complex columns, graphics, and unparsed text tables that crash ATS screeners, causing your application to be rejected instantly.
               </p>
             </div>
 
-            <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 space-y-4">
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 space-y-4 shadow-sm">
               <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
                 <XCircle size={24} />
               </div>
-              <h3 className="text-xl font-black text-white">The 6-Second Recruiter Filter</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">
+              <h3 className="text-xl font-black text-[var(--text-primary)]">The 6-Second Recruiter Filter</h3>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                 Recruiters glance at resumes for only 6 seconds. Generic summaries and unquantified bullet points fail to capture executive attention.
               </p>
             </div>
 
-            <div className="bg-bg-secondary border border-white/5 rounded-3xl p-8 space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 space-y-4 shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-500">
                 <XCircle size={24} />
               </div>
-              <h3 className="text-xl font-black text-white">Zero Job Alignment</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">
+              <h3 className="text-xl font-black text-[var(--text-primary)]">Zero Job Alignment</h3>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                 Sending the same generic CV to 50 jobs yields zero callbacks. Modern hiring requires real-time keyword matching for every specific application.
               </p>
             </div>
@@ -274,46 +216,46 @@ const LandingPage = () => {
       {/* Feature Comparison Matrix Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto space-y-12">
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">The Paradigm Shift</span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">The Paradigm Shift</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
             Resume Builder vs. AI Career Operating System
           </h2>
         </div>
 
-        <div className="bg-bg-secondary border border-white/5 rounded-3xl overflow-x-auto shadow-2xl">
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl overflow-x-auto shadow-xl">
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
-              <tr className="border-b border-white/5 bg-slate-900/60">
-                <th className="p-6 text-xs font-black uppercase tracking-widest text-slate-400">Capability</th>
-                <th className="p-6 text-xs font-black uppercase tracking-widest text-slate-500">Traditional Builders</th>
-                <th className="p-6 text-xs font-black uppercase tracking-widest text-primary bg-primary/5">CVifyPro Career OS</th>
+              <tr className="border-b border-[var(--border)] bg-[var(--surface-muted)]">
+                <th className="p-6 text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">Capability</th>
+                <th className="p-6 text-xs font-black uppercase tracking-widest text-[var(--text-muted)]">Traditional Builders</th>
+                <th className="p-6 text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">CVifyPro Career OS</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-xs font-medium">
+            <tbody className="divide-y divide-[var(--border)] text-xs font-medium">
               <tr>
-                <td className="p-6 font-bold text-white">AI Content Optimization</td>
-                <td className="p-6 text-slate-500">❌ None (Manual typing)</td>
-                <td className="p-6 text-emerald-400 font-bold bg-primary/5">✓ Real-time AI Intent Engine</td>
+                <td className="p-6 font-bold text-[var(--text-primary)]">AI Content Optimization</td>
+                <td className="p-6 text-[var(--text-muted)]">❌ None (Manual typing)</td>
+                <td className="p-6 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5">✓ Real-time AI Intent Engine</td>
               </tr>
               <tr>
-                <td className="p-6 font-bold text-white">ATS Parsing Guarantee</td>
-                <td className="p-6 text-slate-500">❌ Breaks in Workday/Greenhouse</td>
-                <td className="p-6 text-emerald-400 font-bold bg-primary/5">✓ 100% Vector Parsed Standard</td>
+                <td className="p-6 font-bold text-[var(--text-primary)]">ATS Parsing Guarantee</td>
+                <td className="p-6 text-[var(--text-muted)]">❌ Breaks in Workday/Greenhouse</td>
+                <td className="p-6 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5">✓ 100% Vector Parsed Standard</td>
               </tr>
               <tr>
-                <td className="p-6 font-bold text-white">Job Description Matcher</td>
-                <td className="p-6 text-slate-500">❌ Static single CV</td>
-                <td className="p-6 text-emerald-400 font-bold bg-primary/5">✓ 1-Click Keyword Matching</td>
+                <td className="p-6 font-bold text-[var(--text-primary)]">Job Description Matcher</td>
+                <td className="p-6 text-[var(--text-muted)]">❌ Static single CV</td>
+                <td className="p-6 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5">✓ 1-Click Keyword Matching</td>
               </tr>
               <tr>
-                <td className="p-6 font-bold text-white">Impact & Achievement Scoring</td>
-                <td className="p-6 text-slate-500">❌ No metric feedback</td>
-                <td className="p-6 text-emerald-400 font-bold bg-primary/5">✓ Real-Time 0-100 Impact Index</td>
+                <td className="p-6 font-bold text-[var(--text-primary)]">Impact & Achievement Scoring</td>
+                <td className="p-6 text-[var(--text-muted)]">❌ No metric feedback</td>
+                <td className="p-6 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5">✓ Real-Time 0-100 Impact Index</td>
               </tr>
               <tr>
-                <td className="p-6 font-bold text-white">Live Web Portfolio</td>
-                <td className="p-6 text-slate-500">❌ PDF download only</td>
-                <td className="p-6 text-emerald-400 font-bold bg-primary/5">✓ Custom Shareable Web Profile</td>
+                <td className="p-6 font-bold text-[var(--text-primary)]">Live Web Portfolio</td>
+                <td className="p-6 text-[var(--text-muted)]">❌ PDF download only</td>
+                <td className="p-6 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5">✓ Custom Shareable Web Profile</td>
               </tr>
             </tbody>
           </table>
@@ -321,14 +263,14 @@ const LandingPage = () => {
       </section>
 
       {/* How It Works Section: Detailed Wizard Guide */}
-      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-white/5">
+      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-12 bg-[var(--surface-muted)]/50 border-y border-[var(--border)]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">6-Step Interactive Resume Creation Guide</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">6-Step Interactive Resume Creation Guide</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
               How selecting options in the Resume Wizard shapes your CV.
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base font-medium">
+            <p className="text-[var(--text-secondary)] text-sm sm:text-base font-medium">
               Every choice in our 6-step creation wizard configures AI prompts, layout density, ATS parsing rules, and visual typography.
             </p>
           </div>
@@ -378,17 +320,17 @@ const LandingPage = () => {
                 tag: "Visual Design System"
               },
             ].map((s) => (
-              <div key={s.step} className="bg-bg-secondary border border-white/5 rounded-3xl p-7 relative overflow-hidden group hover:border-primary/40 transition-all flex flex-col justify-between space-y-4">
+              <div key={s.step} className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-7 relative overflow-hidden group hover:border-[var(--primary)] transition-all flex flex-col justify-between space-y-4 shadow-sm">
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">{s.step}</span>
-                    <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-white/5 text-slate-300 border border-white/10 rounded-full">
+                    <span className="text-3xl font-black text-emerald-500/30 group-hover:text-[var(--primary)] transition-colors">{s.step}</span>
+                    <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-[var(--surface-muted)] text-[var(--text-secondary)] border border-[var(--border)] rounded-full">
                       {s.tag}
                     </span>
                   </div>
-                  <h3 className="text-base font-black text-white mb-1">{s.title}</h3>
-                  <p className="text-xs font-bold text-primary mb-3">{s.subtitle}</p>
-                  <p className="text-xs text-slate-400 font-medium leading-relaxed whitespace-pre-line">{s.desc}</p>
+                  <h3 className="text-base font-black text-[var(--text-primary)] mb-1">{s.title}</h3>
+                  <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-3">{s.subtitle}</p>
+                  <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed whitespace-pre-line">{s.desc}</p>
                 </div>
               </div>
             ))}
@@ -400,8 +342,8 @@ const LandingPage = () => {
       <section id="templates" className="py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto space-y-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4 max-w-2xl">
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Recruiter Tested</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">Recruiter Tested</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
               ATS-Proof Templates built for modern careers.
             </h2>
           </div>
@@ -414,8 +356,8 @@ const LandingPage = () => {
                 onClick={() => setActiveTemplateTab(tab)}
                 className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                   tab === activeTemplateTab
-                    ? "bg-primary text-white shadow-lg shadow-primary/20"
-                    : "bg-slate-900 text-slate-400 border border-white/5 hover:text-white"
+                    ? "bg-[var(--primary)] text-white shadow-lg shadow-emerald-500/20"
+                    : "bg-[var(--surface-muted)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 {tab}
@@ -426,8 +368,8 @@ const LandingPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredTemplates.map((tmpl) => (
-            <div key={tmpl.id} className="bg-bg-secondary border border-white/5 rounded-3xl p-6 group hover:border-primary/40 transition-all flex flex-col justify-between">
-              <div className="w-full h-48 bg-slate-950 rounded-2xl border border-white/5 flex items-center justify-center mb-6 group-hover:scale-[1.02] transition-transform">
+            <div key={tmpl.id} className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 group hover:border-[var(--primary)] transition-all flex flex-col justify-between shadow-sm">
+              <div className="w-full h-48 bg-[var(--surface-muted)] rounded-2xl border border-[var(--border)] flex items-center justify-center mb-6 group-hover:scale-[1.02] transition-transform">
                 <div className="w-24 h-32 bg-white rounded shadow-2xl p-2 flex flex-col gap-1.5 opacity-90">
                   <div className="w-full h-2 bg-slate-800 rounded-xs" />
                   <div className="w-3/4 h-1.5 bg-slate-400 rounded-xs" />
@@ -439,13 +381,13 @@ const LandingPage = () => {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-black text-white">{tmpl.name}</h3>
-                  <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full">
+                  <h3 className="text-base font-black text-[var(--text-primary)]">{tmpl.name}</h3>
+                  <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full">
                     {tmpl.tag}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 font-medium mb-6 leading-relaxed">{tmpl.desc}</p>
-                <Link to="/resume-builder/create" className="w-full py-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all flex items-center justify-center gap-2">
+                <p className="text-xs text-[var(--text-secondary)] font-medium mb-6 leading-relaxed">{tmpl.desc}</p>
+                <Link to="/resume-builder/create" className="w-full py-3 bg-[var(--surface-muted)] border border-[var(--border)] rounded-xl text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)] group-hover:bg-[var(--primary)] group-hover:text-white group-hover:border-[var(--primary)] transition-all flex items-center justify-center gap-2">
                   <span>Use This Template</span>
                   <ArrowRight size={12} />
                 </Link>
@@ -456,11 +398,11 @@ const LandingPage = () => {
       </section>
 
       {/* AI Features Grid Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-12 bg-slate-900/40 border-y border-white/5">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-12 bg-[var(--surface-muted)]/50 border-y border-[var(--border)]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Engineered Intelligence</span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">Engineered Intelligence</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
               9 Deep AI Modules designed for career growth.
             </h2>
           </div>
@@ -469,12 +411,12 @@ const LandingPage = () => {
             {aiFeatures.map((feat, idx) => {
               const Icon = feat.icon;
               return (
-                <div key={idx} className="bg-bg-secondary border border-white/5 rounded-3xl p-6 space-y-3 hover:border-primary/30 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                <div key={idx} className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 space-y-3 hover:border-[var(--primary)] transition-all shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                     <Icon size={18} />
                   </div>
-                  <h3 className="text-base font-black text-white">{feat.title}</h3>
-                  <p className="text-xs text-slate-400 font-medium leading-relaxed">{feat.desc}</p>
+                  <h3 className="text-base font-black text-[var(--text-primary)]">{feat.title}</h3>
+                  <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed">{feat.desc}</p>
                 </div>
               );
             })}
@@ -485,8 +427,8 @@ const LandingPage = () => {
       {/* FAQ Section */}
       <section id="faq" className="py-20 px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-4">
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">Frequently Asked Questions</span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tighter">
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">Frequently Asked Questions</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tighter">
             Everything you need to know about CVifyPro.
           </h2>
         </div>
@@ -495,16 +437,16 @@ const LandingPage = () => {
           {faqs.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
-              <div key={idx} className="bg-bg-secondary border border-white/5 rounded-2xl overflow-hidden transition-all">
+              <div key={idx} className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden transition-all shadow-sm">
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-black text-sm text-white hover:text-primary transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-black text-sm text-[var(--text-primary)] hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                 >
                   <span>{faq.q}</span>
-                  {isOpen ? <ChevronUp size={16} className="text-primary shrink-0" /> : <ChevronDown size={16} className="text-slate-500 shrink-0" />}
+                  {isOpen ? <ChevronUp size={16} className="text-emerald-500 shrink-0" /> : <ChevronDown size={16} className="text-[var(--text-muted)] shrink-0" />}
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-6 text-xs text-slate-400 font-medium leading-relaxed border-t border-white/5 pt-4 animate-fadeIn">
+                  <div className="px-6 pb-6 text-xs text-[var(--text-secondary)] font-medium leading-relaxed border-t border-[var(--border)] pt-4 animate-fadeIn">
                     {faq.a}
                   </div>
                 )}
@@ -516,45 +458,45 @@ const LandingPage = () => {
 
       {/* Final High-Converting CTA */}
       <section className="py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="bg-gradient-to-r from-primary/20 via-slate-900 to-indigo-950 border border-primary/30 rounded-3xl p-8 sm:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+        <div className="bg-gradient-to-r from-emerald-500/10 via-[var(--surface-muted)] to-[var(--surface)] border border-emerald-500/20 rounded-3xl p-8 sm:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest">
             <Sparkles size={12} /> Start Your Career Upgrade
           </div>
 
-          <h2 className="text-3xl sm:text-6xl font-black text-white tracking-tighter max-w-4xl mx-auto">
+          <h2 className="text-3xl sm:text-6xl font-black text-[var(--text-primary)] tracking-tighter max-w-4xl mx-auto">
             Ready to build a resume that actually lands interviews?
           </h2>
 
-          <p className="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto font-medium">
+          <p className="text-[var(--text-secondary)] text-sm sm:text-lg max-w-2xl mx-auto font-medium">
             Join thousands of developers, designers, and executives using CVifyPro to bypass ATS algorithms and secure top remote and international roles.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link to="/resume-builder/create" className="w-full sm:w-auto px-10 py-5 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-glow-primary hover:scale-105 transition-all">
+            <Link to="/resume-builder/create" className="w-full sm:w-auto px-10 py-5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all">
               Build Your Resume Free ⚡
             </Link>
           </div>
 
-          <div className="flex items-center justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-slate-400 pt-6">
-            <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-emerald-400" /> No Credit Card Required</span>
-            <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-emerald-400" /> 100% ATS Guaranteed</span>
+          <div className="flex items-center justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] pt-6">
+            <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-emerald-500" /> No Credit Card Required</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-emerald-500" /> 100% ATS Guaranteed</span>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-12 px-4 sm:px-6 lg:px-12 text-slate-500 text-xs font-medium">
+      <footer className="border-t border-[var(--border)] py-12 px-4 sm:px-6 lg:px-12 text-[var(--text-muted)] text-xs font-medium">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-black text-[10px]">CV</div>
-            <span className="font-black text-white text-sm tracking-tighter">CVifyPro</span>
-            <span className="text-[10px] text-slate-500">© 2026 CVify Inc. All rights reserved.</span>
+            <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-[10px]">CV</div>
+            <span className="font-black text-[var(--text-primary)] text-sm tracking-tighter">CVifyPro</span>
+            <span className="text-[10px] text-[var(--text-muted)]">© 2026 CVify Inc. All rights reserved.</span>
           </div>
 
-          <div className="flex gap-6 text-[10px] font-black uppercase tracking-wider text-slate-400">
-            <Link to="/documentation" className="hover:text-white">Documentation</Link>
-            <Link to="/login" className="hover:text-white">Sign In</Link>
-            <Link to="/resume-builder/create" className="hover:text-white">Create Resume</Link>
+          <div className="flex gap-6 text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+            <Link to="/documentation" className="hover:text-[var(--text-primary)]">Documentation</Link>
+            <Link to="/login" className="hover:text-[var(--text-primary)]">Sign In</Link>
+            <Link to="/resume-builder/create" className="hover:text-[var(--text-primary)]">Create Resume</Link>
           </div>
         </div>
       </footer>
