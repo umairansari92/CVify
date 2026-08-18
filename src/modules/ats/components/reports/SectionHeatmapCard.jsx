@@ -46,28 +46,28 @@ const SectionHeatmapCard = ({ loopholes = [], bulletFixes = [], keywordScore = 0
   ];
 
   const colorStyles = {
-    emerald: "border-emerald-500/30 bg-emerald-950/20 text-emerald-400",
-    amber:   "border-amber-500/30 bg-amber-950/20 text-amber-400",
-    red:     "border-red-500/30 bg-red-950/20 text-red-400",
+    emerald: "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    amber:   "border-amber-500/30 bg-amber-500/10 text-amber-500",
+    red:     "border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400",
   };
 
   const badgeStyles = {
-    emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    amber:   "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    red:     "bg-red-500/10 text-red-400 border-red-500/30",
+    emerald: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
+    amber:   "bg-amber-500/10 text-amber-500 border-amber-500/30",
+    red:     "bg-red-500/10 text-red-500 dark:text-red-400 border-red-500/30",
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-      <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm text-[var(--text-primary)]">
+      <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
         <Layout className="w-4 h-4" />
         SECTION DENSITY & QUALITY HEATMAP
       </div>
       <div>
-        <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
           Visual Resume Section Health Overview
         </h2>
-        <p className="text-slate-400 text-xs mt-1">
+        <p className="text-[var(--text-secondary)] text-xs mt-1">
           Simulated scanner heatmap showing which sections pass ATS filters and which require attention.
         </p>
       </div>
@@ -80,18 +80,18 @@ const SectionHeatmapCard = ({ loopholes = [], bulletFixes = [], keywordScore = 0
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-slate-100">{sec.name}</span>
+                <span className="font-bold text-sm text-[var(--text-primary)]">{sec.name}</span>
                 <span className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase ${badgeStyles[sec.color]}`}>
                   {sec.status}
                 </span>
               </div>
-              <span className="text-xs font-semibold text-slate-300">{sec.grade}</span>
+              <span className="text-xs font-semibold text-[var(--text-secondary)]">{sec.grade}</span>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">{sec.density}</p>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{sec.density}</p>
 
-            <div className="pt-1 flex items-start gap-1.5 text-[11px] text-slate-400">
-              <ArrowRight className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
+            <div className="pt-1 flex items-start gap-1.5 text-[11px] text-[var(--text-secondary)]">
+              <ArrowRight className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
               <span>{sec.advice}</span>
             </div>
           </div>

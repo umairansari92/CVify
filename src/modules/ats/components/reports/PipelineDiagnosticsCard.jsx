@@ -29,22 +29,22 @@ const PipelineDiagnosticsCard = ({ pipelineMeta = {} }) => {
   ];
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm text-[var(--text-primary)]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
             <Cpu className="w-4 h-4" />
             RESUME INTELLIGENCE PLATFORM v5 TELEMETRY
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
             Intake Pipeline Diagnostics & Telemetry
           </h2>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-[var(--text-secondary)] text-xs mt-1">
             Audit trail of the 7 deterministic engines executed during resume intake.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 text-xs font-mono text-emerald-400">
+        <div className="flex items-center gap-2 bg-[var(--surface-muted)] px-3.5 py-2 rounded-xl border border-[var(--border)] text-xs font-mono text-emerald-600 dark:text-emerald-400">
           <Activity className="w-3.5 h-3.5 animate-pulse" />
           <span>Pipeline Latency: {processingTimeMs}ms</span>
         </div>
@@ -52,38 +52,38 @@ const PipelineDiagnosticsCard = ({ pipelineMeta = {} }) => {
 
       {/* Stage-by-Stage Latency Timeline */}
       <div className="space-y-3">
-        <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
+        <span className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider block">
           ⚡ 7-Stage Pipeline Execution Timeline:
         </span>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {executionStages.map((st, idx) => (
-            <div key={idx} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1">
+            <div key={idx} className="bg-[var(--surface-muted)] p-3.5 rounded-xl border border-[var(--border)] space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-200">{st.name}</span>
-                <span className="text-[10px] font-mono font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+                <span className="font-bold text-[var(--text-primary)]">{st.name}</span>
+                <span className="text-[10px] font-mono font-bold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
                   {st.latency}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">{st.desc}</p>
+              <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">{st.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Skill Normalizer Alias Diffs */}
-      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+      <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-200 uppercase tracking-wider block">
+          <span className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider block">
             🏷️ Skill Normalizer Diffs (Canonical Alias Resolution):
           </span>
-          <span className="text-[10px] text-slate-500 font-mono">Normalized to industry standards</span>
+          <span className="text-[10px] text-[var(--text-muted)] font-mono">Normalized to industry standards</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
           {normalizedAliases.map((al, idx) => (
-            <div key={idx} className="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
-              <span className="text-slate-400">{al.from}</span>
-              <span className="text-emerald-400 font-bold">→ {al.to}</span>
+            <div key={idx} className="p-2.5 bg-[var(--surface)] rounded-xl border border-[var(--border)] flex items-center justify-between text-xs font-mono">
+              <span className="text-[var(--text-secondary)]">{al.from}</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-bold">→ {al.to}</span>
             </div>
           ))}
         </div>

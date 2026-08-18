@@ -69,26 +69,26 @@ const ATSScoreBreakdownCard = ({ result = {}, score = 0, keywordScore = 0, impac
   const overallGrade = getLetterGrade(score);
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm text-[var(--text-primary)]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
             <Award className="w-4 h-4" />
             OFFICIAL REPORT CARD BREAKDOWN
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
             How Your ATS Score Was Calculated
           </h2>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-[var(--text-secondary)] text-xs mt-1">
             Deterministic evaluation based on Fortune 500 ATS weighting matrix.
           </p>
         </div>
 
         {/* Quality Letter Grade Badge */}
-        <div className="flex items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-2xl border border-slate-800">
+        <div className="flex items-center gap-3 bg-[var(--surface-muted)] px-4 py-2.5 rounded-2xl border border-[var(--border)]">
           <div className="text-right">
-            <span className="text-[10px] text-slate-400 font-bold block uppercase">Overall Grade</span>
-            <span className="text-xs text-slate-200 font-medium">ATS Readiness</span>
+            <span className="text-[10px] text-[var(--text-muted)] font-bold block uppercase">Overall Grade</span>
+            <span className="text-xs text-[var(--text-secondary)] font-medium">ATS Readiness</span>
           </div>
           <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-xl border ${overallGrade.color}`}>
             {overallGrade.grade}
@@ -101,38 +101,38 @@ const ATSScoreBreakdownCard = ({ result = {}, score = 0, keywordScore = 0, impac
         {categories.map((cat, idx) => {
           const catGrade = getLetterGrade(cat.scorePct);
           return (
-            <div key={idx} className="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+            <div key={idx} className="bg-[var(--surface-muted)] p-4 sm:p-5 rounded-2xl border border-[var(--border)] space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-slate-100">{cat.name}</span>
+                    <span className="font-bold text-sm text-[var(--text-primary)]">{cat.name}</span>
                     <span className={`text-[10px] font-black px-2 py-0.5 rounded border ${catGrade.color}`}>
                       Grade {catGrade.grade}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400">{cat.description}</p>
+                  <p className="text-[11px] text-[var(--text-secondary)]">{cat.description}</p>
                 </div>
                 <div className="text-right flex items-center sm:block gap-2">
-                  <div className="text-base font-black text-slate-200">
-                    {cat.points} <span className="text-slate-500 text-xs font-semibold">/ {cat.max} pts</span>
+                  <div className="text-base font-black text-[var(--text-primary)]">
+                    {cat.points} <span className="text-[var(--text-muted)] text-xs font-semibold">/ {cat.max} pts</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 block">{cat.scorePct}% achieved</span>
+                  <span className="text-[10px] text-[var(--text-muted)] block">{cat.scorePct}% achieved</span>
                 </div>
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
-                    cat.scorePct >= 75 ? "bg-emerald-400" : cat.scorePct >= 50 ? "bg-amber-400" : "bg-red-400"
+                    cat.scorePct >= 75 ? "bg-emerald-500" : cat.scorePct >= 50 ? "bg-amber-500" : "bg-red-500"
                   }`}
                   style={{ width: `${Math.max(5, cat.scorePct)}%` }}
                 />
               </div>
 
-              <div className="flex items-center justify-between text-[10px] text-slate-400">
-                <span>Rule: <strong className="text-slate-300">{cat.rule}</strong></span>
-                <span className={cat.status === "PASS" ? "text-emerald-400 font-bold" : cat.status === "WARN" ? "text-amber-400 font-bold" : "text-red-400 font-bold"}>
+              <div className="flex items-center justify-between text-[10px] text-[var(--text-secondary)]">
+                <span>Rule: <strong className="text-[var(--text-primary)]">{cat.rule}</strong></span>
+                <span className={cat.status === "PASS" ? "text-emerald-600 dark:text-emerald-400 font-bold" : cat.status === "WARN" ? "text-amber-500 font-bold" : "text-red-500 font-bold"}>
                   {cat.status === "PASS" ? "✓ Meets Benchmark" : cat.status === "WARN" ? "⚠ Needs Improvement" : "✕ Critical Deficit"}
                 </span>
               </div>
@@ -142,19 +142,27 @@ const ATSScoreBreakdownCard = ({ result = {}, score = 0, keywordScore = 0, impac
       </div>
 
       {/* Total Score Summary Box */}
-      <div className="p-5 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-5 bg-[var(--surface-muted)] rounded-2xl border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Total Calibrated Score</span>
-          <p className="text-xs text-slate-300">
+          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">Total Calibrated Score</span>
+          <p className="text-xs text-[var(--text-secondary)]">
             Weighted composite of keyword density, qualification proof, formatting safety, and career relevance.
           </p>
         </div>
-        <div className="text-3xl font-black text-slate-100 flex items-baseline gap-1">
-          <span className={score >= 85 ? "text-emerald-400" : score >= 70 ? "text-amber-400" : "text-red-400"}>
+        <div className="text-3xl font-black text-[var(--text-primary)] flex items-baseline gap-1">
+          <span className={score >= 85 ? "text-emerald-600 dark:text-emerald-400" : score >= 70 ? "text-amber-500" : "text-red-500"}>
             {score}
           </span>
-          <span className="text-slate-500 text-sm font-semibold">/ 100</span>
+          <span className="text-[var(--text-muted)] text-sm font-semibold">/ 100</span>
         </div>
+      </div>
+
+      {/* Footer Diagnostic Note */}
+      <div className="p-4 rounded-2xl bg-[var(--surface-muted)] border border-[var(--border)] flex items-start gap-3 text-xs text-[var(--text-secondary)]">
+        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          Scores above 85% indicate that your resume clears automated filtering thresholds across all major ATS vendors (Workday, Greenhouse, Taleo, Lever, iCIMS).
+        </p>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const ATSModuleLayout = () => {
 
   return (
     <ATSErrorBoundary>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] transition-colors duration-300 flex flex-col">
         {/* Sub-Header Navigation */}
         <header className="sticky top-0 z-30 bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--border)] px-4 lg:px-8 py-3">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -38,12 +38,12 @@ const ATSModuleLayout = () => {
                   <h1 className="text-lg font-bold text-[var(--text-primary)] tracking-tight">
                     ATS Intelligence System
                   </h1>
-                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1">
+                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1">
                     <ShieldCheck className="w-3 h-3" />
                     v2.0
                   </span>
                 </div>
-                <p className="text-xs text-[var(--text-muted)] hidden sm:block">
+                <p className="text-xs text-[var(--text-secondary)] hidden sm:block">
                   Recruiter Decoding & AI Intelligence Engine
                 </p>
               </div>
@@ -65,8 +65,8 @@ const ATSModuleLayout = () => {
                     className={({ isActive }) =>
                       `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                         isActive
-                          ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-semibold"
-                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                          ? "bg-[var(--primary)] text-white shadow-md shadow-emerald-500/20 font-semibold"
+                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >

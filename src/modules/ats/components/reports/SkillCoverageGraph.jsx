@@ -67,42 +67,42 @@ const SkillCoverageGraph = ({ foundKeywords = [], missingKeywords = [] }) => {
   }, [foundKeywords, missingKeywords]);
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-      <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm text-[var(--text-primary)]">
+      <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
         <Cpu className="w-4 h-4" />
         DOMAIN-SPECIFIC SKILL COVERAGE
       </div>
       <div>
-        <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
           Competency Coverage by Technical Domain
         </h2>
-        <p className="text-slate-400 text-xs mt-1">
+        <p className="text-[var(--text-secondary)] text-xs mt-1">
           High-level recruiter overview showing your alignment across core software engineering pillars.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {domainCoverage.map((domain, idx) => (
-          <div key={idx} className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <div key={idx} className="bg-[var(--surface-muted)] p-4 rounded-2xl border border-[var(--border)] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-200">{domain.name}</span>
+              <span className="font-bold text-[var(--text-primary)]">{domain.name}</span>
               <span className={`font-black ${
-                domain.percentage >= 80 ? "text-emerald-400" : domain.percentage >= 50 ? "text-amber-400" : "text-red-400"
+                domain.percentage >= 80 ? "text-emerald-600 dark:text-emerald-400" : domain.percentage >= 50 ? "text-amber-500" : "text-red-500"
               }`}>
                 {domain.percentage}%
               </span>
             </div>
 
-            <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
-                  domain.percentage >= 80 ? "bg-emerald-400" : domain.percentage >= 50 ? "bg-amber-400" : "bg-red-400"
+                  domain.percentage >= 80 ? "bg-emerald-500" : domain.percentage >= 50 ? "bg-amber-500" : "bg-red-500"
                 }`}
                 style={{ width: `${Math.max(8, domain.percentage)}%` }}
               />
             </div>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-500">
+            <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)]">
               <span>{domain.percentage >= 80 ? "Strong domain fit" : domain.percentage >= 50 ? "Moderate alignment" : "Gap detected"}</span>
               <span>{domain.percentage >= 80 ? "✓ Verified" : "Needs attention"}</span>
             </div>

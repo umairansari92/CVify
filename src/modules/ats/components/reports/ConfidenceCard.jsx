@@ -20,27 +20,27 @@ const ConfidenceCard = ({ confidenceScore = 94, certaintyGrade = "HIGH", section
   ];
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm text-[var(--text-primary)]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
             <ShieldCheck className="w-4 h-4" />
             DETERMINISTIC CONFIDENCE ENGINE (v5)
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
             Extraction & Classification Certainty
           </h2>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-[var(--text-secondary)] text-xs mt-1">
             Mathematical proof of extraction precision across all resume modules.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-2xl border border-slate-800">
+        <div className="flex items-center gap-3 bg-[var(--surface-muted)] px-4 py-2.5 rounded-2xl border border-[var(--border)]">
           <div className="text-right">
-            <span className="text-[10px] text-slate-400 font-bold block uppercase">Engine Certainty</span>
-            <span className="text-xs text-emerald-400 font-extrabold">{certaintyGrade} CONFIDENCE</span>
+            <span className="text-[10px] text-[var(--text-muted)] font-bold block uppercase">Engine Certainty</span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-extrabold">{certaintyGrade} CONFIDENCE</span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-black text-emerald-400 text-lg">
+          <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-black text-emerald-600 dark:text-emerald-400 text-lg">
             {confidenceScore}%
           </div>
         </div>
@@ -49,35 +49,35 @@ const ConfidenceCard = ({ confidenceScore = 94, certaintyGrade = "HIGH", section
       {/* Per-Section Score Bars */}
       <div className="space-y-3">
         {sections.map((sec, idx) => (
-          <div key={idx} className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <div key={idx} className="bg-[var(--surface-muted)] p-4 rounded-2xl border border-[var(--border)] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-200">{sec.name}</span>
-              <span className={`font-black ${sec.score >= 90 ? "text-emerald-400" : sec.score >= 75 ? "text-amber-400" : "text-red-400"}`}>
+              <span className="font-bold text-[var(--text-primary)]">{sec.name}</span>
+              <span className={`font-black ${sec.score >= 90 ? "text-emerald-600 dark:text-emerald-400" : sec.score >= 75 ? "text-amber-500" : "text-red-500"}`}>
                 {sec.score}% Certainty
               </span>
             </div>
-            <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
-                  sec.score >= 90 ? "bg-emerald-400" : sec.score >= 75 ? "bg-amber-400" : "bg-red-400"
+                  sec.score >= 90 ? "bg-emerald-500" : sec.score >= 75 ? "bg-amber-500" : "bg-red-500"
                 }`}
                 style={{ width: `${sec.score}%` }}
               />
             </div>
-            <p className="text-[10px] text-slate-400">{sec.reason}</p>
+            <p className="text-[10px] text-[var(--text-secondary)]">{sec.reason}</p>
           </div>
         ))}
       </div>
 
       {/* Explainability Checklist: Why Confidence is High */}
-      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
-        <span className="text-xs font-bold text-slate-200 uppercase tracking-wider block">
+      <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] space-y-3">
+        <span className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider block">
           ✓ Why Extraction Confidence is {certaintyGrade}:
         </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[var(--text-secondary)]">
           {verificationChecklist.map((item, idx) => (
             <div key={idx} className="flex items-start gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
               <span className="text-[11px] leading-relaxed">{item}</span>
             </div>
           ))}

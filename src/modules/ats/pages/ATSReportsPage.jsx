@@ -39,17 +39,17 @@ const ATSReportsPage = () => {
 
   if (!result) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
-        <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-slate-500">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center space-y-4 text-[var(--text-primary)]">
+        <div className="w-16 h-16 bg-[var(--surface-muted)] border border-[var(--border)] rounded-2xl flex items-center justify-center text-[var(--text-muted)]">
           <FileText className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-100">No Intelligence Scan Report Available</h2>
-        <p className="text-xs text-slate-400 max-w-md">
+        <h2 className="text-xl font-bold text-[var(--text-primary)]">No Intelligence Scan Report Available</h2>
+        <p className="text-xs text-[var(--text-secondary)] max-w-md">
           You haven't run an ATS scan yet. Launch the workspace scanner to generate your complete Mission Debrief report.
         </p>
         <Link
           to="/ats/scan"
-          className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all"
+          className="px-6 py-3 rounded-xl bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all"
         >
           Launch Intelligence Scanner
         </Link>
@@ -98,45 +98,59 @@ const ATSReportsPage = () => {
   const loopholes     = Array.isArray(coaching.sectionLoopholes)? coaching.sectionLoopholes: [];
   const quickWins     = Array.isArray(coaching.quickWins)       ? coaching.quickWins        : [];
   const expGap        = coaching.experienceGap || {};
-  const potentialScore= coaching.potentialTotalScore || Math.min(100, score + 16);
-  const bulletFixes   = Array.isArray(result.bulletFixes)       ? result.bulletFixes        :
-                        Array.isArray(result.weakBullets)        ? result.weakBullets        : [];
 
-  const rawFound =
-    result.foundKeywords ||
-    result.feedback?.positives ||
-    result.feedback?.foundKeywords ||
-    result.keywordAnalysis?.found ||
-    result.localMetrics?.found ||
-    result.found ||
-    [];
-
-  const foundKeywords = useMemo(() => {
-    return Array.isArray(rawFound)
-      ? rawFound
-          .map((k) => (typeof k === "string" ? k : k?.keyword || k?.name || k?.text || ""))
-          .filter((k) => k && typeof k === "string" && !k.startsWith("http") && k.length < 50)
+  const bulletFixes =
+    Array.isArray(result.bulletPointImprovements) && result.bulletPointImprovements.length > 0
+      ? result.bulletPointImprovements
+      : Array.isArray(result.bulletImprovements) && result.bulletImprovements.length > 0
+      ? result.bulletImprovements
+      : Array.isArray(result.actionVerbs?.weakVerbsFound)
+      ? result.actionVerbs.weakVerbsFound.map((v) => ({
+          original: `Used weak verb: "${v}"`,
+          improved: `Replace with quantified impact: "Architected / Engineered / Scaled..."`,
+          rationale: "Enterprise ATS filters prioritize strong leadership action verbs.",
+          section: "Experience",
+        }))
       : [];
-  }, [rawFound]);
+
+  const foundKeywords =
+    Array.isArray(result.keywords?.present) && result.keywords.present.length > 0
+      ? result.keywords.present
+      : Array.isArray(result.keywordsFound) && result.keywordsFound.length > 0
+      ? result.keywordsFound
+      : Array.isArray(result.skills?.found)
+      ? result.skills.found
+      : [];
 
   const rawMissing =
-    result.missingKeywords ||
-    result.feedback?.missingKeywords ||
-    result.keywordAnalysis?.missing ||
-    result.localMetrics?.missing ||
-    result.keywordGaps ||
-    [];
+    Array.isArray(result.keywords?.missing) && result.keywords.missing.length > 0
+      ? result.keywords.missing
+      : Array.isArray(result.keywordsMissing) && result.keywordsMissing.length > 0
+      ? result.keywordsMissing
+      : Array.isArray(result.skills?.missing)
+      ? result.skills.missing
+      : [];
 
   const missingKeywords = useMemo(() => {
-    return Array.isArray(rawMissing)
-      ? rawMissing
-          .map((k) => (typeof k === "string" ? k : k?.keyword || k?.name || k?.text || ""))
-          .filter((k) => k && typeof k === "string" && k.length < 50)
-      : [];
+    return rawMissing.map((k) => (typeof k === "string" ? k : k?.keyword || k?.skill || k?.name || "")).filter(Boolean);
   }, [rawMissing]);
 
+  const potentialScore =
+    result.potentialScore ||
+    result.estimatedPotentialScore ||
+    (score < 85 ? Math.min(95, score + missingKeywords.length * 4 + 10) : null);
+
   const rawMissingObjects = useMemo(() => {
-    return Array.isArray(rawMissing) ? rawMissing.filter((k) => typeof k === "object" && k !== null) : [];
+    return rawMissing.map((k) => {
+      if (typeof k === "object" && k !== null) return k;
+      return {
+        keyword: k,
+        category: "Required Skill",
+        importance: "HIGH",
+        recommendedSection: "Skills / Experience",
+        suggestedContext: `Demonstrate hands-on application of ${k} with quantified metrics.`,
+      };
+    });
   }, [rawMissing]);
 
   const headlineAdvantage =
@@ -160,9 +174,9 @@ const ATSReportsPage = () => {
     result.scoreJustifications?.keywordMatch ||
     "Missing essential role keywords or cloud credentials.";
 
-  let statusBadge = { label: "ACTION REQUIRED", color: "bg-red-500/10 text-red-400 border-red-500/20" };
-  if (score >= 85) statusBadge = { label: "RECRUITER READY",  color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
-  else if (score >= 70) statusBadge = { label: "COMPETITIVE", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" };
+  let statusBadge = { label: "ACTION REQUIRED", color: "bg-red-500/10 text-red-500 dark:text-red-400 border-red-500/20" };
+  if (score >= 85) statusBadge = { label: "RECRUITER READY",  color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" };
+  else if (score >= 70) statusBadge = { label: "COMPETITIVE", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" };
 
   const tabs = [
     { id: "overview",    label: "Mission Overview",  icon: <Sparkles className="w-3.5 h-3.5" /> },
@@ -174,21 +188,21 @@ const ATSReportsPage = () => {
   ];
 
   return (
-    <div className="space-y-6 py-2 max-w-5xl mx-auto">
+    <div className="space-y-6 py-2 max-w-5xl mx-auto text-[var(--text-primary)]">
 
       {/* ── 1. MISSION HEADER (Always Present) ──────────────────────────────── */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-6">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 mb-1">
+            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
               <Sparkles className="w-4 h-4" />
               MISSION DEBRIEF REPORT · v5.1 ENTERPRISE
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
               ATS Intelligence Evaluation
             </h1>
-            <p className="text-slate-400 text-xs sm:text-sm mt-1">
-              Target Role: <span className="text-slate-200 font-semibold">{result.targetRole || result.jobTitle || "Full Stack Engineer"}</span>
+            <p className="text-[var(--text-secondary)] text-xs sm:text-sm mt-1">
+              Target Role: <span className="text-[var(--text-primary)] font-semibold">{result.targetRole || result.jobTitle || "Full Stack Engineer"}</span>
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -197,7 +211,7 @@ const ATSReportsPage = () => {
             </span>
             <Link
               to="/ats/scan"
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-[var(--surface-muted)] hover:bg-[var(--surface-hover)] text-[var(--text-primary)] font-semibold text-xs border border-[var(--border)] transition-all flex items-center gap-1.5"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Rescan
             </Link>
@@ -206,48 +220,48 @@ const ATSReportsPage = () => {
 
         {/* Top Metric Meters */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-1">
-            <span className="text-xs text-slate-400 font-semibold">Overall ATS Score</span>
-            <span className={`text-4xl font-black tracking-tight ${score >= 85 ? "text-emerald-400" : score >= 70 ? "text-amber-400" : "text-red-400"}`}>
+          <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-xs text-[var(--text-secondary)] font-semibold">Overall ATS Score</span>
+            <span className={`text-4xl font-black tracking-tight ${score >= 85 ? "text-emerald-600 dark:text-emerald-400" : score >= 70 ? "text-amber-500" : "text-red-500"}`}>
               {score}%
             </span>
-            <span className="text-[11px] text-slate-500">Benchmark: 85%+</span>
+            <span className="text-[11px] text-[var(--text-muted)]">Benchmark: 85%+</span>
             {potentialScore && (
-              <span className="text-[10px] text-teal-400 font-semibold">Potential: {potentialScore}%</span>
+              <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Potential: {potentialScore}%</span>
             )}
           </div>
 
-          <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-medium">Keyword Match</span>
-              <span className="font-bold text-slate-200">{keywordScore}%</span>
+              <span className="text-[var(--text-secondary)] font-medium">Keyword Match</span>
+              <span className="font-bold text-[var(--text-primary)]">{keywordScore}%</span>
             </div>
-            <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${keywordScore}%` }} />
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
+              <div className="bg-[var(--primary)] h-full rounded-full transition-all duration-500" style={{ width: `${keywordScore}%` }} />
             </div>
-            <span className="text-[10px] text-slate-500 block">Target Skill Distance</span>
+            <span className="text-[10px] text-[var(--text-muted)] block">Target Skill Distance</span>
           </div>
 
-          <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-medium">Impact & Quantification</span>
-              <span className="font-bold text-slate-200">{impactScore}%</span>
+              <span className="text-[var(--text-secondary)] font-medium">Impact & Quantification</span>
+              <span className="font-bold text-[var(--text-primary)]">{impactScore}%</span>
             </div>
-            <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-teal-400 h-full rounded-full transition-all duration-500" style={{ width: `${impactScore}%` }} />
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
+              <div className="bg-teal-500 h-full rounded-full transition-all duration-500" style={{ width: `${impactScore}%` }} />
             </div>
-            <span className="text-[10px] text-slate-500 block">Metric density rate</span>
+            <span className="text-[10px] text-[var(--text-muted)] block">Metric density rate</span>
           </div>
 
-          <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-2">
+          <div className="bg-[var(--surface-muted)] p-5 rounded-2xl border border-[var(--border)] space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-medium">Formatting Safety</span>
-              <span className="font-bold text-slate-200">{formattingScore}%</span>
+              <span className="text-[var(--text-secondary)] font-medium">Formatting Safety</span>
+              <span className="font-bold text-[var(--text-primary)]">{formattingScore}%</span>
             </div>
-            <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-              <div className="bg-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: `${formattingScore}%` }} />
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]">
+              <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${formattingScore}%` }} />
             </div>
-            <span className="text-[10px] text-slate-500 block">DOM & font readability</span>
+            <span className="text-[10px] text-[var(--text-muted)] block">DOM & font readability</span>
           </div>
         </div>
       </div>
@@ -260,8 +274,8 @@ const ATSReportsPage = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs whitespace-nowrap transition-all ${
               activeTab === tab.id
-                ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
-                : "bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                ? "bg-[var(--primary)] text-white shadow-md shadow-emerald-500/20"
+                : "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
             }`}
           >
             {tab.icon}
@@ -278,34 +292,34 @@ const ATSReportsPage = () => {
           <div className="space-y-6">
             {/* Alignment Meter */}
             {(alignment.level || alignment.summary || potentialScore) && (
-              <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
-                <div className="flex items-center gap-2 text-sm font-bold text-teal-400">
+              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm">
+                <div className="flex items-center gap-2 text-sm font-bold text-teal-600 dark:text-teal-400">
                   <BarChart3 className="w-4 h-4" />
                   Alignment Meter — Actual vs Potential Score
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1 text-center">
-                    <span className="text-slate-400 block">Current Score</span>
-                    <span className="text-3xl font-black text-red-400">{score}%</span>
+                  <div className="bg-[var(--surface-muted)] p-4 rounded-xl border border-[var(--border)] space-y-1 text-center">
+                    <span className="text-[var(--text-secondary)] block">Current Score</span>
+                    <span className="text-3xl font-black text-red-500">{score}%</span>
                   </div>
-                  <div className="bg-slate-950 p-4 rounded-xl border border-emerald-500/30 space-y-1 text-center">
-                    <span className="text-slate-400 block">Potential After Fixes</span>
-                    <span className="text-3xl font-black text-emerald-400">{potentialScore}%</span>
-                    <span className="text-[10px] text-emerald-500">+{potentialScore - score}% gain possible</span>
+                  <div className="bg-[var(--surface-muted)] p-4 rounded-xl border border-emerald-500/30 space-y-1 text-center">
+                    <span className="text-[var(--text-secondary)] block">Potential After Fixes</span>
+                    <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">{potentialScore}%</span>
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400">+{potentialScore - score}% gain possible</span>
                   </div>
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <span className="text-slate-400 block font-semibold">Alignment Level</span>
-                    <span className={`text-sm font-bold block ${alignment.level === "HIGH" ? "text-emerald-400" : alignment.level === "MEDIUM" ? "text-amber-400" : "text-red-400"}`}>
+                  <div className="bg-[var(--surface-muted)] p-4 rounded-xl border border-[var(--border)] space-y-2">
+                    <span className="text-[var(--text-secondary)] block font-semibold">Alignment Level</span>
+                    <span className={`text-sm font-bold block ${alignment.level === "HIGH" ? "text-emerald-600 dark:text-emerald-400" : alignment.level === "MEDIUM" ? "text-amber-500" : "text-red-500"}`}>
                       {alignment.level || "HIGH"}
                     </span>
                     {alignment.applyAdvice && (
-                      <p className="text-slate-400 leading-relaxed text-[11px]">{alignment.applyAdvice}</p>
+                      <p className="text-[var(--text-secondary)] leading-relaxed text-[11px]">{alignment.applyAdvice}</p>
                     )}
                   </div>
                 </div>
                 {alignment.summary && (
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                    <span className="text-teal-400 font-bold block mb-1">Strategic Summary</span>
+                  <div className="bg-[var(--surface-muted)] p-4 rounded-xl border border-[var(--border)] text-xs text-[var(--text-primary)] leading-relaxed">
+                    <span className="text-teal-600 dark:text-teal-400 font-bold block mb-1">Strategic Summary</span>
                     {alignment.summary}
                   </div>
                 )}
@@ -408,14 +422,14 @@ const ATSReportsPage = () => {
       </div>
 
       {/* ── 4. RESCAN CTA ───────────────────────────────────────────────────── */}
-      <div className="text-center bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/20 rounded-3xl p-8 space-y-4">
-        <h3 className="text-xl font-bold text-slate-100">Apply Improvements & Re-Scan</h3>
-        <p className="text-xs text-slate-400 max-w-md mx-auto">
+      <div className="text-center bg-[var(--surface)] border border-emerald-500/20 rounded-3xl p-8 space-y-4 shadow-sm">
+        <h3 className="text-xl font-bold text-[var(--text-primary)]">Apply Improvements & Re-Scan</h3>
+        <p className="text-xs text-[var(--text-secondary)] max-w-md mx-auto">
           Updated your resume with missing keywords? Re-scanning within 24 hours costs 50% less (25 Diamonds).
         </p>
         <Link
           to="/ats/scan"
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
         >
           <RefreshCw className="w-4 h-4" />
           Apply Fixes & Rescan Now
