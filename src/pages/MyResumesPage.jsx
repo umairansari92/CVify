@@ -364,7 +364,7 @@ const MyResumesPage = () => {
 
                       <Button
                         variant="ghost"
-                        onClick={() => navigate("/ats", { state: { preSelectedResumeId: resumeId } })}
+                        onClick={() => navigate("/ats/scan", { state: { preSelectedResumeId: resumeId } })}
                         icon={FaSearchPlus}
                         className="w-full !h-9 !text-xs !bg-white/5 hover:!bg-white/10 border border-border-subtle font-bold"
                       >
@@ -389,7 +389,7 @@ const MyResumesPage = () => {
                             <span>Edit Resume</span>
                           </button>
                           <button
-                            onClick={() => { setActiveMenuId(null); navigate("/ats", { state: { preSelectedResumeId: resumeId } }); }}
+                            onClick={() => { setActiveMenuId(null); navigate("/ats/scan", { state: { preSelectedResumeId: resumeId } }); }}
                             className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/10 flex items-center gap-2.5 transition-colors"
                           >
                             <FaSearchPlus size={12} className="text-emerald-400" />

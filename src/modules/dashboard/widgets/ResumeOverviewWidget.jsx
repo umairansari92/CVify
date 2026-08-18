@@ -196,7 +196,7 @@ export const ResumeOverviewWidget = ({ data, navigate }) => {
                           <span>Edit Resume</span>
                         </button>
                         <button
-                          onClick={() => { setActiveMenuId(null); navigate("/ats", { state: { preSelectedResumeId: resumeId } }); }}
+                          onClick={() => { setActiveMenuId(null); navigate("/ats/scan", { state: { preSelectedResumeId: resumeId } }); }}
                           className="w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-text-secondary hover:text-text-primary hover:bg-white/10 flex items-center gap-2 transition-colors"
                         >
                           <FaSearchPlus size={11} className="text-emerald-400" />

@@ -144,8 +144,8 @@ const Dashboard = () => {
     navigate("/resume-builder/create");
   };
 
-  const handleScan = (id) => navigate("/ats", { state: { preSelectedResumeId: id } });
-  const handleImprove = (id) => navigate("/ats", { state: { preSelectedResumeId: id, autoImprove: true } });
+  const handleScan = (id) => navigate("/ats/scan", { state: { preSelectedResumeId: id } });
+  const handleImprove = (id) => navigate("/ats/scan", { state: { preSelectedResumeId: id, autoImprove: true } });
 
   if (loading && !resumes) {
     return (

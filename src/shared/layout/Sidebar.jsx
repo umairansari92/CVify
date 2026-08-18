@@ -149,7 +149,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-blue-300 bg-blue-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -179,7 +179,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-blue-300 bg-blue-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -224,6 +224,21 @@ const Sidebar = ({ onClose = () => {} }) => {
               {isAtsOpen && (
                 <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-[var(--border)] ml-5 animate-in fade-in duration-150">
                   <NavLink
+                    to="/ats"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-emerald-300 bg-emerald-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>ATS Overview</span>
+                    {location.pathname === "/ats" && <div className="w-1 h-1 rounded-full bg-emerald-400" />}
+                  </NavLink>
+
+                  <NavLink
                     to="/ats/scan"
                     onClick={onClose}
                     className={({ isActive }) =>
@@ -245,7 +260,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-emerald-300 bg-emerald-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -260,7 +275,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-emerald-300 bg-emerald-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >
@@ -275,7 +290,7 @@ const Sidebar = ({ onClose = () => {} }) => {
                       `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         isActive
                           ? "text-emerald-300 bg-emerald-500/10 font-bold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                       }`
                     }
                   >

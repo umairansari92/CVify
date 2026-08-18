@@ -165,7 +165,7 @@ export const useResumeLibrary = () => {
   }, [navigate]);
 
   const handleAtsAnalysis = useCallback((resumeId) => {
-    navigate("/ats", { state: { preSelectedResumeId: resumeId } });
+    navigate("/ats/scan", { state: { preSelectedResumeId: resumeId } });
   }, [navigate]);
 
   const handleCreateResume = useCallback(() => {
