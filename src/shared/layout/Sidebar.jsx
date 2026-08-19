@@ -19,7 +19,8 @@ import {
   Sparkles,
   Scan,
   TrendingUp,
-  BookOpen
+  BookOpen,
+  Globe
 } from "lucide-react";
 
 const Sidebar = ({ onClose = () => {} }) => {
@@ -189,6 +190,30 @@ const Sidebar = ({ onClose = () => {} }) => {
                 </div>
               )}
             </div>
+
+            {/* ── Portfolio & Profile ── */}
+            <NavLink
+              to="/profile"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isActive
+                    ? "text-purple-400 bg-purple-500/10 border border-purple-500/30"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
+                }`
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Globe className="w-4 h-4 text-purple-400" />
+                <span>Profile & Portfolio</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                  LIVE
+                </span>
+                {location.pathname === "/profile" && <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />}
+              </div>
+            </NavLink>
 
           </div>
 
