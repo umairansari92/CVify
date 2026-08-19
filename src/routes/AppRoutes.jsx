@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -50,6 +50,25 @@ import Layout from "../components/common/Layout";
 import MarketingLayout from "../components/common/MarketingLayout";
 import LoadingScreen from "../components/common/LoadingScreen";
 
+/** External marketing site URL — single source of truth */
+const MARKETING_SITE = "https://cvifypro.vercel.app/";
+
+/**
+ * Performs a hard redirect to the external Next.js marketing site.
+ * Used instead of <Navigate> for cross-domain redirects.
+ */
+const ExternalRedirect = ({ to = MARKETING_SITE }) => {
+  useEffect(() => {
+    window.location.replace(to);
+  }, [to]);
+  return <LoadingScreen />;
+};
+
+/**
+ * ProtectedRoute — guards authenticated-only routes.
+ * If unauthenticated, sends user to the external marketing site
+ * rather than showing an internal page they shouldn't see.
+ */
 const ProtectedRoute = ({ children }) => {
   const { user, isInitialized } = useSelector((state) => state.auth);
 
@@ -59,7 +78,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (user) return children;
 
-  return <Navigate to="/login" replace />;
+  // Redirect unauthenticated users to marketing site, not internal /login
+  return <ExternalRedirect to={MARKETING_SITE} />;
 };
 
 const AdminRoute = ({ children }) => {
@@ -92,7 +112,7 @@ const AppRoutes = () => {
     <Suspense fallback={<LoadingScreen />}>
       <Routes>
 
-        {/* Root Route: Redirect based on auth state */}
+        {/* Root Route: logged-in → dashboard | guest → external marketing site */}
         <Route
           path="/"
           element={
@@ -101,7 +121,7 @@ const AppRoutes = () => {
             ) : user ? (
               <Navigate to="/dashboard" replace />
             ) : (
-              <Navigate to="/resume-builder" replace />
+              <ExternalRedirect to={MARKETING_SITE} />
             )
           }
         />
