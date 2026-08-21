@@ -14,6 +14,9 @@ export const dashboardService = {
       modules: launcherService.getActiveModules(),
       resumes: dashboardData?.resumes || [],
       coverLetters: dashboardData?.coverLetters || [],
+      quests: dashboardData?.quests || [],
+      stats: dashboardData?.stats || {},
+      economy: dashboardData?.economy || {},
     };
   }
 };
