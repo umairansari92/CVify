@@ -28,7 +28,7 @@ import {
   Code2,
 } from "lucide-react";
 import UsernameClaimer from "../components/landing/UsernameClaimer";
-import SectionHotspotExplorer from "../components/landing/SectionHotspotExplorer";
+import ProfileStudioExplorer from "../components/landing/ProfileStudioExplorer";
 import ThemeShowcaseGallery from "../components/landing/ThemeShowcaseGallery";
 import { manifest } from "../manifest";
 
@@ -132,8 +132,8 @@ export const ProfileLandingPage = () => {
       </section>
 
       {/* ── 2. INTERACTIVE MASTER STUDIO GUIDE & FIELD WALKTHROUGH ── */}
-      <section>
-        <SectionHotspotExplorer />
+      <section id="studio-walkthrough">
+        <ProfileStudioExplorer />
       </section>
 
       {/* ── 3. WHY DIGITAL PORTFOLIO VS STATIC PDF (3 Differentiators) ── */}
