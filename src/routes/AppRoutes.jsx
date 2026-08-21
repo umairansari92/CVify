@@ -24,10 +24,16 @@ const ATSReportsPage = lazy(() => import("../modules/ats/pages/ATSReportsPage"))
 const ATSHistoryPage = lazy(() => import("../modules/ats/pages/ATSHistoryPage"));
 const ATSGuidePage = lazy(() => import("../modules/ats/pages/ATSGuidePage"));
 
+// Digital Identity & Profile Studio Module
+const ProfileModuleLayout = lazy(() => import("../modules/profile/ProfileModuleLayout"));
+const ProfileLandingPage = lazy(() => import("../modules/profile/pages/ProfileLandingPage"));
+const ProfileStudioPage = lazy(() => import("../modules/profile/pages/ProfileStudioPage"));
+const ProfileGuidePage = lazy(() => import("../modules/profile/pages/ProfileGuidePage"));
+const ProfileAnalyticsPage = lazy(() => import("../modules/profile/pages/ProfileAnalyticsPage"));
+
 const ReferralPage = lazy(() => import("../pages/ReferralPage"));
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/ResetPassword"));
-const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 const PublicProfile = lazy(() => import("../pages/PublicProfile"));
 const PublicResumeViewer = lazy(() => import("../pages/PublicResumeViewer"));
 const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
@@ -139,6 +145,7 @@ const AppRoutes = () => {
         <Route element={<MarketingLayout />}>
           <Route path="/resume-builder" element={<ResumeLandingPage />} />
           <Route path="/ats" element={<ATSLandingPage />} />
+          <Route path="/profile-guide" element={<ProfileLandingPage />} />
           <Route path="/landing" element={<Navigate to="/resume-builder" replace />} />
           <Route path="/documentation" element={<Documentation />} />
         </Route>
@@ -194,8 +201,17 @@ const AppRoutes = () => {
             <Route path="guide" element={<ATSGuidePage />} />
           </Route>
 
+          {/* Digital Identity & Profile Studio Module */}
+          <Route path="/profile" element={<ProfileModuleLayout />}>
+            <Route index element={<ProfileStudioPage />} />
+            <Route path="studio" element={<ProfileStudioPage />} />
+            <Route path="edit" element={<Navigate to="/profile/studio" replace />} />
+            <Route path="guide" element={<ProfileGuidePage />} />
+            <Route path="analytics" element={<ProfileAnalyticsPage />} />
+            <Route path="overview" element={<ProfileLandingPage />} />
+          </Route>
+
           <Route path="/referral" element={<ReferralPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/job-matcher" element={<JobMatcher />} />
           <Route path="/interview" element={<InterviewSimulator />} />
           <Route path="/roadmap" element={<CareerRoadmap />} />
