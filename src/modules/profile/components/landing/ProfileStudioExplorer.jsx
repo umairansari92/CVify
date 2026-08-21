@@ -155,64 +155,73 @@ const ProfileStudioExplorer = () => {
         </p>
       </div>
 
-      {/* 3-column explorer layout */}
+      {/* 3-column explorer layout — self-contained dark surface */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "220px 1fr 340px",
-          gap: 20,
-          alignItems: "start",
+          background: "#0f0f14",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 20,
+          padding: "24px",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.2)",
         }}
       >
-        {/* ── LEFT: Section Navigation ── */}
         <div
           style={{
-            position: "sticky",
-            top: 80,
-            maxHeight: "calc(100vh - 120px)",
-            overflowY: "auto",
-            padding: "4px 4px 4px 0",
+            display: "grid",
+            gridTemplateColumns: "220px 1fr 340px",
+            gap: 20,
+            alignItems: "start",
           }}
         >
-          <StudioSectionTabs
-            activeSectionId={activeSectionId}
-            onSelect={handleSectionSelect}
-          />
-        </div>
-
-        {/* ── CENTER: Interactive Preview Canvas ── */}
-        <div style={{ position: "sticky", top: 80 }}>
-          <StudioPreviewCanvas
-            sectionId={activeSectionId}
-            activeFieldId={activeFieldId}
-            onHotspotClick={handleHotspotClick}
-            previewImages={PREVIEW_IMAGES}
-          />
-
-          {/* Section summary card below canvas */}
-          <SectionSummaryCard sectionId={activeSectionId} />
-        </div>
-
-        {/* ── RIGHT: Field Guide Panel ── */}
-        <div
-          ref={guidePanelRef}
-          style={{
-            maxHeight: "calc(100vh - 120px)",
-            overflowY: "auto",
-            padding: "4px 0 4px 4px",
-          }}
-        >
+          {/* ── LEFT: Section Navigation ── */}
           <div
             style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 11,
-              fontWeight: 700,
-              color: "rgba(102,144,125,0.8)",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: 12,
-              paddingBottom: 8,
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
+              position: "sticky",
+              top: 80,
+              maxHeight: "calc(100vh - 160px)",
+              overflowY: "auto",
+              padding: "4px 4px 4px 0",
+            }}
+          >
+            <StudioSectionTabs
+              activeSectionId={activeSectionId}
+              onSelect={handleSectionSelect}
+            />
+          </div>
+
+          {/* ── CENTER: Interactive Preview Canvas ── */}
+          <div style={{ position: "sticky", top: 80 }}>
+            <StudioPreviewCanvas
+              sectionId={activeSectionId}
+              activeFieldId={activeFieldId}
+              onHotspotClick={handleHotspotClick}
+              previewImages={PREVIEW_IMAGES}
+            />
+
+            {/* Section summary card below canvas */}
+            <SectionSummaryCard sectionId={activeSectionId} />
+          </div>
+
+          {/* ── RIGHT: Field Guide Panel ── */}
+          <div
+            ref={guidePanelRef}
+            style={{
+              maxHeight: "calc(100vh - 160px)",
+              overflowY: "auto",
+              padding: "4px 0 4px 4px",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 11,
+                fontWeight: 700,
+                color: "rgba(102,144,125,0.8)",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                marginBottom: 12,
+                paddingBottom: 8,
+                borderBottom: "1px solid rgba(255,255,255,0.06)",
             }}
           >
             Field Guide — click to expand
@@ -223,6 +232,7 @@ const ProfileStudioExplorer = () => {
             onFieldSelect={handleFieldSelect}
             onShowPortfolio={handleShowPortfolio}
           />
+        </div>
         </div>
       </div>
 
