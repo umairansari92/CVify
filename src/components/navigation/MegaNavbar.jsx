@@ -13,7 +13,8 @@ import {
   Award,
   User,
   FileText,
-  Target
+  Target,
+  Globe
 } from "lucide-react";
 import AppSwitcherDropdown from "./AppSwitcherDropdown";
 import MegaMenuFeatures from "./MegaMenuFeatures";
@@ -88,6 +89,18 @@ const MegaNavbar = () => {
           >
             <Target className="w-3.5 h-3.5 text-emerald-500" />
             <span>ATS Scanner</span>
+          </Link>
+
+          <Link
+            to="/profile-guide"
+            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+              location.pathname === "/profile-guide" || location.pathname.startsWith("/profile")
+                ? "text-[var(--text-primary)] bg-[var(--surface-hover)] font-black"
+                : "hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5 text-purple-500" />
+            <span>Portfolio</span>
           </Link>
 
           <Link
@@ -222,6 +235,12 @@ const MegaNavbar = () => {
               className="block p-2.5 rounded-xl hover:bg-[var(--surface-hover)] hover:text-emerald-500"
             >
               ATS Intelligence Scanner
+            </Link>
+            <Link
+              to="/profile-guide"
+              className="block p-2.5 rounded-xl hover:bg-[var(--surface-hover)] hover:text-purple-500"
+            >
+              Profile &amp; Portfolio Studio
             </Link>
             <Link
               to="/templates"

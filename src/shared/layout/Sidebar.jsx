@@ -36,6 +36,9 @@ const Sidebar = ({ onClose = () => {} }) => {
   const [isAtsOpen, setIsAtsOpen] = useState(
     location.pathname.startsWith("/ats")
   );
+  const [isProfileOpen, setIsProfileOpen] = useState(
+    location.pathname.startsWith("/profile")
+  );
 
   // Auto-expand if user navigates to a sub-route
   useEffect(() => {
@@ -44,6 +47,9 @@ const Sidebar = ({ onClose = () => {} }) => {
     }
     if (location.pathname.startsWith("/ats")) {
       setIsAtsOpen(true);
+    }
+    if (location.pathname.startsWith("/profile")) {
+      setIsProfileOpen(true);
     }
   }, [location.pathname]);
 
@@ -54,6 +60,7 @@ const Sidebar = ({ onClose = () => {} }) => {
 
   const isResumeActive = location.pathname.startsWith("/resume") || location.pathname === "/templates";
   const isAtsActive = location.pathname.startsWith("/ats");
+  const isProfileActive = location.pathname.startsWith("/profile");
 
   return (
     <aside className="w-72 bg-[var(--surface)]/95 backdrop-blur-2xl border-r border-[var(--border)] h-screen flex flex-col justify-between relative z-30 transition-all duration-300 overflow-hidden">
@@ -191,30 +198,109 @@ const Sidebar = ({ onClose = () => {} }) => {
               )}
             </div>
 
-            {/* ── Portfolio & Profile ── */}
-            <NavLink
-              to="/profile"
-              onClick={onClose}
-              className={({ isActive }) =>
-                `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
-                  isActive
+            {/* ── Profile & Portfolio (Expandable Submenu) ── */}
+            <div className="space-y-0.5">
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  isProfileActive
                     ? "text-purple-400 bg-purple-500/10 border border-purple-500/30"
                     : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] border border-transparent"
-                }`
-              }
-            >
-              <div className="flex items-center gap-2.5">
-                <Globe className="w-4 h-4 text-purple-400" />
-                <span>Profile & Portfolio</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
-                  LIVE
-                </span>
-                {location.pathname === "/profile" && <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />}
-              </div>
-            </NavLink>
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Globe className="w-4 h-4 text-purple-400" />
+                  <span>Profile &amp; Portfolio</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                    LIVE
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`} />
+                </div>
+              </button>
 
+              {/* Profile Submenu Items */}
+              {isProfileOpen && (
+                <div className="pl-6 pr-1 py-1 space-y-1 border-l-2 border-[var(--border)] ml-5 animate-in fade-in duration-150">
+                  <NavLink
+                    to="/profile"
+                    end
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-purple-300 bg-purple-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>Identity Studio</span>
+                    {location.pathname === "/profile" && <div className="w-1 h-1 rounded-full bg-purple-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/profile/studio"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-purple-300 bg-purple-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>Edit All Sections</span>
+                    {location.pathname === "/profile/studio" && <div className="w-1 h-1 rounded-full bg-purple-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/profile/guide"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-purple-300 bg-purple-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>Portfolio Masterclass</span>
+                    {location.pathname === "/profile/guide" && <div className="w-1 h-1 rounded-full bg-purple-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/profile/analytics"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-purple-300 bg-purple-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>Career Analytics</span>
+                    {location.pathname === "/profile/analytics" && <div className="w-1 h-1 rounded-full bg-purple-400" />}
+                  </NavLink>
+
+                  <NavLink
+                    to="/profile-guide"
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                        isActive
+                          ? "text-purple-300 bg-purple-500/10 font-bold"
+                          : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                      }`
+                    }
+                  >
+                    <span>Profile Field Guide</span>
+                    {location.pathname === "/profile-guide" && <div className="w-1 h-1 rounded-full bg-purple-400" />}
+                  </NavLink>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Section 2: AI Career Tools */}
