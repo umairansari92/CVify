@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Card from "../../../components/ui/Card";
 import { Badge } from "../../../components/ui/Badge";
-import { FiClock, FiFileText, FiCheckCircle, FiChevronRight, FiSparkles, FiActivity } from "react-icons/fi";
+import { FiClock, FiFileText, FiCheckCircle, FiChevronRight, FiActivity } from "react-icons/fi";
 
 export const ActivityTimelineWidget = ({ data }) => {
   const timeline = data?.timeline || [];

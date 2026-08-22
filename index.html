@@ -51,6 +51,85 @@
 
   <meta name="google-site-verification" content="XfPfjDgxxYvjhcuVe4FWWBtUToJ2JaYBoDGBNr3LXd8" />
 
+  <!-- Master Entity Graph JSON-LD Schema (Google Knowledge & AI Overviews) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://app-cvifypro.vercel.app/#organization",
+        "name": "DataVerse Technologies",
+        "url": "https://app-cvifypro.vercel.app",
+        "logo": "https://app-cvifypro.vercel.app/CVify%20Logo%20Dark.jpg",
+        "founder": {
+          "@id": "https://app-cvifypro.vercel.app/#founder"
+        },
+        "sameAs": [
+          "https://github.com/umairansari92",
+          "https://www.linkedin.com/in/umair-ahmed-dev"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://app-cvifypro.vercel.app/#founder",
+        "name": "Umair Ahmed",
+        "jobTitle": "Lead Systems Architect & Founder",
+        "worksFor": {
+          "@id": "https://app-cvifypro.vercel.app/#organization"
+        },
+        "description": "Senior Full Stack Developer, Systems Architect, and Educator. Creator of CVify Pro.",
+        "sameAs": [
+          "https://github.com/umairansari92",
+          "https://www.linkedin.com/in/umair-ahmed-dev"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://app-cvifypro.vercel.app/#software",
+        "name": "CVify Pro",
+        "alternateName": ["CVify", "CVifyPro", "CVify Pro AI"],
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Career & Resume Intelligence Platform",
+        "operatingSystem": "Web, Android, iOS, Windows, macOS, Linux",
+        "url": "https://app-cvifypro.vercel.app",
+        "image": "https://app-cvifypro.vercel.app/CVify%20Logo%20Dark.jpg",
+        "description": "AI-powered Career Intelligence and Portfolio Ecosystem providing ATS-optimized resume building, 9-stage resume parsing, real-time job description matching, and customizable live portfolio themes.",
+        "author": {
+          "@id": "https://app-cvifypro.vercel.app/#founder"
+        },
+        "publisher": {
+          "@id": "https://app-cvifypro.vercel.app/#organization"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "category": "Freemium"
+        },
+        "featureList": [
+          "9-Stage Resume Intelligence Parsing & Auto-Healing",
+          "Context-Aware ATS v2.0 Micro-SaaS Engine",
+          "13 Live Portfolio Themes with Reactive Theme Engine v4.0",
+          "Natural Language AI Intent Command Bar",
+          "AI Job Description Matcher & Keyword Gap Analysis",
+          "AI Role-Play Interview Simulator",
+          "Dynamic Public Shareable Resumes & Portfolios"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://app-cvifypro.vercel.app/#website",
+        "url": "https://app-cvifypro.vercel.app",
+        "name": "CVify Pro",
+        "publisher": {
+          "@id": "https://app-cvifypro.vercel.app/#organization"
+        }
+      }
+    ]
+  }
+  </script>
+
 </head>
 
 <body>

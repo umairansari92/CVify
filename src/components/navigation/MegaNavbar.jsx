@@ -149,6 +149,18 @@ const MegaNavbar = () => {
             <BookOpen className="w-3.5 h-3.5 text-teal-500" />
             <span>Docs</span>
           </Link>
+
+          <Link
+            to="/cvify-pro"
+            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+              location.pathname === "/cvify-pro"
+                ? "text-[var(--text-primary)] bg-[var(--surface-hover)] font-black"
+                : "hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>About</span>
+          </Link>
         </nav>
 
         {/* Right Auth / Profile CTA / Theme Toggle */}
@@ -265,6 +277,12 @@ const MegaNavbar = () => {
               className="block p-2.5 rounded-xl hover:bg-[var(--surface-hover)] hover:text-teal-500"
             >
               Documentation
+            </Link>
+            <Link
+              to="/cvify-pro"
+              className="block p-2.5 rounded-xl hover:bg-[var(--surface-hover)] hover:text-amber-500"
+            >
+              About CVify Pro
             </Link>
           </div>
 

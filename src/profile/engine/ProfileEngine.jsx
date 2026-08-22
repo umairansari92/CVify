@@ -227,11 +227,36 @@ const ProfileEngine = ({
           <meta name="twitter:description" content={bio.substring(0, 160)} />
           <meta name="twitter:image"       content={image} />
           <script type="application/ld+json">{JSON.stringify({
-            "@context": "https://schema.org", "@type": "Person",
-            name: fullName, jobTitle, image,
-            url: `https://app-cvifypro.vercel.app/p/${username}`,
-            description: bio,
-            sameAs: [user?.socialLinks?.linkedin, user?.socialLinks?.github, user?.socialLinks?.twitter].filter(Boolean),
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "ProfilePage",
+                "@id": `https://app-cvifypro.vercel.app/p/${username}#webpage`,
+                "url": `https://app-cvifypro.vercel.app/p/${username}`,
+                "name": `${fullName} - ${jobTitle || "Professional Portfolio"}`,
+                "description": bio.substring(0, 160) || "Professional Portfolio",
+                "mainEntity": {
+                  "@type": "Person",
+                  "@id": `https://app-cvifypro.vercel.app/p/${username}#person`,
+                  "name": fullName,
+                  "jobTitle": jobTitle,
+                  "image": image,
+                  "url": `https://app-cvifypro.vercel.app/p/${username}`,
+                  "description": bio,
+                  "sameAs": [
+                    user?.socialLinks?.linkedin,
+                    user?.socialLinks?.github,
+                    user?.socialLinks?.twitter,
+                    user?.socialLinks?.website
+                  ].filter(Boolean),
+                  "knowsAbout": Array.isArray(user?.skills)
+                    ? user.skills.map(s => s?.name || s).filter(Boolean)
+                    : (user?.skills && typeof user.skills === 'object')
+                      ? [...(user.skills.technical || []), ...(user.skills.soft || []), ...(user.skills.strategic || [])]
+                      : []
+                }
+              }
+            ]
           })}</script>
           <style>{`html { scroll-behavior: smooth; }`}</style>
         </Helmet>

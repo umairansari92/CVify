@@ -3167,6 +3167,35 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
 
   return (
     <div className="min-h-screen bg-background text-text-main">
+      <Helmet>
+        <title>CVify Pro System Documentation &amp; Engineering Architecture</title>
+        <meta name="description" content="Official technical documentation, API contracts, ATS v2.0 algorithms, 9-stage parser pipeline, and reactive Theme Engine v4.0 architecture for CVify Pro." />
+        <link rel="canonical" href="https://app-cvifypro.vercel.app/documentation" />
+        <meta property="og:title" content="CVify Pro System Documentation &amp; Engineering Architecture" />
+        <meta property="og:description" content="Technical architecture, AST and DTO data schemas, heuristic ATS score models, and design system v2.0." />
+        <meta property="og:url" content="https://app-cvifypro.vercel.app/documentation" />
+        <meta property="og:type" content="article" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "CVify Pro System Documentation & Engineering Architecture",
+            "description": "Comprehensive engineering specification and architecture for CVify Pro, covering ATS scoring, 9-stage parsing, Theme Engine v4.0, and security protocols.",
+            "url": "https://app-cvifypro.vercel.app/documentation",
+            "author": {
+              "@type": "Person",
+              "name": "Umair Ahmed",
+              "jobTitle": "Lead Systems Architect & Founder"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "DataVerse Technologies",
+              "logo": "https://app-cvifypro.vercel.app/CVify%20Logo%20Dark.jpg"
+            }
+          })}
+        </script>
+      </Helmet>
+
       {/* ── TOP BAR ── */}
       <nav className="fixed top-0 left-0 w-full z-50 p-4 glass border-b border-border-subtle bg-background/80 flex justify-between items-center px-4 lg:px-8">
         <div className="flex items-center gap-4">

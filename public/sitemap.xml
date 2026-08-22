@@ -1,16 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Main landing page -->
+  <!-- Core Entity & Platform Root -->
   <url>
     <loc>https://app-cvifypro.vercel.app/</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-08-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Resume Builder tool -->
+
+  <!-- Master Canonical Entity Page -->
   <url>
-    <loc>https://app-cvifypro.vercel.app/create-resume</loc>
+    <loc>https://app-cvifypro.vercel.app/cvify-pro</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Core Product Hubs -->
+  <url>
+    <loc>https://app-cvifypro.vercel.app/resume-builder</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://app-cvifypro.vercel.app/ats</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://app-cvifypro.vercel.app/profile-guide</loc>
+    <lastmod>2026-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app-cvifypro.vercel.app/templates</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app-cvifypro.vercel.app/cover-letter</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Master Documentation & System Knowledge Hub -->
+  <url>
+    <loc>https://app-cvifypro.vercel.app/documentation</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Authentication -->
+  <url>
+    <loc>https://app-cvifypro.vercel.app/login</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://app-cvifypro.vercel.app/signup</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
+

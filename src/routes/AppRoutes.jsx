@@ -47,6 +47,7 @@ const AdminSettings = lazy(() => import("../pages/AdminSettings"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Maintenance = lazy(() => import("../pages/Maintenance"));
 const Documentation = lazy(() => import("../pages/Documentation"));
+const AboutCVifyPro = lazy(() => import("../pages/AboutCVifyPro"));
 const JobMatcher = lazy(() => import("../pages/JobMatcher"));
 const InterviewSimulator = lazy(() => import("../pages/InterviewSimulator"));
 const CareerRoadmap = lazy(() => import("../pages/CareerRoadmap"));
@@ -143,6 +144,8 @@ const AppRoutes = () => {
 
         {/* ── Public / Marketing Pages wrapped in MarketingLayout (Mega Navbar, NO Sidebar) ── */}
         <Route element={<MarketingLayout />}>
+          <Route path="/cvify-pro" element={<AboutCVifyPro />} />
+          <Route path="/about" element={<Navigate to="/cvify-pro" replace />} />
           <Route path="/resume-builder" element={<ResumeLandingPage />} />
           <Route path="/ats" element={<ATSLandingPage />} />
           <Route path="/profile-guide" element={<ProfileLandingPage />} />

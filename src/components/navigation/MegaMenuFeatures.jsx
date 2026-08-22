@@ -154,6 +154,14 @@ const MegaMenuFeatures = ({ onClose = () => {} }) => {
           color: "text-slate-400 bg-slate-800 border-slate-700"
         },
         {
+          name: "About CVify Pro",
+          desc: "Master platform entity & founder story",
+          path: "/cvify-pro",
+          icon: Sparkles,
+          badge: "ENTITY",
+          color: "text-amber-400 bg-amber-500/10 border-amber-500/20"
+        },
+        {
           name: "Developer Documentation",
           desc: "Architecture guides, API contracts & specs",
           path: "/documentation",
@@ -163,7 +171,7 @@ const MegaMenuFeatures = ({ onClose = () => {} }) => {
         },
         {
           name: "Portfolio Theme Engine",
-          desc: "12+ modern portfolio themes",
+          desc: "13 modern portfolio themes",
           path: "/profile",
           icon: Palette,
           badge: "v4.0",
