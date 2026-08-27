@@ -3152,9 +3152,9 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
     ),
   };
 
-  const NavItem = ({ id, icon, label }) => (
+  const NavItem = ({ id, icon, label, onSelect }) => (
     <button
-      onClick={() => { setActiveSection(id); setMobileNav(false); }}
+      onClick={() => { setActiveSection(id); if (onSelect) onSelect(); }}
       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${activeSection === id
           ? "bg-primary/10 text-primary border border-primary/20"
           : "text-text-muted hover:bg-white/5 hover:text-text-primary"
@@ -3198,15 +3198,21 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
 
       {/* ── TOP BAR ── */}
       <nav className="fixed top-0 left-0 w-full z-50 p-4 glass border-b border-border-subtle bg-background/80 flex justify-between items-center px-4 lg:px-8">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <button onClick={() => navigate(-1)} className="p-2 hover:bg-white/5 rounded-full transition-colors">
             <ArrowLeft size={18} />
           </button>
-          <Logo className="w-28 md:w-36" />
+          <Logo className="w-24 md:w-36" />
           <span className="hidden md:block text-[9px] font-black uppercase tracking-[0.2em] text-text-muted border-l border-border-subtle pl-4">Documentation</span>
         </div>
-        <button onClick={() => setMobileNav(!mobileNav)} className="lg:hidden p-2 hover:bg-white/5 rounded-full">
-          {mobileNav ? <X size={20} /> : <Menu size={20} />}
+        {/* Mobile hamburger — visible label so users know it opens nav */}
+        <button
+          onClick={() => setMobileNav(true)}
+          className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-xl text-primary text-xs font-black"
+          aria-label="Open navigation menu"
+        >
+          <Menu size={15} />
+          <span>Topics</span>
         </button>
       </nav>
 
@@ -3226,19 +3232,75 @@ document.documentElement.classList.toggle('pub-scrolled', window.scrollY > 20);`
         {/* ── MOBILE NAV ── */}
         <AnimatePresence>
           {mobileNav && (
-            <motion.aside
-              initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }}
-              className="fixed left-0 top-24 w-72 h-[calc(100vh-96px)] z-40 overflow-y-auto border-r border-border-subtle p-4 pb-12 space-y-6 bg-background lg:hidden"
-            >
-              {navGroups.map((group) => (
-                <div key={group.label}>
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted mb-2 px-4">{group.label}</p>
-                  <div className="space-y-1">
-                    {group.items.map(item => <NavItem key={item.id} {...item} />)}
+            <>
+              {/* Backdrop — tap to dismiss */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+                onClick={() => setMobileNav(false)}
+              />
+              {/* Drawer */}
+              <motion.aside
+                initial={{ x: -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                transition={{ type: "spring", damping: 28, stiffness: 300 }}
+                className="fixed left-0 top-0 w-[280px] sm:w-80 h-full z-40 overflow-y-auto border-r border-border-subtle bg-background shadow-2xl lg:hidden flex flex-col"
+              >
+                {/* Drawer Header */}
+                <div className="flex items-center justify-between p-4 border-b border-border-subtle sticky top-0 bg-background/95 backdrop-blur-md z-10">
+                  <div className="flex items-center gap-2">
+                    <Book size={16} className="text-primary" />
+                    <span className="text-sm font-black text-text-primary uppercase tracking-wider">Documentation</span>
                   </div>
+                  <button
+                    onClick={() => setMobileNav(false)}
+                    className="p-1.5 rounded-xl hover:bg-white/5 transition-colors text-text-muted hover:text-text-primary"
+                    aria-label="Close navigation"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-              ))}
-            </motion.aside>
+
+                {/* Nav Items */}
+                <div className="flex-1 overflow-y-auto p-4 pb-12 space-y-6">
+                  {navGroups.map((group) => (
+                    <div key={group.label}>
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted mb-2 px-2">{group.label}</p>
+                      <div className="space-y-0.5">
+                        {group.items.map(item => (
+                          <NavItem
+                            key={item.id}
+                            {...item}
+                            onSelect={() => setMobileNav(false)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* ── FLOATING TOPICS BUTTON (Mobile only, visible when drawer closed) ── */}
+        <AnimatePresence>
+          {!mobileNav && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => setMobileNav(true)}
+              className="fixed bottom-6 right-4 z-30 lg:hidden flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/30 font-black text-xs uppercase tracking-wider"
+              aria-label="Open topics list"
+            >
+              <Layers size={14} />
+              Topics
+            </motion.button>
           )}
         </AnimatePresence>
 
